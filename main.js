@@ -33,7 +33,7 @@ function nextFrame(timeStamp) {
 	lastFrame = timeStamp;
 	player.x += player.xv * dt / 1000;
 	player.y += player.yv * dt / 1000;
-	player.yv += player.g;
+	player.yv += player.g * dt / 1000;
 	draw();
 	window.requestAnimationFrame(nextFrame);
 }
