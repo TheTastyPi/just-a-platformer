@@ -7,23 +7,45 @@ const player = {
 	g: 20,
 	canJump: false,
 };
+const control = {
+	up: false,
+	left: false,
+	right: false,
+};
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
 	switch(key) {
 		case "ArrowUp":
 		case "KeyW":
-			player.yv = -40;
+			control.up = true;
 			break;
 		case "ArrowLeft":
 		case "KeyA":
-			player.xv = -20;
+			control.left = true;
 			break;
 		case "ArrowRight":
 		case "KeyD":
-			player.xv = 20;
+			control.right = true;
 			break;
-			
+	}
+});
+
+document.addEventListener("keyup", function(input){
+	let key = input.code;
+	switch(key) {
+		case "ArrowUp":
+		case "KeyW":
+			control.up = false;
+			break;
+		case "ArrowLeft":
+		case "KeyA":
+			control.left = false;
+			break;
+		case "ArrowRight":
+		case "KeyD":
+			control.right = false;
+			break;
 	}
 });
 
@@ -38,6 +60,10 @@ function nextFrame(timeStamp) {
 	player.xv *= 0.5;
 	if (Math.abs(player.xv) < 5) player.xv = 0;
 	player.yv += player.g * dt / 1000;
+	
+	if (control.up) player.yv = -40;
+	if (control.left) player.xv = -20;
+	if (control.right) player.xv = 20;
 	
 	draw();
 	window.requestAnimationFrame(nextFrame);
