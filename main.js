@@ -4,21 +4,22 @@ const player = {
 	y: 50,
 	xv: 0,
 	yv: 0,
+	g: 5,
 };
-var grav = 5;
 var lastFrame = 0;
 function nextFrame(timeStamp) {
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
 	player.x += player.xv * dt / 1000;
 	player.y += player.yv * dt / 1000;
-	player.xv -= 5;
+	player.yv -= player.g;
 	draw();
 	window.requestAnimationFrame(nextFrame);
 }
 function draw() {
-	let screen = document.getElementById("gameScreen").getContext("2d");
-	screen.clearRect(0,0,"100%","100%");
+	let canvas = document.getElementById("gameScreen");
+	let screen = canvas.getContext("2d");
+	screen.clearRect(0,0,canvas.width,canvas.height);
 	
 	screen.fillStyle = "#FF0000";
 	screen.fillRect(player.x, player.y, 5, 5);
