@@ -21,7 +21,7 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "ArrowRight":
 		case "KeyD":
-			player.xv = 5;
+			player.xv = 10;
 			break;
 			
 	}
