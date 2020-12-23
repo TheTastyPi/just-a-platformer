@@ -25,7 +25,7 @@ document.addEventListener("keydown", function(input){
 			break;
 			
 	}
-}
+})
 
 var lastFrame = 0;
 function nextFrame(timeStamp) {
