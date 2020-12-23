@@ -13,7 +13,7 @@ document.addEventListener("keydown", function(input){
 	switch(key) {
 		case "ArrowUp":
 		case "KeyW":
-			player.yv = -5;
+			player.yv = -10;
 			break;
 		case "ArrowLeft":
 		case "KeyA":
@@ -21,11 +21,11 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "ArrowRight":
 		case "KeyD":
-			player.xv = 10;
+			player.xv = 5;
 			break;
 			
 	}
-})
+});
 
 var lastFrame = 0;
 function nextFrame(timeStamp) {
