@@ -92,7 +92,7 @@ function nextFrame(timeStamp) {
 	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
 	   || (level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1 
-	      && blockSize-x1%blockSize < y2%blockSize ) { // left wall
+	      && blockSize-x1%blockSize < y2%blockSize)) { // left wall
 		player.xv = 0;
 		player.x = Math.floor(x1/blockSize + 1) * blockSize;
 	}
