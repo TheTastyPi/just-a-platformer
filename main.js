@@ -85,7 +85,7 @@ function nextFrame(timeStamp) {
 		player.canJump = true;
 	}
 	// key input
-	if (control.up && player.canJump) player.yv = -60;
+	if (control.up && player.canJump) player.yv = -50;
 	if (control.left) player.xv = -20;
 	if (control.right) player.xv = 20;
 	// draw + ending stuff
@@ -100,6 +100,7 @@ function draw() {
 	let lvly = (canvas.height - level[0].length * 10) / 2;
 	screen.clearRect(0,0,canvas.width,canvas.height);
 	// draw level
+	screen.fillStyle = "#000000";
 	for (let x in level) {
 		for (let y in level[x]) {
 			if (level[x][y] == 1) {
