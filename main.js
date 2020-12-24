@@ -95,7 +95,7 @@ function nextFrame(timeStamp) {
 	   || (level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1 
 	      && blockSize-x1%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = Math.floor(x1/blockSize + 1) * blockSize;
+		player.x = Math.floor(x1/blockSize + 1) * blockSize - 1;
 	}
 	// right wall
 	if ((level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
@@ -103,7 +103,7 @@ function nextFrame(timeStamp) {
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
 	      && x2%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
+		player.x = Math.floor(x2/blockSize) * blockSize - playerSize - 1;
 	}
 	// floor
 	if (((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
@@ -114,7 +114,7 @@ function nextFrame(timeStamp) {
 	      && level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1] == 0)
 	   && player.yv > 0) {
 		player.yv = 0;
-		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
+		player.y = Math.floor(y2/blockSize) * blockSize - playerSize - 1;
 		player.canJump = true;
 	} else player.canJump = false;
 	// ceiling
@@ -126,7 +126,7 @@ function nextFrame(timeStamp) {
 	      && level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1] == 0)
 	   && player.yv < 0) {
 		player.yv = 0;
-		player.y = Math.floor(y1/blockSize + 1) * blockSize;
+		player.y = Math.floor(y1/blockSize + 1) * blockSize - 1;
 	}
 	// death block
 	if (level[Math.floor(player.x/blockSize)][Math.floor(player.y/blockSize)] == 2
