@@ -85,7 +85,10 @@ function nextFrame(timeStamp) {
 		player.canJump = true;
 	}
 	// key input
-	if (control.up && player.canJump) player.yv = -50;
+	if (control.up && player.canJump) {
+		player.yv = -50;
+		player.canJump = false;
+	}
 	if (control.left) player.xv = -20;
 	if (control.right) player.xv = 20;
 	// draw + ending stuff
