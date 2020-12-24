@@ -78,12 +78,12 @@ function nextFrame(timeStamp) {
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
 	// position change based on velocity
-	player.x += player.xv * dt / 1000;
-	player.y += player.yv * dt / 1000;
+	player.x += player.xv * dt / 500;
+	player.y += player.yv * dt / 500;
 	// velocity change
 	player.xv *= 0.5;
 	if (Math.abs(player.xv) < 5) player.xv = 0;
-	player.yv += player.g * dt / 1000;
+	player.yv += player.g * dt / 500;
 	// collision detection
 	let x1 = player.x;
 	let x2 = player.x+playerSize;
