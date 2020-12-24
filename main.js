@@ -156,17 +156,17 @@ function draw() {
 	for (let x in level) {
 		for (let y in level[x]) {
 			let type = level[x][y];
-			switch (type) {
-				case 1:
-					screen.fillStyle = "#000000";
-					break;
-				case 2:
-					screen.fillStyle = "#FF0000";
-					break;
-				default:
-					screen.fillStyle = "#000000";
+			if (type != 0) {
+				switch (type) {
+					case 1:
+						screen.fillStyle = "#000000";
+						break;
+					case 2:
+						screen.fillStyle = "#FF0000";
+						break;
+				}
+				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
 			}
-			screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
 		}
 	}
 	// draw player
