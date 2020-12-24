@@ -111,13 +111,13 @@ function nextFrame(timeStamp) {
 		player.yv = 0;
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
+	// position change based on velocity
+	player.x += player.xv * dt / 1000;
+	player.y += player.yv * dt / 1000;
 	// velocity change
 	player.xv *= 0.5;
 	if (Math.abs(player.xv) < 5) player.xv = 0;
 	player.yv += player.g * dt / 1000;
-	// position change based on velocity
-	player.x += player.xv * dt / 1000;
-	player.y += player.yv * dt / 1000;
 	// key input
 	if (control.up && player.canJump) {
 		player.yv = -200;
