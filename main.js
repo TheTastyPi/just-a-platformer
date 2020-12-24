@@ -1,4 +1,6 @@
 var savePoint = 0;
+var playerSize = 10;
+var blockSize = 25;
 const player = {
 	x: 48,
 	y: 76,
