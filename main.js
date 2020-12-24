@@ -1,4 +1,4 @@
-var spawnPoint = [240,380];
+var spawnPoint = [4,7];
 var playerSize = 20;
 var blockSize = 50;
 const player = {
@@ -136,6 +136,14 @@ function nextFrame(timeStamp) {
 		player.x = spawnPoint[0];
 		player.y = spawnPoint[1];
 	}
+	// checkpoint
+	if (level[Math.floor((player.x + 1)/blockSize)][Math.floor((player.y + 1)/blockSize)] == 2
+	   || level[Math.floor((player.x+playerSize - 1)/blockSize)][Math.floor((player.y + 1)/blockSize)] == 2
+	   || level[Math.floor((player.x + 1)/blockSize)][Math.floor((player.y+playerSize - 1)/blockSize)] == 2
+	   || level[Math.floor((player.x+playerSize - 1)/blockSize)][Math.floor((player.y+playerSize - 1)/blockSize)] == 2) {
+		player.x = spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
+		player.y = spawnPoint[1] * blockSize + blockSize - playerSize;
+	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
 	if (control.left) player.xv = -100;
@@ -163,6 +171,12 @@ function draw() {
 						break;
 					case 2:
 						screen.fillStyle = "#FF0000";
+						break;
+					case 3:
+						screen.fillStyle = "#008888";
+						break;
+					case 4:
+						screen.fillStyle = "#00FFFF";
 						break;
 				}
 				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
