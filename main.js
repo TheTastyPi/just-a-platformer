@@ -1,7 +1,7 @@
 var savePoint = 0;
 const player = {
-	x: 50,
-	y: 14,
+	x: 48,
+	y: 76,
 	xv: 0,
 	yv: 0,
 	g: 80,
