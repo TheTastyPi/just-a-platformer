@@ -78,6 +78,16 @@ function nextFrame(timeStamp) {
 	if (Math.abs(player.xv) < 5) player.xv = 0;
 	player.yv += player.g * dt / 1000;
 	// collision detection
+	if (level[Math.floor((player.x)/10)][Math.floor((player.y)/10)] == 1
+	   && level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1) { // left wall
+		player.xv = 0;
+		player.x = Math.floor((player.x)/10 + 1) * 10;
+	}
+	if (level[Math.floor((player.x + 4)/10)][Math.floor((player.y)/10)] == 1
+	   && level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // right wall
+		player.xv = 0;
+		player.x = Math.floor((player.x + 4)/10) * 10 - 4;
+	}
 	if (level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1
 	   || level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // floor
 		player.yv = 0;
@@ -88,16 +98,6 @@ function nextFrame(timeStamp) {
 	   || level[Math.floor((player.x + 4)/10)][Math.floor((player.y)/10)] == 1) { // ceiling
 		player.yv = 0;
 		player.y = Math.floor((player.y)/10 + 1) * 10;
-	}
-	if (level[Math.floor((player.x)/10)][Math.floor((player.y)/10)] == 1
-	   && level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1) { // left wall
-		player.xv = 0;
-		player.x = Math.floor((player.x)/10 + 1) * 10;
-	}
-	if (level[Math.floor((player.x + 4)/10)][Math.floor((player.y)/10)] == 1
-	   && level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // right wall
-		player.xv = 0;
-		player.x = Math.floor((player.x + 4)/10) * 10 - 4;
 	}
 	// key input
 	if (control.up && player.canJump) {
