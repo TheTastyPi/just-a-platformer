@@ -1,4 +1,4 @@
-var savePoint = 0;
+var spawnPoint = [240,380];
 var playerSize = 20;
 var blockSize = 50;
 const player = {
@@ -19,12 +19,12 @@ const level = [
 	[1,1,1,1,1,1,1,1,1],
 	[1,0,0,0,1,0,0,0,1],
 	[1,0,0,0,0,1,0,1,1],
-	[1,0,0,1,0,0,0,0,1],
-	[1,0,0,0,0,0,1,0,1],
-	[1,0,0,0,0,0,0,0,1],
+	[1,0,0,1,0,0,0,0,2],
+	[1,0,0,0,2,0,1,0,1],
+	[1,0,0,0,2,0,0,0,1],
 	[1,0,1,0,1,0,0,0,1],
 	[1,0,0,0,0,0,0,0,1],
-	[1,0,0,1,0,0,0,0,1],
+	[1,2,0,1,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1],
 ];
 
@@ -128,6 +128,14 @@ function nextFrame(timeStamp) {
 		player.yv = 0;
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
+	// death block
+	if (level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 2
+	   || level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 2
+	   || level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 2
+	   || level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 2) {
+		player.x = spawnPoint[0];
+		player.y = spawnPoint[1];
+	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
 	if (control.left) player.xv = -100;
@@ -145,16 +153,21 @@ function draw() {
 	screen.clearRect(0,0,canvas.width,canvas.height);
 	screen.lineWidth = 0;
 	// draw level
-	screen.fillStyle = "#000000";
 	for (let x in level) {
 		for (let y in level[x]) {
-			if (level[x][y] == 1) {
-				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
+			let type = level[x][y];
+			switch (type) {
+				case 1:
+					screen.fillStyle = "#000000";
+					break;
+				case 2:
+					screen.fillStyle = "#FF0000";
 			}
+			screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
 		}
 	}
 	// draw player
-	screen.fillStyle = "#FF0000";
+	screen.fillStyle = "#0000FF";
 	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 }
 function resizeCanvas() {
