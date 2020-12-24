@@ -129,10 +129,10 @@ function nextFrame(timeStamp) {
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
 	// death block
-	if (level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 2
-	   || level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 2
-	   || level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 2
-	   || level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 2) {
+	if (level[Math.floor(player.x/blockSize)][Math.floor(player.y/blockSize)] == 2
+	   || level[Math.floor((player.x+playerSize)/blockSize)][Math.floor(player.y/blockSize)] == 2
+	   || level[Math.floor(player.x/blockSize)][Math.floor((player.y+playerSize)/blockSize)] == 2
+	   || level[Math.floor((player.x+playerSize)/blockSize)][Math.floor((player.y+playerSize)/blockSize)] == 2) {
 		player.x = spawnPoint[0];
 		player.y = spawnPoint[1];
 	}
