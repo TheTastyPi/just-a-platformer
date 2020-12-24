@@ -99,8 +99,8 @@ function draw() {
 	// setup
 	let canvas = document.getElementById("gameScreen");
 	let screen = canvas.getContext("2d");
-	let lvlx = (canvas.width - level.length * 10) / 2;
-	let lvly = (canvas.height - level[0].length * 10) / 2;
+	let lvlx = Math.round((canvas.width - level.length * 10) / 2);
+	let lvly = Math.round((canvas.height - level[0].length * 10) / 2);
 	screen.clearRect(0,0,canvas.width,canvas.height);
 	screen.lineWidth = 0;
 	// draw level
@@ -114,6 +114,6 @@ function draw() {
 	}
 	// draw player
 	screen.fillStyle = "#FF0000";
-	screen.fillRect(player.x + lvlx, player.y + lvly, 4, 4);
+	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, 4, 4);
 }
 window.requestAnimationFrame(nextFrame);
