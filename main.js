@@ -4,7 +4,7 @@ const player = {
 	y: 50,
 	xv: 0,
 	yv: 0,
-	g: 40,
+	g: 80,
 	canJump: false,
 };
 const control = {
@@ -86,7 +86,7 @@ function nextFrame(timeStamp) {
 	}
 	// key input
 	if (control.up && player.canJump) {
-		player.yv = -20;
+		player.yv = -40;
 		player.canJump = false;
 	}
 	if (control.left) player.xv = -20;
