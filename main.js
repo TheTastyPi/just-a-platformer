@@ -162,6 +162,9 @@ function draw() {
 					break;
 				case 2:
 					screen.fillStyle = "#FF0000";
+					break;
+				default:
+					screen.fillStyle = "#000000";
 			}
 			screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
 		}
