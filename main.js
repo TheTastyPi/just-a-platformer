@@ -106,23 +106,25 @@ function nextFrame(timeStamp) {
 		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
 	}
 	// floor
-	if ((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
+	if (((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
 	    && blockSize-x1%blockSize > y2%blockSize
 	    && level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1] == 0)
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
 	      && x2%blockSize > y2%blockSize)
-	      && level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1] == 0) {
+	      && level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1] == 0)
+	   && player.yv > 0) {
 		player.yv = 0;
 		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
 	// ceiling
-	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+	if (((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
 	    && level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1] == 0)
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
 	      && x2%blockSize > blockSize-y1%blockSize)
-	      && level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1] == 0) {
+	      && level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1] == 0)
+	   && player.yv < 0) {
 		player.yv = 0;
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
