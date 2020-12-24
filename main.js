@@ -90,12 +90,12 @@ function nextFrame(timeStamp) {
 		player.y = Math.floor((player.y)/10) * 10;
 	}
 	if (level[Math.floor((player.x)/10)][Math.floor((player.y)/10)] == 1
-	   || level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1) { // left wall
+	   && level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1) { // left wall
 		player.xv = 0;
 		player.x = Math.floor((player.x)/10) * 10;
 	}
 	if (level[Math.floor((player.x + 4)/10)][Math.floor((player.y)/10)] == 1
-	   || level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // right wall
+	   && level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // right wall
 		player.xv = 0;
 		player.x = Math.floor((player.x + 4)/10) * 10 - 4;
 	}
