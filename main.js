@@ -86,37 +86,37 @@ function nextFrame(timeStamp) {
 	player.yv += player.g * dt / 1000;
 	// collision detection
 	let x1 = player.x;
-	let x2 = player.x+4;
+	let x2 = player.x+playerSize;
 	let y1 = player.y;
-	let y2 = player.y+4;
-	if ((level[Math.floor(x1/10)][Math.floor(y1/10)] == 1
-	    && 10-x1%10 < 10-y1%10)
-	   || (level[Math.floor(x1/10)][Math.floor(y2/10)] == 1
-	      && 10-x1%10 < y2%10)) { // left wall
+	let y2 = player.y+playerSize;
+	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
+	   || (level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
+	      && blockSize-x1%blockSize < y2%blockSize)) { // left wall
 		player.xv = 0;
-		player.x = Math.floor(x1/10 + 1) * 10;
+		player.x = Math.floor(x1/blockSize + 1) * blockSize;
 	}
-	if ((level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
-		   && x2%10 < 10-y1%10)
-	   || (level[Math.floor(x2/10)][Math.floor(y2/10)] == 1
-	      && x2%10 < y2%10)) { // right wall
+	if ((level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
+		   && x2%blockSize < blockSize-y1%blockSize)
+	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
+	      && x2%blockSize < y2%blockSize)) { // right wall
 		player.xv = 0;
-		player.x = Math.floor(x2/10) * 10 - 4;
+		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
 	}
-	if ((level[Math.floor(x1/10)][Math.floor(y2/10)] == 1
-	    && 10-x1%10 > y2%10)
-	   || (level[Math.floor(x2/10)][Math.floor(y2/10)] == 1
-	      && x2%10 > y2%10)) { // floor
+	if ((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
+	    && blockSize-x1%blockSize > y2%blockSize)
+	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
+	      && x2%blockSize > y2%blockSize)) { // floor
 		player.yv = 0;
-		player.y = Math.floor(y2/10) * 10 - 4;
+		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
-	if ((level[Math.floor(x1/10)][Math.floor(y1/10)] == 1
-		   && 10-x1%10 > 10-y1%10)
-	   || (level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
-	      && x2%10 > 10-y1%10)) { // ceiling
+	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+		   && blockSize-x1%blockSize > blockSize-y1%blockSize)
+	   || (level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
+	      && x2%blockSize > blockSize-y1%blockSize)) { // ceiling
 		player.yv = 0;
-		player.y = Math.floor(y1/10 + 1) * 10;
+		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
 	// key input
 	if (control.up && player.canJump) {
@@ -132,8 +132,8 @@ function draw() {
 	// setup
 	let canvas = document.getElementById("gameScreen");
 	let screen = canvas.getContext("2d");
-	let lvlx = Math.round((canvas.width - level.length * 10) / 2);
-	let lvly = Math.round((canvas.height - level[0].length * 10) / 2);
+	let lvlx = Math.round((canvas.width - level.length * blockSize) / 2);
+	let lvly = Math.round((canvas.height - level[0].length * blockSize) / 2);
 	screen.clearRect(0,0,canvas.width,canvas.height);
 	screen.lineWidth = 0;
 	// draw level
@@ -141,13 +141,13 @@ function draw() {
 	for (let x in level) {
 		for (let y in level[x]) {
 			if (level[x][y] == 1) {
-				screen.fillRect(lvlx + x * 10, lvly + y * 10, 10, 10);
+				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
 			}
 		}
 	}
 	// draw player
 	screen.fillStyle = "#FF0000";
-	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, 4, 4);
+	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 }
 function resizeCanvas() {
 	let canvas = document.getElementById("gameScreen");
