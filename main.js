@@ -1,12 +1,12 @@
 var savePoint = 0;
-var playerSize = 10;
-var blockSize = 25;
+var playerSize = 20;
+var blockSize = 50;
 const player = {
-	x: 48,
-	y: 76,
+	x: 240,
+	y: 380,
 	xv: 0,
 	yv: 0,
-	g: 80,
+	g: 400,
 	canJump: false,
 };
 const control = {
@@ -120,10 +120,10 @@ function nextFrame(timeStamp) {
 	}
 	// key input
 	if (control.up && player.canJump) {
-		player.yv = -40;
+		player.yv = -200;
 	}
-	if (control.left) player.xv = -20;
-	if (control.right) player.xv = 20;
+	if (control.left) player.xv = -100;
+	if (control.right) player.xv = 100;
 	// draw + ending stuff
 	draw();
 	window.requestAnimationFrame(nextFrame);
