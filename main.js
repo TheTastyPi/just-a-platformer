@@ -86,7 +86,7 @@ function nextFrame(timeStamp) {
 	}
 	// key input
 	if (control.up && player.canJump) {
-		player.yv = -50;
+		player.yv = -20;
 		player.canJump = false;
 	}
 	if (control.left) player.xv = -20;
