@@ -148,6 +148,7 @@ function draw() {
 	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, 4, 4);
 }
 function resizeCanvas() {
+	let canvas = document.getElementById("gameScreen");
 	canvas.width  = window.innerWidth;
 	canvas.height = window.innerHeight;
 }
