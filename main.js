@@ -14,8 +14,8 @@ const control = {
 	right: false,
 };
 const level = [
-	[0,0,1,1,1,0,1,0,1],
-	[0,1,1,1,0,1,1,1,1],
+	[0,0,1,1,1,0,1,1,1],
+	[0,1,1,1,0,1,1,0,1],
 	[0,0,0,1,1,0,0,0,1],
 	[0,1,1,1,0,1,1,0,1],
 	[1,1,1,1,1,1,1,0,1]
@@ -78,26 +78,36 @@ function nextFrame(timeStamp) {
 	if (Math.abs(player.xv) < 5) player.xv = 0;
 	player.yv += player.g * dt / 1000;
 	// collision detection
-	if (level[Math.floor((player.x)/10)][Math.floor((player.y)/10)] == 1
-	   && level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1) { // left wall
+	let x1 = player.x;
+	let x2 = player.x+4;
+	let y1 = player.y;
+	let y2 = player.y+4;
+	if ((level[Math.floor(x1/10)][Math.floor(y1/10)] == 1
+	    && 10-x1%10 < 10-y1%10)
+	   || (level[Math.floor(x1/10)][Math.floor(y2/10)] == 1
+	      && 10-x1%10 < y2%10)) { // left wall
 		player.xv = 0;
-		player.x = Math.floor((player.x)/10 + 1) * 10;
-	}
-	if (level[Math.floor((player.x + 4)/10)][Math.floor((player.y)/10)] == 1
-	   && level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // right wall
+		player.x = Math.floor(x1/10 + 1) * 10;
+	} else if ((level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
+		   && x2%10 < 10-y1%10)
+	   || (level[Math.floor(x2/10)][Math.floor(y2/10)] == 1
+	      && x2%10 < y2%10)) { // right wall
 		player.xv = 0;
-		player.x = Math.floor((player.x + 4)/10) * 10 - 4;
+		player.x = Math.floor(x2/10) * 10 - 4;
 	}
-	if (level[Math.floor((player.x)/10)][Math.floor((player.y + 4)/10)] == 1
-	   || level[Math.floor((player.x + 4)/10)][Math.floor((player.y + 4)/10)] == 1) { // floor
+	if ((level[Math.floor(x1/10)][Math.floor(y2/10)] == 1
+	    && 10-x1%10 > y2%10)
+	   || (level[Math.floor(x2/10)][Math.floor(y2/10)] == 1
+	      && x2%10 > y2%10)) { // floor
 		player.yv = 0;
-		player.y = Math.floor((player.y + 4)/10) * 10 - 4;
+		player.y = Math.floor(y2/10) * 10 - 4;
 		player.canJump = true;
-	}
-	if (level[Math.floor((player.x)/10)][Math.floor((player.y)/10)] == 1
-	   || level[Math.floor((player.x + 4)/10)][Math.floor((player.y)/10)] == 1) { // ceiling
+	} else if ((level[Math.floor(x1/10)][Math.floor(y1/10)] == 1
+		   && 10-x1%10 > 10-y1%10)
+	   || (level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
+	      && x2%10 > 10-y1%10)) { // ceiling
 		player.yv = 0;
-		player.y = Math.floor((player.y)/10 + 1) * 10;
+		player.y = Math.floor(y1/10 + 1) * 10;
 	}
 	// key input
 	if (control.up && player.canJump) {
