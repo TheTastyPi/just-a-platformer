@@ -102,6 +102,7 @@ function draw() {
 	let lvlx = (canvas.width - level.length * 10) / 2;
 	let lvly = (canvas.height - level[0].length * 10) / 2;
 	screen.clearRect(0,0,canvas.width,canvas.height);
+	screen.lineWidth = 0;
 	// draw level
 	screen.fillStyle = "#000000";
 	for (let x in level) {
