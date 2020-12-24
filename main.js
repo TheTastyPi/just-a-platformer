@@ -93,7 +93,8 @@ function nextFrame(timeStamp) {
 	      && 10-x1%10 < y2%10)) { // left wall
 		player.xv = 0;
 		player.x = Math.floor(x1/10 + 1) * 10;
-	} else if ((level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
+	}
+	if ((level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
 		   && x2%10 < 10-y1%10)
 	   || (level[Math.floor(x2/10)][Math.floor(y2/10)] == 1
 	      && x2%10 < y2%10)) { // right wall
@@ -107,7 +108,8 @@ function nextFrame(timeStamp) {
 		player.yv = 0;
 		player.y = Math.floor(y2/10) * 10 - 4;
 		player.canJump = true;
-	} else if ((level[Math.floor(x1/10)][Math.floor(y1/10)] == 1
+	} else player.canJump = false;
+	if ((level[Math.floor(x1/10)][Math.floor(y1/10)] == 1
 		   && 10-x1%10 > 10-y1%10)
 	   || (level[Math.floor(x2/10)][Math.floor(y1/10)] == 1
 	      && x2%10 > 10-y1%10)) { // ceiling
@@ -117,7 +119,6 @@ function nextFrame(timeStamp) {
 	// key input
 	if (control.up && player.canJump) {
 		player.yv = -40;
-		player.canJump = false;
 	}
 	if (control.left) player.xv = -20;
 	if (control.right) player.xv = 20;
