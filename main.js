@@ -90,39 +90,31 @@ function nextFrame(timeStamp) {
 	let y1 = player.y;
 	let y2 = player.y+playerSize;
 	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
-	    && blockSize-x1%blockSize < blockSize-y1%blockSize
-	    && blockSize-x1%blockSize > 1 && blockSize-y1%blockSize > 1)
+	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
 	   || (level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1 
-	      && blockSize-x1%blockSize < y2%blockSize 
-	      && blockSize-x1%blockSize > 1 && y2%blockSize > 1)) { // left wall
+	      && blockSize-x1%blockSize < y2%blockSize ) { // left wall
 		player.xv = 0;
 		player.x = Math.floor(x1/blockSize + 1) * blockSize;
 	}
 	if ((level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
-	    && x2%blockSize < blockSize-y1%blockSize
-	    && x2%blockSize > 1 && blockSize-y1%blockSize > 1)
+	    && x2%blockSize < blockSize-y1%blockSize)
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
-	      && x2%blockSize < y2%blockSize
-	      && x2%blockSize > 1 && y2%blockSize > 1)) { // right wall
+	      && x2%blockSize < y2%blockSize)) { // right wall
 		player.xv = 0;
 		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
 	}
 	if ((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
-	    && blockSize-x1%blockSize > y2%blockSize
-	    && blockSize-x1%blockSize > 1 && y2%blockSize > 1)
+	    && blockSize-x1%blockSize > y2%blockSize)
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
-	      && x2%blockSize > y2%blockSize)
-	      && x2%blockSize > 1 && y2%blockSize > 1) { // floor
+	      && x2%blockSize > y2%blockSize)) { // floor
 		player.yv = 0;
 		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
 	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
-	    && blockSize-x1%blockSize > blockSize-y1%blockSize
-	    && blockSize-x1%blockSize > 1 && blockSize-y1%blockSize > 1)
+	    && blockSize-x1%blockSize > blockSize-y1%blockSize)
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
-	      && x2%blockSize > blockSize-y1%blockSize)
-	      && x2%blockSize > 1 && blockSize-y1%blockSize > 1) { // ceiling
+	      && x2%blockSize > blockSize-y1%blockSize)) { // ceiling
 		player.yv = 0;
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
