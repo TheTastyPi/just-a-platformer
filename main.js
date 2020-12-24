@@ -147,4 +147,9 @@ function draw() {
 	screen.fillStyle = "#FF0000";
 	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, 4, 4);
 }
+function resizeCanvas() {
+	canvas.width  = window.innerWidth;
+	canvas.height = window.innerHeight;
+}
+resizeCanvas();
 window.requestAnimationFrame(nextFrame);
