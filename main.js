@@ -188,7 +188,7 @@ function nextFrame(timeStamp) {
 	   || levels[player.currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 2
 	   || levels[player.currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2
 	   || levels[player.currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2) {
-		player.levelCoord = [player.spawnPoint[2],player.spwanPoint[3]];
+		player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
 		player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
 		player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
 		player.xv = 0;
