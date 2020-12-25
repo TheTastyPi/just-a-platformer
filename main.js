@@ -120,7 +120,7 @@ document.addEventListener("keyup", function(input){
 });
 
 function getBlockType(x,y) {
-	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[plater.currentLevel][0].length) return 1;
+	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) return 1;
 	return levels[player.currentLevel][x][y];
 }
 
