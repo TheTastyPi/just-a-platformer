@@ -140,6 +140,8 @@ function nextFrame(timeStamp) {
 	   || level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2) {
 		player.x = spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
 		player.y = spawnPoint[1] * blockSize + blockSize - playerSize;
+		player.xv = 0;
+		player.yv = 0;
 	}
 	// checkpoint
 	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
