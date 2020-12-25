@@ -165,7 +165,7 @@ function nextFrame(timeStamp) {
 	      && noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
 	   && player.yv > 0) {
 		player.yv = 0;
-		player.yv = -300;
+		if (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 5) player.yv = -300;
 		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
