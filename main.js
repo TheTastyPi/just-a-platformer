@@ -205,7 +205,7 @@ function nextFrame(timeStamp) {
 	   || (!noHitbox.includes(levels[player.currentLevel][x1b][y2b]) 
 	      && blockSize-x1%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = x1b * blockSize;
+		player.x = Math.floor(x1/blockSize + 1) * blockSize;
 	}
 	// right wall
 	if ((!noHitbox.includes(levels[player.currentLevel][x2b][y1b])
@@ -224,7 +224,7 @@ function nextFrame(timeStamp) {
 	      && noHitbox.includes(levels[player.currentLevel][x2b][y1b+1]))
 	   && player.yv < 0) {
 		player.yv = 0;
-		player.y = y1b * blockSize;
+		player.y = Math.floor(y1/blockSize + 1) * blockSize;
 	}
 	// floor
 	if (((!noHitbox.includes(levels[player.currentLevel][x1b][y2b])
