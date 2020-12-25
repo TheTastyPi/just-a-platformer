@@ -135,6 +135,10 @@ function nextFrame(timeStamp) {
 		player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+player.y%blockSize;
 		player.y = 0;
 	}
+	x1 = player.x;
+	x2 = player.x+playerSize;
+	y1 = player.y;
+	y2 = player.y+playerSize;
 	// block collision
 	// left wall
 	if ((levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
