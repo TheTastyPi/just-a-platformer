@@ -299,7 +299,7 @@ function draw() {
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
 			let type = levels[player.currentLevel][x][y];
-			if (type != 0 || type != 6) {
+			if (type != 0 && type != 6) {
 				switch (type) {
 					case 1:
 						screen.fillStyle = "#000000";
