@@ -129,6 +129,7 @@ function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
+	if (dt > 200) window.requestAnimationFrame(nextFrame);
 	// position change based on velocity
 	player.x += player.xv * dt / 500;
 	player.y += player.yv * dt / 500;
