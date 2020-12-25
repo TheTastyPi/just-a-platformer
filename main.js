@@ -121,10 +121,15 @@ document.addEventListener("keyup", function(input){
 
 function getBlockType(x,y) {
 	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) {
-		if (levels[player.currentLevel][x-1][y] == 0
-		   || levels[player.currentLevel][x+1][y] == 0
-		   || levels[player.currentLevel][x][y-1] == 0
-		   || levels[player.currentLevel][x][y+1] == 0) return 6;
+		if (levels[player.currentLevel][x-1] != undefined) {
+			if (levels[player.currentLevel][x-1][y] == 0) return 6;
+		}
+		if (levels[player.currentLevel][x+1] != undefined) {
+			if (levels[player.currentLevel][x-1][y] == 0) return 6;
+		}
+		if (levels[player.currentLevel][x] != undefined) {
+			if (levels[player.currentLevel][x-1][y-1] == 0 || levels[player.currentLevel][x-1][y+1] == 0) return 6;
+		}
 		return 1;
 	}
 	return levels[player.currentLevel][x][y];
