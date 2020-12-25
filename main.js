@@ -208,22 +208,22 @@ function nextFrame(timeStamp) {
 	if (getBlockType(x1b,y1b) == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1]];
-		getBlockType(x1b,y1b) = 4;
+		levels[player.currentLevel][x1b][y1b] = 4;
 	}
 	if (getBlockType(x2b,y1b) == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1]];
-		getBlockType(x2b,y1b) = 4;
+		levels[player.currentLevel][x2b][y1b] = 4;
 	}
 	if (getBlockType(x1b,y2b) == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1]];
-		getBlockType(x1b,y2b) = 4;
+		levels[player.currentLevel][x1b][y2b] = 4;
 	}
 	if (getBlockType(x2b,y2b) == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1]];
-		getBlockType(x2b,y2b) = 4;
+		levels[player.currentLevel][x2b][y2b] = 4;
 	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
