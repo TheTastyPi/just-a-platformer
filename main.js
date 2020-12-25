@@ -193,7 +193,9 @@ function nextFrame(timeStamp) {
 		      && noHitbox.includes(getBlockType(x2b,y2b-1)))
 		   && player.yv > 0) {
 			player.yv = 0;
-			if (getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5) player.yv = -300;
+			if ((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
+			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
+			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b))))) player.yv = -300;
 			player.y = y2b * blockSize - playerSize;
 			player.canJump = true;
 		} else player.canJump = false;
