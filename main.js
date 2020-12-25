@@ -1,7 +1,7 @@
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [4,7,0,0],
+	spawnPoint: [4,8,0,0],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 240,
