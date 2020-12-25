@@ -47,7 +47,7 @@ const levels = [
 		[1,1,1,1,1,1,1,1,1],
 	],
 ];
-const noHitbox = [0,3,4];
+const noHitbox = [0,2,3,4];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
@@ -141,38 +141,39 @@ function nextFrame(timeStamp) {
 	y2 = player.y+playerSize;
 	// block collision
 	// left wall
-	if ((levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+	if ((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)])
 	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
-	   || (levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1 
+	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)]) 
 	      && blockSize-x1%blockSize < y2%blockSize)) {
 		player.xv = 0;
 		player.x = Math.floor(x1/blockSize + 1) * blockSize;
 	}
 	// right wall
-	if ((levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
+	if ((!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)])
 	    && x2%blockSize < blockSize-y1%blockSize)
-	   || (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
+	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)])
 	      && x2%blockSize < y2%blockSize)) {
 		player.xv = 0;
 		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
 	}
 	// floor
-	if (((levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
+	if (((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize))
 	    && blockSize-x1%blockSize > y2%blockSize
 	    && noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
-	   || (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
+	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)])
 	      && x2%blockSize > y2%blockSize)
 	      && noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
 	   && player.yv > 0) {
 		player.yv = 0;
+		player.yv = -300;
 		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
 	// ceiling
-	if (((levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+	if (((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)])
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
 	    && noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1]))
-	   || (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
+	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)])
 	      && x2%blockSize > blockSize-y1%blockSize)
 	      && noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1]))
 	   && player.yv < 0) {
@@ -214,16 +215,6 @@ function nextFrame(timeStamp) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [Math.floor(x2/blockSize),Math.floor(y2/blockSize),player.levelCoord[0],player.levelCoord[1]];
 		levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] = 4;
-	}
-	// bounce block
-	if (((levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 5
-	    && blockSize-x1%blockSize > y2%blockSize
-	    && noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
-	   || (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 5
-	      && x2%blockSize > y2%blockSize)
-	      && noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
-	   && player.yv > 0) {
-		player.yv = -300;
 	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
