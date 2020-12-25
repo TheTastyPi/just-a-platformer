@@ -259,7 +259,7 @@ function draw() {
 					case 4:
 						screen.fillStyle = "#00FFFF";
 						break;
-					case 4:
+					case 5:
 						screen.fillStyle = "#FFFF00";
 						break;
 				}
