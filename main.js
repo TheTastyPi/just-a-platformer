@@ -18,8 +18,8 @@ const control = {
 	right: false,
 };
 const worldMap = [
-	[0],
-	[1],
+	[0,1],
+	[3,2],
 ]
 const levels = [
 	[
@@ -28,26 +28,52 @@ const levels = [
 		[1,0,0,0,0,1,0,1,1],
 		[1,0,0,1,0,0,0,0,2],
 		[1,0,0,0,2,0,1,3,1],
-		[1,0,0,0,2,0,0,0,1],
-		[1,3,1,0,1,0,0,0,1],
+		[6,5,0,0,2,0,0,0,1],
+		[0,0,1,0,1,0,0,0,1],
 		[1,0,0,0,0,0,0,0,1],
 		[1,2,0,1,0,0,0,0,1],
-		[1,1,1,1,1,1,1,0,1],
+		[1,1,1,1,1,1,1,1,1],
 	],
 	[
-		[1,1,1,1,1,1,1,0,1],
-		[1,0,0,0,0,0,0,0,1],
-		[1,0,0,1,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,5],
+		[1,1,1,1,1,1,1,1,1],
+		[1,0,0,1,0,0,0,1,1],
+		[1,0,0,0,0,0,0,3,1],
+		[1,0,1,0,1,0,5,0,6],
+		[1,0,2,0,0,0,0,3,1],
+		[1,0,1,0,0,0,0,1,1],
+		[1,6,1,1,1,1,1,1,1],
+	],
+	[
+		[1,1,1,1,1,1,1,6,1],
+		[1,0,2,0,5,0,0,0,1],
+		[1,0,0,0,0,1,0,0,2],
 		[1,0,1,0,0,0,0,0,1],
 		[1,0,0,0,0,0,1,0,1],
 		[1,0,1,0,0,0,0,0,1],
-		[1,0,0,0,0,1,0,0,1],
-		[1,0,0,0,5,0,0,0,1],
+		[1,0,2,0,0,0,0,0,5],
+		[1,0,0,1,1,1,1,1,1],
+		[1,0,0,0,0,0,0,0,6],
 		[1,1,1,1,1,1,1,1,1],
 	],
+	[
+		[1,1,1,1,1,1,1],
+		[6,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1],
+		[1,0,0,0,0,0,1],
+		[1,0,1,1,1,0,1],
+		[1,0,0,0,1,0,1],
+		[1,0,0,0,0,0,1],
+		[1,0,1,1,1,0,1],
+		[1,0,1,0,1,0,1],
+		[1,0,1,1,1,0,1],
+		[1,0,0,0,0,0,1],
+		[1,0,1,1,1,0,1],
+		[1,0,0,0,1,0,1],
+		[1,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1],
+	],
 ];
-const noHitbox = [0,2,3,4];
+const noHitbox = [0,2,3,4,6];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
@@ -110,85 +136,122 @@ function nextFrame(timeStamp) {
 	let x2 = player.x+playerSize;
 	let y1 = player.y;
 	let y2 = player.y+playerSize;
+	let x1b = Math.floor(x1/blockSize);
+	let x2b = Math.floor(x2/blockSize);
+	let y1b = Math.floor(y1/blockSize);
+	let y2b = Math.floor(y2/blockSize);
 	// level boundary (change level)
 	// left boundary
 	if (x1 < 0) {
-		player.levelCoord[0]--;
-		player.x = (levels[player.currentLevel].length-1)*blockSize-playerSize;
-		player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==0)+player.y%blockSize;
+		if (levels[player.currentLevel][x2b][y1b] == 6
+		   && levels[player.currentLevel][x2b][y2b] == 6) {
+			player.levelCoord[0]--;
+			player.x = (levels[player.currentLevel].length-1)*blockSize-playerSize;
+			player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==6)+player.y%blockSize;
+		} else {
+			player.xv = 0;
+			player.x = x1b * blockSize;
+		}
 	}
 	// right boundary
 	if (x2 > levels[player.currentLevel].length*blockSize) {
-		player.levelCoord[0]++;
-		player.x = 0;
-		player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==0)+player.y%blockSize;
+		if (levels[player.currentLevel][x1b][y1b] == 6
+		   && levels[player.currentLevel][x1b][y2b] == 6) {
+			player.levelCoord[0]++;
+			player.x = 0;
+			player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==6)+player.y%blockSize;
+		} else {
+			player.xv = 0;
+			player.x = x2b * blockSize - playerSize;
+		}
 	}
 	// top boundary
 	if (y1 < 0) {
-		player.levelCoord[1]--;
-		player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==0)+player.y%blockSize;
-		player.y = (levels[player.currentLevel][0].length-1)*blockSize-playerSize;
+		if (levels[player.currentLevel][x1b][y2b] == 6
+		   && levels[player.currentLevel][x2b][y2b] == 6) {
+			player.levelCoord[1]--;
+			player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==6)+player.y%blockSize;
+			player.y = (levels[player.currentLevel][0].length-1)*blockSize-playerSize;
+		} else {
+			player.yv = 0;
+			player.y = y1b * blockSize;
+		}
 	}
 	// bottom boundary
 	if (y2 > levels[player.currentLevel][0].length*blockSize) {
-		player.levelCoord[1]++;
-		player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+player.y%blockSize;
-		player.y = 0;
-	}
+		if (levels[player.currentLevel][x1b][y2b] == 6
+		   && levels[player.currentLevel][x2b][y2b] == 6) {
+			player.levelCoord[1]++;
+			player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==6)+player.y%blockSize;
+			player.y = 0;
+		} else {
+			player.yv = 0;
+			player.y = y2b * blockSize - playerSize;
+			player.canJump = true;
+		}
+	} else player.canJump = false;
 	x1 = player.x;
 	x2 = player.x+playerSize;
 	y1 = player.y;
 	y2 = player.y+playerSize;
+	x1b = Math.floor(x1/blockSize);
+	x2b = Math.floor(x2/blockSize);
+	y1b = Math.floor(y1/blockSize);
+	y2b = Math.floor(y2/blockSize);
 	// block collision
 	// left wall
-	if ((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)])
+	if ((!noHitbox.includes(levels[player.currentLevel][x1b][y1b])
 	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
-	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)]) 
+	   || (!noHitbox.includes(levels[player.currentLevel][x1b][y2b]) 
 	      && blockSize-x1%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = Math.floor(x1/blockSize + 1) * blockSize;
+		player.x = x1b * blockSize;
 	}
 	// right wall
-	if ((!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)])
+	if ((!noHitbox.includes(levels[player.currentLevel][x2b][y1b])
 	    && x2%blockSize < blockSize-y1%blockSize)
-	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)])
+	   || (!noHitbox.includes(levels[player.currentLevel][x2b][y2b])
 	      && x2%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
+		player.x = x2b * blockSize - playerSize;
 	}
-	// floor
-	if (((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)])
-	    && blockSize-x1%blockSize > y2%blockSize
-	    && noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
-	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)])
-	      && x2%blockSize > y2%blockSize)
-	      && noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
-	   && player.yv > 0) {
-		player.yv = 0;
-		if (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 5) player.yv = -300;
-		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
-		player.canJump = true;
-	} else player.canJump = false;
 	// ceiling
-	if (((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)])
+	if (((!noHitbox.includes(levels[player.currentLevel][x1b][y1b])
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
-	    && noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1]))
-	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)])
+	    && noHitbox.includes(levels[player.currentLevel][x1b][y1b+1]))
+	   || (!noHitbox.includes(levels[player.currentLevel][x2b][y1b])
 	      && x2%blockSize > blockSize-y1%blockSize)
-	      && noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1]))
+	      && noHitbox.includes(levels[player.currentLevel][x2b][y1b+1]))
 	   && player.yv < 0) {
 		player.yv = 0;
-		player.y = Math.floor(y1/blockSize + 1) * blockSize;
+		player.y = y1b * blockSize;
+	}
+	// floor
+	if (((!noHitbox.includes(levels[player.currentLevel][x1b][y2b])
+	    && blockSize-x1%blockSize > y2%blockSize
+	    && noHitbox.includes(levels[player.currentLevel][x1b][y2b-1]))
+	   || (!noHitbox.includes(levels[player.currentLevel][x2b][y2b])
+	      && x2%blockSize > y2%blockSize)
+	      && noHitbox.includes(levels[player.currentLevel][x2b][y2b-1]))
+	   && player.yv > 0) {
+		player.yv = 0;
+		if (levels[player.currentLevel][x2b][Math.floor(y2/blockSize)] == 5) player.yv = -300;
+		player.y = y2b * blockSize - playerSize;
+		player.canJump = true;
 	}
 	x1 = player.x + 1;
 	x2 = player.x+playerSize - 1;
 	y1 = player.y + 1;
 	y2 = player.y+playerSize - 1;
+	x1b = Math.floor(x1/blockSize);
+	x2b = Math.floor(x2/blockSize);
+	y1b = Math.floor(y1/blockSize);
+	y2b = Math.floor(y2/blockSize);
 	// death block
-	if (levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 2
-	   || levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 2
-	   || levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 2
-	   || levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 2) {
+	if (levels[player.currentLevel][x1b][y1b] == 2
+	   || levels[player.currentLevel][x2b][y1b] == 2
+	   || levels[player.currentLevel][x1b][y2b] == 2
+	   || levels[player.currentLevel][x2b][y2b] == 2) {
 		player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
 		player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
 		player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
@@ -196,25 +259,25 @@ function nextFrame(timeStamp) {
 		player.yv = 0;
 	}
 	// checkpoint
-	if (levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 3) {
+	if (levels[player.currentLevel][x1b][y1b] == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [Math.floor(x1/blockSize),Math.floor(y1/blockSize),player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] = 4;
+		player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1]];
+		levels[player.currentLevel][x1b][y1b] = 4;
 	}
-	if (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 3) {
+	if (levels[player.currentLevel][x2b][y1b] == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [Math.floor(x2/blockSize),Math.floor(y1/blockSize),player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] = 4;
+		player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1]];
+		levels[player.currentLevel][x2b][y1b] = 4;
 	}
-	if (levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 3) {
+	if (levels[player.currentLevel][x1b][y2b] == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [Math.floor(x1/blockSize),Math.floor(y2/blockSize),player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] = 4;
+		player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1]];
+		levels[player.currentLevel][x1b][y2b] = 4;
 	}
-	if (levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 3) {
+	if (levels[player.currentLevel][x2b][Math.floor(y2/blockSize)] == 3) {
 		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [Math.floor(x2/blockSize),Math.floor(y2/blockSize),player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] = 4;
+		player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1]];
+		levels[player.currentLevel][x2b][y2b] = 4;
 	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
