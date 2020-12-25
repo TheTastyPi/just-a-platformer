@@ -162,7 +162,7 @@ function nextFrame(timeStamp) {
 			player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==6)+y1%blockSize;
 		} else {
 			player.xv = 0;
-			player.x = x2b * blockSize - playerSize;
+			player.x = x2b * blockSize - playerSize - 1;
 		}
 	}
 	// top boundary
@@ -186,7 +186,7 @@ function nextFrame(timeStamp) {
 			player.y = 0;
 		} else {
 			player.yv = 0;
-			player.y = y2b * blockSize - playerSize;
+			player.y = y2b * blockSize - playerSize - 1;
 			player.canJump = true;
 		}
 	} else player.canJump = false;
@@ -213,7 +213,7 @@ function nextFrame(timeStamp) {
 	   || (!noHitbox.includes(levels[player.currentLevel][x2b][y2b])
 	      && x2%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = x2b * blockSize - playerSize;
+		player.x = x2b * blockSize - playerSize - 1;
 	}
 	// ceiling
 	if (((!noHitbox.includes(levels[player.currentLevel][x1b][y1b])
@@ -236,7 +236,7 @@ function nextFrame(timeStamp) {
 	   && player.yv > 0) {
 		player.yv = 0;
 		if (levels[player.currentLevel][x2b][Math.floor(y2/blockSize)] == 5) player.yv = -300;
-		player.y = y2b * blockSize - playerSize;
+		player.y = y2b * blockSize - playerSize - 1;
 		player.canJump = true;
 	}
 	x1 = player.x + 1;
