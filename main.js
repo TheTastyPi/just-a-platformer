@@ -145,22 +145,6 @@ function nextFrame(timeStamp) {
 	let x2b = Math.floor(x2/blockSize);
 	let y1b = Math.floor(y1/blockSize);
 	let y2b = Math.floor(y2/blockSize);
-	// left wall
-	if ((!noHitbox.includes(getBlockType(x1b,y1b))
-	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
-	   || (!noHitbox.includes(getBlockType(x1b,y2b)) 
-	      && blockSize-x1%blockSize < y2%blockSize)) {
-		player.xv = 0;
-		player.x = (x1b + 1) * blockSize;
-	}
-	// right wall
-	if ((!noHitbox.includes(getBlockType(x2b,y1b))
-	    && x2%blockSize < blockSize-y1%blockSize)
-	   || (!noHitbox.includes(getBlockType(x2b,y2b))
-	      && x2%blockSize < y2%blockSize)) {
-		player.xv = 0;
-		player.x = x2b * blockSize - playerSize;
-	}
 	// ceiling
 	if (((!noHitbox.includes(getBlockType(x1b,y1b))
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
@@ -185,6 +169,22 @@ function nextFrame(timeStamp) {
 		player.y = y2b * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
+	// left wall
+	if ((!noHitbox.includes(getBlockType(x1b,y1b))
+	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
+	   || (!noHitbox.includes(getBlockType(x1b,y2b)) 
+	      && blockSize-x1%blockSize < y2%blockSize)) {
+		player.xv = 0;
+		player.x = (x1b + 1) * blockSize;
+	}
+	// right wall
+	if ((!noHitbox.includes(getBlockType(x2b,y1b))
+	    && x2%blockSize < blockSize-y1%blockSize)
+	   || (!noHitbox.includes(getBlockType(x2b,y2b))
+	      && x2%blockSize < y2%blockSize)) {
+		player.xv = 0;
+		player.x = x2b * blockSize - playerSize;
+	}
 	x1 = player.x + 1;
 	x2 = player.x+playerSize - 1;
 	y1 = player.y + 1;
