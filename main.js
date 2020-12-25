@@ -23,28 +23,28 @@ const worldMap = [
 ]
 const levels = [
 	[
-		[1,1,1,1,1,1,1,6,1],
+		[1,1,1,1,1,1,1,1,1],
 		[1,0,0,0,1,0,0,0,1],
 		[1,0,0,0,0,1,0,1,1],
 		[1,0,0,1,0,0,0,0,2],
 		[1,0,0,0,2,0,1,3,1],
 		[1,0,0,0,2,0,0,0,1],
-		[6,0,5,0,1,0,0,0,1],
+		[0,0,5,0,1,0,0,0,1],
 		[1,0,0,0,0,0,0,0,1],
 		[1,2,0,1,0,0,0,0,1],
-		[1,1,1,1,1,1,1,6,1],
+		[1,1,1,1,1,1,1,1,1],
 	],
 	[
 		[1,1,1,1,1,1,1,1,1],
 		[1,0,0,1,0,0,0,1,1],
 		[1,0,0,0,1,0,0,1,3],
-		[1,0,1,0,0,0,0,0,6],
+		[1,0,1,0,2,0,0,0,0],
 		[1,0,2,0,1,0,5,0,1],
 		[1,0,1,0,0,0,0,0,1],
-		[1,6,1,1,1,1,1,1,1],
+		[1,0,1,1,1,1,1,1,1],
 	],
 	[
-		[1,1,1,1,1,1,1,6,1],
+		[1,1,1,1,1,1,1,0,1],
 		[1,0,2,0,5,0,0,0,1],
 		[1,0,0,0,0,1,0,0,2],
 		[1,0,1,0,0,0,0,0,1],
@@ -52,12 +52,12 @@ const levels = [
 		[1,0,1,0,0,0,0,0,1],
 		[1,0,2,0,0,0,0,0,5],
 		[1,0,0,1,1,1,1,1,1],
-		[1,0,0,0,0,0,0,0,6],
+		[1,0,0,0,0,0,0,0,0],
 		[1,1,1,1,1,1,1,1,1],
 	],
 	[
-		[1,1,1,1,1,6,1],
-		[6,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1],
+		[0,0,0,0,0,0,1],
 		[1,1,1,1,1,1,1],
 		[1,0,0,0,0,0,1],
 		[1,0,1,1,1,0,1],
@@ -120,7 +120,13 @@ document.addEventListener("keyup", function(input){
 });
 
 function getBlockType(x,y) {
-	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) return 1;
+	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) {
+		if (levels[player.currentLevel][x-1][y] == 0
+		   || levels[player.currentLevel][x+1][y] == 0
+		   || levels[player.currentLevel][x][y-1] == 0
+		   || levels[player.currentLevel][x][y+1] == 0) return 6;
+		return 1;
+	}
 	return levels[player.currentLevel][x][y];
 }
 
@@ -225,6 +231,36 @@ function nextFrame(timeStamp) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1]];
 			levels[player.currentLevel][x2b][y2b] = 4;
+		}
+		// level warp
+		if (getBlockType(x1b,y1b) == 6
+		   || getBlockType(x2b,y1b) == 6
+		   || getBlockType(x1b,y2b) == 6
+		   || getBlockType(x2b,y2b) == 6) {
+			// left
+			if (x1 < 0) {
+				player.levelCoord[0]--;
+				player.x = levels[player.currentLevel].length * blockSize - playerSize;
+				player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==6)+(y1+blockSize)%blockSize;
+			}
+			// right
+			if (x2 > levels[player.currentLevel].length * blockSize) {
+				player.levelCoord[0]++;
+				player.x = 0;
+				player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==6)+(y1+blockSize)%blockSize;
+			}
+			// up
+			if (y1 < 0) {
+				player.levelCoord[1]++;
+				player.y = levels[player.currentLevel][0].length * blockSize - playerSize;
+				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==6)+(x1+blockSize)%blockSize;
+			}
+			// down
+			if (y2 > levels[player.currentLevel][0].length * blockSize) {
+				player.levelCoord[1]--;
+				player.y = 0;
+				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==6)+(x1+blockSize)%blockSize;
+			}
 		}
 		// key input
 		if (control.up && player.canJump) player.yv = -200;
