@@ -156,13 +156,13 @@ function nextFrame(timeStamp) {
 	// right wall
 	if ((!noHitbox.includes(getBlockType(x2b,y1b))
 	    && x2%blockSize < blockSize-y1%blockSize)
-	   || (!noHitbox.includes(getBlockType(x2b,y2b)
+	   || (!noHitbox.includes(getBlockType(x2b,y2b))
 	      && x2%blockSize < y2%blockSize)) {
 		player.xv = 0;
 		player.x = x2b * blockSize - playerSize;
 	}
 	// ceiling
-	if (((!noHitbox.includes(getBlockType(x1b,y1b)
+	if (((!noHitbox.includes(getBlockType(x1b,y1b))
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
 	    && noHitbox.includes(getBlockType(x1b,y1b+1)))
 	   || (!noHitbox.includes(getBlockType(x2b,y1b))
