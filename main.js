@@ -1,7 +1,8 @@
-var spawnPoint = [4,7];
 var playerSize = 20;
 var blockSize = 50;
 const player = {
+	spawnPoint: [4,7],
+	currentLevel: 0,
 	x: 240,
 	y: 380,
 	xv: 0,
@@ -15,17 +16,31 @@ const control = {
 	left: false,
 	right: false,
 };
-const level = [
-	[1,1,1,1,1,1,1,1,1],
-	[1,0,0,0,1,0,0,0,1],
-	[1,0,0,0,0,1,0,1,1],
-	[1,0,0,1,0,0,0,0,2],
-	[1,0,0,0,2,0,1,3,1],
-	[1,0,0,0,2,0,0,0,1],
-	[1,3,1,0,1,0,0,0,1],
-	[1,0,0,0,0,0,0,0,1],
-	[1,2,0,1,0,0,0,0,1],
-	[1,1,1,1,1,1,1,1,1],
+const levels = [
+	[
+		[1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,1,0,0,0,1],
+		[1,0,0,0,0,1,0,1,1],
+		[1,0,0,1,0,0,0,0,2],
+		[1,0,0,0,2,0,1,3,1],
+		[1,0,0,0,2,0,0,0,1],
+		[1,3,1,0,1,0,0,0,1],
+		[1,0,0,0,0,0,0,0,1],
+		[1,2,0,1,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1],
+	],
+	[
+		[1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,1,0,0,0,1],
+		[1,0,0,0,0,1,0,1,1],
+		[1,0,0,1,0,0,0,0,2],
+		[1,0,0,0,2,0,1,3,1],
+		[1,0,0,0,2,0,0,0,1],
+		[1,3,1,0,1,0,0,0,1],
+		[1,0,0,0,0,0,0,0,1],
+		[1,2,0,1,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1],
+	],
 ];
 const noHitbox = [0,3,4];
 
@@ -91,40 +106,40 @@ function nextFrame(timeStamp) {
 	let y1 = player.y;
 	let y2 = player.y+playerSize;
 	// left wall
-	if ((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+	if ((levels[currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
-	   || (level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1 
+	   || (levels[currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1 
 	      && blockSize-x1%blockSize < y2%blockSize)) {
 		player.xv = 0;
 		player.x = Math.floor(x1/blockSize + 1) * blockSize;
 	}
 	// right wall
-	if ((level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
+	if ((levels[currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && x2%blockSize < blockSize-y1%blockSize)
-	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
+	   || (levels[currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
 	      && x2%blockSize < y2%blockSize)) {
 		player.xv = 0;
 		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
 	}
 	// floor
-	if (((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
+	if (((levels[currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
 	    && blockSize-x1%blockSize > y2%blockSize
-	    && noHitbox.includes(level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
-	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
+	    && noHitbox.includes(levels[currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
+	   || (levels[currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
 	      && x2%blockSize > y2%blockSize)
-	      && noHitbox.includes(level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
+	      && noHitbox.includes(levels[currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
 	   && player.yv > 0) {
 		player.yv = 0;
 		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
 		player.canJump = true;
 	} else player.canJump = false;
 	// ceiling
-	if (((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
+	if (((levels[currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
-	    && noHitbox.includes(level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1]))
-	   || (level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
+	    && noHitbox.includes(levels[currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1]))
+	   || (levels[currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
 	      && x2%blockSize > blockSize-y1%blockSize)
-	      && noHitbox.includes(level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1]))
+	      && noHitbox.includes(levels[currentLevel][Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1]))
 	   && player.yv < 0) {
 		player.yv = 0;
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
@@ -134,35 +149,35 @@ function nextFrame(timeStamp) {
 	y1 = player.y;
 	y2 = player.y+playerSize;
 	// death block
-	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 2
-	   || level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 2
-	   || level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2
-	   || level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2) {
-		player.x = spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
-		player.y = spawnPoint[1] * blockSize + blockSize - playerSize;
+	if (levels[currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 2
+	   || levels[currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 2
+	   || levels[currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2
+	   || levels[currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 2) {
+		player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
+		player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
 		player.xv = 0;
 		player.yv = 0;
 	}
 	// checkpoint
-	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
-		level[spawnPoint[0]][spawnPoint[1]] = 3;
-		spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y1 + 1)/blockSize)];
-		level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
+	if (levels[currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
+		levels[currentLevel][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		player.spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y1 + 1)/blockSize)];
+		levels[currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
 	}
-	if (level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
-		level[spawnPoint[0]][spawnPoint[1]] = 3;
-		spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y1 + 1)/blockSize)];
-		level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
+	if (levels[currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
+		levels[currentLevel][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		player.spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y1 + 1)/blockSize)];
+		levels[currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
 	}
-	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
-		level[spawnPoint[0]][spawnPoint[1]] = 3;
-		spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y2 - 1)/blockSize)];
-		level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
+	if (levels[currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
+		levels[currentLevel][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		player.spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y2 - 1)/blockSize)];
+		levels[currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
 	}
-	if (level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
-		level[spawnPoint[0]][spawnPoint[1]] = 3;
-		spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y2 - 1)/blockSize)];
-		level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
+	if (levels[currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
+		levels[currentLevel][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		player.spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y2 - 1)/blockSize)];
+		levels[currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
 	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
@@ -176,14 +191,14 @@ function draw() {
 	// setup
 	let canvas = document.getElementById("gameScreen");
 	let screen = canvas.getContext("2d");
-	let lvlx = Math.round((canvas.width - level.length * blockSize) / 2);
-	let lvly = Math.round((canvas.height - level[0].length * blockSize) / 2);
+	let lvlx = Math.round((canvas.width - levels[currentLevel].length * blockSize) / 2);
+	let lvly = Math.round((canvas.height - levels[currentLevel][0].length * blockSize) / 2);
 	screen.clearRect(0,0,canvas.width,canvas.height);
 	screen.lineWidth = 0;
 	// draw level
-	for (let x in level) {
-		for (let y in level[x]) {
-			let type = level[x][y];
+	for (let x in levels[currentLevel]) {
+		for (let y in levels[currentLevel][x]) {
+			let type = levels[currentLevel][x][y];
 			if (type != 0) {
 				switch (type) {
 					case 1:
