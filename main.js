@@ -129,109 +129,110 @@ function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
-	if (dt > 200) window.requestAnimationFrame(nextFrame);
-	// position change based on velocity
-	player.x += player.xv * dt / 500;
-	player.y += player.yv * dt / 500;
-	// velocity change
-	player.xv *= 0.5;
-	if (Math.abs(player.xv) < 5) player.xv = 0;
-	player.yv += player.g * dt / 500;
-	// collision detection
-	let x1 = player.x;
-	let x2 = player.x+playerSize;
-	let y1 = player.y;
-	let y2 = player.y+playerSize;
-	let x1b = Math.floor(x1/blockSize);
-	let x2b = Math.floor(x2/blockSize);
-	let y1b = Math.floor(y1/blockSize);
-	let y2b = Math.floor(y2/blockSize);
-	// left wall
-	if ((!noHitbox.includes(getBlockType(x1b,y1b))
-	    && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize)
-	   || (!noHitbox.includes(getBlockType(x1b,y2b)) 
-	      && blockSize-(x1+blockSize)%blockSize < y2%blockSize)) {
-		player.xv = 0;
-		player.x = (x1b + 1) * blockSize;
+	if (dt < 100) {
+		// position change based on velocity
+		player.x += player.xv * dt / 500;
+		player.y += player.yv * dt / 500;
+		// velocity change
+		player.xv *= 0.5;
+		if (Math.abs(player.xv) < 5) player.xv = 0;
+		player.yv += player.g * dt / 500;
+		// collision detection
+		let x1 = player.x;
+		let x2 = player.x+playerSize;
+		let y1 = player.y;
+		let y2 = player.y+playerSize;
+		let x1b = Math.floor(x1/blockSize);
+		let x2b = Math.floor(x2/blockSize);
+		let y1b = Math.floor(y1/blockSize);
+		let y2b = Math.floor(y2/blockSize);
+		// left wall
+		if ((!noHitbox.includes(getBlockType(x1b,y1b))
+		    && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize)
+		   || (!noHitbox.includes(getBlockType(x1b,y2b)) 
+		      && blockSize-(x1+blockSize)%blockSize < y2%blockSize)) {
+			player.xv = 0;
+			player.x = (x1b + 1) * blockSize;
+		}
+		// right wall
+		if ((!noHitbox.includes(getBlockType(x2b,y1b))
+		    && x2%blockSize < blockSize-(y1+blockSize)%blockSize)
+		   || (!noHitbox.includes(getBlockType(x2b,y2b))
+		      && x2%blockSize < y2%blockSize)) {
+			player.xv = 0;
+			player.x = x2b * blockSize - playerSize;
+		}
+		// ceiling
+		if (((!noHitbox.includes(getBlockType(x1b,y1b))
+		    && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize
+		    && noHitbox.includes(getBlockType(x1b,y1b+1)))
+		   || (!noHitbox.includes(getBlockType(x2b,y1b))
+		      && x2%blockSize > blockSize-(y1+blockSize)%blockSize)
+		      && noHitbox.includes(getBlockType(x2b,y1b+1)))
+		   && player.yv < 0) {
+			player.yv = 0;
+			player.y = (y1b + 1) * blockSize;
+		}
+		// floor
+		if (((!noHitbox.includes(getBlockType(x1b,y2b))
+		    && blockSize-(x1+blockSize)%blockSize > y2%blockSize
+		    && noHitbox.includes(getBlockType(x1b,y2b-1)))
+		   || (!noHitbox.includes(getBlockType(x2b,y2b))
+		      && x2%blockSize > y2%blockSize)
+		      && noHitbox.includes(getBlockType(x2b,y2b-1)))
+		   && player.yv > 0) {
+			player.yv = 0;
+			if (getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5) player.yv = -300;
+			player.y = y2b * blockSize - playerSize;
+			player.canJump = true;
+		} else player.canJump = false;
+		x1 = player.x + 1;
+		x2 = player.x+playerSize - 1;
+		y1 = player.y + 1;
+		y2 = player.y+playerSize - 1;
+		x1b = Math.floor(x1/blockSize);
+		x2b = Math.floor(x2/blockSize);
+		y1b = Math.floor(y1/blockSize);
+		y2b = Math.floor(y2/blockSize);
+		// death block
+		if (getBlockType(x1b,y1b) == 2
+		   || getBlockType(x2b,y1b) == 2
+		   || getBlockType(x1b,y2b) == 2
+		   || getBlockType(x2b,y2b) == 2) {
+			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
+			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
+			player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
+			player.xv = 0;
+			player.yv = 0;
+		}
+		// checkpoint
+		if (getBlockType(x1b,y1b) == 3) {
+			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+			player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1]];
+			levels[player.currentLevel][x1b][y1b] = 4;
+		}
+		if (getBlockType(x2b,y1b) == 3) {
+			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+			player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1]];
+			levels[player.currentLevel][x2b][y1b] = 4;
+		}
+		if (getBlockType(x1b,y2b) == 3) {
+			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+			player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1]];
+			levels[player.currentLevel][x1b][y2b] = 4;
+		}
+		if (getBlockType(x2b,y2b) == 3) {
+			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1]];
+			levels[player.currentLevel][x2b][y2b] = 4;
+		}
+		// key input
+		if (control.up && player.canJump) player.yv = -200;
+		if (control.left) player.xv = -100;
+		if (control.right) player.xv = 100;
+		// draw + ending stuff
+		draw();
 	}
-	// right wall
-	if ((!noHitbox.includes(getBlockType(x2b,y1b))
-	    && x2%blockSize < blockSize-(y1+blockSize)%blockSize)
-	   || (!noHitbox.includes(getBlockType(x2b,y2b))
-	      && x2%blockSize < y2%blockSize)) {
-		player.xv = 0;
-		player.x = x2b * blockSize - playerSize;
-	}
-	// ceiling
-	if (((!noHitbox.includes(getBlockType(x1b,y1b))
-	    && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize
-	    && noHitbox.includes(getBlockType(x1b,y1b+1)))
-	   || (!noHitbox.includes(getBlockType(x2b,y1b))
-	      && x2%blockSize > blockSize-(y1+blockSize)%blockSize)
-	      && noHitbox.includes(getBlockType(x2b,y1b+1)))
-	   && player.yv < 0) {
-		player.yv = 0;
-		player.y = (y1b + 1) * blockSize;
-	}
-	// floor
-	if (((!noHitbox.includes(getBlockType(x1b,y2b))
-	    && blockSize-(x1+blockSize)%blockSize > y2%blockSize
-	    && noHitbox.includes(getBlockType(x1b,y2b-1)))
-	   || (!noHitbox.includes(getBlockType(x2b,y2b))
-	      && x2%blockSize > y2%blockSize)
-	      && noHitbox.includes(getBlockType(x2b,y2b-1)))
-	   && player.yv > 0) {
-		player.yv = 0;
-		if (getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5) player.yv = -300;
-		player.y = y2b * blockSize - playerSize;
-		player.canJump = true;
-	} else player.canJump = false;
-	x1 = player.x + 1;
-	x2 = player.x+playerSize - 1;
-	y1 = player.y + 1;
-	y2 = player.y+playerSize - 1;
-	x1b = Math.floor(x1/blockSize);
-	x2b = Math.floor(x2/blockSize);
-	y1b = Math.floor(y1/blockSize);
-	y2b = Math.floor(y2/blockSize);
-	// death block
-	if (getBlockType(x1b,y1b) == 2
-	   || getBlockType(x2b,y1b) == 2
-	   || getBlockType(x1b,y2b) == 2
-	   || getBlockType(x2b,y2b) == 2) {
-		player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
-		player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
-		player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
-		player.xv = 0;
-		player.yv = 0;
-	}
-	// checkpoint
-	if (getBlockType(x1b,y1b) == 3) {
-		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][x1b][y1b] = 4;
-	}
-	if (getBlockType(x2b,y1b) == 3) {
-		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][x2b][y1b] = 4;
-	}
-	if (getBlockType(x1b,y2b) == 3) {
-		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][x1b][y2b] = 4;
-	}
-	if (getBlockType(x2b,y2b) == 3) {
-		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-		player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1]];
-		levels[player.currentLevel][x2b][y2b] = 4;
-	}
-	// key input
-	if (control.up && player.canJump) player.yv = -200;
-	if (control.left) player.xv = -100;
-	if (control.right) player.xv = 100;
-	// draw + ending stuff
-	draw();
 	window.requestAnimationFrame(nextFrame);
 }
 function draw() {
