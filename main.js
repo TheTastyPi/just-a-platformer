@@ -196,22 +196,22 @@ function nextFrame(timeStamp) {
 	}
 	// checkpoint
 	if (levels[player.currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
-		levels[map[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y1 + 1)/blockSize),player.levelCoord[0],player.levelCoord[1]];
 		levels[player.currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
 	}
 	if (levels[player.currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
-		levels[map[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y1 + 1)/blockSize),player.levelCoord[0],player.levelCoord[1]];
 		levels[player.currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
 	}
 	if (levels[player.currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
-		levels[map[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y2 - 1)/blockSize),player.levelCoord[0],player.levelCoord[1]];
 		levels[player.currentLevel][Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
 	}
 	if (levels[player.currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
-		levels[map[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+		levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y2 - 1)/blockSize),player.levelCoord[0],player.levelCoord[1]];
 		levels[player.currentLevel][Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
 	}
