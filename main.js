@@ -2,7 +2,8 @@ var playerSize = 20;
 var blockSize = 50;
 const player = {
 	spawnPoint: [4,7],
-	currentLevel: 0,
+	levelCoord: [0,0],
+	get currentLevel() {return worldMap[levelCoord[0],levelCoord[1]]},
 	x: 240,
 	y: 380,
 	xv: 0,
@@ -16,6 +17,10 @@ const control = {
 	left: false,
 	right: false,
 };
+const worldMap = [
+	[0],
+	[1],
+]
 const levels = [
 	[
 		[1,1,1,1,1,1,1,1,1],
@@ -27,10 +32,10 @@ const levels = [
 		[1,3,1,0,1,0,0,0,1],
 		[1,0,0,0,0,0,0,0,1],
 		[1,2,0,1,0,0,0,0,1],
-		[1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,0,1],
 	],
 	[
-		[1,1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,0,1],
 		[1,0,0,0,1,0,0,0,1],
 		[1,0,0,0,0,1,0,1,1],
 		[1,0,0,1,0,0,0,0,2],
@@ -105,6 +110,32 @@ function nextFrame(timeStamp) {
 	let x2 = player.x+playerSize;
 	let y1 = player.y;
 	let y2 = player.y+playerSize;
+	// level boundary (change level)
+	// left boundary
+	if (x1 < 0) {
+		player.levelCoord[0]--;
+		player.x = levels[player.currentLevel].length*blockSize-playerSize;
+		player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==0)+player.y%blockSize;
+	}
+	// right boundary
+	if (x2 > levels[player.currentLevel].length*blockSize) {
+		player.levelCoord[0]++;
+		player.x = 0;
+		player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==0)+player.y%blockSize;
+	}
+	// top boundary
+	if (y1 < 0) {
+		player.levelCoord[1]--;
+		player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==0)+player.y%blockSize;
+		player.y = levels[player.currentLevel][0].length*blockSize-playerSize;
+	}
+	// bottom boundary
+	if (y2 > levels[player.currentLevel][0].length*blockSize) {
+		player.levelCoord[1]++;
+		player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+player.y%blockSize;
+		player.y = 0;
+	}
+	// block collision
 	// left wall
 	if ((levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && blockSize-x1%blockSize < blockSize-y1%blockSize)
