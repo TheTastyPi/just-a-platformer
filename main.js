@@ -157,7 +157,7 @@ function nextFrame(timeStamp) {
 		player.x = Math.floor(x2/blockSize) * blockSize - playerSize;
 	}
 	// floor
-	if (((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize))
+	if (((!noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)])
 	    && blockSize-x1%blockSize > y2%blockSize
 	    && noHitbox.includes(levels[player.currentLevel][Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
 	   || (!noHitbox.includes(levels[player.currentLevel][Math.floor(x2/blockSize)][Math.floor(y2/blockSize)])
