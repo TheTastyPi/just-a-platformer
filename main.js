@@ -142,10 +142,26 @@ function nextFrame(timeStamp) {
 		player.y = spawnPoint[1] * blockSize + blockSize - playerSize;
 	}
 	// checkpoint
-	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y1 + 1)/blockSize)]; level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;}
-	if (level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y1 + 1)/blockSize)]; level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;}
-	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y2 - 1)/blockSize)]; level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;}
-	if (level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y2 - 1)/blockSize)]; level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;}
+	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
+		level[spawnPoint[0]][spawnPoint[1]] = 3;
+		spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y1 + 1)/blockSize)];
+		level[Math.floor((x1 + 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
+	}
+	if (level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] == 3) {
+		level[spawnPoint[0]][spawnPoint[1]] = 3;
+		spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y1 + 1)/blockSize)];
+		level[Math.floor((x2 - 1)/blockSize)][Math.floor((y1 + 1)/blockSize)] = 4;
+	}
+	if (level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
+		level[spawnPoint[0]][spawnPoint[1]] = 3;
+		spawnPoint = [Math.floor((x1 + 1)/blockSize),Math.floor((y2 - 1)/blockSize)];
+		level[Math.floor((x1 + 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
+	}
+	if (level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] == 3) {
+		level[spawnPoint[0]][spawnPoint[1]] = 3;
+		spawnPoint = [Math.floor((x2 - 1)/blockSize),Math.floor((y2 - 1)/blockSize)];
+		level[Math.floor((x2 - 1)/blockSize)][Math.floor((y2 - 1)/blockSize)] = 4;
+	}
 	// key input
 	if (control.up && player.canJump) player.yv = -200;
 	if (control.left) player.xv = -100;
