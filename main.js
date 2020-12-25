@@ -128,7 +128,7 @@ function getBlockType(x,y) {
 			if (levels[player.currentLevel][x-1][y] == 0) return 6;
 		}
 		if (levels[player.currentLevel][x] != undefined) {
-			if (levels[player.currentLevel][x-1][y-1] == 0 || levels[player.currentLevel][x-1][y+1] == 0) return 6;
+			if (levels[player.currentLevel][x][y-1] == 0 || levels[player.currentLevel][x][y+1] == 0) return 6;
 		}
 		return 1;
 	}
