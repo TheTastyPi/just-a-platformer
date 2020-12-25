@@ -179,8 +179,8 @@ function nextFrame(timeStamp) {
 	}
 	// bottom boundary
 	if (y2 > levels[player.currentLevel][0].length*blockSize) {
-		if (levels[player.currentLevel][x1b][y2b] == 6
-		   && levels[player.currentLevel][x2b][y2b] == 6) {
+		if (levels[player.currentLevel][x1b][y1b] == 6
+		   && levels[player.currentLevel][x2b][y1b] == 6) {
 			player.levelCoord[1]--;
 			player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==6)+player.y%blockSize;
 			player.y = 0;
