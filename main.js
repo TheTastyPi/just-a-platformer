@@ -259,6 +259,9 @@ function draw() {
 					case 4:
 						screen.fillStyle = "#00FFFF";
 						break;
+					case 4:
+						screen.fillStyle = "#FFFF00";
+						break;
 				}
 				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
 			}
