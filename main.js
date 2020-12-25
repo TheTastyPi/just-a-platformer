@@ -27,6 +27,7 @@ const level = [
 	[1,2,0,1,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1],
 ];
+const noHitbox = [0,3,4];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
@@ -108,10 +109,10 @@ function nextFrame(timeStamp) {
 	// floor
 	if (((level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)] == 1
 	    && blockSize-x1%blockSize > y2%blockSize
-	    && level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1] == 0)
+	    && noHitbox.includes(level[Math.floor(x1/blockSize)][Math.floor(y2/blockSize)-1]))
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)] == 1
 	      && x2%blockSize > y2%blockSize)
-	      && level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1] == 0)
+	      && noHitbox.includes(level[Math.floor(x2/blockSize)][Math.floor(y2/blockSize)-1]))
 	   && player.yv > 0) {
 		player.yv = 0;
 		player.y = Math.floor(y2/blockSize) * blockSize - playerSize;
@@ -120,10 +121,10 @@ function nextFrame(timeStamp) {
 	// ceiling
 	if (((level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)] == 1
 	    && blockSize-x1%blockSize > blockSize-y1%blockSize
-	    && level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1] == 0)
+	    && noHitbox.includes(level[Math.floor(x1/blockSize)][Math.floor(y1/blockSize)+1]))
 	   || (level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)] == 1
 	      && x2%blockSize > blockSize-y1%blockSize)
-	      && level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1] == 0)
+	      && noHitbox.includes(level[Math.floor(x2/blockSize)][Math.floor(y1/blockSize)+1]))
 	   && player.yv < 0) {
 		player.yv = 0;
 		player.y = Math.floor(y1/blockSize + 1) * blockSize;
