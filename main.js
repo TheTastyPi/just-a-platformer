@@ -169,7 +169,7 @@ function nextFrame(timeStamp) {
 	if (y1 < 0) {
 		if (levels[player.currentLevel][x1b][y2b] == 6
 		   && levels[player.currentLevel][x2b][y2b] == 6) {
-			player.levelCoord[1]--;
+			player.levelCoord[1]++;
 			player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==6)+player.y%blockSize;
 			player.y = (levels[player.currentLevel][0].length-1)*blockSize-playerSize;
 		} else {
@@ -181,7 +181,7 @@ function nextFrame(timeStamp) {
 	if (y2 > levels[player.currentLevel][0].length*blockSize) {
 		if (levels[player.currentLevel][x1b][y2b] == 6
 		   && levels[player.currentLevel][x2b][y2b] == 6) {
-			player.levelCoord[1]++;
+			player.levelCoord[1]--;
 			player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==6)+player.y%blockSize;
 			player.y = 0;
 		} else {
