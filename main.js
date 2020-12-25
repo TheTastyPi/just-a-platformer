@@ -1,7 +1,7 @@
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [4,8,0,0],
+	spawnPoint: [4,7,0,0],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 240,
@@ -23,16 +23,16 @@ const worldMap = [
 ]
 const levels = [
 	[
-		[1,1,1,1,1,1,1,1,1,1],
-		[1,1,0,0,0,1,0,0,0,1],
-		[1,1,0,0,0,0,1,0,1,1],
-		[1,1,0,0,1,0,0,0,0,2],
-		[1,1,0,0,0,2,0,1,3,1],
-		[1,1,0,0,0,2,0,0,0,1],
-		[1,6,0,5,0,1,0,0,0,1],
-		[1,1,0,0,0,0,0,0,0,1],
-		[1,1,2,0,1,0,0,0,0,1],
-		[1,1,1,1,1,1,1,1,6,1],
+		[1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,1,0,0,0,1],
+		[1,0,0,0,0,1,0,1,1],
+		[1,0,0,1,0,0,0,0,2],
+		[1,0,0,0,2,0,1,3,1],
+		[1,0,0,0,2,0,0,0,1],
+		[6,0,5,0,1,0,0,0,1],
+		[1,0,0,0,0,0,0,0,1],
+		[1,2,0,1,0,0,0,0,1],
+		[1,1,1,1,1,1,1,6,1],
 	],
 	[
 		[1,1,1,1,1,1,1,1,1],
@@ -151,7 +151,7 @@ function nextFrame(timeStamp) {
 	   || (!noHitbox.includes(getBlockType(x1b,y2b)) 
 	      && blockSize-x1%blockSize < y2%blockSize)) {
 		player.xv = 0;
-		player.x = Math.floor(x1/blockSize + 1) * blockSize;
+		player.x = (x1b + 1) * blockSize;
 	}
 	// right wall
 	if ((!noHitbox.includes(getBlockType(x2b,y1b))
@@ -170,7 +170,7 @@ function nextFrame(timeStamp) {
 	      && noHitbox.includes(getBlockType(x2b,y1b+1)))
 	   && player.yv < 0) {
 		player.yv = 0;
-		player.y = Math.floor(y1/blockSize + 1) * blockSize;
+		player.y = (y1b + 1) * blockSize;
 	}
 	// floor
 	if (((!noHitbox.includes(getBlockType(x1b,y2b))
