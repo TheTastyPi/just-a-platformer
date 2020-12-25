@@ -150,7 +150,7 @@ function nextFrame(timeStamp) {
 			player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==6)+player.y%blockSize;
 		} else {
 			player.xv = 0;
-			player.x = x1b * blockSize;
+			player.x = Math.floor(x1/blockSize + 1) * blockSize;
 		}
 	}
 	// right boundary
@@ -174,7 +174,7 @@ function nextFrame(timeStamp) {
 			player.y = (levels[player.currentLevel][0].length)*blockSize-playerSize;
 		} else {
 			player.yv = 0;
-			player.y = y1b * blockSize;
+			player.y = Math.floor(y1/blockSize + 1) * blockSize;
 		}
 	}
 	// bottom boundary
