@@ -320,8 +320,18 @@ function draw() {
 	// setup
 	let canvas = document.getElementById("gameScreen");
 	let screen = canvas.getContext("2d");
-	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length * blockSize) / 2);
-	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length * blockSize) / 2);
+	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = canvas.width/2 - (player.x+playerSize/2);
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = levels[player.currentLevel].length*blockSize - canvas.width;
+	}
+	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = canvas.height/2 - (player.y+playerSize/2);
+		if (lvly > 0) lvly = 0;
+		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = levels[player.currentLevel][0].length*blockSize - canvas.height;
+	}
 	screen.clearRect(0,0,canvas.width,canvas.height);
 	screen.lineWidth = 0;
 	// draw level
