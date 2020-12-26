@@ -183,6 +183,14 @@ function isTouching(dir, type) {
 			&& player.yv > 0;
 			break;
 		case "any":
+			x1 = player.x + 1;
+			x2 = player.x+playerSize - 1;
+			y1 = player.y + 1;
+			y2 = player.y+playerSize - 1;
+			x1b = Math.floor(x1/blockSize);
+			x2b = Math.floor(x2/blockSize);
+			y1b = Math.floor(y1/blockSize);
+			y2b = Math.floor(y2/blockSize);
 			return getBlockType(x1b,y1b) == type
 			|| getBlockType(x2b,y1b) == type
 			|| getBlockType(x1b,y2b) == type
