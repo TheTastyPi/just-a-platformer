@@ -165,6 +165,7 @@ function nextFrame(timeStamp) {
 		player.xv *= 0.5;
 		if (Math.abs(player.xv) < 5) player.xv = 0;
 		player.yv += player.g * dt / 500;
+		if (Math.abs(player.yv) > player.g) player.yv = player.g;
 		// collision detection
 		let x1 = player.x;
 		let x2 = player.x+playerSize;
