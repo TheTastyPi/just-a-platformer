@@ -208,8 +208,8 @@ function nextFrame(timeStamp) {
 			       && (noHitbox.includes(getBlockType(x2b,y1b)) || noHitbox.includes(getBlockType(x1b,y1b)))))
 			   && player.g < 0) player.yv = -player.g*3/4;
 			player.y = (y1b + 1) * blockSize;
-			if (player.g < 0) player.canJump = true;
-		} else if (player.g < 0) player.canJump = false;
+			if (player.g < 0 && player.yv <= 0) player.canJump = true;
+		} else if (player.g < 0 && player.yv <= 0) player.canJump = false;
 		// floor
 		if (((!noHitbox.includes(getBlockType(x1b,y2b))
 		    && blockSize-(x1+blockSize)%blockSize > y2%blockSize
@@ -224,8 +224,8 @@ function nextFrame(timeStamp) {
 			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b)))))
 			   && player.g > 0) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
-			if (player.g > 0) player.canJump = true;
-		} else if (player.g > 0) player.canJump = false;
+			if (player.g > 0 && player.yv >= 0) player.canJump = true;
+		} else if (player.g > 0 && player.yv >= 0) player.canJump = false;
 		x1 = player.x + 1;
 		x2 = player.x+playerSize - 1;
 		y1 = player.y + 1;
