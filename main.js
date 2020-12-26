@@ -280,6 +280,14 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			player.g = player.spawnPoint[4];
 		}
+		x1 = player.x + 1;
+		x2 = player.x+playerSize - 1;
+		y1 = player.y + 1;
+		y2 = player.y+playerSize - 1;
+		x1b = Math.floor(x1/blockSize);
+		x2b = Math.floor(x2/blockSize);
+		y1b = Math.floor(y1/blockSize);
+		y2b = Math.floor(y2/blockSize);
 		// level warp
 		if (getBlockType(x1b,y1b) == 6
 		   || getBlockType(x2b,y1b) == 6
