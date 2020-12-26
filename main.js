@@ -285,26 +285,19 @@ function nextFrame(timeStamp) {
 		   || getBlockType(x2b,y1b) == 6
 		   || getBlockType(x1b,y2b) == 6
 		   || getBlockType(x2b,y2b) == 6) {
-			// left
-			if (x1 < 0) {
+			if (x1 < 0) { // left
 				player.levelCoord[0]--;
 				player.x = levels[player.currentLevel].length * blockSize - playerSize;
 				player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==0)+(y1+blockSize)%blockSize;
-			}
-			// right
-			if (x2 > levels[player.currentLevel].length * blockSize) {
+			} else if (x2 > levels[player.currentLevel].length * blockSize) { // right
 				player.levelCoord[0]++;
 				player.x = 0;
 				player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==0)+(y1+blockSize)%blockSize;
-			}
-			// up
-			if (y1 < 0) {
+			} else if (y1 < 0) { // up
 				player.levelCoord[1]++;
 				player.y = levels[player.currentLevel][0].length * blockSize - playerSize;
 				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==0)+(x1+blockSize)%blockSize;
-			}
-			// down
-			if (y2 > levels[player.currentLevel][0].length * blockSize) {
+			} else if (y2 > levels[player.currentLevel][0].length * blockSize) { // down
 				player.levelCoord[1]--;
 				player.y = 0;
 				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+(x1+blockSize)%blockSize;
