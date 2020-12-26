@@ -226,18 +226,6 @@ function nextFrame(timeStamp) {
 		x2b = Math.floor(x2/blockSize);
 		y1b = Math.floor(y1/blockSize);
 		y2b = Math.floor(y2/blockSize);
-		// death block
-		if (getBlockType(x1b,y1b) == 2
-		   || getBlockType(x2b,y1b) == 2
-		   || getBlockType(x1b,y2b) == 2
-		   || getBlockType(x2b,y2b) == 2) {
-			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
-			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
-			player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
-			player.xv = 0;
-			player.yv = 0;
-			player.g = player.spawnPoint[4];
-		}
 		// checkpoint
 		if (getBlockType(x1b,y1b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
@@ -301,6 +289,18 @@ function nextFrame(timeStamp) {
 		   || getBlockType(x1b,y2b) == 8
 		   || getBlockType(x2b,y2b) == 8) {
 			if (player.g < 0) player.g = -player.g;
+		}
+		// death block
+		if (getBlockType(x1b,y1b) == 2
+		   || getBlockType(x2b,y1b) == 2
+		   || getBlockType(x1b,y2b) == 2
+		   || getBlockType(x2b,y2b) == 2) {
+			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
+			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
+			player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
+			player.xv = 0;
+			player.yv = 0;
+			player.g = player.spawnPoint[4];
 		}
 		// key input
 		if (control.up && player.canJump) player.yv = -player.g/2;
