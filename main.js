@@ -200,6 +200,10 @@ function nextFrame(timeStamp) {
 		      && noHitbox.includes(getBlockType(x2b,y1b+1)))
 		   && player.yv < 0) {
 			player.yv = 0;
+			if ((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
+			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
+			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b))))
+			   && player.g < 0) player.yv = -player.g*3/4;
 			player.y = (y1b + 1) * blockSize;
 			if (player.g < 0) player.canJump = true;
 		} else if (player.g < 0) player.canJump = false;
@@ -214,7 +218,8 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			if ((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
 			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
-			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b))))) player.yv = -player.g*3/4;
+			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b))))
+			   && player.g > 0) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0) player.canJump = true;
 		} else if (player.g > 0) player.canJump = false;
