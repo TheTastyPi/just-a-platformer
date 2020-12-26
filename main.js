@@ -18,8 +18,8 @@ const control = {
 	right: false,
 };
 const worldMap = [
-	[0,1],
-	[3,2],
+	[5,0,1],
+	[4,3,2],
 ]
 const levels = [
 	[
@@ -57,7 +57,7 @@ const levels = [
 	],
 	[
 		[1,1,1,1,1,1,1],
-		[0,0,0,0,0,0,1],
+		[0,0,0,0,0,0,0],
 		[1,1,1,1,1,1,1],
 		[1,0,0,0,0,0,1],
 		[1,0,1,1,1,0,1],
@@ -72,8 +72,18 @@ const levels = [
 		[1,0,0,0,0,0,1],
 		[1,1,1,1,1,1,1],
 	],
+	[
+		[1,1,0,1,1,1,1],
+		[1,1,0,2,0,5,1],
+		[2,0,7,0,0,2,1],
+		[5,0,0,2,0,1,1],
+		[2,0,0,2,0,0,5],
+		[1,1,1,1,1,3,1],
+		[0,0,0,0,0,0,2],
+		[1,1,1,1,1,1,1],
+	],
 ];
-const noHitbox = [0,2,3,4,6];
+const noHitbox = [-1,0,2,3,4,6,7,8];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
@@ -195,7 +205,7 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			if ((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
 			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
-			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b))))) player.yv = -300;
+			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b))))) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
 			player.canJump = true;
 		} else player.canJump = false;
@@ -269,8 +279,21 @@ function nextFrame(timeStamp) {
 				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+(x1+blockSize)%blockSize;
 			}
 		}
+		// anti-grav
+		if (getBlockType(x1b,y1b) == 7
+		   || getBlockType(x2b,y1b) == 7
+		   || getBlockType(x1b,y2b) == 7
+		   || getBlockType(x2b,y2b) == 7) {
+			if (player.g > 0) player.g = -player.g;
+		}
+		if (getBlockType(x1b,y1b) == 8
+		   || getBlockType(x2b,y1b) == 8
+		   || getBlockType(x1b,y2b) == 8
+		   || getBlockType(x2b,y2b) == 8) {
+			if (player.g < 0) player.g = -player.g;
+		}
 		// key input
-		if (control.up && player.canJump) player.yv = -200;
+		if (control.up && player.canJump) player.yv = -player.g/2;
 		if (control.left) player.xv = -100;
 		if (control.right) player.xv = 100;
 		// draw + ending stuff
@@ -290,7 +313,7 @@ function draw() {
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
 			let type = getBlockType(x,y);
-			if (type != 0 && type != 6) {
+			if (type != -1 && type != 0 && type != 6) {
 				switch (type) {
 					case 1:
 						screen.fillStyle = "#000000";
@@ -306,6 +329,12 @@ function draw() {
 						break;
 					case 5:
 						screen.fillStyle = "#FFFF00";
+						break;
+					case 7:
+						screen.fillStyle = "#FF8888";
+						break;
+					case 7:
+						screen.fillStyle = "#8888FF";
 						break;
 				}
 				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
