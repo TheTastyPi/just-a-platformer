@@ -1,7 +1,7 @@
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [4,7,0,0],
+	spawnPoint: [4,7,0,0,400],
 	levelCoord: [0,1],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 240,
@@ -165,7 +165,7 @@ function nextFrame(timeStamp) {
 		player.xv *= 0.5;
 		if (Math.abs(player.xv) < 5) player.xv = 0;
 		player.yv += player.g * dt / 500;
-		if (Math.abs(player.yv) > player.g) player.yv = player.g;
+		if (Math.abs(player.yv) > Math.abs(player.g)) player.yv = player.g;
 		// collision detection
 		let x1 = player.x;
 		let x2 = player.x+playerSize;
@@ -239,22 +239,22 @@ function nextFrame(timeStamp) {
 		// checkpoint
 		if (getBlockType(x1b,y1b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1]];
+			player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x1b][y1b] = 4;
 		}
 		if (getBlockType(x2b,y1b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1]];
+			player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x2b][y1b] = 4;
 		}
 		if (getBlockType(x1b,y2b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1]];
+			player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x1b][y2b] = 4;
 		}
 		if (getBlockType(x2b,y2b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1]];
+			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x2b][y2b] = 4;
 		}
 		// level warp
