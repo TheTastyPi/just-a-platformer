@@ -87,7 +87,7 @@ const levels = [
 		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,2,0,0,0,0,0,1,3,1],
 		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2,0,0,0,0,0,2,0,0,0,0,1],
-		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,2,0,0,2,0,0,1,0,1],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,2,0,0,2,0,0,1,0,1],
 		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
 	],
 ];
@@ -273,7 +273,7 @@ function nextFrame(timeStamp) {
 		   || getBlockType(x2b,y2b) == 2) {
 			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
 			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
-			player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
+			player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize)/2;
 			player.xv = 0;
 			player.yv = 0;
 			player.g = player.spawnPoint[4];
