@@ -1,3 +1,4 @@
+var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
@@ -159,12 +160,12 @@ function nextFrame(timeStamp) {
 	lastFrame = timeStamp;
 	if (dt < 100) {
 		// position change based on velocity
-		player.x += player.xv * dt / 500;
-		player.y += player.yv * dt / 500;
+		player.x += player.xv * dt / 500 * gameSpeed;
+		player.y += player.yv * dt / 500 * gameSpeed;
 		// velocity change
 		player.xv *= 0.5;
 		if (Math.abs(player.xv) < 5) player.xv = 0;
-		player.yv += player.g * dt / 500;
+		player.yv += player.g * dt / 500 * gameSpeed;
 		if (Math.abs(player.yv) > Math.abs(player.g)) player.yv = player.g;
 		// collision detection
 		let x1 = player.x;
