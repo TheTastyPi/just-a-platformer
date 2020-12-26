@@ -229,7 +229,7 @@ function nextFrame(timeStamp) {
 		// right wall
 		if (isTouching("right")) {
 			player.xv = 0;
-			player.x = x2b * blockSize - playerSize - 1;
+			player.x = x2b * blockSize - playerSize;
 		}
 		// ceiling
 		if (isTouching("up")) {
