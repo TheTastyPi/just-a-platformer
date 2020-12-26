@@ -154,6 +154,41 @@ function getBlockType(x,y) {
 	}
 	return levels[player.currentLevel][x][y];
 }
+function isTouching(dir, type) {
+	let x1 = player.x;
+	let x2 = player.x+playerSize;
+	let y1 = player.y;
+	let y2 = player.y+playerSize;
+	let x1b = Math.floor(x1/blockSize);
+	let x2b = Math.floor(x2/blockSize);
+	let y1b = Math.floor(y1/blockSize);
+	let y2b = Math.floor(y2/blockSize);
+	switch (dir) {
+		case "left":
+			return (!noHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize) 
+			|| (!noHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize);
+			break;
+		case "right":
+			return (!noHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize) 
+			|| (!noHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize);
+			break;
+		case "up":
+			return ((!noHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && noHitbox.includes(getBlockType(x1b,y1b+1))) 
+			|| (!noHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && noHitbox.includes(getBlockType(x2b,y1b+1))))
+			&& player.yv < 0;
+			break;
+		case "down":
+			return ((!noHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && noHitbox.includes(getBlockType(x1b,y2b-1))) 
+			|| (!noHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && noHitbox.includes(getBlockType(x2b,y2b-1))))
+			&& player.yv > 0;
+			break;
+		case "any":
+			return getBlockType(x1b,y1b) == type
+			|| getBlockType(x2b,y1b) == type
+			|| getBlockType(x1b,y2b) == type
+			|| getBlockType(x2b,y2b) == type;
+	}
+}
 
 var lastFrame = 0;
 function nextFrame(timeStamp) {
@@ -179,49 +214,33 @@ function nextFrame(timeStamp) {
 		let y1b = Math.floor(y1/blockSize);
 		let y2b = Math.floor(y2/blockSize);
 		// left wall
-		if ((!noHitbox.includes(getBlockType(x1b,y1b))
-		    && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize)
-		   || (!noHitbox.includes(getBlockType(x1b,y2b)) 
-		      && blockSize-(x1+blockSize)%blockSize < y2%blockSize)) {
+		if (isTouching("left")) {
 			player.xv = 0;
 			player.x = (x1b + 1) * blockSize;
 		}
 		// right wall
-		if ((!noHitbox.includes(getBlockType(x2b,y1b))
-		    && x2%blockSize < blockSize-(y1+blockSize)%blockSize)
-		   || (!noHitbox.includes(getBlockType(x2b,y2b))
-		      && x2%blockSize < y2%blockSize)) {
+		if (isTouching("right")) {
 			player.xv = 0;
 			player.x = x2b * blockSize - playerSize;
 		}
 		// ceiling
-		if (((!noHitbox.includes(getBlockType(x1b,y1b))
-		    && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize
-		    && noHitbox.includes(getBlockType(x1b,y1b+1)))
-		   || (!noHitbox.includes(getBlockType(x2b,y1b))
-		      && x2%blockSize > blockSize-(y1+blockSize)%blockSize)
-		      && noHitbox.includes(getBlockType(x2b,y1b+1)))
-		   && player.yv < 0) {
+		if (isTouching("up")) {
 			player.yv = 0;
 			if (((getBlockType(x2b,y1b) == 5 && getBlockType(x1b,y1b) == 5)
 			   || ((getBlockType(x2b,y1b) == 5 || getBlockType(x1b,y1b) == 5)
-			       && (noHitbox.includes(getBlockType(x2b,y1b)) || noHitbox.includes(getBlockType(x1b,y1b)))))
+			       && ((noHitbox.includes(getBlockType(x2b,y1b)) && noHitbox.includes(getBlockType(x1b,y2b-1)))
+				   || (noHitbox.includes(getBlockType(x1b,y1b)) && noHitbox.includes(getBlockType(x1b,y2b-1))))))
 			   && player.g < 0) player.yv = -player.g*3/4;
 			player.y = (y1b + 1) * blockSize;
 			if (player.g < 0 && player.yv <= 0) player.canJump = true;
 		} else if (player.g < 0) player.canJump = false;
 		// floor
-		if (((!noHitbox.includes(getBlockType(x1b,y2b))
-		    && blockSize-(x1+blockSize)%blockSize > y2%blockSize
-		    && noHitbox.includes(getBlockType(x1b,y2b-1)))
-		   || (!noHitbox.includes(getBlockType(x2b,y2b))
-		      && x2%blockSize > y2%blockSize)
-		      && noHitbox.includes(getBlockType(x2b,y2b-1)))
-		   && player.yv > 0) {
+		if (isTouching("down")) {
 			player.yv = 0;
 			if (((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
 			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
-			       && (noHitbox.includes(getBlockType(x2b,y2b)) || noHitbox.includes(getBlockType(x1b,y2b)))))
+			       && ((noHitbox.includes(getBlockType(x2b,y2b)) && noHitbox.includes(getBlockType(x1b,y2b-1))) 
+				   || (noHitbox.includes(getBlockType(x1b,y2b)) && noHitbox.includes(getBlockType(x1b,y2b-1))))))
 			   && player.g > 0) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0 && player.yv >= 0) player.canJump = true;
@@ -256,23 +275,14 @@ function nextFrame(timeStamp) {
 			levels[player.currentLevel][x2b][y2b] = 4;
 		}
 		// anti-grav
-		if (getBlockType(x1b,y1b) == 7
-		   || getBlockType(x2b,y1b) == 7
-		   || getBlockType(x1b,y2b) == 7
-		   || getBlockType(x2b,y2b) == 7) {
+		if (isTouching("any",7)) {
 			if (player.g > 0) player.g = -player.g;
 		}
-		if (getBlockType(x1b,y1b) == 8
-		   || getBlockType(x2b,y1b) == 8
-		   || getBlockType(x1b,y2b) == 8
-		   || getBlockType(x2b,y2b) == 8) {
+		if (isTouching("any",8)) {
 			if (player.g < 0) player.g = -player.g;
 		}
 		// death block
-		if (getBlockType(x1b,y1b) == 2
-		   || getBlockType(x2b,y1b) == 2
-		   || getBlockType(x1b,y2b) == 2
-		   || getBlockType(x2b,y2b) == 2) {
+		if (isTouching("any",2)) {
 			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
 			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
 			player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize)/2;
@@ -289,10 +299,7 @@ function nextFrame(timeStamp) {
 		y1b = Math.floor(y1/blockSize);
 		y2b = Math.floor(y2/blockSize);
 		// level warp
-		if (getBlockType(x1b,y1b) == 6
-		   || getBlockType(x2b,y1b) == 6
-		   || getBlockType(x1b,y2b) == 6
-		   || getBlockType(x2b,y2b) == 6) {
+		if (isTouching("any",6)) {
 			if (x1 < 0) { // left
 				player.levelCoord[0]--;
 				player.x = levels[player.currentLevel].length * blockSize - playerSize;
