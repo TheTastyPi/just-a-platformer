@@ -247,6 +247,31 @@ function nextFrame(timeStamp) {
 			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x2b][y2b] = 4;
 		}
+		// anti-grav
+		if (getBlockType(x1b,y1b) == 7
+		   || getBlockType(x2b,y1b) == 7
+		   || getBlockType(x1b,y2b) == 7
+		   || getBlockType(x2b,y2b) == 7) {
+			if (player.g > 0) player.g = -player.g;
+		}
+		if (getBlockType(x1b,y1b) == 8
+		   || getBlockType(x2b,y1b) == 8
+		   || getBlockType(x1b,y2b) == 8
+		   || getBlockType(x2b,y2b) == 8) {
+			if (player.g < 0) player.g = -player.g;
+		}
+		// death block
+		if (getBlockType(x1b,y1b) == 2
+		   || getBlockType(x2b,y1b) == 2
+		   || getBlockType(x1b,y2b) == 2
+		   || getBlockType(x2b,y2b) == 2) {
+			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
+			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
+			player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
+			player.xv = 0;
+			player.yv = 0;
+			player.g = player.spawnPoint[4];
+		}
 		// level warp
 		if (getBlockType(x1b,y1b) == 6
 		   || getBlockType(x2b,y1b) == 6
@@ -276,31 +301,6 @@ function nextFrame(timeStamp) {
 				player.y = 0;
 				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+(x1+blockSize)%blockSize;
 			}
-		}
-		// anti-grav
-		if (getBlockType(x1b,y1b) == 7
-		   || getBlockType(x2b,y1b) == 7
-		   || getBlockType(x1b,y2b) == 7
-		   || getBlockType(x2b,y2b) == 7) {
-			if (player.g > 0) player.g = -player.g;
-		}
-		if (getBlockType(x1b,y1b) == 8
-		   || getBlockType(x2b,y1b) == 8
-		   || getBlockType(x1b,y2b) == 8
-		   || getBlockType(x2b,y2b) == 8) {
-			if (player.g < 0) player.g = -player.g;
-		}
-		// death block
-		if (getBlockType(x1b,y1b) == 2
-		   || getBlockType(x2b,y1b) == 2
-		   || getBlockType(x1b,y2b) == 2
-		   || getBlockType(x2b,y2b) == 2) {
-			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
-			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
-			player.y = player.spawnPoint[1] * blockSize + blockSize - playerSize;
-			player.xv = 0;
-			player.yv = 0;
-			player.g = player.spawnPoint[4];
 		}
 		// key input
 		if (control.up && player.canJump) player.yv = -player.g/2;
