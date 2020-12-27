@@ -352,10 +352,15 @@ function draw() {
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = canvas.height - levels[player.currentLevel][0].length*blockSize;
 	}
 	screen.clearRect(0,0,canvas.width,canvas.height);
-	screen.lineWidth = 0;
+	// draw player
+	screen.fillStyle = "#0000FF";
+	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 	// draw level
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
+			screen.lineWidth = blockSize*3/25;
+			let xb = lvlx + x * blockSize;
+			let yb = lvly + y * blockSize;
 			let type = getBlockType(x,y);
 			if (type != -1 && type != 0 && type != 6) {
 				switch (type) {
@@ -366,28 +371,93 @@ function draw() {
 						screen.fillStyle = "#FF0000";
 						break;
 					case 3:
-						screen.fillStyle = "#008888";
+						screen.fillStyle = "#00888888";
 						break;
 					case 4:
-						screen.fillStyle = "#00FFFF";
+						screen.fillStyle = "#00FFFF88";
 						break;
 					case 5:
 						screen.fillStyle = "#FFFF00";
 						break;
 					case 7:
-						screen.fillStyle = "#FF8888";
+						screen.fillStyle = "#FF888888";
 						break;
 					case 8:
-						screen.fillStyle = "#8888FF";
+						screen.fillStyle = "#8888FF88";
 						break;
 				}
-				screen.fillRect(lvlx + x * blockSize, lvly + y * blockSize, blockSize, blockSize);
+				screen.fillRect(xb, yb, blockSize, blockSize);
+				switch (type) {
+					case 2:
+						screen.strokeStyle = "#880000";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+						screen.stroke();
+						
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						screen.stroke();
+						break;
+					case 3:
+						screen.strokeStyle = "#00444488";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						screen.stroke();
+						break;
+					case 4:
+						screen.strokeStyle = "#00888888";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						screen.stroke();
+						break;
+					case 5:
+						screen.strokeStyle = "#888800";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+						screen.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+						screen.stroke();
+						
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+						screen.stroke();
+						break;
+					case 7:
+						screen.strokeStyle = "#88000088";
+						screen.lineWidth = blockSize/25;
+						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+						
+						for (let i=0; i<3; i++) {
+							screen.beginPath();
+							screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
+							screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
+							screen.stroke();
+						}
+						break;
+					case 8:
+						screen.strokeStyle = "#00008888";
+						screen.lineWidth = blockSize/25;
+						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+						
+						for (let i=0; i<3; i++) {
+							screen.beginPath();
+							screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
+							screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+							screen.stroke();
+						}
+						break;
+				}
 			}
 		}
 	}
-	// draw player
-	screen.fillStyle = "#0000FF";
-	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 }
 function resizeCanvas() {
 	let canvas = document.getElementById("gameScreen");
