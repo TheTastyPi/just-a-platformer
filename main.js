@@ -401,8 +401,15 @@ function draw() {
 						screen.stroke();
 						break;
 					case 3:
+						screen.strokeStyle = "#00444488";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						screen.stroke();
+						break;
 					case 4:
-						screen.strokeStyle = "#88FFFF88";
+						screen.strokeStyle = "#00888888";
 						screen.beginPath();
 						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
 						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
@@ -410,7 +417,7 @@ function draw() {
 						screen.stroke();
 						break;
 					case 5:
-						screen.strokeStyle = "#FFFF88";
+						screen.strokeStyle = "#888800";
 						screen.beginPath();
 						screen.moveTo(xb+blockSize/25*3,yb+blockSize/4);
 						screen.lineTo(xb+blockSize/2,yb+blockSize/25*3);
@@ -425,6 +432,7 @@ function draw() {
 						break;
 					case 7:
 						screen.strokeStyle = "#88000088";
+						screen.strokeWidth = blockSize/25;
 						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
 						
 						for (let i=0; i<3; i++) {
@@ -436,6 +444,7 @@ function draw() {
 						break;
 					case 8:
 						screen.strokeStyle = "#00008888";
+						screen.strokeWidth = blockSize/25;
 						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
 						
 						for (let i=0; i<3; i++) {
