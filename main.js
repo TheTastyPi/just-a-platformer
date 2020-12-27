@@ -402,16 +402,48 @@ function draw() {
 						break;
 					case 3:
 					case 4:
-						screen.fillStyle = "#00FFFF";
+						screen.strokeStyle = "#88FFFF88";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						screen.stroke();
 						break;
 					case 5:
-						screen.fillStyle = "#FFFF00";
+						screen.strokeStyle = "#FFFF88";
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+						screen.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+						screen.stroke();
+						
+						screen.beginPath();
+						screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+						screen.stroke();
 						break;
 					case 7:
-						screen.fillStyle = "#FF8888";
+						screen.strokeStyle = "#88000088";
+						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+						
+						for (let i=0; i<3; i++) {
+							screen.beginPath();
+							screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
+							screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
+							screen.stroke();
+						}
 						break;
 					case 8:
-						screen.fillStyle = "#8888FF";
+						screen.strokeStyle = "#00008888";
+						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+						
+						for (let i=0; i<3; i++) {
+							screen.beginPath();
+							screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
+							screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+							screen.stroke();
+						}
 						break;
 				}
 			}
