@@ -352,13 +352,13 @@ function draw() {
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = canvas.height - levels[player.currentLevel][0].length*blockSize;
 	}
 	screen.clearRect(0,0,canvas.width,canvas.height);
-	screen.lineWidth = blockSize*3/25;
 	// draw player
 	screen.fillStyle = "#0000FF";
 	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 	// draw level
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
+			screen.lineWidth = blockSize*3/25;
 			let xb = lvlx + x * blockSize;
 			let yb = lvly + y * blockSize;
 			let type = getBlockType(x,y);
