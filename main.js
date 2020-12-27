@@ -432,7 +432,7 @@ function draw() {
 						break;
 					case 7:
 						screen.strokeStyle = "#88000088";
-						screen.strokeWidth = blockSize/25;
+						screen.lineWidth = blockSize/25;
 						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
 						
 						for (let i=0; i<3; i++) {
@@ -444,7 +444,7 @@ function draw() {
 						break;
 					case 8:
 						screen.strokeStyle = "#00008888";
-						screen.strokeWidth = blockSize/25;
+						screen.lineWidth = blockSize/25;
 						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
 						
 						for (let i=0; i<3; i++) {
