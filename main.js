@@ -373,7 +373,7 @@ function drawPlayer() {
 	canvas.height = levels[player.currentLevel][0].length*blockSize;
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
-	pL.fillRect(Math.floor(player.x) + lvlx, Math.floor(player.y) + lvly, playerSize, playerSize);
+	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
@@ -384,8 +384,8 @@ function drawLevel() {
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
 			lL.lineWidth = blockSize*3/25;
-			let xb = lvlx + x * blockSize;
-			let yb = lvly + y * blockSize;
+			let xb = x * blockSize;
+			let yb = y * blockSize;
 			let type = getBlockType(x,y);
 			if (type != -1 && type != 0 && type != 6) {
 				switch (type) {
