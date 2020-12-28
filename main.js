@@ -246,7 +246,7 @@ function nextFrame(timeStamp) {
 			   && player.g < 0) player.yv = -player.g*3/4;
 			player.y = (y1b + 1) * blockSize;
 			if (player.g < 0 && player.yv <= 0) player.canJump = true;
-		} else if (player.g < 0) player.canJump = false;
+		} else if (player.g < 0 && !player.godMode) player.canJump = false;
 		// floor
 		if (isTouching("down")) {
 			player.yv = 0;
