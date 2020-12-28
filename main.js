@@ -356,12 +356,12 @@ function draw() {
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
 	// draw player
-	if (!arraysEqual(playerPosLast[0],[Math.round(player.x)+lvlx,Math.round(player.y)+lvly])) {
+	if (!arraysEqual(playerPosLast,[Math.round(player.x)+lvlx,Math.round(player.y)+lvly])) {
 		playerPosLast = [Math.round(player.x)+lvlx,Math.round(player.y)+lvly];
 		drawPlayer();
 	}
 	// draw level
-	if (!arraysEqual(lvlPosLast[0],[lvlx,lvly])) {
+	if (!arraysEqual(lvlPosLast,[lvlx,lvly])) {
 		lvlPosLast = [lvlx,lvly];
 		drawLevel();
 	}
