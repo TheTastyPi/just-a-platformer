@@ -355,15 +355,15 @@ function draw() {
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
 	// draw player
-	if (playerPosLast[0] != Math.round(player.x)+lvlx || playerPosLast[1] != Math.round(player.y)+lvly) {
+	if (!arrayEqual(playerPosLast[0],[Math.round(player.x)+lvlx,Math.round(player.y)+lvly])) {
 		playerPosLast = [Math.round(player.x)+lvlx,Math.round(player.y)+lvly];
 		pL.clearRect(0,0,canvas.width,canvas.height);
 		pL.fillStyle = "#0000FF";
 		pL.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 	}
 	// draw level
-	if (lvlPosLast[0] != lvlx || lvlPosLast[1] != lvly || lvlPosLast[2] != player.currentLevel) {
-		lvlPosLast = [lvlx,lvly,player.currentLevel];
+	if (!arrayEqual(lvlPosLast[0],[lvlx,lvly,levels[player.currentLevel]])) {
+		lvlPosLast = [lvlx,lvly,levels[player.currentLevel]];
 		lL.clearRect(0,0,canvas.width,canvas.height);
 		for (let x in levels[player.currentLevel]) {
 			for (let y in levels[player.currentLevel][x]) {
@@ -476,6 +476,15 @@ function resizeCanvas() {
 	canvas = document.getElementById("levelLayer");
 	canvas.width  = window.innerWidth;
 	canvas.height = window.innerHeight;
+}
+function arraysEqual(a, b) {
+	if (a === b) return true;
+	if (a == null || b == null) return false;
+	if (a.length !== b.length) return false;
+	for (var i = 0; i < a.length; ++i) {
+		if (!arraysEqual(a[i],b[i])) return false;
+	}
+	return true;
 }
 resizeCanvas();
 window.requestAnimationFrame(nextFrame);
