@@ -364,7 +364,8 @@ function draw() {
 	canvas = document.getElementById("levelLayer");
 	screen = canvas.getContext("2d");
 	if (lvlPosLast != [lvlx,lvly,player.currentLevel]) {
-		lvlPosLast = [lvlx,lvly,player.currentLevel]
+		lvlPosLast = [lvlx,lvly,player.currentLevel];
+		screen.clearRect(0,0,canvas.width,canvas.height);
 		for (let x in levels[player.currentLevel]) {
 			for (let y in levels[player.currentLevel][x]) {
 				screen.lineWidth = blockSize*3/25;
