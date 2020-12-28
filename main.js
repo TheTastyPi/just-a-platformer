@@ -343,13 +343,13 @@ function draw() {
 	let canvas = document.getElementById("playerLayer");
 	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
-		lvlx = Math.floor(canvas.width/2 - (player.x+playerSize/2));
+		lvlx = Math.floor(canvas.width/2) - Math.floor(player.x+playerSize/2);
 		if (lvlx > 0) lvlx = 0;
 		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
 	}
 	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
-		lvly = Math.floor(canvas.height/2 - (player.y+playerSize/2));
+		lvly = Math.floor(canvas.height/2) - Math.floor(player.y+playerSize/2);
 		if (lvly > 0) lvly = 0;
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
@@ -369,13 +369,13 @@ function drawPlayer() {
 	let pL = canvas.getContext("2d");
 	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
-		lvlx = Math.floor(canvas.width/2 - (player.x+playerSize/2));
+		lvlx = Math.floor(canvas.width/2) - Math.floor(player.x+playerSize/2);
 		if (lvlx > 0) lvlx = 0;
 		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
 	}
 	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
-		lvly = Math.floor(canvas.height/2 - (player.y+playerSize/2));
+		lvly = Math.floor(canvas.height/2) - Math.floor(player.y+playerSize/2);
 		if (lvly > 0) lvly = 0;
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
@@ -388,13 +388,13 @@ function drawLevel() {
 	let lL = canvas.getContext("2d");
 	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
-		lvlx = Math.floor(canvas.width/2 - (player.x+playerSize/2));
+		lvlx = Math.floor(canvas.width/2) - Math.floor(player.x+playerSize/2);
 		if (lvlx > 0) lvlx = 0;
 		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
 	}
 	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
-		lvly = Math.floor(canvas.height/2 - (player.y+playerSize/2));
+		lvly = Math.floor(canvas.height/2) - Math.floor(player.y+playerSize/2);
 		if (lvly > 0) lvly = 0;
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
