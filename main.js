@@ -93,7 +93,7 @@ const levels = [
 		[5,1,5,5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,1],
 	],
 ];
-const noHitbox = [-1,0,2,3,4,6,7,8];
+const hasHitbox = [1,5];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
@@ -165,21 +165,21 @@ function isTouching(dir, type) {
 	let y2b = Math.floor(y2/blockSize);
 	switch (dir) {
 		case "left":
-			return (!noHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize) 
-			|| (!noHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize);
+			return (hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize) 
+			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize);
 			break;
 		case "right":
-			return (!noHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize) 
-			|| (!noHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize);
+			return (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize);
 			break;
 		case "up":
-			return ((!noHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && noHitbox.includes(getBlockType(x1b,y1b+1))) 
-			|| (!noHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && noHitbox.includes(getBlockType(x2b,y1b+1))))
+			return ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
+			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
 			&& player.yv < 0;
 			break;
 		case "down":
-			return ((!noHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && noHitbox.includes(getBlockType(x1b,y2b-1))) 
-			|| (!noHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && noHitbox.includes(getBlockType(x2b,y2b-1))))
+			return ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
 			&& player.yv > 0;
 			break;
 		case "any":
@@ -236,8 +236,8 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			if (((getBlockType(x2b,y1b) == 5 && getBlockType(x1b,y1b) == 5)
 			   || ((getBlockType(x2b,y1b) == 5 || getBlockType(x1b,y1b) == 5)
-			       && ((noHitbox.includes(getBlockType(x2b,y1b)) || !noHitbox.includes(getBlockType(x2b,y1b+1)))
-				   || (noHitbox.includes(getBlockType(x1b,y1b)) || !noHitbox.includes(getBlockType(x1b,y1b+1))))))
+			       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
+				   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
 			   && player.g < 0) player.yv = -player.g*3/4;
 			player.y = (y1b + 1) * blockSize;
 			if (player.g < 0 && player.yv <= 0) player.canJump = true;
@@ -247,8 +247,8 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			if (((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
 			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
-			       && ((noHitbox.includes(getBlockType(x2b,y2b)) || !noHitbox.includes(getBlockType(x2b,y2b-1))) 
-				   || (noHitbox.includes(getBlockType(x1b,y2b)) || !noHitbox.includes(getBlockType(x1b,y2b-1))))))
+			       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
+				   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
 			   && player.g > 0) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0 && player.yv >= 0) player.canJump = true;
