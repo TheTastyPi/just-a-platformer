@@ -361,6 +361,8 @@ function draw() {
 		screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 	}
 	// draw level
+	canvas = document.getElementById("levelLayer");
+	screen = canvas.getContext("2d");
 	if (lvlPosLast != [lvlx,lvly,player.currentLevel]) {
 		lvlPosLast = [lvlx,lvly,player.currentLevel]
 		for (let x in levels[player.currentLevel]) {
@@ -468,7 +470,10 @@ function draw() {
 	}
 }
 function resizeCanvas() {
-	let canvas = document.getElementById("gameScreen");
+	let canvas = document.getElementById("playerLayer");
+	canvas.width  = window.innerWidth;
+	canvas.height = window.innerHeight;
+	canvas = document.getElementById("levelLayer");
 	canvas.width  = window.innerWidth;
 	canvas.height = window.innerHeight;
 }
