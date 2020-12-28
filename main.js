@@ -341,23 +341,21 @@ var lvlPosLast = [0,0];
 function draw() {
 	// setup
 	let canvas = document.getElementById("playerLayer");
-	let pL = canvas.getContext("2d");
-	let lL = document.getElementById("levelLayer").getContext("2d");
-	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
+	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
-		lvlx = Math.round(canvas.width/2 - (player.x+playerSize/2));
+		lvlx = Math.floor(canvas.width/2 - (player.x+playerSize/2));
 		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.round(levels[player.currentLevel].length*blockSize - canvas.width);
+		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
 	}
-	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
+	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
-		lvly = Math.round(canvas.height/2 - (player.y+playerSize/2));
+		lvly = Math.floor(canvas.height/2 - (player.y+playerSize/2));
 		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
+		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
 	// draw player
-	if (!arraysEqual(playerPosLast,[Math.round(player.x)+lvlx,Math.round(player.y)+lvly])) {
-		playerPosLast = [Math.round(player.x)+lvlx,Math.round(player.y)+lvly];
+	if (!arraysEqual(playerPosLast,[Math.floor(player.x)+lvlx,Math.floor(player.y)+lvly])) {
+		playerPosLast = [Math.floor(player.x)+lvlx,Math.floor(player.y)+lvly];
 		drawPlayer();
 	}
 	// draw level
@@ -369,36 +367,36 @@ function draw() {
 function drawPlayer() {
 	let canvas = document.getElementById("playerLayer");
 	let pL = canvas.getContext("2d");
-	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
+	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
-		lvlx = Math.round(canvas.width/2 - (player.x+playerSize/2));
+		lvlx = Math.floor(canvas.width/2 - (player.x+playerSize/2));
 		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.round(levels[player.currentLevel].length*blockSize - canvas.width);
+		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
 	}
-	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
+	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
-		lvly = Math.round(canvas.height/2 - (player.y+playerSize/2));
+		lvly = Math.floor(canvas.height/2 - (player.y+playerSize/2));
 		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
+		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
-	pL.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
+	pL.fillRect(Math.floor(player.x) + lvlx, Math.floor(player.y) + lvly, playerSize, playerSize);
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
 	let lL = canvas.getContext("2d");
-	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
+	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
-		lvlx = Math.round(canvas.width/2 - (player.x+playerSize/2));
+		lvlx = Math.floor(canvas.width/2 - (player.x+playerSize/2));
 		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.round(levels[player.currentLevel].length*blockSize - canvas.width);
+		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
 	}
-	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
+	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
-		lvly = Math.round(canvas.height/2 - (player.y+playerSize/2));
+		lvly = Math.floor(canvas.height/2 - (player.y+playerSize/2));
 		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
+		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in levels[player.currentLevel]) {
