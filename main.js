@@ -341,8 +341,6 @@ function nextFrame(timeStamp) {
 	}
 	window.requestAnimationFrame(nextFrame);
 }
-var playerPosLast = [0,0];
-var lvlPosLast = [0,0];
 function drawPlayer() {
 	let canvas = document.getElementById("playerLayer");
 	let pL = canvas.getContext("2d");
