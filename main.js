@@ -340,7 +340,8 @@ var lvlPosLast = [0,0,0];
 function draw() {
 	// setup
 	let canvas = document.getElementById("playerLayer");
-	let screen = canvas.getContext("2d");
+	let pL = canvas.getContext("2d");
+	let lL = document.getElementById("levelLayer").getContext("2d");
 	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
 	if (lvlx < 0) {
 		lvlx = Math.round(canvas.width/2 - (player.x+playerSize/2));
@@ -356,112 +357,110 @@ function draw() {
 	// draw player
 	if (playerPosLast[0] != Math.round(player.x)+lvlx || playerPosLast[1] != Math.round(player.y)+lvly) {
 		playerPosLast = [Math.round(player.x)+lvlx,Math.round(player.y)+lvly];
-		screen.clearRect(0,0,canvas.width,canvas.height);
-		screen.fillStyle = "#0000FF";
-		screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
+		pL.clearRect(0,0,canvas.width,canvas.height);
+		pL.fillStyle = "#0000FF";
+		pL.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
 	}
 	// draw level
-	canvas = document.getElementById("levelLayer");
-	screen = canvas.getContext("2d");
 	if (lvlPosLast[0] != lvlx || lvlPosLast[1] != lvly || lvlPosLast[2] != player.currentLevel) {
 		lvlPosLast = [lvlx,lvly,player.currentLevel];
-		screen.clearRect(0,0,canvas.width,canvas.height);
+		lL.clearRect(0,0,canvas.width,canvas.height);
 		for (let x in levels[player.currentLevel]) {
 			for (let y in levels[player.currentLevel][x]) {
-				screen.lineWidth = blockSize*3/25;
+				lL.lineWidth = blockSize*3/25;
 				let xb = lvlx + x * blockSize;
 				let yb = lvly + y * blockSize;
 				let type = getBlockType(x,y);
 				if (type != -1 && type != 0 && type != 6) {
 					switch (type) {
 						case 1:
-							screen.fillStyle = "#000000";
+							lL.fillStyle = "#000000";
 							break;
 						case 2:
-							screen.fillStyle = "#FF0000";
+							lL.fillStyle = "#FF0000";
 							break;
 						case 3:
-							screen.fillStyle = "#00888888";
+							lL.fillStyle = "#00888888";
 							break;
 						case 4:
-							screen.fillStyle = "#00FFFF88";
+							lL.fillStyle = "#00FFFF88";
 							break;
 						case 5:
-							screen.fillStyle = "#FFFF00";
+							lL.fillStyle = "#FFFF00";
 							break;
 						case 7:
-							screen.fillStyle = "#FF888888";
+							lL.fillStyle = "#FF888888";
 							break;
 						case 8:
-							screen.fillStyle = "#8888FF88";
+							lL.fillStyle = "#8888FF88";
 							break;
 					}
-					screen.fillRect(xb, yb, blockSize, blockSize);
+					lL.fillRect(xb, yb, blockSize, blockSize);
 					switch (type) {
 						case 2:
-							screen.strokeStyle = "#880000";
-							screen.beginPath();
-							screen.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-							screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
-							screen.stroke();
+							lL.strokeStyle = "#880000";
+							lL.beginPath();
+							lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+							lL.stroke();
 
-							screen.beginPath();
-							screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
-							screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-							screen.stroke();
+							lL.beginPath();
+							lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+							lL.stroke();
 							break;
 						case 3:
-							screen.strokeStyle = "#00444488";
-							screen.beginPath();
-							screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-							screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-							screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-							screen.stroke();
+							lL.strokeStyle = "#00444488";
+							lL.beginPath();
+							lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+							lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+							lL.stroke();
 							break;
 						case 4:
-							screen.strokeStyle = "#00888888";
-							screen.beginPath();
-							screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-							screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-							screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-							screen.stroke();
+							lL.strokeStyle = "#00888888";
+							lL.beginPath();
+							lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+							lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+							lL.stroke();
 							break;
 						case 5:
-							screen.strokeStyle = "#888800";
-							screen.beginPath();
-							screen.moveTo(xb+blockSize/25*3,yb+blockSize/4);
-							screen.lineTo(xb+blockSize/2,yb+blockSize/25*3);
-							screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
-							screen.stroke();
+							lL.strokeStyle = "#888800";
+							lL.beginPath();
+							lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+							lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+							lL.stroke();
 
-							screen.beginPath();
-							screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
-							screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-							screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
-							screen.stroke();
+							lL.beginPath();
+							lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+							lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+							lL.stroke();
 							break;
 						case 7:
-							screen.strokeStyle = "#88000088";
-							screen.lineWidth = blockSize/25;
-							screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+							lL.strokeStyle = "#88000088";
+							lL.lineWidth = blockSize/25;
+							lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
 
 							for (let i=0; i<3; i++) {
-								screen.beginPath();
-								screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
-								screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
-								screen.stroke();
+								lL.beginPath();
+								lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
+								lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
+								lL.stroke();
 							}
 							break;
 						case 8:
-							screen.strokeStyle = "#00008888";
-							screen.lineWidth = blockSize/25;
-							screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+							lL.strokeStyle = "#00008888";
+							lL.lineWidth = blockSize/25;
+							lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
 
 							for (let i=0; i<3; i++) {
-								screen.beginPath();
-								screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
-								screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
-								screen.stroke();
+								lL.beginPath();
+								lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
+								lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+								lL.stroke();
 							}
 							break;
 					}
