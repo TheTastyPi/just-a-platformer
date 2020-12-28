@@ -204,6 +204,10 @@ function nextFrame(timeStamp) {
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
 	if (dt < 100) {
+		let xprev = player.x;
+		let yprev = player.y;
+		let lvlxprev = player.levelCoord[0];
+		let lvlyprev = player.levelCoord[1];
 		// position change based on velocity
 		player.x += player.xv * dt / 500 * gameSpeed;
 		player.y += player.yv * dt / 500 * gameSpeed;
@@ -331,41 +335,14 @@ function nextFrame(timeStamp) {
 		if (control.up && player.canJump) player.yv = -player.g/2;
 		if (control.left) player.xv = -100;
 		if (control.right) player.xv = 100;
-		// draw + ending stuff
-		draw();
+		// draw checks
+		if (player.x != xprev || player.y != yprev) drawPlayer();
+		if (player.levelCoord[0] != lvlxprev || player.levelCoord[1] != lvlyprev) drawLevel();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
 var playerPosLast = [0,0];
 var lvlPosLast = [0,0];
-function draw() {
-	// setup
-	let canvas = document.getElementById("playerLayer");
-	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(canvas.width/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
-	}
-	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = Math.floor(canvas.height/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
-	}
-	// draw player
-	if (!arraysEqual(playerPosLast,[Math.floor(player.x)+lvlx,Math.floor(player.y)+lvly])) {
-		playerPosLast = [Math.floor(player.x)+lvlx,Math.floor(player.y)+lvly];
-		drawPlayer();
-		adjustScreen();
-	}
-	// draw level
-	if (!arraysEqual(lvlPosLast,[lvlx,lvly])) {
-		lvlPosLast = [lvlx,lvly];
-		drawLevel();
-		adjustScreen();
-	}
-}
 function drawPlayer() {
 	let canvas = document.getElementById("playerLayer");
 	let pL = canvas.getContext("2d");
@@ -374,6 +351,7 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
+	adjustScreen();
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
@@ -483,6 +461,7 @@ function drawLevel() {
 			}
 		}
 	}
+	adjustScreen();
 }
 function adjustScreen() {
 	let lvlx = Math.floor((window.innerWidth - levels[player.currentLevel].length*blockSize) / 2);
