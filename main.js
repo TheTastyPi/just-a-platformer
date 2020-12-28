@@ -337,7 +337,7 @@ function nextFrame(timeStamp) {
 	window.requestAnimationFrame(nextFrame);
 }
 var playerPosLast = [0,0];
-var lvlPosLast = [0,0,0];
+var lvlPosLast = [0,0];
 function draw() {
 	// setup
 	let canvas = document.getElementById("playerLayer");
@@ -517,7 +517,7 @@ function arraysEqual(a, b) {
 	if (a == null || b == null) return false;
 	if (a.length !== b.length) return false;
 	for (var i = 0; i < a.length; ++i) {
-		if (!arraysEqual(a[i],b[i])) return false;
+		if (a[i] !== b[i]) return false;
 	}
 	return true;
 }
