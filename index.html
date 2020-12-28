@@ -3,8 +3,9 @@
 	<head>
 		<title>just a platformer</title>
 	</head>
-	<body onresize="resizeCanvas()" style="height:100%; margin:0; overflow:hidden">
-		<canvas id="gameScreen"></canvas>
+	<body onresize="adjustScreen()" style="height:100%; margin:0; overflow:hidden">
+		<canvas id="playerLayer" style="position:absolute"></canvas>
+		<canvas id="levelLayer" style="position:absolute"></canvas>
 	</body>
 	<script src="main.js"></script>
 </html>

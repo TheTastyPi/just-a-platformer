@@ -5,8 +5,8 @@ const player = {
 	spawnPoint: [4,7,0,1,400],
 	levelCoord: [0,1],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
-	x: 240,
-	y: 380,
+	x: 215,
+	y: 367.5,
 	xv: 0,
 	yv: 0,
 	g: 400,
@@ -93,7 +93,7 @@ const levels = [
 		[5,1,5,5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,1],
 	],
 ];
-const noHitbox = [-1,0,2,3,4,6,7,8];
+const hasHitbox = [1,5];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
@@ -165,21 +165,21 @@ function isTouching(dir, type) {
 	let y2b = Math.floor(y2/blockSize);
 	switch (dir) {
 		case "left":
-			return (!noHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize) 
-			|| (!noHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize);
+			return (hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize) 
+			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize);
 			break;
 		case "right":
-			return (!noHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize) 
-			|| (!noHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize);
+			return (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize);
 			break;
 		case "up":
-			return ((!noHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && noHitbox.includes(getBlockType(x1b,y1b+1))) 
-			|| (!noHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && noHitbox.includes(getBlockType(x2b,y1b+1))))
+			return ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
+			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
 			&& player.yv < 0;
 			break;
 		case "down":
-			return ((!noHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && noHitbox.includes(getBlockType(x1b,y2b-1))) 
-			|| (!noHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && noHitbox.includes(getBlockType(x2b,y2b-1))))
+			return ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
 			&& player.yv > 0;
 			break;
 		case "any":
@@ -204,6 +204,10 @@ function nextFrame(timeStamp) {
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
 	if (dt < 100) {
+		let xprev = player.x;
+		let yprev = player.y;
+		let lvlxprev = player.levelCoord[0];
+		let lvlyprev = player.levelCoord[1];
 		// position change based on velocity
 		player.x += player.xv * dt / 500 * gameSpeed;
 		player.y += player.yv * dt / 500 * gameSpeed;
@@ -236,8 +240,8 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			if (((getBlockType(x2b,y1b) == 5 && getBlockType(x1b,y1b) == 5)
 			   || ((getBlockType(x2b,y1b) == 5 || getBlockType(x1b,y1b) == 5)
-			       && ((noHitbox.includes(getBlockType(x2b,y1b)) || !noHitbox.includes(getBlockType(x2b,y1b+1)))
-				   || (noHitbox.includes(getBlockType(x1b,y1b)) || !noHitbox.includes(getBlockType(x1b,y1b+1))))))
+			       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
+				   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
 			   && player.g < 0) player.yv = -player.g*3/4;
 			player.y = (y1b + 1) * blockSize;
 			if (player.g < 0 && player.yv <= 0) player.canJump = true;
@@ -247,8 +251,8 @@ function nextFrame(timeStamp) {
 			player.yv = 0;
 			if (((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
 			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
-			       && ((noHitbox.includes(getBlockType(x2b,y2b)) || !noHitbox.includes(getBlockType(x2b,y2b-1))) 
-				   || (noHitbox.includes(getBlockType(x1b,y2b)) || !noHitbox.includes(getBlockType(x1b,y2b-1))))))
+			       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
+				   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
 			   && player.g > 0) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0 && player.yv >= 0) player.canJump = true;
@@ -262,25 +266,23 @@ function nextFrame(timeStamp) {
 		y1b = Math.floor(y1/blockSize);
 		y2b = Math.floor(y2/blockSize);
 		// checkpoint
-		if (getBlockType(x1b,y1b) == 3) {
+		if (isTouching("any",3)) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
-			levels[player.currentLevel][x1b][y1b] = 4;
-		}
-		if (getBlockType(x2b,y1b) == 3) {
-			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
-			levels[player.currentLevel][x2b][y1b] = 4;
-		}
-		if (getBlockType(x1b,y2b) == 3) {
-			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
-			levels[player.currentLevel][x1b][y2b] = 4;
-		}
-		if (getBlockType(x2b,y2b) == 3) {
-			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
-			levels[player.currentLevel][x2b][y2b] = 4;
+			if (getBlockType(x1b,y1b) == 3) {
+				player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
+				levels[player.currentLevel][x1b][y1b] = 4;
+			} else if (getBlockType(x2b,y1b) == 3) {
+				player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
+				levels[player.currentLevel][x2b][y1b] = 4;
+			} else if (getBlockType(x1b,y2b) == 3) {
+				player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
+				levels[player.currentLevel][x1b][y2b] = 4;
+				drawLevel();
+			} else if (getBlockType(x2b,y2b) == 3) {
+				player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
+				levels[player.currentLevel][x2b][y2b] = 4;
+			}
+			drawLevel();
 		}
 		// anti-grav
 		if (isTouching("any",7)) {
@@ -330,139 +332,157 @@ function nextFrame(timeStamp) {
 		if (control.up && player.canJump) player.yv = -player.g/2;
 		if (control.left) player.xv = -100;
 		if (control.right) player.xv = 100;
-		// draw + ending stuff
-		draw();
+		// draw checks
+		if (player.x != xprev || player.y != yprev) drawPlayer();
+		if (player.levelCoord[0] != lvlxprev || player.levelCoord[1] != lvlyprev) drawLevel();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
-function draw() {
-	// setup
-	let canvas = document.getElementById("gameScreen");
-	let screen = canvas.getContext("2d");
-	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = canvas.width/2 - (player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = levels[player.currentLevel].length*blockSize - canvas.width;
-	}
-	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = canvas.height/2 - (player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = canvas.height - levels[player.currentLevel][0].length*blockSize;
-	}
-	screen.clearRect(0,0,canvas.width,canvas.height);
-	// draw player
-	screen.fillStyle = "#0000FF";
-	screen.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
-	// draw level
+function drawPlayer() {
+	let canvas = document.getElementById("playerLayer");
+	let pL = canvas.getContext("2d");
+	canvas.width = levels[player.currentLevel].length*blockSize;
+	canvas.height = levels[player.currentLevel][0].length*blockSize;
+	pL.clearRect(0,0,canvas.width,canvas.height);
+	pL.fillStyle = "#0000FF";
+	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
+	adjustScreen();
+}
+function drawLevel() {
+	let canvas = document.getElementById("levelLayer");
+	let lL = canvas.getContext("2d");
+	canvas.width = levels[player.currentLevel].length*blockSize;
+	canvas.height = levels[player.currentLevel][0].length*blockSize;
+	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
-			screen.lineWidth = blockSize*3/25;
-			let xb = lvlx + x * blockSize;
-			let yb = lvly + y * blockSize;
+			lL.lineWidth = blockSize*3/25;
+			let xb = x * blockSize;
+			let yb = y * blockSize;
 			let type = getBlockType(x,y);
 			if (type != -1 && type != 0 && type != 6) {
 				switch (type) {
 					case 1:
-						screen.fillStyle = "#000000";
+						lL.fillStyle = "#000000";
 						break;
 					case 2:
-						screen.fillStyle = "#FF0000";
+						lL.fillStyle = "#FF0000";
 						break;
 					case 3:
-						screen.fillStyle = "#00888888";
+						lL.fillStyle = "#00888888";
 						break;
 					case 4:
-						screen.fillStyle = "#00FFFF88";
+						lL.fillStyle = "#00FFFF88";
 						break;
 					case 5:
-						screen.fillStyle = "#FFFF00";
+						lL.fillStyle = "#FFFF00";
 						break;
 					case 7:
-						screen.fillStyle = "#FF888888";
+						lL.fillStyle = "#FF888888";
 						break;
 					case 8:
-						screen.fillStyle = "#8888FF88";
+						lL.fillStyle = "#8888FF88";
 						break;
 				}
-				screen.fillRect(xb, yb, blockSize, blockSize);
+				lL.fillRect(xb, yb, blockSize, blockSize);
 				switch (type) {
 					case 2:
-						screen.strokeStyle = "#880000";
-						screen.beginPath();
-						screen.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
-						screen.stroke();
-						
-						screen.beginPath();
-						screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
-						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-						screen.stroke();
+						lL.strokeStyle = "#880000";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+						lL.stroke();
+
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						lL.stroke();
 						break;
 					case 3:
-						screen.strokeStyle = "#00444488";
-						screen.beginPath();
-						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-						screen.stroke();
+						lL.strokeStyle = "#00444488";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						lL.stroke();
 						break;
 					case 4:
-						screen.strokeStyle = "#00888888";
-						screen.beginPath();
-						screen.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-						screen.stroke();
+						lL.strokeStyle = "#00888888";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						lL.stroke();
 						break;
 					case 5:
-						screen.strokeStyle = "#888800";
-						screen.beginPath();
-						screen.moveTo(xb+blockSize/25*3,yb+blockSize/4);
-						screen.lineTo(xb+blockSize/2,yb+blockSize/25*3);
-						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
-						screen.stroke();
-						
-						screen.beginPath();
-						screen.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
-						screen.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-						screen.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
-						screen.stroke();
+						lL.strokeStyle = "#888800";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+						lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+						lL.stroke();
+
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+						lL.stroke();
 						break;
 					case 7:
-						screen.strokeStyle = "#88000088";
-						screen.lineWidth = blockSize/25;
-						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
-						
+						lL.strokeStyle = "#88000088";
+						lL.lineWidth = blockSize/25;
+						lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+
 						for (let i=0; i<3; i++) {
-							screen.beginPath();
-							screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
-							screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
-							screen.stroke();
+							lL.beginPath();
+							lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
+							lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
+							lL.stroke();
 						}
 						break;
 					case 8:
-						screen.strokeStyle = "#00008888";
-						screen.lineWidth = blockSize/25;
-						screen.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
-						
+						lL.strokeStyle = "#00008888";
+						lL.lineWidth = blockSize/25;
+						lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+
 						for (let i=0; i<3; i++) {
-							screen.beginPath();
-							screen.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
-							screen.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
-							screen.stroke();
+							lL.beginPath();
+							lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
+							lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+							lL.stroke();
 						}
 						break;
 				}
 			}
 		}
 	}
+	adjustScreen();
 }
-function resizeCanvas() {
-	let canvas = document.getElementById("gameScreen");
-	canvas.width  = window.innerWidth;
-	canvas.height = window.innerHeight;
+function adjustScreen() {
+	let lvlx = Math.floor((window.innerWidth - levels[player.currentLevel].length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < window.innerWidth - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - window.innerWidth);
+	}
+	let lvly = Math.floor((window.innerHeight - levels[player.currentLevel][0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
+		if (lvly > 0) lvly = 0;
+		if (lvly < window.innerHeight - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(window.innerHeight - levels[player.currentLevel][0].length*blockSize);
+	}
+	document.getElementById("playerLayer").style.left = lvlx+"px";
+	document.getElementById("levelLayer").style.left = lvlx+"px";
+	document.getElementById("playerLayer").style.top = lvly+"px";
+	document.getElementById("levelLayer").style.top = lvly+"px";
 }
-resizeCanvas();
+function arraysEqual(a, b) {
+	if (a === b) return true;
+	if (a == null || b == null) return false;
+	if (a.length !== b.length) return false;
+	for (var i = 0; i < a.length; ++i) {
+		if (a[i] !== b[i]) return false;
+	}
+	return true;
+}
 window.requestAnimationFrame(nextFrame);
