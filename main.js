@@ -502,11 +502,6 @@ function adjustScreen() {
 	document.getElementById("playerLayer").style.top = lvly+"px";
 	document.getElementById("levelLayer").style.top = lvly+"px";
 }
-function resizeCanvas() {
-	let canvas = document.getElementById("playerLayer");
-	canvas.width  = window.innerWidth;
-	canvas.height = window.innerHeight;
-}
 function arraysEqual(a, b) {
 	if (a === b) return true;
 	if (a == null || b == null) return false;
@@ -516,5 +511,4 @@ function arraysEqual(a, b) {
 	}
 	return true;
 }
-resizeCanvas();
 window.requestAnimationFrame(nextFrame);
