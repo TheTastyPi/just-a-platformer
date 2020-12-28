@@ -357,28 +357,20 @@ function draw() {
 	if (!arraysEqual(playerPosLast,[Math.floor(player.x)+lvlx,Math.floor(player.y)+lvly])) {
 		playerPosLast = [Math.floor(player.x)+lvlx,Math.floor(player.y)+lvly];
 		drawPlayer();
+		adjustScreen();
 	}
 	// draw level
 	if (!arraysEqual(lvlPosLast,[lvlx,lvly])) {
 		lvlPosLast = [lvlx,lvly];
 		drawLevel();
+		adjustScreen();
 	}
 }
 function drawPlayer() {
 	let canvas = document.getElementById("playerLayer");
 	let pL = canvas.getContext("2d");
-	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(canvas.width/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
-	}
-	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = Math.floor(canvas.height/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
-	}
+	canvas.width = levels[player.currentLevel].length*blockSize;
+	canvas.height = levels[player.currentLevel][0].length*blockSize;
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	pL.fillRect(Math.floor(player.x) + lvlx, Math.floor(player.y) + lvly, playerSize, playerSize);
@@ -386,18 +378,8 @@ function drawPlayer() {
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
 	let lL = canvas.getContext("2d");
-	let lvlx = Math.floor((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(canvas.width/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - canvas.width);
-	}
-	let lvly = Math.floor((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = Math.floor(canvas.height/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(canvas.height - levels[player.currentLevel][0].length*blockSize);
-	}
+	canvas.width = levels[player.currentLevel].length*blockSize;
+	canvas.height = levels[player.currentLevel][0].length*blockSize;
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in levels[player.currentLevel]) {
 		for (let y in levels[player.currentLevel][x]) {
@@ -502,11 +484,26 @@ function drawLevel() {
 		}
 	}
 }
+function adjustScreen() {
+	let lvlx = Math.floor((window.innerWidth - levels[player.currentLevel].length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < window.innerWidth - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - window.innerWidth);
+	}
+	let lvly = Math.floor((window.innerHeight - levels[player.currentLevel][0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
+		if (lvly > 0) lvly = 0;
+		if (lvly < window.innerHeight - levels[player.currentLevel][0].length*blockSize) lvly = Math.floor(window.innerHeight - levels[player.currentLevel][0].length*blockSize);
+	}
+	document.getElementById("playerLayer").style.left = lvlx+"px";
+	document.getElementById("levelLayer").style.left = lvlx+"px";
+	document.getElementById("playerLayer").style.top = lvly+"px";
+	document.getElementById("levelLayer").style.top = lvly+"px";
+}
 function resizeCanvas() {
 	let canvas = document.getElementById("playerLayer");
-	canvas.width  = window.innerWidth;
-	canvas.height = window.innerHeight;
-	canvas = document.getElementById("levelLayer");
 	canvas.width  = window.innerWidth;
 	canvas.height = window.innerHeight;
 }
