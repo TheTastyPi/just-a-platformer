@@ -354,7 +354,7 @@ function draw() {
 		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
 	}
 	// draw player
-	if (playerPosLast != [Math.round(player.x)+lvlx,Math.round(player.y)+lvly]) {
+	if (playerPosLast[0] != Math.round(player.x)+lvlx || playerPosLast[1] != Math.round(player.y)+lvly) {
 		playerPosLast = [Math.round(player.x)+lvlx,Math.round(player.y)+lvly];
 		screen.clearRect(0,0,canvas.width,canvas.height);
 		screen.fillStyle = "#0000FF";
@@ -363,7 +363,7 @@ function draw() {
 	// draw level
 	canvas = document.getElementById("levelLayer");
 	screen = canvas.getContext("2d");
-	if (lvlPosLast != [lvlx,lvly,player.currentLevel]) {
+	if (lvlPosLast[0] != lvlx || lvlPosLast[1] != lvly || lvlPosLast[2] != player.currentLevel) {
 		lvlPosLast = [lvlx,lvly,player.currentLevel];
 		screen.clearRect(0,0,canvas.width,canvas.height);
 		for (let x in levels[player.currentLevel]) {
