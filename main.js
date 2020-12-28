@@ -11,6 +11,7 @@ const player = {
 	yv: 0,
 	g: 400,
 	canJump: false,
+	godMode: false,
 };
 const control = {
 	up: false,
@@ -256,7 +257,7 @@ function nextFrame(timeStamp) {
 			   && player.g > 0) player.yv = -player.g*3/4;
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0 && player.yv >= 0) player.canJump = true;
-		} else if (player.g > 0) player.canJump = false;
+		} else if (player.g > 0 && !player.godMode) player.canJump = false;
 		x1 = player.x + 1;
 		x2 = player.x+playerSize - 1;
 		y1 = player.y + 1;
@@ -292,7 +293,7 @@ function nextFrame(timeStamp) {
 			if (player.g < 0) player.g = -player.g;
 		}
 		// death block
-		if (isTouching("any",2)) {
+		if (isTouching("any",2) && !player.godMode) {
 			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
 			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
 			player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize)/2;
