@@ -266,21 +266,22 @@ function nextFrame(timeStamp) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x1b][y1b] = 4;
-		}
-		if (getBlockType(x2b,y1b) == 3) {
+			drawLevel();
+		} else if (getBlockType(x2b,y1b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x2b][y1b] = 4;
-		}
-		if (getBlockType(x1b,y2b) == 3) {
+			drawLevel();
+		} else if (getBlockType(x1b,y2b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x1b][y2b] = 4;
-		}
-		if (getBlockType(x2b,y2b) == 3) {
+			drawLevel();
+		} else if (getBlockType(x2b,y2b) == 3) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][x2b][y2b] = 4;
+			drawLevel();
 		}
 		// anti-grav
 		if (isTouching("any",7)) {
@@ -357,113 +358,147 @@ function draw() {
 	// draw player
 	if (!arraysEqual(playerPosLast[0],[Math.round(player.x)+lvlx,Math.round(player.y)+lvly])) {
 		playerPosLast = [Math.round(player.x)+lvlx,Math.round(player.y)+lvly];
-		pL.clearRect(0,0,canvas.width,canvas.height);
-		pL.fillStyle = "#0000FF";
-		pL.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
+		drawPlayer();
 	}
 	// draw level
-	if (!arraysEqual(lvlPosLast[0],[lvlx,lvly,levels[player.currentLevel]])) {
-		lvlPosLast = [lvlx,lvly,levels[player.currentLevel]];
-		lL.clearRect(0,0,canvas.width,canvas.height);
-		for (let x in levels[player.currentLevel]) {
-			for (let y in levels[player.currentLevel][x]) {
-				lL.lineWidth = blockSize*3/25;
-				let xb = lvlx + x * blockSize;
-				let yb = lvly + y * blockSize;
-				let type = getBlockType(x,y);
-				if (type != -1 && type != 0 && type != 6) {
-					switch (type) {
-						case 1:
-							lL.fillStyle = "#000000";
-							break;
-						case 2:
-							lL.fillStyle = "#FF0000";
-							break;
-						case 3:
-							lL.fillStyle = "#00888888";
-							break;
-						case 4:
-							lL.fillStyle = "#00FFFF88";
-							break;
-						case 5:
-							lL.fillStyle = "#FFFF00";
-							break;
-						case 7:
-							lL.fillStyle = "#FF888888";
-							break;
-						case 8:
-							lL.fillStyle = "#8888FF88";
-							break;
-					}
-					lL.fillRect(xb, yb, blockSize, blockSize);
-					switch (type) {
-						case 2:
-							lL.strokeStyle = "#880000";
-							lL.beginPath();
-							lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
-							lL.stroke();
+	if (!arraysEqual(lvlPosLast[0],[lvlx,lvly])) {
+		lvlPosLast = [lvlx,lvly];
+		drawLevel();
+	}
+}
+function drawPlayer() {
+	let canvas = document.getElementById("playerLayer");
+	let pL = canvas.getContext("2d");
+	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = Math.round(canvas.width/2 - (player.x+playerSize/2));
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.round(levels[player.currentLevel].length*blockSize - canvas.width);
+	}
+	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = Math.round(canvas.height/2 - (player.y+playerSize/2));
+		if (lvly > 0) lvly = 0;
+		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
+	}
+	pL.clearRect(0,0,canvas.width,canvas.height);
+	pL.fillStyle = "#0000FF";
+	pL.fillRect(Math.round(player.x) + lvlx, Math.round(player.y) + lvly, playerSize, playerSize);
+}
+function drawLevel() {
+	let canvas = document.getElementById("levelLayer");
+	let lL = canvas.getContext("2d");
+	let lvlx = Math.round((canvas.width - levels[player.currentLevel].length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = Math.round(canvas.width/2 - (player.x+playerSize/2));
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < canvas.width - levels[player.currentLevel].length*blockSize) lvlx = Math.round(levels[player.currentLevel].length*blockSize - canvas.width);
+	}
+	let lvly = Math.round((canvas.height - levels[player.currentLevel][0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = Math.round(canvas.height/2 - (player.y+playerSize/2));
+		if (lvly > 0) lvly = 0;
+		if (lvly < canvas.height - levels[player.currentLevel][0].length*blockSize) lvly = Math.round(canvas.height - levels[player.currentLevel][0].length*blockSize);
+	}
+	lL.clearRect(0,0,canvas.width,canvas.height);
+	for (let x in levels[player.currentLevel]) {
+		for (let y in levels[player.currentLevel][x]) {
+			lL.lineWidth = blockSize*3/25;
+			let xb = lvlx + x * blockSize;
+			let yb = lvly + y * blockSize;
+			let type = getBlockType(x,y);
+			if (type != -1 && type != 0 && type != 6) {
+				switch (type) {
+					case 1:
+						lL.fillStyle = "#000000";
+						break;
+					case 2:
+						lL.fillStyle = "#FF0000";
+						break;
+					case 3:
+						lL.fillStyle = "#00888888";
+						break;
+					case 4:
+						lL.fillStyle = "#00FFFF88";
+						break;
+					case 5:
+						lL.fillStyle = "#FFFF00";
+						break;
+					case 7:
+						lL.fillStyle = "#FF888888";
+						break;
+					case 8:
+						lL.fillStyle = "#8888FF88";
+						break;
+				}
+				lL.fillRect(xb, yb, blockSize, blockSize);
+				switch (type) {
+					case 2:
+						lL.strokeStyle = "#880000";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+						lL.stroke();
 
-							lL.beginPath();
-							lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
-							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-							lL.stroke();
-							break;
-						case 3:
-							lL.strokeStyle = "#00444488";
-							lL.beginPath();
-							lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-							lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-							lL.stroke();
-							break;
-						case 4:
-							lL.strokeStyle = "#00888888";
-							lL.beginPath();
-							lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-							lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-							lL.stroke();
-							break;
-						case 5:
-							lL.strokeStyle = "#888800";
-							lL.beginPath();
-							lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
-							lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
-							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
-							lL.stroke();
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						lL.stroke();
+						break;
+					case 3:
+						lL.strokeStyle = "#00444488";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						lL.stroke();
+						break;
+					case 4:
+						lL.strokeStyle = "#00888888";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+						lL.stroke();
+						break;
+					case 5:
+						lL.strokeStyle = "#888800";
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+						lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+						lL.stroke();
 
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+						lL.stroke();
+						break;
+					case 7:
+						lL.strokeStyle = "#88000088";
+						lL.lineWidth = blockSize/25;
+						lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+
+						for (let i=0; i<3; i++) {
 							lL.beginPath();
-							lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
-							lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-							lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+							lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
+							lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
 							lL.stroke();
-							break;
-						case 7:
-							lL.strokeStyle = "#88000088";
-							lL.lineWidth = blockSize/25;
-							lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+						}
+						break;
+					case 8:
+						lL.strokeStyle = "#00008888";
+						lL.lineWidth = blockSize/25;
+						lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
 
-							for (let i=0; i<3; i++) {
-								lL.beginPath();
-								lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
-								lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
-								lL.stroke();
-							}
-							break;
-						case 8:
-							lL.strokeStyle = "#00008888";
-							lL.lineWidth = blockSize/25;
-							lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
-
-							for (let i=0; i<3; i++) {
-								lL.beginPath();
-								lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
-								lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
-								lL.stroke();
-							}
-							break;
-					}
+						for (let i=0; i<3; i++) {
+							lL.beginPath();
+							lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
+							lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+							lL.stroke();
+						}
+						break;
 				}
 			}
 		}
