@@ -335,8 +335,8 @@ function nextFrame(timeStamp) {
 	}
 	window.requestAnimationFrame(nextFrame);
 }
-var playerPosLast;
-var lvlPosLast;
+var playerPosLast = [0,0];
+var lvlPosLast = [0,0,0];
 function draw() {
 	// setup
 	let canvas = document.getElementById("playerLayer");
