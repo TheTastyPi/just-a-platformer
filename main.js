@@ -143,26 +143,26 @@ document.addEventListener("keyup", function(input){
 function getBlockType(x,y) {
 	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) {
 		if (levels[player.currentLevel][x-1] != undefined) {
-			if (levels[player.currentLevel][x-1][y][0] != undefined) {
+			if (typeof(levels[player.currentLevel][x-1][y]) == "object") {
 				if (levels[player.currentLevel][x-1][y][0] == 0) {
 					return -2;
 				}
 			}
 		}
 		if (levels[player.currentLevel][x+1] != undefined) {
-			if (levels[player.currentLevel][x+1][y][0] != undefined) {
+			if (typeof(levels[player.currentLevel][x+1][y]) == "object") {
 				if (levels[player.currentLevel][x+1][y][0] == 0) {
 					return -2;
 				}
 			}
 		}
 		if (levels[player.currentLevel][x] != undefined) {
-			if (levels[player.currentLevel][x][y-1][0] != undefined) {
+			if (typeof(levels[player.currentLevel][x][y-1]) == "object") {
 				if (levels[player.currentLevel][x][y-1][0] == 0) {
 					return -2;
 				}
 			}
-			if (levels[player.currentLevel][x][y+1][0] != undefined) {
+			if (typeof(levels[player.currentLevel][x][y+1]) == "object") {
 				if (levels[player.currentLevel][x][y+1][0] == 0) {
 					return -2;
 				}
