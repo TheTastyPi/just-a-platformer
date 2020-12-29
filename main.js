@@ -31,22 +31,22 @@ const levels = [
 		[1,0,0,1,0,0,0,0,2],
 		[1,0,0,0,2,0,1,3,1],
 		[1,0,0,0,2,0,0,0,1],
-		[0,0,5,0,1,0,0,0,1],
+		[[-1,0],0,5,0,1,0,0,0,1],
 		[1,0,0,0,2,0,1,1,1],
-		[1,2,0,1,1,0,0,8,0],
+		[1,2,0,1,1,0,0,8,[-1,0]],
 		[1,1,1,1,1,1,1,1,1],
 	],
 	[
 		[1,1,1,1,1,1,1,1,1],
 		[1,0,0,1,0,0,0,1,1],
 		[1,0,0,0,1,0,0,1,3],
-		[1,0,1,0,2,0,0,0,0],
+		[1,0,1,0,2,0,0,0,[-1,0]],
 		[1,0,2,0,1,0,5,0,1],
 		[1,0,1,0,0,0,0,0,1],
-		[1,0,1,1,1,1,1,1,1],
+		[1,[-1,0],1,1,1,1,1,1,1],
 	],
 	[
-		[1,1,1,1,1,1,1,0,1],
+		[1,1,1,1,1,1,1,[-1,0],1],
 		[1,0,2,0,5,0,0,0,1],
 		[1,0,0,0,0,1,0,0,2],
 		[1,0,1,0,0,0,0,0,1],
@@ -54,12 +54,12 @@ const levels = [
 		[1,0,1,0,0,0,0,0,1],
 		[1,0,2,0,0,0,0,0,5],
 		[1,0,0,1,1,1,1,1,1],
-		[1,0,0,0,0,0,0,0,0],
+		[1,0,0,0,0,0,0,0,[-1,0]],
 		[1,1,1,1,1,1,1,1,1],
 	],
 	[
 		[1,1,1,1,1,1,1],
-		[0,0,0,0,0,0,0],
+		[[-1,0],0,0,0,0,0,[-1,0]],
 		[1,1,1,1,1,1,1],
 		[1,0,0,0,0,0,1],
 		[1,0,1,1,1,0,1],
@@ -75,23 +75,23 @@ const levels = [
 		[1,1,1,1,1,1,1],
 	],
 	[
-		[1,1,0,1,1,1,1],
+		[1,1,[-1,0],1,1,1,1],
 		[1,1,0,2,0,5,1],
 		[2,0,0,0,0,2,1],
 		[5,0,7,2,0,1,1],
 		[2,0,0,2,0,0,5],
 		[1,1,1,1,1,3,1],
-		[0,0,0,0,0,0,2],
+		[[-1,0],0,0,0,0,0,2],
 		[1,1,1,1,1,1,1],
 	],
 	[
-		[5,5,5,5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+		[5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[5,1,1,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 		[5,1,5,5,1,0,0,2,0,0,8,0,0,2,2,3,1,0,5,7,2,0,5,7,8,5,0,0,0,5,0,0,0,2,0,0,2,0,0,1,3,1],
-		[0,0,0,0,7,0,1,2,7,7,2,0,7,0,2,0,0,0,2,0,0,0,8,0,0,2,3,1,0,2,0,0,0,0,0,0,2,0,0,0,0,1],
+		[[-1,0],0,0,0,7,0,1,2,7,7,2,0,7,0,2,0,0,0,2,0,0,0,8,0,0,2,3,1,0,2,0,0,0,0,0,0,2,0,0,0,0,1],
 		[5,5,5,5,1,0,0,8,0,0,0,2,0,8,0,7,0,0,8,0,0,2,2,0,0,0,0,5,0,8,0,0,2,0,0,0,0,0,0,1,0,1],
 		[5,1,1,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
-		[5,1,5,5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,1],
+		[5,1,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,[-1,0],1],
 	],
 ];
 const hasHitbox = [1,5];
@@ -143,16 +143,34 @@ document.addEventListener("keyup", function(input){
 function getBlockType(x,y) {
 	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) {
 		if (levels[player.currentLevel][x-1] != undefined) {
-			if (levels[player.currentLevel][x-1][y] == 0) return 6;
+			if (levels[player.currentLevel][x-1][y][0] != undefined) {
+				if (levels[player.currentLevel][x-1][y][0] == 0) {
+					return -2;
+				}
+			}
 		}
 		if (levels[player.currentLevel][x+1] != undefined) {
-			if (levels[player.currentLevel][x+1][y] == 0) return 6;
+			if (levels[player.currentLevel][x+1][y][0] != undefined) {
+				if (levels[player.currentLevel][x+1][y][0] == 0) {
+					return -2;
+				}
+			}
 		}
 		if (levels[player.currentLevel][x] != undefined) {
-			if (levels[player.currentLevel][x][y-1] == 0 || levels[player.currentLevel][x][y+1] == 0) return 6;
+			if (levels[player.currentLevel][x][y-1][0] != undefined) {
+				if (levels[player.currentLevel][x][y-1][0] == 0) {
+					return -2;
+				}
+			}
+			if (levels[player.currentLevel][x][y+1][0] != undefined) {
+				if (levels[player.currentLevel][x][y+1][0] == 0) {
+					return -2;
+				}
+			}
 		}
 		return 1;
 	}
+	if (typeof(levels[player.currentLevel][x][y]) == "object") return levels[player.currentLevel][x][y][0];
 	return levels[player.currentLevel][x][y];
 }
 function isTouching(dir, type) {
@@ -196,6 +214,25 @@ function isTouching(dir, type) {
 			|| getBlockType(x2b,y1b) == type
 			|| getBlockType(x1b,y2b) == type
 			|| getBlockType(x2b,y2b) == type;
+	}
+}
+function getCoord(type) {
+	let x1 = player.x;
+	let x2 = player.x+playerSize;
+	let y1 = player.y;
+	let y2 = player.y+playerSize;
+	let x1b = Math.floor(x1/blockSize);
+	let x2b = Math.floor(x2/blockSize);
+	let y1b = Math.floor(y1/blockSize);
+	let y2b = Math.floor(y2/blockSize);
+	if (getBlockType(x1b,y1b) == type) {
+		return [x1b,y1b];
+	} else if (getBlockType(x2b,y1b) == type) {
+		return [x2b,y1b];
+	} else if (getBlockType(x1b,y2b) == type) {
+		return [x1b,y2b];
+	} else if (getBlockType(x2b,y2b) == type) {
+		return [x2b,y2b];
 	}
 }
 
@@ -269,19 +306,9 @@ function nextFrame(timeStamp) {
 		// checkpoint
 		if (isTouching("any",3)) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-			if (getBlockType(x1b,y1b) == 3) {
-				player.spawnPoint = [x1b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
-				levels[player.currentLevel][x1b][y1b] = 4;
-			} else if (getBlockType(x2b,y1b) == 3) {
-				player.spawnPoint = [x2b,y1b,player.levelCoord[0],player.levelCoord[1],player.g];
-				levels[player.currentLevel][x2b][y1b] = 4;
-			} else if (getBlockType(x1b,y2b) == 3) {
-				player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
-				levels[player.currentLevel][x1b][y2b] = 4;
-			} else if (getBlockType(x2b,y2b) == 3) {
-				player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
-				levels[player.currentLevel][x2b][y2b] = 4;
-			}
+			let coord = getCoord(3);
+			player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g];
+			levels[player.currentLevel][coord[0]][coord[1]] = 4;
 			drawLevel();
 		}
 		// anti-grav
@@ -309,23 +336,29 @@ function nextFrame(timeStamp) {
 		y1b = Math.floor(y1/blockSize);
 		y2b = Math.floor(y2/blockSize);
 		// level warp
-		if (isTouching("any",6)) {
+		if (isTouching("any",-2)) {
+			let coord = getCoord(-1);
+			let warpId = levels[player.currentLevel][coord[0]][coord[1]][1];
 			if (x1 < 0) { // left
 				player.levelCoord[0]--;
+				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) player.levelCoord = [coord[2],coord[3]];
 				player.x = levels[player.currentLevel].length * blockSize - playerSize;
-				player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x==0)+(y1+blockSize)%blockSize;
+				player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x[1]==warpId)+(y1+blockSize)%blockSize;
 			} else if (x2 > levels[player.currentLevel].length * blockSize) { // right
 				player.levelCoord[0]++;
+				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) player.levelCoord = [coord[2],coord[3]];
 				player.x = 0;
-				player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x==0)+(y1+blockSize)%blockSize;
+				player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x[1]==warpId)+(y1+blockSize)%blockSize;
 			} else if (y1 < 0) { // up
 				player.levelCoord[1]++;
+				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) player.levelCoord = [coord[2],coord[3]];
 				player.y = levels[player.currentLevel][0].length * blockSize - playerSize;
-				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1]==0)+(x1+blockSize)%blockSize;
+				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1][1]==warpId)+(x1+blockSize)%blockSize;
 			} else if (y2 > levels[player.currentLevel][0].length * blockSize) { // down
 				player.levelCoord[1]--;
+				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) player.levelCoord = [coord[2],coord[3]];
 				player.y = 0;
-				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0]==0)+(x1+blockSize)%blockSize;
+				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0][1]==warpId)+(x1+blockSize)%blockSize;
 			}
 		}
 		// key input
