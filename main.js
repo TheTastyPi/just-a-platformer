@@ -278,7 +278,6 @@ function nextFrame(timeStamp) {
 			} else if (getBlockType(x1b,y2b) == 3) {
 				player.spawnPoint = [x1b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 				levels[player.currentLevel][x1b][y2b] = 4;
-				drawLevel();
 			} else if (getBlockType(x2b,y2b) == 3) {
 				player.spawnPoint = [x2b,y2b,player.levelCoord[0],player.levelCoord[1],player.g];
 				levels[player.currentLevel][x2b][y2b] = 4;
@@ -486,4 +485,6 @@ function arraysEqual(a, b) {
 	}
 	return true;
 }
+drawPlayer();
+drawLevel();
 window.requestAnimationFrame(nextFrame);
