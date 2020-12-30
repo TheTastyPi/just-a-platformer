@@ -5,8 +5,8 @@ const player = {
 	spawnPoint: [2,1,0,1,400],
 	levelCoord: [0,1],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
-	x: 215,
-	y: 367.5,
+	x: 0,
+	y: 0,
 	xv: 0,
 	yv: 0,
 	g: 400,
@@ -184,6 +184,14 @@ function getCoord(type) {
 		return [x2b,y2b];
 	}
 }
+function respawn() {
+	player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
+	player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
+	player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize)/2;
+	player.xv = 0;
+	player.yv = 0;
+	player.g = player.spawnPoint[4];
+}
 
 var lastFrame = 0;
 function nextFrame(timeStamp) {
@@ -269,12 +277,7 @@ function nextFrame(timeStamp) {
 		}
 		// death block
 		if (isTouching("any",2) && !player.godMode) {
-			player.levelCoord = [player.spawnPoint[2],player.spawnPoint[3]];
-			player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
-			player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize)/2;
-			player.xv = 0;
-			player.yv = 0;
-			player.g = player.spawnPoint[4];
+			respawn();
 		}
 		x1 = player.x + 1;
 		x2 = player.x+playerSize - 1;
@@ -471,6 +474,7 @@ function arraysEqual(a, b) {
 	}
 	return true;
 }
+respawn();
 drawPlayer();
 drawLevel();
 window.requestAnimationFrame(nextFrame);
