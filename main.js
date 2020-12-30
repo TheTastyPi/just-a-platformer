@@ -354,99 +354,99 @@ function drawLevel() {
 			let xb = x * blockSize;
 			let yb = y * blockSize;
 			let type = getBlockType(x,y);
-			if (type != -1 && type != 0 && type != 6) {
-				switch (type) {
-					case 1:
-						lL.fillStyle = "#000000";
-						break;
-					case 2:
-						lL.fillStyle = "#FF0000";
-						break;
-					case 3:
-						lL.fillStyle = "#00888888";
-						break;
-					case 4:
-						lL.fillStyle = "#00FFFF88";
-						break;
-					case 5:
-						lL.fillStyle = "#FFFF00";
-						break;
-					case 7:
-						lL.fillStyle = "#FF888888";
-						break;
-					case 8:
-						lL.fillStyle = "#8888FF88";
-						break;
-				}
-				lL.fillRect(xb, yb, blockSize, blockSize);
-				switch (type) {
-					case 2:
-						lL.strokeStyle = "#880000";
-						lL.beginPath();
-						lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
-						lL.stroke();
+			switch (type) {
+				case 1:
+					lL.fillStyle = "#000000";
+					break;
+				case 2:
+					lL.fillStyle = "#FF0000";
+					break;
+				case 3:
+					lL.fillStyle = "#00888888";
+					break;
+				case 4:
+					lL.fillStyle = "#00FFFF88";
+					break;
+				case 5:
+					lL.fillStyle = "#FFFF00";
+					break;
+				case 6:
+					lL.fillStyle = "#FF888888";
+					break;
+				case 7:
+					lL.fillStyle = "#8888FF88";
+					break;
+				default:
+					lL.fillStyle = "#00000000";
+			}
+			lL.fillRect(xb, yb, blockSize, blockSize);
+			switch (type) {
+				case 2:
+					lL.strokeStyle = "#880000";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
 
-						lL.beginPath();
-						lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
-						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-						lL.stroke();
-						break;
-					case 3:
-						lL.strokeStyle = "#00444488";
-						lL.beginPath();
-						lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-						lL.stroke();
-						break;
-					case 4:
-						lL.strokeStyle = "#00888888";
-						lL.beginPath();
-						lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
-						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-						lL.stroke();
-						break;
-					case 5:
-						lL.strokeStyle = "#888800";
-						lL.beginPath();
-						lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
-						lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
-						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
-						lL.stroke();
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
+				case 3:
+					lL.strokeStyle = "#00444488";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
+				case 4:
+					lL.strokeStyle = "#00888888";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
+				case 5:
+					lL.strokeStyle = "#888800";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+					lL.stroke();
 
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.stroke();
+					break;
+				case 6:
+					lL.strokeStyle = "#88000088";
+					lL.lineWidth = blockSize/25;
+					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+
+					for (let i=0; i<3; i++) {
 						lL.beginPath();
-						lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
-						lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-						lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+						lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
+						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
 						lL.stroke();
-						break;
-					case 7:
-						lL.strokeStyle = "#88000088";
-						lL.lineWidth = blockSize/25;
-						lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+					}
+					break;
+				case 7:
+					lL.strokeStyle = "#00008888";
+					lL.lineWidth = blockSize/25;
+					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
 
-						for (let i=0; i<3; i++) {
-							lL.beginPath();
-							lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
-							lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
-							lL.stroke();
-						}
-						break;
-					case 8:
-						lL.strokeStyle = "#00008888";
-						lL.lineWidth = blockSize/25;
-						lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
-
-						for (let i=0; i<3; i++) {
-							lL.beginPath();
-							lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
-							lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
-							lL.stroke();
-						}
-						break;
-				}
+					for (let i=0; i<3; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
+						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+						lL.stroke();
+					}
+					break;
 			}
 		}
 	}
