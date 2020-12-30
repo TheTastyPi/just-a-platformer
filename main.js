@@ -26,7 +26,9 @@ const levels = [
 	[
 		[1,1,1],
 		[1,0,[-1,0]],
+		[1,7,1],
 		[1,4,1],
+		[1,7,1],
 		[1,0,[-1,1]],
 		[1,1,1]
 	],
@@ -35,6 +37,9 @@ const levels = [
 		[[-1,1],0,1],
 		[1,0,1],
 		[1,0,1],
+		[1,0,1],
+		[1,0,1],
+		[1,6,1],
 		[1,0,1],
 		[1,0,1],
 		[1,0,1],
@@ -269,10 +274,10 @@ function nextFrame(timeStamp) {
 			drawLevel();
 		}
 		// anti-grav
-		if (isTouching("any",7)) {
+		if (isTouching("any",6)) {
 			if (player.g > 0) player.g = -player.g;
 		}
-		if (isTouching("any",8)) {
+		if (isTouching("any",7)) {
 			if (player.g < 0) player.g = -player.g;
 		}
 		// death block
