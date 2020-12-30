@@ -344,25 +344,25 @@ function nextFrame(timeStamp) {
 					player.levelCoord = [coord[2],coord[3]];
 				} else player.levelCoord[0]--;
 				player.x = levels[player.currentLevel].length * blockSize - playerSize;
-				player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x[1]==warpId)+(y1+blockSize)%blockSize;
+				player.y = blockSize*levels[player.currentLevel][levels[player.currentLevel].length-1].findIndex(x => x[0]==-1 && x[1]==warpId)+(y1+blockSize)%blockSize;
 			} else if (x2 > levels[player.currentLevel].length * blockSize) { // right
 				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) {
 					player.levelCoord = [coord[2],coord[3]];
 				} else player.levelCoord[0]++;
 				player.x = 0;
-				player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x[1]==warpId)+(y1+blockSize)%blockSize;
+				player.y = blockSize*levels[player.currentLevel][0].findIndex(x => x[0]==-1 && x[1]==warpId)+(y1+blockSize)%blockSize;
 			} else if (y1 < 0) { // up
 				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) {
 					player.levelCoord = [coord[2],coord[3]];
 				} else player.levelCoord[1]++;
 				player.y = levels[player.currentLevel][0].length * blockSize - playerSize;
-				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1][1]==warpId)+(x1+blockSize)%blockSize;
+				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[x.length-1][0]==-1 && x[x.length-1][1]==warpId)+(x1+blockSize)%blockSize;
 			} else if (y2 > levels[player.currentLevel][0].length * blockSize) { // down
 				if (levels[player.currentLevel][coord[0]][coord[1]][2] != undefined) {
 					player.levelCoord = [coord[2],coord[3]];
 				} else player.levelCoord[1]--;
 				player.y = 0;
-				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0][1]==warpId)+(x1+blockSize)%blockSize;
+				player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0][0]==-1 && x[0][1]==warpId)+(x1+blockSize)%blockSize;
 			}
 		}
 		// key input
