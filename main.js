@@ -1,3 +1,17 @@
+/*/
+TODO 
+- add grav low/high block
+- add multi-jump block
+- add wall jump block
+- add switch block
+
+- grav section
+- multi-jump section
+- border warp section
+- wall jump section
+- final section
+/*/
+
 var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
@@ -24,7 +38,7 @@ const worldMap = [
 	[0,0,0,0,1],
 	[0,0,0,0,2],
 	[0,0,5,4,3],
-	[0,0,6,0,0],
+	[8,0,6,0,0],
 	[7,4,3,0,0]
 ]
 const levels = [
@@ -83,7 +97,7 @@ const levels = [
 		[1,[-1,0],1,0,0]
 	],
 	[
-		[1,1,0,1,1,0,1,1,1,1],
+		[1,1,[-1,0],1,1,0,1,1,1,1],
 		[1,0,0,1,0,0,1,0,0,1],
 		[1,0,0,0,0,0,0,0,0,1],
 		[1,0,0,0,1,0,0,0,0,1],
@@ -98,6 +112,13 @@ const levels = [
 		[1,0,0,0,0,0,0,0,0,1],
 		[1,0,0,1,0,0,1,0,0,1],
 		[1,1,0,1,1,0,1,1,1,1]
+	],
+	[
+		[1,1,1,1,1,1,1,1,1],
+		[0,0,0,0,0,0,6,0,1],
+		[0,0,0,0,0,0,6,0,1],
+		[0,0,0,0,0,0,6,0,1],
+		[1,1,1,1,1,1,1,[-1,0],1]
 	]
 ]
 const hasHitbox = [1,5];
