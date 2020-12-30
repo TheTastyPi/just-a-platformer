@@ -24,28 +24,15 @@ const worldMap = [
 ]
 const levels = [
 	[
-		[1,1,1],
-		[1,0,[-1,0]],
-		[1,7,1],
-		[1,4,1],
-		[1,7,1],
-		[1,0,[-1,1]],
-		[1,1,1]
-	],
-	[
-		[1,1,1],
-		[[-1,1],0,1],
-		[1,0,1],
-		[1,0,1],
-		[1,0,1],
-		[1,0,1],
-		[1,6,1],
-		[1,0,1],
-		[1,0,1],
-		[1,0,1],
-		[1,0,1],
-		[[-1,0],0,1],
-		[1,1,1]
+		[1,1,1,1,1,1,1,1,1],
+		[1,7,0,0,0,0,0,6,1],
+		[1,0,0,0,5,0,0,0,1],
+		[1,0,0,0,0,0,0,0,1],
+		[2,0,4,1,3,1,3,0,2],
+		[1,0,0,0,0,0,0,0,1],
+		[1,0,0,0,5,0,0,0,1],
+		[1,7,0,0,0,0,0,6,1],
+		[1,1,1,1,1,1,1,1,1]
 	]
 ];
 const hasHitbox = [1,5];
@@ -242,7 +229,7 @@ function nextFrame(timeStamp) {
 			   || ((getBlockType(x2b,y1b) == 5 || getBlockType(x1b,y1b) == 5)
 			       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
 				   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
-			   && player.g < 0) player.yv = -player.g*3/4;
+			   && player.g < 0) player.yv = -Math.sign(player.g)*300;
 			player.y = (y1b + 1) * blockSize;
 			if (player.g < 0 && player.yv <= 0) player.canJump = true;
 		} else if (player.g < 0 && !player.godMode) player.canJump = false;
@@ -253,7 +240,7 @@ function nextFrame(timeStamp) {
 			   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
 			       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
 				   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
-			   && player.g > 0) player.yv = -player.g*3/4;
+			   && player.g > 0) player.yv = -Math.sign(player.g)*300;
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0 && player.yv >= 0) player.canJump = true;
 		} else if (player.g > 0 && !player.godMode) player.canJump = false;
@@ -323,7 +310,7 @@ function nextFrame(timeStamp) {
 			}
 		}
 		// key input
-		if (control.up && player.canJump) player.yv = -player.g/2;
+		if (control.up && player.canJump) player.yv = -Math.sign(player.g)*200;
 		if (control.left) player.xv = -100;
 		if (control.right) player.xv = 100;
 		// draw checks
