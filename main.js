@@ -24,15 +24,7 @@ const worldMap = [
 ]
 const levels = [
 	[
-		[1,1,1,1,1,1,1,1,1],
-		[1,7,0,0,0,0,0,6,1],
-		[1,0,0,0,5,0,0,0,1],
-		[1,0,0,0,0,0,0,0,1],
-		[2,0,4,1,3,1,3,0,2],
-		[1,0,0,0,0,0,0,0,1],
-		[1,0,0,0,5,0,0,0,1],
-		[1,7,0,0,0,0,0,6,1],
-		[1,1,1,1,1,1,1,1,1]
+		[[[1,1,1,1,1,1,1,1],[1,0,0,0,0,1,0,1],[1,0,0,1,0,1,0,1],[1,0,1,1,0,1,0,1],[1,0,0,1,0,1,0,1],[1,0,0,0,0,1,0,1],[1,1,1,1,1,1,0,1]],[16,16,400]]
 	]
 ];
 const hasHitbox = [1,5];
@@ -245,14 +237,6 @@ function nextFrame(timeStamp) {
 			player.y = y2b * blockSize - playerSize;
 			if (player.g > 0 && player.yv >= 0) player.canJump = true;
 		} else if (player.g > 0 && !player.godMode) player.canJump = false;
-		x1 = player.x + 1;
-		x2 = player.x+playerSize - 1;
-		y1 = player.y + 1;
-		y2 = player.y+playerSize - 1;
-		x1b = Math.floor(x1/blockSize);
-		x2b = Math.floor(x2/blockSize);
-		y1b = Math.floor(y1/blockSize);
-		y2b = Math.floor(y2/blockSize);
 		// checkpoint
 		if (isTouching("any",3)) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
@@ -276,10 +260,6 @@ function nextFrame(timeStamp) {
 		x2 = player.x+playerSize - 1;
 		y1 = player.y + 1;
 		y2 = player.y+playerSize - 1;
-		x1b = Math.floor(x1/blockSize);
-		x2b = Math.floor(x2/blockSize);
-		y1b = Math.floor(y1/blockSize);
-		y2b = Math.floor(y2/blockSize);
 		// level warp
 		if (isTouching("any",-2)) {
 			let coord = getCoord(-1);
