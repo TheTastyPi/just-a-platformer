@@ -385,10 +385,10 @@ function nextFrame(timeStamp) {
 		}
 		// grav magnitude
 		if (isTouching("any",8)) {
-			player.g = Math.sign(player.g)*400;
+			player.g = Math.sign(player.g)*200;
 		}
 		if (isTouching("any",9)) {
-			player.g = Math.sign(player.g)*200;
+			player.g = Math.sign(player.g)*400;
 		}
 		if (isTouching("any",10)) {
 			player.g = Math.sign(player.g)*800;
