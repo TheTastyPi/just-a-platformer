@@ -1,13 +1,13 @@
 /*/
 TODO 
-- add grav low/high block
+- add grav low/high block (dunno if actually gonna do or not)
 - add multi-jump block
-- add wall jump block
+- add wall jump block (need to generalize isTouching() further)
 - add switch block
 
 - grav section
 - multi-jump section
-- border warp section
+- warp confusion section (AKA the "i'll take you along for a trip" section)
 - wall jump section
 - final section
 /*/
@@ -385,7 +385,7 @@ function nextFrame(timeStamp) {
 			}
 		}
 		// key input
-		if (control.up && player.canJump) player.yv = -Math.sign(player.g)*200;
+		if (control.up && player.canJump) player.yv = -Math.sign(player.g)*225;
 		if (control.left) player.xv = -100;
 		if (control.right) player.xv = 100;
 		// draw checks
