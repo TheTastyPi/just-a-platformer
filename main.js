@@ -1,6 +1,5 @@
 /*/
 TODO 
-- add grav low/high block (dunno if actually gonna do or not)
 - add multi-jump block
 - add wall jump block (need to generalize isTouching() further)
 - add switch block
@@ -384,6 +383,16 @@ function nextFrame(timeStamp) {
 		if (isTouching("any",7)) {
 			if (player.g < 0) player.g = -player.g;
 		}
+		// grav magnitude
+		if (isTouching("any",8)) {
+			player.g = Math.sign(player.g)*400;
+		}
+		if (isTouching("any",9)) {
+			player.g = Math.sign(player.g)*200;
+		}
+		if (isTouching("any",10)) {
+			player.g = Math.sign(player.g)*800;
+		}
 		// death block
 		if (isTouching("any",2) && !player.godMode) {
 			respawn();
@@ -477,6 +486,15 @@ function drawLevel() {
 				case 7:
 					lL.fillStyle = "#8888FF88";
 					break;
+				case 8:
+					lL.fillStyle = "#FFFF8888";
+					break;
+				case 9:
+					lL.fillStyle = "#88FF8888";
+					break;
+				case 10:
+					lL.fillStyle = "#88FFFF88";
+					break;
 				default:
 					lL.fillStyle = "#00000000";
 			}
@@ -527,27 +545,70 @@ function drawLevel() {
 				case 6:
 					lL.strokeStyle = "#88000088";
 					lL.lineWidth = blockSize/25;
-					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
-
-					for (let i=0; i<3; i++) {
-						lL.beginPath();
-						lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/25*3);
-						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/5+blockSize/25*6);
-						lL.stroke();
-					}
+					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/5-blockSize/25*6);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2-blockSize/25*3,yb+blockSize/25*6);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2+blockSize/25*3,yb+blockSize/25*6);
+					lL.stroke();
 					break;
 				case 7:
 					lL.strokeStyle = "#00008888";
 					lL.lineWidth = blockSize/25;
+					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize/25*3,blockSize/5,blockSize/5);
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5+blockSize/25*6);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2-blockSize/25*3,yb+blockSize-blockSize/25*6);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize/2+blockSize/25*3,yb+blockSize-blockSize/25*6);
+					lL.stroke();
+					break;
+				case 8:
+					lL.strokeStyle = "#88880088";
+					lL.lineWidth = blockSize/25;
 					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
-
+					
+					for (let i=0; i<3; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*9);
+						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+						lL.stroke();
+					}
+					break;
+				case 9:
+					lL.strokeStyle = "#00880088";
+					lL.lineWidth = blockSize/25;
+					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+					
+					for (let i=0; i<3; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/4);
+						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
+						lL.stroke();
+					}
+					break;
+				case 10:
+					lL.strokeStyle = "#00888888";
+					lL.lineWidth = blockSize/25;
+					lL.strokeRect(xb+(blockSize-blockSize/5)/2,yb+blockSize-blockSize/5-blockSize/25*3,blockSize/5,blockSize/5);
+					
 					for (let i=0; i<3; i++) {
 						lL.beginPath();
 						lL.moveTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize/25*3);
 						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
 						lL.stroke();
 					}
-					break;
 			}
 		}
 	}
