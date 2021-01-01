@@ -28,7 +28,6 @@ const player = {
 };
 const control = {
 	up: false,
-	down: false,
 	left: false,
 	right: false,
 };
@@ -174,10 +173,6 @@ document.addEventListener("keydown", function(input){
 		case "KeyW":
 			control.up = true;
 			break;
-		case "ArrowDown":
-		case "KeyS":
-			control.down = true;
-			break;
 		case "ArrowLeft":
 		case "KeyA":
 			control.left = true;
@@ -195,10 +190,6 @@ document.addEventListener("keyup", function(input){
 		case "ArrowUp":
 		case "KeyW":
 			control.up = false;
-			break;
-		case "ArrowDown":
-		case "KeyS":
-			control.down = false;
 			break;
 		case "ArrowLeft":
 		case "KeyA":
@@ -325,15 +316,15 @@ function nextFrame(timeStamp) {
 		let yprev = player.y;
 		let lvlxprev = player.levelCoord[0];
 		let lvlyprev = player.levelCoord[1];
-		// position change based on velocity
-		player.x += player.xv * dt / 500 * gameSpeed;
-		player.y += player.yv * dt / 500 * gameSpeed;
 		// velocity change
 		player.xv *= 0.5;
 		if (Math.abs(player.xv) < 5) player.xv = 0;
 		player.yv += player.g * dt / 500 * gameSpeed;
 		if (player.yv > player.g && player.g > 0) player.yv = player.g;
 		if (player.yv < player.g && player.g < 0) player.yv = player.g;
+		// position change based on velocity
+		player.x += player.xv * dt / 500 * gameSpeed;
+		player.y += player.yv * dt / 500 * gameSpeed;
 		// collision detection
 		let x1 = player.x;
 		let x2 = player.x+playerSize;
@@ -346,13 +337,23 @@ function nextFrame(timeStamp) {
 		// left wall
 		if (isTouching("left")) {
 			player.xv = 0;
+			if ((getBlockType(x1b,y1b) == 11 || getBlockType(x1b,y2b) == 11) && control.left) {
+				if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
+				if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
+				player.canWalljump = true;
+				player.wallJumpDir = "right";
+			} else player.canWalljump = false;
 			player.x = (x1b + 1) * blockSize;
-		}
-		// right wall
-		if (isTouching("right")) {
+		} else if (isTouching("right")) { // right wall
 			player.xv = 0;
+			if ((getBlockType(x2b,y1b) == 11 || getBlockType(x2b,y2b) == 11) && control.right) {
+				if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
+				if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
+				player.canWalljump = true;
+				player.wallJumpDir = "left";
+			} else player.canWalljump = false;
 			player.x = x2b * blockSize - playerSize;
-		}
+		} else player.canWalljump = false;
 		// ceiling
 		if (isTouching("up")) {
 			player.yv = 0;
@@ -392,13 +393,13 @@ function nextFrame(timeStamp) {
 		}
 		// grav magnitude
 		if (isTouching("any",8)) {
-			player.g = Math.sign(player.g)*200;
+			player.g = Math.sign(player.g)*195;
 		}
 		if (isTouching("any",9)) {
-			player.g = Math.sign(player.g)*400;
+			player.g = Math.sign(player.g)*350;
 		}
 		if (isTouching("any",10)) {
-			player.g = Math.sign(player.g)*800;
+			player.g = Math.sign(player.g)*650;
 		}
 		// death block
 		if (isTouching("any",2) && !player.godMode) {
@@ -440,9 +441,24 @@ function nextFrame(timeStamp) {
 			}
 		}
 		// key input
-		if (control.up && player.canJump) player.yv = -Math.sign(player.g)*225;
-		if (control.left) player.xv = -100;
-		if (control.right) player.xv = 100;
+		if (control.up && player.canWalljump) {
+			if (player.wallJumpDir == "left") {
+				player.xv = -1000;
+				player.yv = -Math.sign(player.g)*225;
+			}
+			if (player.wallJumpDir == "right") {
+				player.xv = 1000;
+				player.yv = -Math.sign(player.g)*225;
+			}
+		} else if (control.up && player.canJump) player.yv = -Math.sign(player.g)*225;
+		if (control.left && player.xv > -200) {
+			player.xv -= 200;
+			if (player.xv < -200) player.xv = -200;
+		}
+		if (control.right && player.xv < 200) {
+			player.xv += 200;
+			if (player.xv > 200) player.xv = 200;
+		}
 		// draw checks
 		if (player.x != xprev || player.y != yprev) drawPlayer();
 		if (player.levelCoord[0] != lvlxprev || player.levelCoord[1] != lvlyprev) drawLevel();
@@ -501,6 +517,9 @@ function drawLevel() {
 					break;
 				case 10:
 					lL.fillStyle = "#88FFFF88";
+					break;
+				case 11:
+					lL.fillStyle = "#7289DA";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -616,6 +635,39 @@ function drawLevel() {
 						lL.lineTo(xb+(blockSize-blockSize/5)/2+blockSize*i/10,yb+blockSize-blockSize/5-blockSize/25*6);
 						lL.stroke();
 					}
+					break;
+				case 11:
+					lL.strokeStyle = "#4E5D94";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/2);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/25*3,yb+blockSize/4);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize-blockSize/4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+					lL.stroke();
+					break;
 			}
 		}
 	}
@@ -626,7 +678,7 @@ function adjustScreen() {
 	if (lvlx < 0) {
 		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
 		if (lvlx > 0) lvlx = 0;
-		if (lvlx < window.innerWidth - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(levels[player.currentLevel].length*blockSize - window.innerWidth);
+		if (lvlx < window.innerWidth - levels[player.currentLevel].length*blockSize) lvlx = Math.floor(window.innerWidth - levels[player.currentLevel].length*blockSize);
 	}
 	let lvly = Math.floor((window.innerHeight - levels[player.currentLevel][0].length*blockSize) / 2);
 	if (lvly < 0) {
