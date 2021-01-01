@@ -14,7 +14,7 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [1,6,0,5,400],
+	spawnPoint: [1,6,0,5,400,1],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
@@ -22,11 +22,12 @@ const player = {
 	xv: 0,
 	yv: 0,
 	g: 400,
-	canJump: false,
+	canWalljump: false,
+	currentJumps: 0,
+	maxJumps: 1,
 	godMode: false,
 };
 const control = {
-	up: false,
 	left: false,
 	right: false,
 };
@@ -163,14 +164,26 @@ const levels = [
 		[1,1,1,1,1]
 	]
 ]
-const hasHitbox = [1,5];
+const hasHitbox = [1,5,11];
 
 document.addEventListener("keydown", function(input){
 	let key = input.code;
 	switch(key) {
 		case "ArrowUp":
 		case "KeyW":
-			control.up = true;
+			if (player.canWalljump) {
+				if (player.wallJumpDir == "left") {
+					player.xv = -1000;
+					player.yv = -Math.sign(player.g)*225;
+				}
+				if (player.wallJumpDir == "right") {
+					player.xv = 1000;
+					player.yv = -Math.sign(player.g)*225;
+				}
+			} else if (player.currentJumps > 0 || player.godMode) {
+				player.yv = -Math.sign(player.g)*225;
+				player.currentJumps--;
+			}
 			break;
 		case "ArrowLeft":
 		case "KeyA":
@@ -186,10 +199,6 @@ document.addEventListener("keydown", function(input){
 document.addEventListener("keyup", function(input){
 	let key = input.code;
 	switch(key) {
-		case "ArrowUp":
-		case "KeyW":
-			control.up = false;
-			break;
 		case "ArrowLeft":
 		case "KeyA":
 			control.left = false;
@@ -245,20 +254,24 @@ function isTouching(dir, type) {
 	let y2b = Math.floor(y2/blockSize);
 	switch (dir) {
 		case "left":
-			return (hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize) 
-			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize);
+			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x1b,y2b)))
+			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b))) 
+			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b))));
 			break;
 		case "right":
-			return (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize) 
-			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize);
+			return (hasHitbox.includes(getBlockType(x2b,y1b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
+			|| ((hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b))) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b))));
 			break;
 		case "up":
-			return ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
+			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x2b,y1b)))
+			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
 			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
 			&& player.yv < 0;
 			break;
 		case "down":
-			return ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
+			return (hasHitbox.includes(getBlockType(x1b,y2b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
+			|| ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
 			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
 			&& player.yv > 0;
 			break;
@@ -362,8 +375,8 @@ function nextFrame(timeStamp) {
 				   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
 			   && player.g < 0) player.yv = -Math.sign(player.g)*300;
 			player.y = (y1b + 1) * blockSize;
-			if (player.g < 0 && player.yv <= 0) player.canJump = true;
-		} else if (player.g < 0 && !player.godMode) player.canJump = false;
+			if (player.g < 0 && player.yv <= 0) player.currentJumps = player.maxJumps;
+		} else if (player.g < 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
 		// floor
 		if (isTouching("down")) {
 			player.yv = 0;
@@ -373,8 +386,8 @@ function nextFrame(timeStamp) {
 				   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
 			   && player.g > 0) player.yv = -Math.sign(player.g)*300;
 			player.y = y2b * blockSize - playerSize;
-			if (player.g > 0 && player.yv >= 0) player.canJump = true;
-		} else if (player.g > 0 && !player.godMode) player.canJump = false;
+			if (player.g > 0 && player.yv >= 0) player.currentJumps = player.maxJumps;
+		} else if (player.g > 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
 		// checkpoint
 		if (isTouching("any",3)) {
 			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
@@ -399,6 +412,27 @@ function nextFrame(timeStamp) {
 		}
 		if (isTouching("any",10)) {
 			player.g = Math.sign(player.g)*650;
+		}
+		// multi-jump
+		if (isTouching("any",12)) {
+			player.maxJumps = 0;
+			if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
+		}
+		if (isTouching("any",13)) {
+			player.maxJumps = 1;
+			if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
+		}
+		if (isTouching("any",14)) {
+			player.maxJumps = 2;
+			if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
+		}
+		if (isTouching("any",15)) {
+			player.maxJumps = 3;
+			if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
+		}
+		if (isTouching("any",16)) {
+			player.maxJumps = Infinity;
+			if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
 		}
 		// death block
 		if (isTouching("any",2) && !player.godMode) {
@@ -440,16 +474,6 @@ function nextFrame(timeStamp) {
 			}
 		}
 		// key input
-		if (control.up && player.canWalljump) {
-			if (player.wallJumpDir == "left") {
-				player.xv = -1000;
-				player.yv = -Math.sign(player.g)*225;
-			}
-			if (player.wallJumpDir == "right") {
-				player.xv = 1000;
-				player.yv = -Math.sign(player.g)*225;
-			}
-		} else if (control.up && player.canJump) player.yv = -Math.sign(player.g)*225;
 		if (control.left && player.xv > -200) {
 			player.xv -= 200;
 			if (player.xv < -200) player.xv = -200;
@@ -519,6 +543,21 @@ function drawLevel() {
 					break;
 				case 11:
 					lL.fillStyle = "#7289DA";
+					break;
+				case 12:
+					lL.fillStyle = "#77440088";
+					break;
+				case 13:
+					lL.fillStyle = "#99550088";
+					break;
+				case 14:
+					lL.fillStyle = "#BB660088";
+					break;
+				case 15:
+					lL.fillStyle = "#DD770088";
+					break;
+				case 16:
+					lL.fillStyle = "#FF880088";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -667,6 +706,112 @@ function drawLevel() {
 					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
 					lL.stroke();
 					break;
+				case 12:
+					lL.strokeStyle = "#44220088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.quadraticCurveTo(xb+blockSize/2,yb-blockSize/2,xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
+				case 13:
+					lL.strokeStyle = "#55270088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.quadraticCurveTo(xb+blockSize/2,yb-blockSize/2,xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/3*2,yb+blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize/3*2,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					break;
+				case 14:
+					lL.strokeStyle = "#66330088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.quadraticCurveTo(xb+blockSize/2,yb-blockSize/2,xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					for (let i = 1; i < 3; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/3*i,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize/3*i,yb+blockSize-blockSize/25*3);
+						lL.stroke();
+					}
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/6,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/6*5,yb+blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/6,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize/6*5,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					break;
+				case 15:
+					lL.strokeStyle = "#77380088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.quadraticCurveTo(xb+blockSize/2,yb-blockSize/2,xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					for (let i = 1; i < 4; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/4*i,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize/4*i,yb+blockSize-blockSize/25*3);
+						lL.stroke();
+					}
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					break;
+				case 16:
+					lL.strokeStyle = "#88440088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.quadraticCurveTo(xb+blockSize/2,yb-blockSize/2,xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/2,yb+blockSize/2);
+					lL.quadraticCurveTo(xb+blockSize/25*3,yb+blockSize/25*3,xb+blockSize/25*3,yb+blockSize/2);
+					lL.quadraticCurveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3,xb+blockSize/2,yb+blockSize/2);
+					lL.quadraticCurveTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3,xb+blockSize-blockSize/25*3,yb+blockSize/2);
+					lL.quadraticCurveTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3,xb+blockSize-blockSize/2,yb+blockSize/2);
+					lL.stroke();
 			}
 		}
 	}
