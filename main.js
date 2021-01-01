@@ -442,7 +442,7 @@ function nextFrame(timeStamp) {
 		} else if (player.g > 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
 		// checkpoint
 		if (isTouching("any",3)) {
-			levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+			if (levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] == 4) levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			let coord = getCoord(3);
 			player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g];
 			levels[player.currentLevel][coord[0]][coord[1]] = 4;
