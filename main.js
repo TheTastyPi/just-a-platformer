@@ -1,7 +1,6 @@
 /*/
 TODO 
 - add multi-jump block
-- add wall jump block (need to generalize isTouching() further)
 - add switch block
 
 - grav section
