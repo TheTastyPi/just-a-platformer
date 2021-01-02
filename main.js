@@ -273,7 +273,7 @@ const levels = [
 	],
 	[
 		[1,1,1,1,1,1,1,1,1,1,1],
-		[1,0,0,0,0,1,2,[-3,0],2,1,1],
+		[1,0,0,0,0,1,2,[-3,0],0,2,1],
 		[1,8,1,0,2,1,0,0,0,0,[-1,0,0,1]],
 		[1,0,1,0,0,0,2,0,0,0,5],
 		[1,0,1,1,1,0,0,0,0,2,1],
@@ -282,8 +282,8 @@ const levels = [
 		[1,0,0,0,5,1,1,1,1,1,1],
 		[1,0,1,1,1,0,0,0,0,2,1],
 		[1,0,1,0,2,0,1,2,0,1,1],
-		[1,10,1,0,0,0,2,0,0,0,[-1,0,0,1]],
-		[1,0,0,0,1,0,2,[-3,1],0,2,1],
+		[1,10,1,0,0,2,1,0,0,0,[-1,0,0,1]],
+		[1,0,0,0,1,1,1,[-3,1],0,2,1],
 		[1,1,1,1,1,1,1,1,1,1,1]
 	]
 ]
@@ -653,8 +653,8 @@ function drawLevel() {
 			switch (type) {
 				case -3:
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
-						lL.fillStyle = "#00888888";
-					} else lL.fillStyle = "#00FFFF88";
+						lL.fillStyle = "#00880088";
+					} else lL.fillStyle = "#00FF0088";
 					break;
 				case 1:
 					lL.fillStyle = "#000000";
@@ -721,13 +721,13 @@ function drawLevel() {
 				case -3:
 					lL.lineWidth = blockSize/25;
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
-						lL.strokeStyle = "#00444488";
-						lL.fillStyle = "#00444488";
+						lL.strokeStyle = "#00440088";
+						lL.fillStyle = "#0044004488";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
 						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/25*3+blockSize/50*3,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3-blockSize/50*3);
 					} else {
-						lL.strokeStyle = "#00888888";
-						lL.fillStyle = "#00888888";
+						lL.strokeStyle = "#00880088";
+						lL.fillStyle = "#00880088";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
 						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/2,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3-blockSize/50*3);
 					}
