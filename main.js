@@ -443,7 +443,7 @@ function respawn() {
 	player.g = player.spawnPoint[4];
 	let prevTriggers = deepClone(player.triggers);
 	player.triggers = deepClone(player.spawnPoint[5]);
-	if (prevTriggers != player.triggers)) drawLevel();
+	if (prevTriggers != player.triggers) drawLevel();
 }
 
 var lastFrame = 0;
