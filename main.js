@@ -24,7 +24,7 @@ const player = {
 	canWalljump: false,
 	currentJumps: 0,
 	maxJumps: 1,
-	godMode: false,
+	moveSpeed: 200,
 };
 const control = {
 	left: false,
@@ -225,11 +225,11 @@ document.addEventListener("keydown", function(input){
 		case "KeyW":
 			if (player.canWalljump) {
 				if (player.wallJumpDir == "left") {
-					player.xv = -1000;
+					player.xv = -player.moveSpeed*5;
 					player.yv = -Math.sign(player.g)*225;
 				}
 				if (player.wallJumpDir == "right") {
-					player.xv = 1000;
+					player.xv = player.moveSpeed*5;
 					player.yv = -Math.sign(player.g)*225;
 				}
 			} else if (player.currentJumps > 0 || player.godMode) {
@@ -486,6 +486,9 @@ function nextFrame(timeStamp) {
 			player.maxJumps = Infinity;
 			if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
 		}
+		if (isTouching("any",21)) player.moveSpeed = 100;
+		if (isTouching("any",22)) player.moveSpeed = 200;
+		if (isTouching("any",23)) player.moveSpeed = 400;
 		// death block
 		if (isTouching("any",2) && !player.godMode) {
 			respawn();
@@ -526,13 +529,13 @@ function nextFrame(timeStamp) {
 			}
 		}
 		// key input
-		if (control.left && player.xv > -200) {
-			player.xv -= 200;
-			if (player.xv < -200) player.xv = -200;
+		if (control.left && player.xv > -player.moveSpeed) {
+			player.xv -= player.moveSpeed;
+			if (player.xv < -player.moveSpeed) player.xv = -player.moveSpeed;
 		}
-		if (control.right && player.xv < 200) {
-			player.xv += 200;
-			if (player.xv > 200) player.xv = 200;
+		if (control.right && player.xv < player.moveSpeed) {
+			player.xv += player.moveSpeed;
+			if (player.xv > player.moveSpeed) player.xv = player.moveSpeed;
 		}
 		// draw checks
 		if (player.x != xprev || player.y != yprev) drawPlayer();
@@ -610,6 +613,15 @@ function drawLevel() {
 					break;
 				case 16:
 					lL.fillStyle = "#FF880088";
+					break;
+				case 21:
+					lL.fillStyle = "#00880088";
+					break;
+				case 22:
+					lL.fillStyle = "#00BB0088";
+					break;
+				case 23:
+					lL.fillStyle = "#00FF0088";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -864,6 +876,38 @@ function drawLevel() {
 					lL.quadraticCurveTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3,xb+blockSize-blockSize/25*3,yb+blockSize/2);
 					lL.quadraticCurveTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3,xb+blockSize-blockSize/2,yb+blockSize/2);
 					lL.stroke();
+				case 21:
+					lL.strokeStyle = "#00440088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/4+blockSize/2,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/4,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+					break;
+				case 22:
+					lL.strokeStyle = "#00660088";
+					lL.lineWidth = blockSize/25;
+					for (let i = 1; i < 3; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/6*i,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize/6*i+blockSize/2,yb+blockSize/2);
+						lL.lineTo(xb+blockSize/6*i,yb+blockSize-blockSize/25*3);
+						lL.stroke();
+					}
+					break;
+				case 23:
+					lL.strokeStyle = "#00880088";
+					lL.lineWidth = blockSize/25;
+					lL.beginPath();
+					for (let i = 1; i < 4; i++) {
+						lL.beginPath();
+						lL.moveTo(xb+blockSize/8*i,yb+blockSize/25*3);
+						lL.lineTo(xb+blockSize/8*i+blockSize/2,yb+blockSize/2);
+						lL.lineTo(xb+blockSize/8*i,yb+blockSize-blockSize/25*3);
+						lL.stroke();
+					}
+					break;
 			}
 		}
 	}
