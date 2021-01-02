@@ -441,8 +441,9 @@ function respawn() {
 	player.xv = 0;
 	player.yv = 0;
 	player.g = player.spawnPoint[4];
+	player.maxJumps = player.spawnPoint[5];
 	let prevTriggers = [...player.triggers];
-	player.triggers = [...player.spawnPoint[5]];
+	player.triggers = [...player.spawnPoint[6]];
 	if (arraysEqual(prevTriggers,player.triggers)) drawLevel();
 }
 
@@ -520,7 +521,7 @@ function nextFrame(timeStamp) {
 		if (isTouching("any",3)) {
 			if (levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] == 4) levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			let coord = getCoord(3);
-			player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.triggers];
+			player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.maxJumps,player.triggers];
 			levels[player.currentLevel][coord[0]][coord[1]] = 4;
 			drawLevel();
 		}
