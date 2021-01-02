@@ -25,6 +25,7 @@ const player = {
 	currentJumps: 0,
 	maxJumps: 1,
 	moveSpeed: 200,
+	triggers: [],
 };
 const control = {
 	left: false,
@@ -304,7 +305,7 @@ document.addEventListener("keydown", function(input){
 					player.xv = player.moveSpeed*5;
 					player.yv = -Math.sign(player.g)*225;
 				}
-			} else if (player.currentJumps > 0 || player.godMode) {
+			} else if (player.currentJumps > 0) {
 				player.yv = -Math.sign(player.g)*225;
 				player.currentJumps--;
 			}
@@ -440,6 +441,9 @@ function respawn() {
 	player.xv = 0;
 	player.yv = 0;
 	player.g = player.spawnPoint[4];
+	let prevTriggers = deepClone(player.triggers);
+	player.triggers = deepClone(player.spawnPoint[5]);
+	if (prevTriggers != player.triggers)) drawLevel();
 }
 
 var lastFrame = 0;
@@ -516,7 +520,7 @@ function nextFrame(timeStamp) {
 		if (isTouching("any",3)) {
 			if (levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] == 4) levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 			let coord = getCoord(3);
-			player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g];
+			player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.triggers];
 			levels[player.currentLevel][coord[0]][coord[1]] = 4;
 			drawLevel();
 		}
@@ -565,20 +569,18 @@ function nextFrame(timeStamp) {
 		if (isTouching("any",-3)) {
 			let coord = getCoord(-3);
 			let trigger = levels[player.currentLevel][coord[0]][coord[1]];
-			if (!player.spawnPoint[6].includes(trigger[1])) player.spawnPoint[6].push(trigger[1]);
+			if (!player.triggers.includes(trigger[1])) player.triggers.push(trigger[1]);
 			drawLevel();
 		}
 		// triggers
-		if (!player.spawnPoint[6].includes(0)) {
+		if (!player.triggers.includes(0)) {
 			levels[22][6][4] = 0;
 		} else levels[22][6][4] = 2;
-		if (!player.spawnPoint[6].includes(1)) {
+		if (!player.triggers.includes(1)) {
 			levels[22][6][5] = 0;
 		} else levels[22][6][5] = 2;
 		// death block
-		if (isTouching("any",2) && !player.godMode) {
-			respawn();
-		}
+		if (isTouching("any",2)) respawn();
 		x1 = player.x + 1;
 		x2 = player.x+playerSize - 1;
 		y1 = player.y + 1;
@@ -653,7 +655,7 @@ function drawLevel() {
 			let type = getBlockType(x,y);
 			switch (type) {
 				case -3:
-					if (!player.spawnPoint[6].includes(levels[player.currentLevel][x][y][1])) {
+					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
 						lL.fillStyle = "#00888888";
 					} else lL.fillStyle = "#00FFFF88";
 					break;
@@ -721,7 +723,7 @@ function drawLevel() {
 			switch (type) {
 				case -3:
 					lL.lineWidth = blockSize/25;
-					if (!player.spawnPoint[6].includes(levels[player.currentLevel][x][y][1])) {
+					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
 						lL.strokeStyle = "#00444488";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
 						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/25*6,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
