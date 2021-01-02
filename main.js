@@ -281,7 +281,7 @@ const levels = [
 		[[-1,0],3,1,9,2,2,0,0,0,0,0],
 		[1,0,0,0,5,1,1,1,1,1,1],
 		[1,0,1,1,1,0,0,0,0,2,1],
-		[1,0,1,0,2,0,1,2,0,1,1],
+		[1,0,1,0,0,0,1,2,0,1,1],
 		[1,10,1,0,0,2,1,0,0,0,[-1,0,0,1]],
 		[1,0,0,0,1,1,1,[-3,1],0,2,1],
 		[1,1,1,1,1,1,1,1,1,1,1]
@@ -722,7 +722,7 @@ function drawLevel() {
 					lL.lineWidth = blockSize/25;
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
 						lL.strokeStyle = "#00440088";
-						lL.fillStyle = "#0044004488";
+						lL.fillStyle = "#00440088";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
 						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/25*3+blockSize/50*3,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3-blockSize/50*3);
 					} else {
