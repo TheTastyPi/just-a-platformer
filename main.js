@@ -13,7 +13,7 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [1,6,0,5,350,1],
+	spawnPoint: [1,6,0,5,350,1,[]],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
@@ -272,6 +272,21 @@ const levels = [
 		[1,0,1,3,1,0,0,2],
 		[1,1,1,[-1,0],1,1,1,1]
 	],
+	[
+		[1,1,1,1,1,1,1,1,1,1,1],
+		[1,0,0,0,0,1,2,[-3,0],2,1,1],
+		[1,8,1,0,2,1,0,0,0,0,0],
+		[1,0,1,0,0,0,2,0,0,0,5],
+		[1,0,1,1,1,0,0,0,0,2,1],
+		[1,0,0,0,5,1,1,1,1,1,1],
+		[0,3,1,9,2,2,0,0,0,0,0],
+		[1,0,0,0,5,1,1,1,1,1,1],
+		[1,0,1,1,1,0,0,0,0,2,1],
+		[1,0,1,0,2,0,1,2,0,1,1],
+		[1,10,1,0,0,0,2,0,0,0,0],
+		[1,0,0,0,1,0,2,[-3,1],0,2,1],
+		[1,1,1,1,1,1,1,1,1,1,1]
+	]
 ]
 const hasHitbox = [1,5,11];
 
@@ -546,6 +561,20 @@ function nextFrame(timeStamp) {
 		if (isTouching("any",21)) player.moveSpeed = 100;
 		if (isTouching("any",22)) player.moveSpeed = 200;
 		if (isTouching("any",23)) player.moveSpeed = 400;
+		// trigger block
+		if (isTouching("any",-3)) {
+			let coord = getCoord(-3);
+			let trigger = levels[player.currentLevel][coord[0]][coord[1]];
+			if (!player.spawnPoint[6].includes(trigger[1])) player.spawnPoint[6].push(trigger[1]);
+			drawLevel();
+		}
+		// triggers
+		if (!player.spawnPoint[6].includes(0)) {
+			levels[22][6][4] = 0;
+		} else levels[22][6][4] = 2;
+		if (!player.spawnPoint[6].includes(1)) {
+			levels[22][6][5] = 0;
+		} else levels[22][6][5] = 2;
 		// death block
 		if (isTouching("any",2) && !player.godMode) {
 			respawn();
@@ -623,6 +652,11 @@ function drawLevel() {
 			let yb = y * blockSize;
 			let type = getBlockType(x,y);
 			switch (type) {
+				case -3:
+					if (!player.spawnPoint[6].includes(levels[player.currentLevel][x][y][1])) {
+						lL.fillStyle = "#00888888";
+					} else lL.fillStyle = "#00FFFF88";
+					break;
 				case 1:
 					lL.fillStyle = "#000000";
 					break;
@@ -685,6 +719,18 @@ function drawLevel() {
 			}
 			lL.fillRect(xb, yb, blockSize, blockSize);
 			switch (type) {
+				case -3:
+					lL.lineWidth = blockSize/25;
+					if (!player.spawnPoint[6].includes(levels[player.currentLevel][x][y][1])) {
+						lL.strokeStyle = "#00444488";
+						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
+						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/25*6,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
+					} else {
+						lL.strokeStyle = "#00888888";
+						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
+						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/2,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
+					}
+					break;
 				case 2:
 					lL.strokeStyle = "#880000";
 					lL.beginPath();
