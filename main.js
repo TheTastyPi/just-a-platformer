@@ -453,7 +453,7 @@ function nextFrame(timeStamp) {
 		let yprev = player.y;
 		let lvlxprev = player.levelCoord[0];
 		let lvlyprev = player.levelCoord[1];
-		let triggersPrev = [...player.trigger];
+		let triggersPrev = [...player.triggers];
 		// velocity change
 		player.xv *= 0.5;
 		if (Math.abs(player.xv) < 5) player.xv = 0;
