@@ -563,6 +563,12 @@ function nextFrame(timeStamp) {
 		if (isTouching("any",21)) player.moveSpeed = 100;
 		if (isTouching("any",22)) player.moveSpeed = 200;
 		if (isTouching("any",23)) player.moveSpeed = 400;
+		// death block
+		if (isTouching("any",2)) respawn();
+		x1 = player.x + 1;
+		x2 = player.x+playerSize - 1;
+		y1 = player.y + 1;
+		y2 = player.y+playerSize - 1;
 		// trigger block
 		if (isTouching("any",-3)) {
 			let coord = getCoord(-3);
@@ -576,12 +582,6 @@ function nextFrame(timeStamp) {
 		if (player.triggers.includes(1)) {
 			levels[22][6][5] = 0;
 		} else levels[22][6][5] = 2;
-		// death block
-		if (isTouching("any",2)) respawn();
-		x1 = player.x + 1;
-		x2 = player.x+playerSize - 1;
-		y1 = player.y + 1;
-		y2 = player.y+playerSize - 1;
 		// level warp
 		if (isTouching("any",-2)) {
 			let coord = getCoord(-1);
@@ -724,12 +724,12 @@ function drawLevel() {
 						lL.strokeStyle = "#00444488";
 						lL.fillStyle = "#00444488";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
-						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/25*6,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
+						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/50*6,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3);
 					} else {
 						lL.strokeStyle = "#00888888";
 						lL.fillStyle = "#00888888";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
-						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/2,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
+						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/2,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3);
 					}
 					break;
 				case 2:
