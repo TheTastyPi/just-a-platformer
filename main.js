@@ -1,7 +1,5 @@
 /*/
 TODO 
-- add switch block
-
 - grav section
 - multi-jump section
 - warp confusion section (AKA the "i'll take you along for a trip" section)
@@ -442,9 +440,7 @@ function respawn() {
 	player.yv = 0;
 	player.g = player.spawnPoint[4];
 	player.maxJumps = player.spawnPoint[5];
-	let prevTriggers = [...player.triggers];
 	player.triggers = [...player.spawnPoint[6]];
-	if (arraysEqual(prevTriggers,player.triggers)) drawLevel();
 }
 
 var lastFrame = 0;
@@ -457,6 +453,7 @@ function nextFrame(timeStamp) {
 		let yprev = player.y;
 		let lvlxprev = player.levelCoord[0];
 		let lvlyprev = player.levelCoord[1];
+		let triggersPrev = [...player.trigger];
 		// velocity change
 		player.xv *= 0.5;
 		if (Math.abs(player.xv) < 5) player.xv = 0;
@@ -571,13 +568,12 @@ function nextFrame(timeStamp) {
 			let coord = getCoord(-3);
 			let trigger = levels[player.currentLevel][coord[0]][coord[1]];
 			if (!player.triggers.includes(trigger[1])) player.triggers.push(trigger[1]);
-			drawLevel();
 		}
 		// triggers
-		if (!player.triggers.includes(0)) {
+		if (player.triggers.includes(0)) {
 			levels[22][6][4] = 0;
 		} else levels[22][6][4] = 2;
-		if (!player.triggers.includes(1)) {
+		if (player.triggers.includes(1)) {
 			levels[22][6][5] = 0;
 		} else levels[22][6][5] = 2;
 		// death block
@@ -628,7 +624,7 @@ function nextFrame(timeStamp) {
 		}
 		// draw checks
 		if (player.x != xprev || player.y != yprev) drawPlayer();
-		if (player.levelCoord[0] != lvlxprev || player.levelCoord[1] != lvlyprev) drawLevel();
+		if (player.levelCoord[0] != lvlxprev || player.levelCoord[1] != lvlyprev || !arraysEqual(player.triggers,triggersPrev)) drawLevel();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
@@ -726,10 +722,12 @@ function drawLevel() {
 					lL.lineWidth = blockSize/25;
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
 						lL.strokeStyle = "#00444488";
+						lL.fillStyle = "#00444488";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
 						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/25*6,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
 					} else {
 						lL.strokeStyle = "#00888888";
+						lL.fillStyle = "#00888888";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
 						lL.fillRect(xb+blockSize/3+blockSize/25*3,yb+blockSize/2,blockSize/3-blockSize/25*6,blockSize/2-blockSize/25*6);
 					}
