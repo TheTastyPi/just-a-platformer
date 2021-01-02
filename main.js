@@ -724,7 +724,7 @@ function drawLevel() {
 						lL.strokeStyle = "#00444488";
 						lL.fillStyle = "#00444488";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
-						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/50*6,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3);
+						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/25*3+blockSize/50*3,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3);
 					} else {
 						lL.strokeStyle = "#00888888";
 						lL.fillStyle = "#00888888";
