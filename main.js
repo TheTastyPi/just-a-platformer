@@ -449,6 +449,7 @@ function nextFrame(timeStamp) {
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
 	if (dt < 100) {
+		dt = dt/100;
 		let xprev = player.x;
 		let yprev = player.y;
 		let lvlxprev = player.levelCoord[0];
