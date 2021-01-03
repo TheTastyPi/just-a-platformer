@@ -11,7 +11,7 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [1,6,0,5,350,1,[]],
+	spawnPoint: [1,6,0,5,350,1,215,[]],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
@@ -22,7 +22,7 @@ const player = {
 	canWalljump: false,
 	currentJumps: 0,
 	maxJumps: 1,
-	moveSpeed: 200,
+	moveSpeed: 215,
 	triggers: [],
 };
 const control = {
@@ -297,14 +297,14 @@ document.addEventListener("keydown", function(input){
 			if (player.canWalljump) {
 				if (player.wallJumpDir == "left") {
 					player.xv = -player.moveSpeed*5;
-					player.yv = -Math.sign(player.g)*225;
+					player.yv = -Math.sign(player.g)*205;
 				}
 				if (player.wallJumpDir == "right") {
 					player.xv = player.moveSpeed*5;
-					player.yv = -Math.sign(player.g)*225;
+					player.yv = -Math.sign(player.g)*205;
 				}
 			} else if (player.currentJumps > 0) {
-				player.yv = -Math.sign(player.g)*225;
+				player.yv = -Math.sign(player.g)*205;
 				player.currentJumps--;
 			}
 			break;
@@ -440,7 +440,8 @@ function respawn() {
 	player.yv = 0;
 	player.g = player.spawnPoint[4];
 	player.maxJumps = player.spawnPoint[5];
-	player.triggers = [...player.spawnPoint[6]];
+	player.moveSpeed = player.spawnPoint[6];
+	player.triggers = [...player.spawnPoint[7]];
 }
 
 var lastFrame = 0;
@@ -521,7 +522,7 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",3)) {
 				if (levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] == 4) levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 				let coord = getCoord(3);
-				player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.maxJumps,[...player.triggers]];
+				player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.maxJumps,player.moveSpeed,[...player.triggers]];
 				levels[player.currentLevel][coord[0]][coord[1]] = 4;
 				shouldDrawLevel = true;
 			}
@@ -534,7 +535,7 @@ function nextFrame(timeStamp) {
 			}
 			// grav magnitude
 			if (isTouching("any",8)) {
-				player.g = Math.sign(player.g)*195;
+				player.g = Math.sign(player.g)*170;
 			}
 			if (isTouching("any",9)) {
 				player.g = Math.sign(player.g)*350;
@@ -563,9 +564,9 @@ function nextFrame(timeStamp) {
 				player.maxJumps = Infinity;
 				if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
 			}
-			if (isTouching("any",21)) player.moveSpeed = 100;
-			if (isTouching("any",22)) player.moveSpeed = 200;
-			if (isTouching("any",23)) player.moveSpeed = 400;
+			if (isTouching("any",21)) player.moveSpeed = 106;
+			if (isTouching("any",22)) player.moveSpeed = 215;
+			if (isTouching("any",23)) player.moveSpeed = 430;
 			// death block
 			if (isTouching("any",2)) respawn();
 			x1 = player.x + 1;
