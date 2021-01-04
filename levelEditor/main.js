@@ -402,6 +402,7 @@ function toStart() {
 	player.yv = 0;
 	player.g = player.startPoint[2];
 	player.maxJumps = player.startPoint[3];
+	player.currentJumps = player.maxJumps -1;
 	player.moveSpeed = player.startPoint[4];
 }
 function respawn() {
@@ -411,6 +412,7 @@ function respawn() {
 	player.yv = 0;
 	player.g = player.spawnPoint[2];
 	player.maxJumps = player.spawnPoint[3];
+	player.currentJumps = player.maxJumps -1;
 	player.moveSpeed = player.spawnPoint[4];
 }
 
