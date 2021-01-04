@@ -36,7 +36,7 @@ var level = [
 	[1,0,0,0,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1]
 ];
-const hasHitbox = [1,5,11,24,25,26,27,28,29,30,31,32,33];
+const hasHitbox = [1,5,11,24,25,26,31,32,33];
 const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Activated Check Point (Unavailable)","Bounce Block", // basic (0,1,2,3,4,5)
 		   "G-Up Field","G-Down Field","G-Low Field","G-Medium Field","G-High Field", // grav (6,7,8,9,10)
 		   "Wall-Jump Block","0-Jump Field","1-Jump Field","2-Jump Field","3-Jump Field","Inf-Jump Field", // jumping (11,12,13,14,15,16)
@@ -339,23 +339,41 @@ function isTouching(dir, type) {
 	let y2b = Math.floor(y2/blockSize);
 	switch (dir) {
 		case "left":
-			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x1b,y2b)))
+			if (type) {
+				return (getBlockType(x1b,y1b) == type && getBlockType(x1b,y2b) == type)
+				|| (getBlockType(x1b,y1b) == type && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b))) 
+				|| (getBlockType(x1b,y2b) == type && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b)));
+			} else return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x1b,y2b)))
 			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b))) 
 			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b))));
 			break;
 		case "right":
-			return (hasHitbox.includes(getBlockType(x2b,y1b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
+			if (type) {
+				return (getBlockType(x2b,y1b) == type && getBlockType(x2b,y2b) == type)
+				|| (getBlockType(x2b,y1b) == type && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b))) 
+				|| (getBlockType(x2b,y2b) == type && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b)));
+			} else return (hasHitbox.includes(getBlockType(x2b,y1b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
 			|| ((hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b))) 
 			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b))));
 			break;
 		case "up":
-			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x2b,y1b)))
+			if (type) {
+				return (getBlockType(x1b,y1b) == type && getBlockType(x2b,y1b) == type)
+				|| ((getBlockType(x1b,y1b) == type && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
+				|| (getBlockType(x2b,y1b) == type && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
+				&& player.yv < 0;
+			} else return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x2b,y1b)))
 			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
 			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
 			&& player.yv < 0;
 			break;
 		case "down":
-			return (hasHitbox.includes(getBlockType(x1b,y2b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
+			if (type) {
+				return (getBlockType(x1b,y2b) == type && getBlockType(x2b,y2b) == type)
+				|| ((getBlockType(x1b,y2b) == type && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
+				|| (getBlockType(x2b,y2b) == type && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
+			&& player.yv > 0;
+			} else return (hasHitbox.includes(getBlockType(x1b,y2b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
 			|| ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
 			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
 			&& player.yv > 0;
@@ -445,84 +463,72 @@ function nextFrame(timeStamp) {
 			let y1b = Math.floor(y1/blockSize);
 			let y2b = Math.floor(y2/blockSize);
 			// left wall
-			if (isTouching("left")) {
-				let noEdge = [27,29,30];
-				if (!noEdge.includes(getBlockType(x1b,y1b)) || !noEdge.includes(getBlockType(x1b,y2b))) {
-					if ((getBlockType(x1b,y1b) == 11 || getBlockType(x1b,y2b) == 11) && control.left) {
-						if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
-						if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
-						player.canWalljump = true;
-						player.wallJumpDir = "right";
-					} else if (i == 0) player.canWalljump = false;
-					player.xv = 0;
-					player.x = (x1b + 1) * blockSize;
-				}
-			} else if (isTouching("right")) { // right wall
-				let noEdge = [28,29,30];
-				if (!noEdge.includes(getBlockType(x2b,y1b)) || !noEdge.includes(getBlockType(x2b,y2b))) {
-					if ((getBlockType(x2b,y1b) == 11 || getBlockType(x2b,y2b) == 11) && control.right) {
-						if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
-						if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
-						player.canWalljump = true;
-						player.wallJumpDir = "left";
-					} else if (i == 0) player.canWalljump = false;
-					player.xv = 0;
-					player.x = x2b * blockSize - playerSize;
-				}
+			if (isTouching("left") || isTouching("left",28)) {
+				if ((getBlockType(x1b,y1b) == 11 || getBlockType(x1b,y2b) == 11) && control.left) {
+					if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
+					if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
+					player.canWalljump = true;
+					player.wallJumpDir = "right";
+				} else if (i == 0) player.canWalljump = false;
+				player.xv = 0;
+				player.x = (x1b + 1) * blockSize;
+			} else if (isTouching("right") || isTouching("right",27)) { // right wall
+				if ((getBlockType(x2b,y1b) == 11 || getBlockType(x2b,y2b) == 11) && control.right) {
+					if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
+					if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
+					player.canWalljump = true;
+					player.wallJumpDir = "left";
+				} else if (i == 0) player.canWalljump = false;
+				player.xv = 0;
+				player.x = x2b * blockSize - playerSize;
 			} else if (i == 0) player.canWalljump = false;
 			// ceiling
-			if (isTouching("up")) {
-				let noEdge = [27,28,29];
-				if (!noEdge.includes(getBlockType(x2b,y1b)) || !noEdge.includes(getBlockType(x1b,y1b))) {
-					player.yv = 0;
-					if (((getBlockType(x2b,y1b) == 5 && getBlockType(x1b,y1b) == 5)
-					   || ((getBlockType(x2b,y1b) == 5 || getBlockType(x1b,y1b) == 5)
-					       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
-						   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
-					   && player.g < 0) player.yv = -Math.sign(player.g)*275;
-					if (((getBlockType(x2b,y1b) == 24 && getBlockType(x1b,y1b) == 24)
-					   || ((getBlockType(x2b,y1b) == 24 || getBlockType(x1b,y1b) == 24)
-					       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
-						   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
-					   && player.g < 0) player.yv = -Math.sign(player.g)*700;
-					if (((getBlockType(x2b,y1b) == 26 && getBlockType(x1b,y1b) == 26)
-					   || ((getBlockType(x2b,y1b) == 26 || getBlockType(x1b,y1b) == 26)
-					       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
-						   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
-					   && player.g < 0) {
-						player.g = -player.g;
-						player.yv = player.g/2;
-					}
-					player.y = (y1b + 1) * blockSize;
-					if (player.g < 0 && player.yv <= 0) player.currentJumps = player.maxJumps;
+			if (isTouching("up") || isTouching("up",30)) {
+				player.yv = 0;
+				if (((getBlockType(x2b,y1b) == 5 && getBlockType(x1b,y1b) == 5)
+				   || ((getBlockType(x2b,y1b) == 5 || getBlockType(x1b,y1b) == 5)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
+					   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
+				   && player.g < 0) player.yv = -Math.sign(player.g)*275;
+				if (((getBlockType(x2b,y1b) == 24 && getBlockType(x1b,y1b) == 24)
+				   || ((getBlockType(x2b,y1b) == 24 || getBlockType(x1b,y1b) == 24)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
+					   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
+				   && player.g < 0) player.yv = -Math.sign(player.g)*700;
+				if (((getBlockType(x2b,y1b) == 26 && getBlockType(x1b,y1b) == 26)
+				   || ((getBlockType(x2b,y1b) == 26 || getBlockType(x1b,y1b) == 26)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
+					   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
+				   && player.g < 0) {
+					player.g = -player.g;
+					player.yv = player.g/2;
 				}
+				player.y = (y1b + 1) * blockSize;
+				if (player.g < 0 && player.yv <= 0) player.currentJumps = player.maxJumps;
 			} else if (player.g < 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
 			// floor
-			if (isTouching("down")) {
-				let noEdge = [27,28,30];
-				if (!noEdge.includes(getBlockType(x2b,y2b)) || !noEdge.includes(getBlockType(x1b,y2b))) {
-					player.yv = 0;
-					if (((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
-					   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
-					       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
-						   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
-					   && player.g > 0) player.yv = -Math.sign(player.g)*275;
-					if (((getBlockType(x2b,y2b) == 24 && getBlockType(x1b,y2b) == 24)
-					   || ((getBlockType(x2b,y2b) == 24 || getBlockType(x1b,y2b) == 24)
-					       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
-						   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
-					   && player.g > 0) player.yv = -Math.sign(player.g)*700;
-					if (((getBlockType(x2b,y2b) == 25 && getBlockType(x1b,y2b) == 25)
-					   || ((getBlockType(x2b,y2b) == 25 || getBlockType(x1b,y2b) == 25)
-					       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
-						   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
-					   && player.g > 0) {
-						player.g = -player.g;
-						player.yv = player.g/2;
-					}
-					player.y = y2b * blockSize - playerSize;
-					if (player.g > 0 && player.yv >= 0) player.currentJumps = player.maxJumps;
+			if (isTouching("down") || isTouching("down",29)) {
+				player.yv = 0;
+				if (((getBlockType(x2b,y2b) == 5 && getBlockType(x1b,y2b) == 5)
+				   || ((getBlockType(x2b,y2b) == 5 || getBlockType(x1b,y2b) == 5)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
+					   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
+				   && player.g > 0) player.yv = -Math.sign(player.g)*275;
+				if (((getBlockType(x2b,y2b) == 24 && getBlockType(x1b,y2b) == 24)
+				   || ((getBlockType(x2b,y2b) == 24 || getBlockType(x1b,y2b) == 24)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
+					   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
+				   && player.g > 0) player.yv = -Math.sign(player.g)*700;
+				if (((getBlockType(x2b,y2b) == 25 && getBlockType(x1b,y2b) == 25)
+				   || ((getBlockType(x2b,y2b) == 25 || getBlockType(x1b,y2b) == 25)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
+					   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
+				   && player.g > 0) {
+					player.g = -player.g;
+					player.yv = player.g/2;
 				}
+				player.y = y2b * blockSize - playerSize;
+				if (player.g > 0 && player.yv >= 0) player.currentJumps = player.maxJumps;
 			} else if (player.g > 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
 			// anti-grav
 			if (isTouching("any",6)) {
