@@ -270,6 +270,7 @@ document.addEventListener("keydown", function(input){
 					if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
 					if (!player.startPoint[4]) player.startPoint[4] = 750;
 					if (player.startPoint[4] == 100) player.startPoint[4] = 325;
+					if (player.startPoint[4] == 200) player.startPoint[4] = 750;
 					if (player.startPoint[4] == 400) player.startPoint[4] = 1500;
 					player.spawnPoint = deepCopy(player.startPoint);
 					id("lvlWidth").innerHTML = level.length;
