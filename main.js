@@ -11,7 +11,7 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [1,6,0,5,350,1,215,[]],
+	spawnPoint: [1,6,0,5,350,1,750,[]],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
@@ -22,7 +22,7 @@ const player = {
 	canWalljump: false,
 	currentJumps: 0,
 	maxJumps: 1,
-	moveSpeed: 215,
+	moveSpeed: 750,
 	triggers: [],
 };
 const control = {
@@ -296,11 +296,11 @@ document.addEventListener("keydown", function(input){
 		case "KeyW":
 			if (player.canWalljump) {
 				if (player.wallJumpDir == "left") {
-					player.xv = -player.moveSpeed*5;
+					player.xv = -player.moveSpeed;
 					player.yv = -Math.sign(player.g)*205;
 				}
 				if (player.wallJumpDir == "right") {
-					player.xv = player.moveSpeed*5;
+					player.xv = player.moveSpeed;
 					player.yv = -Math.sign(player.g)*205;
 				}
 			} else if (player.currentJumps > 0) {
@@ -459,7 +459,7 @@ function nextFrame(timeStamp) {
 		let shouldDrawLevel = false;
 		for (let i = 0; i < 100; i++) {
 			// velocity change
-			player.xv *= 0.5;
+			player.xv *= Math.pow(0.5,dt/12);
 			if (Math.abs(player.xv) < 5) player.xv = 0;
 			player.yv += player.g * dt / 500 * gameSpeed;
 			if (player.yv > player.g && player.g > 0) player.yv = player.g;
@@ -478,24 +478,24 @@ function nextFrame(timeStamp) {
 			let y2b = Math.floor(y2/blockSize);
 			// left wall
 			if (isTouching("left")) {
-				player.xv = 0;
 				if ((getBlockType(x1b,y1b) == 11 || getBlockType(x1b,y2b) == 11) && control.left) {
 					if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
 					if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
 					player.canWalljump = true;
 					player.wallJumpDir = "right";
-				} else player.canWalljump = false;
+				} else if (i == 0) player.canWalljump = false;
+				player.xv = 0;
 				player.x = (x1b + 1) * blockSize;
 			} else if (isTouching("right")) { // right wall
-				player.xv = 0;
 				if ((getBlockType(x2b,y1b) == 11 || getBlockType(x2b,y2b) == 11) && control.right) {
 					if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
 					if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
 					player.canWalljump = true;
 					player.wallJumpDir = "left";
-				} else player.canWalljump = false;
+				} else if (i == 0) player.canWalljump = false;
+				player.xv = 0;
 				player.x = x2b * blockSize - playerSize;
-			} else player.canWalljump = false;
+			} else if (i == 0) player.canWalljump = false;
 			// ceiling
 			if (isTouching("up")) {
 				player.yv = 0;
@@ -564,9 +564,9 @@ function nextFrame(timeStamp) {
 				player.maxJumps = Infinity;
 				if (player.currentJumps != player.maxJumps && player.currentJumps != player.maxJumps-1) player.currentJumps = player.maxJumps-1;
 			}
-			if (isTouching("any",21)) player.moveSpeed = 106;
-			if (isTouching("any",22)) player.moveSpeed = 215;
-			if (isTouching("any",23)) player.moveSpeed = 430;
+			if (isTouching("any",21)) player.moveSpeed = 375;
+			if (isTouching("any",22)) player.moveSpeed = 750;
+			if (isTouching("any",23)) player.moveSpeed = 1500;
 			// death block
 			if (isTouching("any",2)) respawn();
 			x1 = player.x + 1;
@@ -617,15 +617,15 @@ function nextFrame(timeStamp) {
 					player.x = blockSize*levels[player.currentLevel].findIndex(x => x[0][0]==-1 && x[0][1]==warpId)+(x1+blockSize)%blockSize;
 				}
 			}
-			// key input
-			if (control.left && player.xv > -player.moveSpeed) {
-				player.xv -= player.moveSpeed;
-				if (player.xv < -player.moveSpeed) player.xv = -player.moveSpeed;
-			}
-			if (control.right && player.xv < player.moveSpeed) {
-				player.xv += player.moveSpeed;
-				if (player.xv > player.moveSpeed) player.xv = player.moveSpeed;
-			}
+		}
+		// key input
+		if (control.left && player.xv > -player.moveSpeed) {
+			player.xv -= player.moveSpeed / 100 * dt * simReruns;
+			if (player.xv < -player.moveSpeed) player.xv = -player.moveSpeed;
+		}
+		if (control.right && player.xv < player.moveSpeed) {
+			player.xv += player.moveSpeed / 100 * dt * simReruns;
+			if (player.xv > player.moveSpeed) player.xv = player.moveSpeed;
 		}
 		// draw checks
 		if (player.x != xprev || player.y != yprev) drawPlayer();
