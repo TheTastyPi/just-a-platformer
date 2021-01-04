@@ -11,14 +11,14 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	spawnPoint: [1,6,0,5,350,1,750,[]],
+	spawnPoint: [1,6,0,5,325,1,750,[]],
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
 	y: 0,
 	xv: 0,
 	yv: 0,
-	g: 350,
+	g: 325,
 	canWalljump: false,
 	currentJumps: 0,
 	maxJumps: 1,
@@ -538,7 +538,7 @@ function nextFrame(timeStamp) {
 				player.g = Math.sign(player.g)*170;
 			}
 			if (isTouching("any",9)) {
-				player.g = Math.sign(player.g)*350;
+				player.g = Math.sign(player.g)*325;
 			}
 			if (isTouching("any",10)) {
 				player.g = Math.sign(player.g)*650;
