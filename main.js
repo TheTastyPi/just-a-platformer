@@ -453,6 +453,7 @@ function respawn() {
 	player.yv = 0;
 	player.g = player.spawnPoint[4];
 	player.maxJumps = player.spawnPoint[5];
+	player.currentJumps = player.maxJumps -1;
 	player.moveSpeed = player.spawnPoint[6];
 	player.triggers = [...player.spawnPoint[7]];
 }
