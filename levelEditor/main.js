@@ -3,8 +3,8 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	startPoint: [4,5,325,1,750],
-	spawnPoint: [4,5,325,1,750],
+	startPoint: [4,5,325,1,600],
+	spawnPoint: [4,5,325,1,600],
 	x: 0,
 	y: 0,
 	xv: 0,
@@ -14,7 +14,7 @@ const player = {
 	canWalljump: false,
 	wallJumpDir: "left",
 	maxJumps: 1,
-	moveSpeed: 750,
+	moveSpeed: 600,
 	jumpHeight: 205,
 	godMode: false,
 	selectedBlock: [1,0],
@@ -267,9 +267,12 @@ document.addEventListener("keydown", function(input){
 					if (!player.startPoint[3]) player.startPoint[3] = 1;
 					if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
 					if (!player.startPoint[4]) player.startPoint[4] = 750;
-					if (player.startPoint[4] == 100) player.startPoint[4] = 325;
-					if (player.startPoint[4] == 200) player.startPoint[4] = 750;
-					if (player.startPoint[4] == 400) player.startPoint[4] = 1500;
+					if (player.startPoint[4] == 100) player.startPoint[4] = 300;
+					if (player.startPoint[4] == 200) player.startPoint[4] = 600;
+					if (player.startPoint[4] == 400) player.startPoint[4] = 1200;
+					if (player.startPoint[4] == 325) player.startPoint[4] = 300;
+					if (player.startPoint[4] == 750) player.startPoint[4] = 600;
+					if (player.startPoint[4] == 1500) player.startPoint[4] = 1200;
 					player.spawnPoint = deepCopy(player.startPoint);
 					id("lvlWidth").innerHTML = level.length;
 					id("lvlHeight").innerHTML = level[0].length;
@@ -581,9 +584,9 @@ function nextFrame(timeStamp) {
 				level[coord[0]][coord[1]] = 17;
 				shouldDrawLevel = true;
 			}
-			if (isTouching("any",21)) player.moveSpeed = 375;
-			if (isTouching("any",22)) player.moveSpeed = 750;
-			if (isTouching("any",23)) player.moveSpeed = 1500;
+			if (isTouching("any",21)) player.moveSpeed = 300;
+			if (isTouching("any",22)) player.moveSpeed = 600;
+			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			// OoB check
