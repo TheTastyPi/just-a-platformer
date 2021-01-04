@@ -620,11 +620,11 @@ function nextFrame(timeStamp) {
 		}
 		// key input
 		if (control.left && player.xv > -player.moveSpeed) {
-			player.xv -= player.moveSpeed / 100 * dt * simReruns;
+			player.xv -= player.moveSpeed *dt;
 			if (player.xv < -player.moveSpeed) player.xv = -player.moveSpeed;
 		}
 		if (control.right && player.xv < player.moveSpeed) {
-			player.xv += player.moveSpeed / 100 * dt * simReruns;
+			player.xv += player.moveSpeed *dt;
 			if (player.xv > player.moveSpeed) player.xv = player.moveSpeed;
 		}
 		// draw checks
