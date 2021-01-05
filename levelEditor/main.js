@@ -3,8 +3,8 @@ var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
 const player = {
-	startPoint: [4,5,325,1,600],
-	spawnPoint: [4,5,325,1,600],
+	startPoint: [4,5,325,1,600,false],
+	spawnPoint: [4,5,325,1,600,false],
 	x: 0,
 	y: 0,
 	xv: 0,
@@ -16,6 +16,7 @@ const player = {
 	maxJumps: 1,
 	moveSpeed: 600,
 	jumpHeight: 205,
+	switchOn: false,
 	godMode: false,
 	selectedBlock: [1,0],
 };
@@ -36,7 +37,7 @@ var level = [
 	[1,0,0,0,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1]
 ];
-const hasHitbox = [1,5,11,24,25,26,31,32,33];
+const hasHitbox = [1,5,11,24,25,26,31,player.switchOn?32:1,player.switchOn?1:33];
 const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Activated Check Point (Unavailable)","Bounce Block", // basic (0,1,2,3,4,5)
 		   "G-Up Field","G-Down Field","G-Low Field","G-Medium Field","G-High Field", // grav (6,7,8,9,10)
 		   "Wall-Jump Block","0-Jump Field","1-Jump Field","2-Jump Field","3-Jump Field","Inf-Jump Field", // jumping (11,12,13,14,15,16)
@@ -70,8 +71,8 @@ id("levelLayer").addEventListener("mousedown", function(input){
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
+				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
+				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 			}
 			level[xb][yb] = player.selectedBlock[0];
 			control.lmb = true;
@@ -89,8 +90,8 @@ id("levelLayer").addEventListener("mousedown", function(input){
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
+				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
+				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 			}
 			level[xb][yb] = player.selectedBlock[1];
 			control.rmb = true;
@@ -109,8 +110,8 @@ id("levelLayer").addEventListener("mousemove", function(input){
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
+				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
+				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 			}
 			level[xb][yb] = player.selectedBlock[0];
 			drawLevel();
@@ -121,8 +122,8 @@ id("levelLayer").addEventListener("mousemove", function(input){
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed];
+				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
+				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 			}
 			level[xb][yb] = player.selectedBlock[1];
 			drawLevel();
@@ -268,10 +269,14 @@ document.addEventListener("keydown", function(input){
 					player.startPoint = data[1];
 					if (!player.startPoint[3]) player.startPoint[3] = 1;
 					if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
-					if (!player.startPoint[4]) player.startPoint[4] = 750;
-					if (player.startPoint[4] == 100) player.startPoint[4] = 325;
-					if (player.startPoint[4] == 200) player.startPoint[4] = 750;
-					if (player.startPoint[4] == 400) player.startPoint[4] = 1500;
+					if (!player.startPoint[4]) player.startPoint[4] = 600;
+					if (player.startPoint[4] == 100) player.startPoint[4] = 300;
+					if (player.startPoint[4] == 200) player.startPoint[4] = 600;
+					if (player.startPoint[4] == 400) player.startPoint[4] = 1200;
+					if (player.startPoint[4] == 325) player.startPoint[4] = 300;
+					if (player.startPoint[4] == 750) player.startPoint[4] = 600;
+					if (player.startPoint[4] == 1500) player.startPoint[4] = 1200;
+					if (!player.startPoint[5]) player.startPoint[5] = false;
 					player.spawnPoint = deepCopy(player.startPoint);
 					id("lvlWidth").innerHTML = level.length;
 					id("lvlHeight").innerHTML = level[0].length;
@@ -408,6 +413,7 @@ function toStart() {
 	player.g = player.startPoint[2];
 	player.maxJumps = player.startPoint[3];
 	player.moveSpeed = player.startPoint[4];
+	player.switchOn = player.spawnPoint[5];
 }
 function respawn() {
 	player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
@@ -417,11 +423,13 @@ function respawn() {
 	player.g = player.spawnPoint[2];
 	player.maxJumps = player.spawnPoint[3];
 	player.moveSpeed = player.spawnPoint[4];
+	player.switchOn = player.spawnPoint[5];
 }
 
 var lastFrame = 0;
 var haltThreshold = 100;
 var simReruns = 100;
+var canSwitch = true;
 function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
@@ -558,7 +566,7 @@ function nextFrame(timeStamp) {
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
 				let coord = getCoord(3);
-				player.spawnPoint = [coord[0],coord[1],player.g,player.maxJumps,player.moveSpeed];
+				player.spawnPoint = [coord[0],coord[1],player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 				level[coord[0]][coord[1]] = 4;
 				shouldDrawLevel = true;
 			}
@@ -569,7 +577,7 @@ function nextFrame(timeStamp) {
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
 				let coord = getCoord(18);
-				player.spawnPoint = [coord[0],coord[1],player.g,player.maxJumps,player.moveSpeed];
+				player.spawnPoint = [coord[0],coord[1],player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 				level[coord[0]][coord[1]] = 20;
 				shouldDrawLevel = true;
 			}
@@ -580,7 +588,7 @@ function nextFrame(timeStamp) {
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
 				}
 				let coord = getCoord(19);
-				player.spawnPoint = [coord[0],coord[1],player.g,player.maxJumps,player.moveSpeed];
+				player.spawnPoint = [coord[0],coord[1],player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 				level[coord[0]][coord[1]] = 17;
 				shouldDrawLevel = true;
 			}
@@ -593,6 +601,11 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",28)) player.xv = 100;
 			if (isTouching("any",29)) player.yv = -100;
 			if (isTouching("any",30)) player.yv = 100;
+			// switch
+			if (isTouching("any",31)) {
+				if (canSwitch) player.switchOn = !player.switchOn;
+				canSwitch = false;
+			} else canSwitch = true;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			// OoB check
@@ -730,6 +743,21 @@ function drawLevel() {
 					break;
 				case 30:
 					lL.fillStyle = "#00000088";
+					break;
+				case 31:
+					if (!player.switchOn) {
+						lL.fillStyle = "#00880088";
+					} else lL.fillStyle = "#00FF0088";
+					break;
+				case 32:
+					if (!player.switchOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#00FF00";
+					break;
+				case 33:
+					if (player.switchOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#008800";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -1142,6 +1170,38 @@ function drawLevel() {
 					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
 					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
 					lL.stroke();
+					break;
+				case 31:
+					lL.lineWidth = blockSize/25;
+					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
+						lL.strokeStyle = "#00440088";
+						lL.fillStyle = "#00440088";
+						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
+						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/25*3+blockSize/50*3,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3-blockSize/50*3);
+					} else {
+						lL.strokeStyle = "#00880088";
+						lL.fillStyle = "#00880088";
+						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
+						lL.fillRect(xb+blockSize/3+blockSize/50*3,yb+blockSize/2,blockSize/3-blockSize/25*3,blockSize/2-blockSize/25*3-blockSize/50*3);
+					}
+					break;
+				case 32:
+					lL.lineWidth = blockSize/25;
+					if (!player.switchOn) {
+						lL.strokeStyle = "#00FF0088";
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 33:
+					lL.lineWidth = blockSize/25;
+					if (player.switchOn) {
+						lL.strokeStyle = "#00FF0088";
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
 					break;
 			}
 		}
