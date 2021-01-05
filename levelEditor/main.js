@@ -1085,7 +1085,7 @@ function drawLevel() {
 					lL.stroke();
 					break;
 				case 27:
-					lL.strokeStyle = "#00000000";
+					lL.strokeStyle = "#FFFFFF00";
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/4,yb+blockSize/25*3);
 					lL.lineTo(xb+blockSize/25*3,yb+blockSize/2);
@@ -1099,7 +1099,7 @@ function drawLevel() {
 					lL.stroke();
 					break;
 				case 28:
-					lL.strokeStyle = "#00000000";
+					lL.strokeStyle = "#FFFFFF00";
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
 					lL.lineTo(xb+blockSize/4,yb+blockSize/2);
@@ -1113,7 +1113,7 @@ function drawLevel() {
 					lL.stroke();
 					break;
 				case 29:
-					lL.strokeStyle = "#00000000";
+					lL.strokeStyle = "#FFFFFF00";
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
 					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
@@ -1127,7 +1127,7 @@ function drawLevel() {
 					lL.stroke();
 					break;
 				case 30:
-					lL.strokeStyle = "#00000000";
+					lL.strokeStyle = "#FFFFFF00";
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
 					lL.lineTo(xb+blockSize/2,yb+blockSize/4);
