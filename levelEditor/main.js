@@ -43,7 +43,7 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Start","Goal","Deactivated Start (Unavailable)","Activated Goal (Unavailable)", // exclusive (17,18,19,20)
 		   "S-Slow Field","S-Normal Field","S-Fast Field", // speed (21,22,23)
 		   "Bounce Block++","G-Bounce Up","G-Bounce Down", // more bounce (24,25,26)
-		   "One-Way Block L","One-Way Block R","One-Way Block U","One-Way Block D", // one-way (27,28,29,30)
+		   "Force Field L","Force Field R","Force Field U","Force Field D", // force (27,28,29,30)
 		   "Switch Block","Toggle Block A","Toggle Block B"]; // on off (31,32,33)
 const bannedBlock = [4,19,20];
 
@@ -581,9 +581,15 @@ function nextFrame(timeStamp) {
 				level[coord[0]][coord[1]] = 17;
 				shouldDrawLevel = true;
 			}
+			// speed change
 			if (isTouching("any",21)) player.moveSpeed = 300;
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
+			// force field
+			if (isTouching("any",27)) player.x -= dt;
+			if (isTouching("any",28)) player.x += dt;
+			if (isTouching("any",29)) player.y -= dt;
+			if (isTouching("any",30)) player.y += dt;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			// OoB check
@@ -709,6 +715,18 @@ function drawLevel() {
 					break;
 				case 26:
 					lL.fillStyle = "#00FFFF";
+					break;
+				case 27:
+					lL.fillStyle = "#00000088";
+					break;
+				case 28:
+					lL.fillStyle = "#00000088";
+					break;
+				case 29:
+					lL.fillStyle = "#00000088";
+					break;
+				case 30:
+					lL.fillStyle = "#00000088";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -1067,20 +1085,60 @@ function drawLevel() {
 					lL.stroke();
 					break;
 				case 27:
-					lL.fillStyle = "#000000";
-					lL.fillRect(xb,yb,blockSize/25*3,blockSize);
+					lL.strokeStyle = "#00000000";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/25*3,yb+blockSize/2);
+					lL.lineTo(xb+blockSize-blockSize/4,yb+blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/4,yb+blockSize/2);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
 					break;
 				case 28:
-					lL.fillStyle = "#000000";
-					lL.fillRect(xb+blockSize-blockSize/25*3,yb,blockSize/25*3,blockSize);
+					lL.strokeStyle = "#00000000";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/4,yb+blockSize/2);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize-blockSize/4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/2);
+					lL.lineTo(xb+blockSize-blockSize/4,yb+blockSize-blockSize/25*3);
+					lL.stroke();
 					break;
 				case 29:
-					lL.fillStyle = "#000000";
-					lL.fillRect(xb,yb,blockSize,blockSize/25*3);
+					lL.strokeStyle = "#00000000";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/4);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
 					break;
 				case 30:
-					lL.fillStyle = "#000000";
-					lL.fillRect(xb,yb+blockSize-blockSize/25*3,blockSize,blockSize/25*3);
+					lL.strokeStyle = "#00000000";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/4);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.stroke();
 					break;
 			}
 		}
