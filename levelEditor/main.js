@@ -1173,7 +1173,7 @@ function drawLevel() {
 					break;
 				case 31:
 					lL.lineWidth = blockSize/25;
-					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
+					if (!player.switchOn) {
 						lL.strokeStyle = "#00440088";
 						lL.fillStyle = "#00440088";
 						lL.strokeRect(xb+blockSize/3,yb+blockSize/25*3,blockSize/3,blockSize-blockSize/25*6);
