@@ -586,10 +586,10 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// force field
-			if (isTouching("any",27)) player.x -= dt;
-			if (isTouching("any",28)) player.x += dt;
-			if (isTouching("any",29)) player.y -= dt;
-			if (isTouching("any",30)) player.y += dt;
+			if (isTouching("any",27)) player.xv = -50;
+			if (isTouching("any",28)) player.xv = 50;
+			if (isTouching("any",29)) player.yv = -50;
+			if (isTouching("any",30)) player.yv = 50;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			// OoB check
