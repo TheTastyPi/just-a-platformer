@@ -1089,7 +1089,7 @@ function drawLevel() {
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/4,yb+blockSize/25*3);
 					lL.lineTo(xb+blockSize/25*3,yb+blockSize/2);
-					lL.lineTo(xb+blockSize-blockSize/4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/4,yb+blockSize-blockSize/25*3);
 					lL.stroke();
 
 					lL.beginPath();
@@ -1103,7 +1103,7 @@ function drawLevel() {
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
 					lL.lineTo(xb+blockSize/4,yb+blockSize/2);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
 					lL.stroke();
 
 					lL.beginPath();
