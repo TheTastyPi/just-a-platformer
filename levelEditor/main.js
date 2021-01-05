@@ -364,14 +364,17 @@ function isTouching(dir, type) {
 			&& player.yv > 0;
 			break;
 		case "any":
-			x1 = player.x + 1;
-			x2 = player.x+playerSize - 1;
-			y1 = player.y + 1;
-			y2 = player.y+playerSize - 1;
-			x1b = Math.floor(x1/blockSize);
-			x2b = Math.floor(x2/blockSize);
-			y1b = Math.floor(y1/blockSize);
-			y2b = Math.floor(y2/blockSize);
+			let specialBlocks = [27,28,29,30];
+			if (!specialBlocks.includes(type)) {
+				x1 = player.x + 1;
+				x2 = player.x+playerSize - 1;
+				y1 = player.y + 1;
+				y2 = player.y+playerSize - 1;
+				x1b = Math.floor(x1/blockSize);
+				x2b = Math.floor(x2/blockSize);
+				y1b = Math.floor(y1/blockSize);
+				y2b = Math.floor(y2/blockSize);
+			}
 			return getBlockType(x1b,y1b) == type
 			|| getBlockType(x2b,y1b) == type
 			|| getBlockType(x1b,y2b) == type
@@ -586,10 +589,10 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// force field
-			if (isTouching("any",27)) player.xv = -50;
-			if (isTouching("any",28)) player.xv = 50;
-			if (isTouching("any",29)) player.yv = -50;
-			if (isTouching("any",30)) player.yv = 50;
+			if (isTouching("any",27)) player.x -= dt;
+			if (isTouching("any",28)) player.x += dt;
+			if (isTouching("any",29)) player.y -= dt;
+			if (isTouching("any",30)) player.y += dt;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			// OoB check
