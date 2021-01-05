@@ -603,7 +603,10 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",30)) player.yv = 100;
 			// switch
 			if (isTouching("any",31)) {
-				if (canSwitch) player.switchOn = !player.switchOn;
+				if (canSwitch) {
+					player.switchOn = !player.switchOn;
+					shouldDrawLevel = true;
+				}
 				canSwitch = false;
 			} else canSwitch = true;
 			// death block
