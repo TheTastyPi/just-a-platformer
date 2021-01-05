@@ -412,6 +412,7 @@ function toStart() {
 	player.yv = 0;
 	player.g = player.startPoint[2];
 	player.maxJumps = player.startPoint[3];
+	player.currentJumps = player.maxJumps -1;
 	player.moveSpeed = player.startPoint[4];
 	player.switchOn = player.spawnPoint[5];
 }
@@ -422,6 +423,7 @@ function respawn() {
 	player.yv = 0;
 	player.g = player.spawnPoint[2];
 	player.maxJumps = player.spawnPoint[3];
+	player.currentJumps = player.maxJumps -1;
 	player.moveSpeed = player.spawnPoint[4];
 	player.switchOn = player.spawnPoint[5];
 }
@@ -468,7 +470,7 @@ function nextFrame(timeStamp) {
 				} else if (i == 0) player.canWalljump = false;
 				player.xv = 0;
 				player.x = (x1b + 1) * blockSize;
-			} else if (isTouching("right") || isTouching("right",27)) { // right wall
+			} else if (isTouching("right")) { // right wall
 				if ((getBlockType(x2b,y1b) == 11 || getBlockType(x2b,y2b) == 11) && control.right) {
 					if (player.yv > player.g/10 && player.g > 0) player.yv = player.g/10;
 					if (player.yv < player.g/10 && player.g < 0) player.yv = player.g/10;
