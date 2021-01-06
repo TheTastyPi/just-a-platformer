@@ -637,6 +637,7 @@ function nextFrame(timeStamp) {
 				player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.maxJumps,player.moveSpeed,[...player.triggers]];
 				levels[player.currentLevel][coord[0]][coord[1]] = 4;
 				shouldDrawLevel = true;
+				save();
 			}
 			// anti-grav
 			if (isTouching("any",6)) {
