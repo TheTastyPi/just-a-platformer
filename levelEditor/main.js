@@ -1306,11 +1306,6 @@ function drawLevel() {
 					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
 					lL.stroke();
 				case 36:
-					lL.strokeStyle = "#666666";
-					lL.lineWidth = blockSize/25;
-					lL.setLineDash([blockSize/10]);
-					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
-					lL.setLineDash([]);
 					if (!timerOn) {
 						lL.fillStyle = "#BBBBBB";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
@@ -1321,13 +1316,13 @@ function drawLevel() {
 						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
-					break;
-				case 37:
-					lL.strokeStyle = "#333333";
+					lL.strokeStyle = "#666666";
 					lL.lineWidth = blockSize/25;
 					lL.setLineDash([blockSize/10]);
 					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
 					lL.setLineDash([]);
+					break;
+				case 37:
 					if (timerOn) {
 						lL.fillStyle = "#666666";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
@@ -1338,13 +1333,13 @@ function drawLevel() {
 						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
-					break;
-				case 38:
+					lL.strokeStyle = "#333333";
 					lL.lineWidth = blockSize/25;
-					lL.strokeStyle = "#666666";
 					lL.setLineDash([blockSize/10]);
 					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
 					lL.setLineDash([]);
+					break;
+				case 38:
 					if (!timerOn) {
 						lL.fillStyle = "#BBBBBB";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
@@ -1355,6 +1350,12 @@ function drawLevel() {
 						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
+					lL.lineWidth = blockSize/25;
+					lL.strokeStyle = "#666666";
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					
 					lL.lineWidth = blockSize/25*3;
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
@@ -1367,11 +1368,6 @@ function drawLevel() {
 					lL.stroke();
 					break;
 				case 39:
-					lL.lineWidth = blockSize/25;
-					lL.strokeStyle = "#333333";
-					lL.setLineDash([blockSize/10]);
-					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
-					lL.setLineDash([]);
 					if (timerOn) {
 						lL.fillStyle = "#666666";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
@@ -1382,6 +1378,11 @@ function drawLevel() {
 						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
+					lL.lineWidth = blockSize/25;
+					lL.strokeStyle = "#333333";
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
 					
 					lL.lineWidth = blockSize/25*3;
 					lL.beginPath();
