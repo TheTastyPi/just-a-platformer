@@ -374,7 +374,7 @@ const levels = [
 		[1,0,1,7,0,0,0,0,0,6,1,0,1],
 		[1,0,0,1,7,0,0,0,6,1,0,0,1],
 		[1,0,0,0,1,7,0,6,1,0,0,0,1],
-		[1,0,0,0,0,1,0,1,0,0,0,0,1],
+		[1,0,0,0,0,1,[-3,-1],1,0,0,0,0,1],
 		[1,0,0,0,1,7,0,6,1,0,0,0,1],
 		[1,0,0,1,7,0,0,0,6,1,0,0,1],
 		[1,0,1,7,0,0,0,0,0,6,1,0,1],
@@ -677,6 +677,15 @@ function nextFrame(timeStamp) {
 				if (!player.triggers.includes(trigger[1])) player.triggers.push(trigger[1]);
 			}
 			// triggers
+			if (player.triggers.includes(-1)) {
+				levels[9][5][5] = 0;
+				levels[9][5][4] = 0;
+				levels[9][5][2] = 0;
+			} else {
+				levels[9][5][5] = 8;
+				levels[9][5][4] = 7;
+				levels[9][5][2] = 8;
+			}
 			if (player.triggers.includes(0)) {
 				levels[22][6][4] = 0;
 			} else levels[22][6][4] = 2;
