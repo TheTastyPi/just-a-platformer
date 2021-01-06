@@ -348,24 +348,24 @@ function isTouching(dir, type) {
 	switch (dir) {
 		case "left":
 			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x1b,y2b)))
-			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b))) 
-			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b))));
+			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b)) && getBlockType(x1b+1,y1b) != 2) 
+			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b)) && getBlockType(x1b+1,y2b) != 2));
 			break;
 		case "right":
 			return (hasHitbox.includes(getBlockType(x2b,y1b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
-			|| ((hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b))) 
-			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b))));
+			|| ((hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b)) && getBlockType(x2b-1,y1b) != 2) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b)) && getBlockType(x2b-1,y2b) != 2));
 			break;
 		case "up":
 			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x2b,y1b)))
-			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
-			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
+			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1)) && getBlockType(x1b,y1b+1) != 2) 
+			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1)) && getBlockType(x2b,y1b+1) != 2))
 			&& player.yv < 0;
 			break;
 		case "down":
 			return (hasHitbox.includes(getBlockType(x1b,y2b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
-			|| ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
-			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
+			|| ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1)) && getBlockType(x1b,y2b-1) != 2) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1)) && getBlockType(x2b,y2b-1) != 2))
 			&& player.yv > 0;
 			break;
 		case "any":
@@ -414,7 +414,9 @@ function toStart() {
 	player.maxJumps = player.startPoint[3];
 	player.currentJumps = player.maxJumps -1;
 	player.moveSpeed = player.startPoint[4];
-	player.switchOn = player.spawnPoint[5];
+	let shouldDraw = player.switchOn != player.startPoint[5];
+	player.switchOn = player.startPoint[5];
+	if (shouldDraw) drawLevel();
 }
 function respawn() {
 	player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize)/2;
@@ -424,8 +426,10 @@ function respawn() {
 	player.g = player.spawnPoint[2];
 	player.maxJumps = player.spawnPoint[3];
 	player.currentJumps = player.maxJumps -1;
+	let shouldDraw = player.switchOn != player.spawnPoint[5];
 	player.moveSpeed = player.spawnPoint[4];
 	player.switchOn = player.spawnPoint[5];
+	if (shouldDraw) drawLevel();
 }
 
 var lastFrame = 0;

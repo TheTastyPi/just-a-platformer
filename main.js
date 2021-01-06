@@ -1,17 +1,17 @@
 /*/
 TODO 
-- grav section
 - multi-jump section
-- warp confusion section (AKA the "i'll take you along for a trip" section)
+- speed section
 - wall jump section
 - final section
+- secret section? :o
 /*/
 
 var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
-const player = {
-	spawnPoint: [1,6,0,5,325,1,600,[]],
+var player = {
+	spawnPoint: newSave(),
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
@@ -24,6 +24,7 @@ const player = {
 	maxJumps: 1,
 	moveSpeed: 600,
 	triggers: [],
+	godMode: false
 };
 const control = {
 	left: false,
@@ -31,9 +32,9 @@ const control = {
 };
 const worldMap = [
 	[23,22,21,18,17,0],
-	[24,0,20,19,16,1],
-	[0,0,13,14,15,2],
-	[0,0,12,5,4,3],
+	[24,25,20,19,16,1],
+	[0,26,13,14,15,2],
+	[0,27,12,5,4,3],
 	[0,10,11,6,0,0],
 	[9,8,4,7,0,0]
 ]
@@ -302,12 +303,84 @@ const levels = [
 		[1,[-1,0],1,1,1,1,1,1,1,1,1,1,1],
 		[1,7,0,0,0,0,10,0,0,0,0,0,1],
 		[1,1,1,1,1,1,1,1,1,1,1,3,1],
-		[0,9,0,0,0,2,1,2,0,0,0,6,1],
+		[[-1,0],0,0,0,0,2,1,2,0,0,0,6,1],
 		[1,2,0,0,0,6,1,7,0,0,0,2,1],
 		[1,7,0,0,0,2,1,2,0,0,0,6,1],
 		[1,2,0,0,0,6,1,7,0,0,0,2,1],
 		[1,7,0,0,0,0,2,0,0,0,0,6,1],
 		[1,2,0,0,0,0,0,0,0,0,0,2,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1]
+	],
+	[
+		[1,1,1,2,9,9,1,1,1],
+		[2,0,0,0,0,0,1,3,[-1,0]],
+		[1,0,2,1,1,0,2,0,1],
+		[2,0,0,8,2,0,1,0,1],
+		[1,0,2,0,1,0,2,0,1],
+		[2,0,1,0,1,0,0,0,1],
+		[1,0,2,0,1,1,1,1,1],
+		[5,0,0,0,0,0,0,0,2],
+		[1,1,1,1,2,7,2,[-1,0],1]
+	],
+	[
+		[1,[-1,0],1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,3,1,0,0,2,0,0,0,0,2,2,2,[-1,0,2,1]],
+		[1,0,1,0,0,6,7,2,0,0,0,0,0,[-1,1,2,1]],
+		[1,0,0,0,0,2,0,2,0,0,2,2,2,[-1,2,2,1]],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[[-1,0,2,1],2,0,0,2,0,0,0,0,0,0,2,0,[-1,3,2,1]],
+		[[-1,1,2,1],2,0,0,0,0,0,2,0,0,0,2,0,[-1,4,2,1]],
+		[[-1,2,2,1],0,0,0,2,0,0,2,0,0,0,9,0,[-1,5,2,1]],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[[-1,3,2,1],2,0,0,0,0,0,0,0,0,0,0,2,1],
+		[[-1,4,2,1],0,0,0,0,2,0,0,0,0,0,0,2,1],
+		[[-1,5,2,1],2,0,0,0,2,0,0,0,0,0,0,0,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,3,1],
+		[2,7,0,9,6,2,0,0,8,1,2,0,0,1],
+		[5,8,2,5,0,2,0,5,0,1,2,0,6,1],
+		[2,9,6,2,0,0,0,2,0,0,7,0,0,5],
+		[2,0,0,5,1,1,1,1,1,1,1,1,1,1],
+		[[-1,6,2,1],7,0,2,2,0,0,0,0,0,0,0,0,[-1,9,2,1]],
+		[[-1,7,2,1],0,0,0,0,0,0,0,0,2,1,1,1,1],
+		[[-1,8,2,1],0,0,2,1,1,1,1,1,0,0,0,0,[-1,6,2,1]],
+		[1,0,0,10,0,0,0,0,2,0,0,0,0,[-1,7,2,1]],
+		[1,0,0,10,0,0,0,0,0,0,0,0,0,[-1,8,2,1]],
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+		[[-1,9,2,1],0,0,0,0,0,0,6,0,0,0,0,0,2],
+		[1,1,1,1,1,1,1,1,1,1,1,2,8,1],
+		[1,2,2,2,[-3,4],[-3,4],2,2,[-3,2],[-3,2],2,1,3,1],
+		[1,0,7,0,0,0,0,0,0,0,0,0,0,1],
+		[1,2,2,2,2,2,[-3,3],[-3,3],2,2,2,2,2,1],
+		[1,2,2,2,1,1,1,1,1,1,1,1,1,1],
+		[1,2,2,2,2,2,[-3,6],[-3,6],2,2,2,2,2,1],
+		[1,0,0,0,0,0,0,0,0,0,0,6,0,1],
+		[1,2,2,2,[-3,5],[-3,5],2,2,[-3,7],[-3,7],2,2,2,1],
+		[1,1,1,1,1,1,1,1,1,1,2,2,2,1],
+		[1,5,6,6,2,1,1,1,1,1,2,2,2,1],
+		[2,[-3,8],0,0,[-3,9],2,0,0,0,0,0,0,0,1],
+		[2,[-3,8],0,0,[-3,9],2,0,0,7,2,1,1,1,1],
+		[2,[-3,8],0,0,[-3,9],2,0,0,0,0,0,0,2,1],
+		[1,2,7,7,5,1,1,1,2,6,0,0,2,1],
+		[1,2,0,0,0,7,0,0,9,0,0,0,2,1],
+		[1,2,1,1,1,1,1,1,1,1,1,1,1,1],
+		[1,0,2,0,2,0,0,2,0,0,0,2,9,1],
+		[1,0,10,0,0,0,0,0,0,0,0,0,9,2],
+		[1,0,2,0,2,0,0,2,0,0,0,2,9,1],
+		[1,1,1,1,1,1,1,1,1,1,1,1,[-1,0],1]
+	],
+	[
+		[1,1,1,1,1,1,1,1,1,1,1,[-1,0],1],
+		[1,7,0,0,0,0,0,0,0,0,0,6,1],
+		[1,1,7,0,0,0,0,0,0,0,6,1,1],
+		[1,0,1,7,0,0,0,0,0,6,1,0,1],
+		[1,0,0,1,7,0,0,0,6,1,0,0,1],
+		[1,0,0,0,1,7,0,6,1,0,0,0,1],
+		[1,0,0,0,0,1,[-3,-1],1,0,0,0,0,1],
+		[1,0,0,0,1,7,0,6,1,0,0,0,1],
+		[1,0,0,1,7,0,0,0,6,1,0,0,1],
+		[1,0,1,7,0,0,0,0,0,6,1,0,1],
+		[1,1,7,0,0,0,0,0,0,0,6,1,1],
+		[1,7,0,0,0,0,0,0,0,0,0,0,[-1,0,5,1]],
 		[1,1,1,1,1,1,1,1,1,1,1,1,1]
 	]
 ]
@@ -327,7 +400,7 @@ document.addEventListener("keydown", function(input){
 					player.xv = player.moveSpeed;
 					player.yv = -Math.sign(player.g)*205;
 				}
-			} else if (player.currentJumps > 0) {
+			} else if (player.currentJumps > 0 || player.godMode) {
 				player.yv = -Math.sign(player.g)*205;
 				player.currentJumps--;
 			}
@@ -339,6 +412,9 @@ document.addEventListener("keydown", function(input){
 		case "ArrowRight":
 		case "KeyD":
 			control.right = true;
+			break;
+		case "Delete":
+			wipeSave();
 			break;
 	}
 });
@@ -356,6 +432,32 @@ document.addEventListener("keyup", function(input){
 			break;
 	}
 });
+
+function newSave() {
+	return [1,6,0,5,325,1,600,[]];
+}
+function save() {
+	let saveData = player.spawnPoint;
+	if (saveData[5] == Infinity) saveData[5] = "Infinity";
+	localStorage.setItem('just-a-save',JSON.stringify(saveData));
+}
+
+function load() {
+	if (localStorage.getItem('just-a-save')) {
+		let saveData = JSON.parse(localStorage.getItem('just-a-save'));
+		if (saveData[5] == "Infinity") saveData[5] = Infinity;
+		player.spawnPoint = saveData;
+	}
+}
+function wipeSave() {
+	if (confirm("Are you sure you want to delete your save?")) {
+		player.spawnPoint = newSave();
+		save();
+		respawn();
+		drawLevel();
+		drawPlayer();
+	}
+}
 
 function getBlockType(x,y) {
 	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) {
@@ -402,24 +504,24 @@ function isTouching(dir, type) {
 	switch (dir) {
 		case "left":
 			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x1b,y2b)))
-			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b))) 
-			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b))));
+			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y1b)) && getBlockType(x1b+1,y1b) != 2) 
+			|| (hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x1b+1,y2b)) && getBlockType(x1b+1,y2b) != 2));
 			break;
 		case "right":
 			return (hasHitbox.includes(getBlockType(x2b,y1b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
-			|| ((hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b))) 
-			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b))));
+			|| ((hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize < blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y1b)) && getBlockType(x2b-1,y1b) != 2) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize < y2%blockSize && !hasHitbox.includes(getBlockType(x2b-1,y2b)) && getBlockType(x2b-1,y2b) != 2));
 			break;
 		case "up":
 			return (hasHitbox.includes(getBlockType(x1b,y1b)) && hasHitbox.includes(getBlockType(x2b,y1b)))
-			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1))) 
-			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1))))
+			|| ((hasHitbox.includes(getBlockType(x1b,y1b)) && blockSize-(x1+blockSize)%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x1b,y1b+1)) && getBlockType(x1b,y1b+1) != 2) 
+			|| (hasHitbox.includes(getBlockType(x2b,y1b)) && x2%blockSize > blockSize-(y1+blockSize)%blockSize && !hasHitbox.includes(getBlockType(x2b,y1b+1)) && getBlockType(x2b,y1b+1) != 2))
 			&& player.yv < 0;
 			break;
 		case "down":
 			return (hasHitbox.includes(getBlockType(x1b,y2b)) && hasHitbox.includes(getBlockType(x2b,y2b)))
-			|| ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1))) 
-			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1))))
+			|| ((hasHitbox.includes(getBlockType(x1b,y2b)) && blockSize-(x1+blockSize)%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x1b,y2b-1)) && getBlockType(x1b,y2b-1) != 2) 
+			|| (hasHitbox.includes(getBlockType(x2b,y2b)) && x2%blockSize > y2%blockSize && !hasHitbox.includes(getBlockType(x2b,y2b-1)) && getBlockType(x2b,y2b-1) != 2))
 			&& player.yv > 0;
 			break;
 		case "any":
@@ -550,6 +652,7 @@ function nextFrame(timeStamp) {
 				player.spawnPoint = [coord[0],coord[1],player.levelCoord[0],player.levelCoord[1],player.g,player.maxJumps,player.moveSpeed,[...player.triggers]];
 				levels[player.currentLevel][coord[0]][coord[1]] = 4;
 				shouldDrawLevel = true;
+				save();
 			}
 			// anti-grav
 			if (isTouching("any",6)) {
@@ -593,7 +696,7 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// death block
-			if (isTouching("any",2)) respawn();
+			if (isTouching("any",2) && !player.godMode) respawn();
 			x1 = player.x + 1;
 			x2 = player.x+playerSize - 1;
 			y1 = player.y + 1;
@@ -605,12 +708,71 @@ function nextFrame(timeStamp) {
 				if (!player.triggers.includes(trigger[1])) player.triggers.push(trigger[1]);
 			}
 			// triggers
+			if (!player.triggers.includes(-1)) {
+				levels[9][5][5] = 0;
+				levels[9][5][4] = 0;
+				levels[9][5][2] = 0;
+				levels[9][5][1] = 0;
+			} else {
+				levels[9][5][5] = 7;
+				levels[9][5][4] = 6;
+				levels[9][5][2] = 7;
+				levels[9][5][1] = 6;
+			}
 			if (player.triggers.includes(0)) {
 				levels[22][6][4] = 0;
 			} else levels[22][6][4] = 2;
 			if (player.triggers.includes(1)) {
 				levels[22][6][5] = 0;
 			} else levels[22][6][5] = 2;
+			if (player.triggers.includes(2)) {
+				levels[26][27][1] = 0;
+				levels[26][27][2] = 0;
+			} else {
+				levels[26][27][1] = 2;
+				levels[26][27][2] = 2;
+			}
+			if (player.triggers.includes(3)) {
+				levels[26][28][1] = 0;
+				levels[26][28][2] = 0;
+			} else {
+				levels[26][28][1] = 2;
+				levels[26][28][2] = 2;
+			}
+			if (player.triggers.includes(4)) {
+				levels[26][29][1] = 0;
+				levels[26][29][2] = 0;
+			} else {
+				levels[26][29][1] = 2;
+				levels[26][29][2] = 2;
+			}
+			if (player.triggers.includes(5)) {
+				levels[26][31][11] = 0;
+				levels[26][31][12] = 0;
+			} else {
+				levels[26][31][11] = 2;
+				levels[26][31][12] = 2;
+			}
+			if (player.triggers.includes(6)) {
+				levels[26][32][11] = 0;
+				levels[26][32][12] = 0;
+			} else {
+				levels[26][32][11] = 2;
+				levels[26][32][12] = 2;
+			}
+			if (player.triggers.includes(7)) {
+				levels[26][33][11] = 0;
+				levels[26][33][12] = 0;
+			} else {
+				levels[26][33][11] = 2;
+				levels[26][33][12] = 2;
+			}
+			if (player.triggers.includes(8)) {
+				levels[26][38][1] = 0;
+			} else levels[26][38][1] = 2;
+			if (player.triggers.includes(9)) {
+				levels[26][39][1] = 0;
+			} else levels[26][39][1] = 2;
 			// level warp
 			if (isTouching("any",-2)) {
 				let coord = getCoord(-1);
@@ -1074,6 +1236,8 @@ function arraysEqual(a, b) {
 	}
 	return true;
 }
+
+load();
 respawn();
 drawPlayer();
 drawLevel();
