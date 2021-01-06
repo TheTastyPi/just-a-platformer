@@ -625,6 +625,7 @@ function nextFrame(timeStamp) {
 			// timer
 			if (sinceLastTimer > 4000) {
 				timerOn = !timerOn;
+				shouldDrawLevel = true;
 			}
 			if (timerOn) {
 				hasHitbox[7] = 36;
@@ -633,6 +634,8 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
 			if (isTouching("any",35) && !player.switchOn && !player.godMode) respawn();
+			if (isTouching("any",38) && timerOn && !player.godMode) respawn();
+			if (isTouching("any",39) && !timerOn && !player.godMode) respawn();
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
 				player.x = 0;
