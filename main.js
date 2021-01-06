@@ -1,10 +1,10 @@
 /*/
 TODO 
-- grav section
 - multi-jump section
-- warp confusion section (AKA the "i'll take you along for a trip" section)
+- speed section
 - wall jump section
 - final section
+- secret section? :o
 /*/
 
 var gameSpeed = 1;
@@ -24,6 +24,7 @@ const player = {
 	maxJumps: 1,
 	moveSpeed: 600,
 	triggers: [],
+	godMode: false
 };
 const control = {
 	left: false,
@@ -399,7 +400,7 @@ document.addEventListener("keydown", function(input){
 					player.xv = player.moveSpeed;
 					player.yv = -Math.sign(player.g)*205;
 				}
-			} else if (player.currentJumps > 0) {
+			} else if (player.currentJumps > 0 || player.godMode) {
 				player.yv = -Math.sign(player.g)*205;
 				player.currentJumps--;
 			}
@@ -741,7 +742,7 @@ function nextFrame(timeStamp) {
 				levels[26][39][1] = 0;
 			} else levels[26][39][1] = 2;
 			// level warp
-			if (isTouching("any",-2)) {
+			if (isTouching("any",-2) && !player.godMode) {
 				let coord = getCoord(-1);
 				let warp = levels[player.currentLevel][coord[0]][coord[1]];
 				let warpId = warp[1];
