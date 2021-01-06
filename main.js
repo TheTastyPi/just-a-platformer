@@ -666,7 +666,7 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// death block
-			if (isTouching("any",2)) respawn();
+			if (isTouching("any",2) && !player.godMode) respawn();
 			x1 = player.x + 1;
 			x2 = player.x+playerSize - 1;
 			y1 = player.y + 1;
@@ -742,7 +742,7 @@ function nextFrame(timeStamp) {
 				levels[26][39][1] = 0;
 			} else levels[26][39][1] = 2;
 			// level warp
-			if (isTouching("any",-2) && !player.godMode) {
+			if (isTouching("any",-2)) {
 				let coord = getCoord(-1);
 				let warp = levels[player.currentLevel][coord[0]][coord[1]];
 				let warpId = warp[1];
