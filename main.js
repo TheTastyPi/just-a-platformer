@@ -413,6 +413,9 @@ document.addEventListener("keydown", function(input){
 		case "KeyD":
 			control.right = true;
 			break;
+		case "Delete":
+			wipeSave();
+			break;
 	}
 });
 
