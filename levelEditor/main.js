@@ -37,7 +37,7 @@ var level = [
 	[1,0,0,0,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1]
 ];
-const hasHitbox = [1,5,11,24,25,26,33];
+const hasHitbox = [1,5,11,24,25,26,33,37];
 const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Activated Check Point (Unavailable)","Bounce Block", // basic (0,1,2,3,4,5)
 		   "G-Up Field","G-Down Field","G-Low Field","G-Medium Field","G-High Field", // grav (6,7,8,9,10)
 		   "Wall-Jump Block","0-Jump Field","1-Jump Field","2-Jump Field","3-Jump Field","Inf-Jump Field", // jumping (11,12,13,14,15,16)
@@ -45,7 +45,8 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "S-Slow Field","S-Normal Field","S-Fast Field", // speed (21,22,23)
 		   "Bounce Block++","G-Bounce Up","G-Bounce Down", // more bounce (24,25,26)
 		   "Force Field L","Force Field R","Force Field U","Force Field D", // force (27,28,29,30)
-		   "Switch Block","Toggle Block A","Toggle Block B"]; // on off (31,32,33)
+		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B" // switchables (31,32,33,34,35)
+		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B"]; // timer (36,37,38,39)
 const bannedBlock = [4,19,20];
 
 id("levelLayer").addEventListener("mousedown", function(input){
@@ -436,10 +437,13 @@ var lastFrame = 0;
 var haltThreshold = 100;
 var simReruns = 100;
 var canSwitch = true;
+var sinceLastTimer = 0;
+var timerOn = false;
 function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
+	sinceLastTimer += dt;
 	if (dt < haltThreshold) {
 		dt = dt/simReruns;
 		let xprev = player.x;
@@ -618,8 +622,17 @@ function nextFrame(timeStamp) {
 			if (player.switchOn) {
 				hasHitbox[6] = 32;
 			} else hasHitbox[6] = 33;
+			// timer
+			if (sinceLastTimer > 4000) {
+				timerOn = !timerOn;
+			}
+			if (timerOn) {
+				hasHitbox[7] = 36;
+			} else hasHitbox[7] = 37;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
+			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
+			if (isTouching("any",35) && !player.switchOn && !player.godMode) respawn();
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
 				player.x = 0;
@@ -770,6 +783,36 @@ function drawLevel() {
 					if (player.switchOn) {
 						lL.fillStyle = "#00000000";
 					} else lL.fillStyle = "#008800";
+					break;
+				case 34:
+					if (!player.switchOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#00FF00";
+					break;
+				case 35:
+					if (player.switchOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#008800";
+					break;
+				case 36:
+					if (!timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#BBBBBB";
+					break;
+				case 37:
+					if (timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#666666";
+					break;
+				case 38:
+					if (!timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#666666";
+					break;
+				case 39:
+					if (timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#BBBBBB";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -1198,18 +1241,108 @@ function drawLevel() {
 					}
 					break;
 				case 32:
+					lL.strokeStyle = "#00FF0088";
 					lL.lineWidth = blockSize/25;
 					if (!player.switchOn) {
-						lL.strokeStyle = "#00FF0088";
 						lL.setLineDash([blockSize/10]);
 						lL.strokeRect(xb,yb,blockSize,blockSize);
 						lL.setLineDash([]);
 					}
 					break;
 				case 33:
+					lL.strokeStyle = "#00FF0088";
 					lL.lineWidth = blockSize/25;
 					if (player.switchOn) {
-						lL.strokeStyle = "#00FF0088";
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 34:
+					lL.strokeStyle = "#00FF0088";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					lL.lineWidth = blockSize/25;
+					if (!player.switchOn) {
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 35:
+					lL.strokeStyle = "#00FF0088";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					lL.lineWidth = blockSize/25;
+					if (player.switchOn) {
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 36:
+					lL.strokeStyle = "#BBBBBB88";
+					lL.lineWidth = blockSize/25;
+					if (!timerOn) {
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 37:
+					lL.strokeStyle = "#66666688";
+					lL.lineWidth = blockSize/25;
+					if (timerOn) {
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 38:
+					lL.strokeStyle = "#BBBBBB88";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					lL.lineWidth = blockSize/25;
+					if (!timerOn) {
+						lL.setLineDash([blockSize/10]);
+						lL.strokeRect(xb,yb,blockSize,blockSize);
+						lL.setLineDash([]);
+					}
+					break;
+				case 39:
+					lL.strokeStyle = "#66666688";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					lL.lineWidth = blockSize/25;
+					if (timerOn) {
 						lL.setLineDash([blockSize/10]);
 						lL.strokeRect(xb,yb,blockSize,blockSize);
 						lL.setLineDash([]);
