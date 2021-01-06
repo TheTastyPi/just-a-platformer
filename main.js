@@ -430,6 +430,20 @@ document.addEventListener("keyup", function(input){
 	}
 });
 
+function save() {
+	let saveData = player.spawnPoint;
+	if (saveData[5] == Infinity) saveData[5] = "Infinity";
+	localStorage.setItem('just-a-save',JSON.stringify(saveData));
+}
+
+function load() {
+	if (localStorage.getItem('just-a-save')) {
+		let saveData = JSON.parse(localStorage.getItem('just-a-save'));
+		if (saveData[5] == "Infinity") saveData[5] = Infinity;
+		player.spawnPoint = saveData;
+	}
+}
+
 function getBlockType(x,y) {
 	if (x < 0 || x >= levels[player.currentLevel].length || y < 0 || y >= levels[player.currentLevel][0].length) {
 		if (levels[player.currentLevel][x-1] != undefined) {
@@ -1204,6 +1218,8 @@ function arraysEqual(a, b) {
 	}
 	return true;
 }
+
+load();
 respawn();
 drawPlayer();
 drawLevel();
