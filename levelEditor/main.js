@@ -1102,85 +1102,85 @@ function drawLevel() {
 				case 25:
 					lL.strokeStyle = "#880000";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*2);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*2);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
-					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/4);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
-					lL.stroke();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*4);
+					lL.stroke();;
 					break;
 				case 26:
 					lL.strokeStyle = "#008888";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/4);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5*2);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
-					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5*4);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*3);
 					lL.stroke();
 					break;
 				case 27:
 					lL.strokeStyle = "#FFFFFF88";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/4,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize/25*3,yb+blockSize/2);
-					lL.lineTo(xb+blockSize/4,yb+blockSize-blockSize/25*3);
+					lL.moveTo(xb+blockSize/5*2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/5,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/5*2,yb+blockSize-blockSize/25*3);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize-blockSize/4,yb+blockSize/2);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.moveTo(xb+blockSize/5*4,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/5*3,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/5*4,yb+blockSize-blockSize/25*3);
 					lL.stroke();
 					break;
 				case 28:
 					lL.strokeStyle = "#FFFFFF88";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize/4,yb+blockSize/2);
-					lL.lineTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.moveTo(xb+blockSize/5,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/5*2,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/5,yb+blockSize-blockSize/25*3);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize-blockSize/4,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/2);
-					lL.lineTo(xb+blockSize-blockSize/4,yb+blockSize-blockSize/25*3);
+					lL.moveTo(xb+blockSize/5*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize/5*4,yb+blockSize/2);
+					lL.lineTo(xb+blockSize/5*3,yb+blockSize-blockSize/25*3);
 					lL.stroke();
 					break;
 				case 29:
 					lL.strokeStyle = "#FFFFFF88";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*2);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*2);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
-					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/4);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*4);
 					lL.stroke();
 					break;
 				case 30:
 					lL.strokeStyle = "#FFFFFF88";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/4);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5*2);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
-					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*3);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/5*4);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*3);
 					lL.stroke();
 					break;
 				case 31:
