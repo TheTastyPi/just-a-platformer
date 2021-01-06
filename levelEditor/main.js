@@ -807,15 +807,15 @@ function drawLevel() {
 				case 5:
 					lL.strokeStyle = "#888800";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*2);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/5);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*2);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*3);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/5*4);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*3);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
 					lL.stroke();
 					break;
 				case 6:
@@ -1088,15 +1088,15 @@ function drawLevel() {
 				case 24:
 					lL.strokeStyle = "#880088";
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*2);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/5);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*2);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/4);
 					lL.stroke();
 
 					lL.beginPath();
-					lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*3);
-					lL.lineTo(xb+blockSize/2,yb+blockSize/5*4);
-					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/5*3);
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/4);
+					lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/4);
 					lL.stroke();
 					break;
 				case 25:
