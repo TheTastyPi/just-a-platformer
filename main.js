@@ -711,7 +711,7 @@ function nextFrame(timeStamp) {
 				levels[9][5][5] = 7;
 				levels[9][5][4] = 6;
 				levels[9][5][2] = 7;
-				levels[9][5][1] = 7;
+				levels[9][5][1] = 6;
 			}
 			if (player.triggers.includes(0)) {
 				levels[22][6][4] = 0;
