@@ -446,6 +446,7 @@ function nextFrame(timeStamp) {
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
 	sinceLastTimer += dt;
+	sinceLastTimerStage += dt;
 	if (dt < haltThreshold) {
 		dt = dt/simReruns;
 		let xprev = player.x;
