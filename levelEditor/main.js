@@ -437,7 +437,6 @@ var lastFrame = 0;
 var haltThreshold = 100;
 var simReruns = 100;
 var canSwitch = true;
-var sinceLastTimer = 0;
 var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
@@ -445,7 +444,6 @@ function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
-	sinceLastTimer += dt;
 	sinceLastTimerStage += dt;
 	if (dt < haltThreshold) {
 		dt = dt/simReruns;
@@ -626,20 +624,19 @@ function nextFrame(timeStamp) {
 				hasHitbox[6] = 32;
 			} else hasHitbox[6] = 33;
 			// timer
-			if (sinceLastTimer > 4000) {
-				timerOn = !timerOn;
-				sinceLastTimer = sinceLastTimer%4000;
-				shouldDrawLevel = true;
-			}
-			if (timerOn) {
-				hasHitbox[7] = 36;
-			} else hasHitbox[7] = 37;
 			if (sinceLastTimerStage > 1000) {
 				timerStage++;
 				sinceLastTimer = sinceLastTimer%1000;
 				if (timerStage > 3) timerStage = 0;
 				shouldDrawLevel = true;
 			}
+			if (timerStage > 3) {
+				timerOn = !timerOn;
+				timerStage = 0;
+			}
+			if (timerOn) {
+				hasHitbox[7] = 36;
+			} else hasHitbox[7] = 37;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
