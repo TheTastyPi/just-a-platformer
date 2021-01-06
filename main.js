@@ -10,8 +10,8 @@ TODO
 var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
-const player = {
-	spawnPoint: [1,6,0,5,325,1,600,[]],
+var player = {
+	spawnPoint: newSave(),
 	levelCoord: [0,0],
 	get currentLevel() {return worldMap[player.levelCoord[0]][player.levelCoord[1]]},
 	x: 0,
@@ -430,6 +430,9 @@ document.addEventListener("keyup", function(input){
 	}
 });
 
+function newSave() {
+	return [1,6,0,5,325,1,600,[]];
+}
 function save() {
 	let saveData = player.spawnPoint;
 	if (saveData[5] == Infinity) saveData[5] = "Infinity";
@@ -441,6 +444,12 @@ function load() {
 		let saveData = JSON.parse(localStorage.getItem('just-a-save'));
 		if (saveData[5] == "Infinity") saveData[5] = Infinity;
 		player.spawnPoint = saveData;
+	}
+}
+function wipeSave() {
+	if (confirm("Are you sure you want to delete your save?")) {
+		player.spawnPoint = newSave();
+		respawn();
 	}
 }
 
@@ -697,10 +706,12 @@ function nextFrame(timeStamp) {
 				levels[9][5][5] = 0;
 				levels[9][5][4] = 0;
 				levels[9][5][2] = 0;
+				levels[9][5][1] = 0;
 			} else {
 				levels[9][5][5] = 7;
 				levels[9][5][4] = 6;
 				levels[9][5][2] = 7;
+				levels[9][5][1] = 7;
 			}
 			if (player.triggers.includes(0)) {
 				levels[22][6][4] = 0;
