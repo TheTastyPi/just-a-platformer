@@ -625,7 +625,7 @@ function nextFrame(timeStamp) {
 			// timer
 			if (sinceLastTimer > 4000) {
 				timerOn = !timerOn;
-				sinceLastTime = sinceLastTime%4000;
+				sinceLastTimer = sinceLastTimer%4000;
 				shouldDrawLevel = true;
 			}
 			if (timerOn) {
