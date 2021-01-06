@@ -678,7 +678,7 @@ function nextFrame(timeStamp) {
 				if (!player.triggers.includes(trigger[1])) player.triggers.push(trigger[1]);
 			}
 			// triggers
-			if (player.triggers.includes(-1)) {
+			if (!player.triggers.includes(-1)) {
 				levels[9][5][5] = 0;
 				levels[9][5][4] = 0;
 				levels[9][5][2] = 0;
