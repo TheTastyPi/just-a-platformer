@@ -627,7 +627,6 @@ function nextFrame(timeStamp) {
 			if (sinceLastTimerStage > 1000) {
 				timerStage++;
 				sinceLastTimerStage = sinceLastTimerStage%1000;
-				if (timerStage > 3) timerStage = 0;
 				shouldDrawLevel = true;
 			}
 			if (timerStage > 3) {
@@ -1315,7 +1314,7 @@ function drawLevel() {
 						lL.setLineDash([]);
 					}
 					
-					lL.fillStyle = "#BBBBBB88";
+					lL.fillStyle = "#BBBBBB";
 					if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 					if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 					if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1329,7 +1328,7 @@ function drawLevel() {
 						lL.setLineDash([]);
 					}
 					
-					lL.fillStyle = "#66666688";
+					lL.fillStyle = "#666666";
 					if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 					if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 					if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1343,7 +1342,7 @@ function drawLevel() {
 						lL.setLineDash([]);
 					} else lL.strokeStyle = "#666666";
 					
-					lL.fillStyle = "#BBBBBB88";
+					lL.fillStyle = "#BBBBBB";
 					if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 					if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 					if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1368,7 +1367,7 @@ function drawLevel() {
 						lL.setLineDash([]);
 					} else lL.strokeStyle = "#333333";
 					
-					lL.fillStyle = "#666666B88";
+					lL.fillStyle = "#666666";
 					if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 					if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 					if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
