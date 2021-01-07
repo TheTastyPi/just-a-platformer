@@ -817,22 +817,22 @@ function drawLevel() {
 				case 36:
 					if (!timerOn) {
 						lL.fillStyle = "#00000000";
-					} else lL.fillStyle = "#BBBBBB";
+					} else lL.fillStyle = "#BBBBBB88";
 					break;
 				case 37:
 					if (timerOn) {
 						lL.fillStyle = "#00000000";
-					} else lL.fillStyle = "#666666";
+					} else lL.fillStyle = "#66666688";
 					break;
 				case 38:
 					if (!timerOn) {
 						lL.fillStyle = "#00000000";
-					} else lL.fillStyle = "#BBBBBB";
+					} else lL.fillStyle = "#BBBBBB88";
 					break;
 				case 39:
 					if (timerOn) {
 						lL.fillStyle = "#00000000";
-					} else lL.fillStyle = "#666666";
+					} else lL.fillStyle = "#66666688";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -1313,7 +1313,7 @@ function drawLevel() {
 					break;
 				case 36:
 					if (!timerOn) {
-						lL.fillStyle = "#BBBBBB";
+						lL.fillStyle = "#BBBBBB88";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1322,7 +1322,7 @@ function drawLevel() {
 						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
-					lL.strokeStyle = "#666666";
+					lL.strokeStyle = "#66666688";
 					lL.lineWidth = blockSize/25;
 					lL.setLineDash([blockSize/10]);
 					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
@@ -1330,7 +1330,7 @@ function drawLevel() {
 					break;
 				case 37:
 					if (timerOn) {
-						lL.fillStyle = "#666666";
+						lL.fillStyle = "#66666688";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1339,7 +1339,7 @@ function drawLevel() {
 						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
-					lL.strokeStyle = "#333333";
+					lL.strokeStyle = "#33333388";
 					lL.lineWidth = blockSize/25;
 					lL.setLineDash([blockSize/10]);
 					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
@@ -1347,7 +1347,7 @@ function drawLevel() {
 					break;
 				case 38:
 					if (!timerOn) {
-						lL.fillStyle = "#BBBBBB";
+						lL.fillStyle = "#BBBBBB88";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1357,7 +1357,7 @@ function drawLevel() {
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
 					lL.lineWidth = blockSize/25;
-					lL.strokeStyle = "#666666";
+					lL.strokeStyle = "#66666688";
 					lL.setLineDash([blockSize/10]);
 					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
 					lL.setLineDash([]);
@@ -1375,7 +1375,7 @@ function drawLevel() {
 					break;
 				case 39:
 					if (timerOn) {
-						lL.fillStyle = "#666666";
+						lL.fillStyle = "#66666688";
 						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
 						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
 						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
@@ -1385,7 +1385,7 @@ function drawLevel() {
 						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
 					lL.lineWidth = blockSize/25;
-					lL.strokeStyle = "#333333";
+					lL.strokeStyle = "#33333388";
 					lL.setLineDash([blockSize/10]);
 					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
 					lL.setLineDash([]);
