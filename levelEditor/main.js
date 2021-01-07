@@ -1335,7 +1335,7 @@ function drawLevel() {
 					lL.beginPath();
 					lL.moveTo(xb+blockSize/2,yb+blockSize/2);
 					lL.lineTo(xb+blockSize/2,yb);
-					lL.arc(xb+blockSize/2,yb+blockSize/2,yb+blockSize/2-blockSize/25*3,0,Math.PI/2*timerStage);
+					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,0,Math.PI/2*timerStage);
 					lL.fill();
 					
 					lL.strokeStyle = "#66666688";
