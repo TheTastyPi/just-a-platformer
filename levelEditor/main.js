@@ -19,6 +19,7 @@ const player = {
 	switchOn: false,
 	godMode: false,
 	selectedBlock: [1,0],
+	playerFocus: true,
 };
 const control = {
 	lmb: false,
@@ -102,7 +103,13 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	}
 });
 id("levelLayer").addEventListener("mousemove", function(input){
-	if (!input.shiftKey) {
+	if (input.ctrlKey) {
+		player.playerFocus = false;
+		id("playerLayer").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
+		id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
+		id("playerLayer").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
+		id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
+	} else if (!input.shiftKey) {
 		let xb = Math.floor(input.offsetX/blockSize);
 		let yb = Math.floor(input.offsetY/blockSize);
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
@@ -261,6 +268,9 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "KeyR":
 			respawn();
+			break;
+		case "KeyF":
+			player.playerFocus = true;
 			break;
 		case "KeyG":
 			player.godMode = !player.godMode;
@@ -687,7 +697,7 @@ function drawPlayer() {
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FFFF00";
 	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
-	adjustScreen();
+	if (player.playerFocus) adjustScreen();
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
@@ -1408,7 +1418,7 @@ function drawLevel() {
 			}
 		}
 	}
-	adjustScreen();
+	if (player.playerFocus) adjustScreen();
 }
 function adjustScreen() {
 	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
