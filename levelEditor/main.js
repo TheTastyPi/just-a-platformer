@@ -37,7 +37,7 @@ var level = [
 	[1,0,0,0,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1]
 ];
-const hasHitbox = [1,5,11,24,25,26,33];
+const hasHitbox = [1,5,11,24,25,26,33,37];
 const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Activated Check Point (Unavailable)","Bounce Block", // basic (0,1,2,3,4,5)
 		   "G-Up Field","G-Down Field","G-Low Field","G-Medium Field","G-High Field", // grav (6,7,8,9,10)
 		   "Wall-Jump Block","0-Jump Field","1-Jump Field","2-Jump Field","3-Jump Field","Inf-Jump Field", // jumping (11,12,13,14,15,16)
@@ -45,23 +45,25 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "S-Slow Field","S-Normal Field","S-Fast Field", // speed (21,22,23)
 		   "Bounce Block++","G-Bounce Up","G-Bounce Down", // more bounce (24,25,26)
 		   "Force Field L","Force Field R","Force Field U","Force Field D", // force (27,28,29,30)
-		   "Switch Block","Toggle Block A","Toggle Block B"]; // on off (31,32,33)
+		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B", // switchables (31,32,33,34,35)
+		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B"]; // timer (36,37,38,39)
 const bannedBlock = [4,19,20];
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
 	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.shiftKey) {
-		player.x = input.offsetX;
-		player.y = input.offsetY;
-		player.xv = 0;
-		player.yv = 0;
 		if (input.button == 1) {
 			player.selectedBlock[1] = getBlockType(xb,yb);
 			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
 			if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
 			if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
 			id("selectedBlock"+(input.shiftKey?1:0)).innerHTML = blockName[player.selectedBlock[input.shiftKey?1:0]];
+		} else {
+			player.x = input.offsetX;
+			player.y = input.offsetY;
+			player.xv = 0;
+			player.yv = 0;
 		}
 	} else {
 		if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
@@ -146,6 +148,8 @@ document.addEventListener("keydown", function(input){
 			if (input.ctrlKey) {
 				if (level[0].length > 1) {
 					for (let i in level) level[i].shift();
+					player.spawnPoint[1]--;
+					player.startPoint[1]--;
 					id("lvlHeight").innerHTML = level[0].length;
 					drawLevel();
 				}
@@ -153,22 +157,26 @@ document.addEventListener("keydown", function(input){
 				for (let i in level) {
 					level[i].unshift(0);
 				}
+				player.spawnPoint[1]++;
+				player.startPoint[1]++;
 				id("lvlHeight").innerHTML = level[0].length;
 				drawLevel();
 			}
 		case "KeyW":
-			if (player.canWalljump) {
-				if (player.wallJumpDir == "left") {
-					player.xv = -player.moveSpeed;
+			if (!input.shiftKey && !input.ctrlKey) {
+				if (player.canWalljump) {
+					if (player.wallJumpDir == "left") {
+						player.xv = -player.moveSpeed;
+						player.yv = -Math.sign(player.g)*player.jumpHeight;
+					}
+					if (player.wallJumpDir == "right") {
+						player.xv = player.moveSpeed;
+						player.yv = -Math.sign(player.g)*player.jumpHeight;
+					}
+				} else if (player.currentJumps > 0 || player.godMode) {
 					player.yv = -Math.sign(player.g)*player.jumpHeight;
+					player.currentJumps--;
 				}
-				if (player.wallJumpDir == "right") {
-					player.xv = player.moveSpeed;
-					player.yv = -Math.sign(player.g)*player.jumpHeight;
-				}
-			} else if (player.currentJumps > 0 || player.godMode) {
-				player.yv = -Math.sign(player.g)*player.jumpHeight;
-				player.currentJumps--;
 			}
 			break;
 		case "ArrowDown":
@@ -190,6 +198,8 @@ document.addEventListener("keydown", function(input){
 			if (input.ctrlKey) {
 				if (level.length > 1) {
 					level.shift();
+					player.spawnPoint[0]--;
+					player.startPoint[0]--;
 					id("lvlWidth").innerHTML = level.length;
 					drawLevel();
 				}
@@ -197,11 +207,13 @@ document.addEventListener("keydown", function(input){
 				level.unshift([]);
 				level[0].length = level[1].length;
 				level[0].fill(0);
+				player.spawnPoint[0]++;
+				player.startPoint[0]++;
 				id("lvlWidth").innerHTML = level.length;
 				drawLevel();
 			}
 		case "KeyA":
-			control.left = true;
+			if (!input.shiftKey && !input.ctrlKey) control.left = true;
 			break;
 		case "ArrowRight":
 			if (input.ctrlKey) {
@@ -218,7 +230,7 @@ document.addEventListener("keydown", function(input){
 				drawLevel();
 			}
 		case "KeyD":
-			control.right = true;
+			if (!input.shiftKey && !input.ctrlKey) control.right = true;
 			break;
 		case "Comma":
 			player.selectedBlock[input.shiftKey?1:0]--;
@@ -436,10 +448,14 @@ var lastFrame = 0;
 var haltThreshold = 100;
 var simReruns = 100;
 var canSwitch = true;
+var timerOn = false;
+var sinceLastTimerStage = 0;
+var timerStage = 0;
 function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
 	lastFrame = timeStamp;
+	sinceLastTimerStage += dt;
 	if (dt < haltThreshold) {
 		dt = dt/simReruns;
 		let xprev = player.x;
@@ -618,8 +634,25 @@ function nextFrame(timeStamp) {
 			if (player.switchOn) {
 				hasHitbox[6] = 32;
 			} else hasHitbox[6] = 33;
+			// timer
+			if (sinceLastTimerStage > 1000) {
+				timerStage++;
+				sinceLastTimerStage = sinceLastTimerStage%1000;
+				shouldDrawLevel = true;
+			}
+			if (timerStage > 3) {
+				timerOn = !timerOn;
+				timerStage = 0;
+			}
+			if (timerOn) {
+				hasHitbox[7] = 36;
+			} else hasHitbox[7] = 37;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
+			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
+			if (isTouching("any",35) && !player.switchOn && !player.godMode) respawn();
+			if (isTouching("any",38) && timerOn && !player.godMode) respawn();
+			if (isTouching("any",39) && !timerOn && !player.godMode) respawn();
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
 				player.x = 0;
@@ -770,6 +803,36 @@ function drawLevel() {
 					if (player.switchOn) {
 						lL.fillStyle = "#00000000";
 					} else lL.fillStyle = "#008800";
+					break;
+				case 34:
+					if (!player.switchOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#00FF00";
+					break;
+				case 35:
+					if (player.switchOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#008800";
+					break;
+				case 36:
+					if (!timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#BBBBBB88";
+					break;
+				case 37:
+					if (timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#66666688";
+					break;
+				case 38:
+					if (!timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#BBBBBB88";
+					break;
+				case 39:
+					if (timerOn) {
+						lL.fillStyle = "#00000000";
+					} else lL.fillStyle = "#66666688";
 					break;
 				default:
 					lL.fillStyle = "#00000000";
@@ -1198,22 +1261,145 @@ function drawLevel() {
 					}
 					break;
 				case 32:
+					lL.strokeStyle = "#008800";
 					lL.lineWidth = blockSize/25;
-					if (!player.switchOn) {
-						lL.strokeStyle = "#00FF0088";
-						lL.setLineDash([blockSize/10]);
-						lL.strokeRect(xb,yb,blockSize,blockSize);
-						lL.setLineDash([]);
-					}
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
 					break;
 				case 33:
+					lL.strokeStyle = "#004400";
 					lL.lineWidth = blockSize/25;
-					if (player.switchOn) {
-						lL.strokeStyle = "#00FF0088";
-						lL.setLineDash([blockSize/10]);
-						lL.strokeRect(xb,yb,blockSize,blockSize);
-						lL.setLineDash([]);
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					break;
+				case 34:
+					lL.lineWidth = blockSize/25;
+					lL.strokeStyle = "#008800";
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					
+					lL.lineWidth = blockSize/25*3;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke()
+					lL.lineWidth = blockSize/25;
+					break;
+				case 35:
+					lL.lineWidth = blockSize/25;
+					lL.strokeStyle = "#004400";
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					
+					lL.lineWidth = blockSize/25*3;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
+				case 36:
+					if (!timerOn) {
+						lL.fillStyle = "#BBBBBB88";
+						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					} else {
+						if (timerStage > 0) lL.clearRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
 					}
+					lL.strokeStyle = "#66666688";
+					lL.lineWidth = blockSize/25;
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					break;
+				case 37:
+					if (timerOn) {
+						lL.fillStyle = "#66666688";
+						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					} else {
+						if (timerStage > 0) lL.clearRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					}
+					lL.strokeStyle = "#33333388";
+					lL.lineWidth = blockSize/25;
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					break;
+				case 38:
+					if (!timerOn) {
+						lL.fillStyle = "#BBBBBB88";
+						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					} else {
+						if (timerStage > 0) lL.clearRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					}
+					lL.lineWidth = blockSize/25;
+					lL.strokeStyle = "#66666688";
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					
+					lL.lineWidth = blockSize/25*3;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
+				case 39:
+					if (timerOn) {
+						lL.fillStyle = "#66666688";
+						if (timerStage > 0) lL.fillRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.fillRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.fillRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					} else {
+						if (timerStage > 0) lL.clearRect(xb,yb,blockSize/2,blockSize/2);
+						if (timerStage > 1) lL.clearRect(xb+blockSize/2,yb,blockSize/2,blockSize/2);
+						if (timerStage > 2) lL.clearRect(xb,yb+blockSize/2,blockSize/2,blockSize/2);
+					}
+					lL.lineWidth = blockSize/25;
+					lL.strokeStyle = "#33333388";
+					lL.setLineDash([blockSize/10]);
+					lL.strokeRect(xb+blockSize/25,yb+blockSize/25,blockSize-blockSize/25*2,blockSize-blockSize/25*2);
+					lL.setLineDash([]);
+					
+					lL.lineWidth = blockSize/25*3;
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
 					break;
 			}
 		}
