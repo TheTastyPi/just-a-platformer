@@ -150,6 +150,7 @@ document.addEventListener("keydown", function(input){
 					for (let i in level) level[i].shift();
 					player.spawnPoint[1]--;
 					player.startPoint[1]--;
+					player.y -= blockSize;
 					id("lvlHeight").innerHTML = level[0].length;
 					drawLevel();
 				}
@@ -159,6 +160,7 @@ document.addEventListener("keydown", function(input){
 				}
 				player.spawnPoint[1]++;
 				player.startPoint[1]++;
+				player.y += blockSize;
 				id("lvlHeight").innerHTML = level[0].length;
 				drawLevel();
 			}
@@ -200,6 +202,7 @@ document.addEventListener("keydown", function(input){
 					level.shift();
 					player.spawnPoint[0]--;
 					player.startPoint[0]--;
+					player.x -= blockSize;
 					id("lvlWidth").innerHTML = level.length;
 					drawLevel();
 				}
@@ -209,6 +212,7 @@ document.addEventListener("keydown", function(input){
 				level[0].fill(0);
 				player.spawnPoint[0]++;
 				player.startPoint[0]++;
+				player.x += blockSize;
 				id("lvlWidth").innerHTML = level.length;
 				drawLevel();
 			}
