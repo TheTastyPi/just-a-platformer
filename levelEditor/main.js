@@ -1333,7 +1333,7 @@ function drawLevel() {
 				case 36:
 					lL.fillStyle = "#66666688";
 					lL.beginPath();
-					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*timerStage);
+					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*(timerStage-1));
 					lL.lineTo(xb+blockSize/2,yb+blockSize/2);
 					lL.fill();
 					
@@ -1346,7 +1346,7 @@ function drawLevel() {
 				case 37:
 					lL.fillStyle = "#33333388";
 					lL.beginPath();
-					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*timerStage);
+					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*(timerStage-1));
 					lL.lineTo(xb+blockSize/2,yb+blockSize/2);
 					lL.fill();
 					
@@ -1359,7 +1359,7 @@ function drawLevel() {
 				case 38:
 					lL.fillStyle = "#66666688";
 					lL.beginPath();
-					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*timerStage);
+					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*(timerStage-1));
 					lL.lineTo(xb+blockSize/2,yb+blockSize/2);
 					lL.fill();
 					
@@ -1383,7 +1383,7 @@ function drawLevel() {
 				case 39:
 					lL.fillStyle = "#33333388";
 					lL.beginPath();
-					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*timerStage);
+					lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,-Math.PI/2,Math.PI/2*(timerStage-1));
 					lL.lineTo(xb+blockSize/2,yb+blockSize/2);
 					lL.fill();
 					
