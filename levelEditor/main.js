@@ -53,16 +53,17 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
 	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.shiftKey) {
-		player.x = input.offsetX;
-		player.y = input.offsetY;
-		player.xv = 0;
-		player.yv = 0;
 		if (input.button == 1) {
 			player.selectedBlock[1] = getBlockType(xb,yb);
 			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
 			if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
 			if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
 			id("selectedBlock"+(input.shiftKey?1:0)).innerHTML = blockName[player.selectedBlock[input.shiftKey?1:0]];
+		} else {
+			player.x = input.offsetX;
+			player.y = input.offsetY;
+			player.xv = 0;
+			player.yv = 0;
 		}
 	} else {
 		if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
@@ -147,6 +148,8 @@ document.addEventListener("keydown", function(input){
 			if (input.ctrlKey) {
 				if (level[0].length > 1) {
 					for (let i in level) level[i].shift();
+					player.spawnPoint[1]--;
+					player.startPoint[1]--;
 					id("lvlHeight").innerHTML = level[0].length;
 					drawLevel();
 				}
@@ -154,22 +157,26 @@ document.addEventListener("keydown", function(input){
 				for (let i in level) {
 					level[i].unshift(0);
 				}
+				player.spawnPoint[1]++;
+				player.startPoint[1]++;
 				id("lvlHeight").innerHTML = level[0].length;
 				drawLevel();
 			}
 		case "KeyW":
-			if (player.canWalljump) {
-				if (player.wallJumpDir == "left") {
-					player.xv = -player.moveSpeed;
+			if (!input.shiftKey && !input.ctrlKey) {
+				if (player.canWalljump) {
+					if (player.wallJumpDir == "left") {
+						player.xv = -player.moveSpeed;
+						player.yv = -Math.sign(player.g)*player.jumpHeight;
+					}
+					if (player.wallJumpDir == "right") {
+						player.xv = player.moveSpeed;
+						player.yv = -Math.sign(player.g)*player.jumpHeight;
+					}
+				} else if (player.currentJumps > 0 || player.godMode) {
 					player.yv = -Math.sign(player.g)*player.jumpHeight;
+					player.currentJumps--;
 				}
-				if (player.wallJumpDir == "right") {
-					player.xv = player.moveSpeed;
-					player.yv = -Math.sign(player.g)*player.jumpHeight;
-				}
-			} else if (player.currentJumps > 0 || player.godMode) {
-				player.yv = -Math.sign(player.g)*player.jumpHeight;
-				player.currentJumps--;
 			}
 			break;
 		case "ArrowDown":
@@ -191,6 +198,8 @@ document.addEventListener("keydown", function(input){
 			if (input.ctrlKey) {
 				if (level.length > 1) {
 					level.shift();
+					player.spawnPoint[0]--;
+					player.startPoint[0]--;
 					id("lvlWidth").innerHTML = level.length;
 					drawLevel();
 				}
@@ -198,11 +207,13 @@ document.addEventListener("keydown", function(input){
 				level.unshift([]);
 				level[0].length = level[1].length;
 				level[0].fill(0);
+				player.spawnPoint[0]++;
+				player.startPoint[0]++;
 				id("lvlWidth").innerHTML = level.length;
 				drawLevel();
 			}
 		case "KeyA":
-			control.left = true;
+			if (!input.shiftKey && !input.ctrlKey) control.left = true;
 			break;
 		case "ArrowRight":
 			if (input.ctrlKey) {
@@ -219,7 +230,7 @@ document.addEventListener("keydown", function(input){
 				drawLevel();
 			}
 		case "KeyD":
-			control.right = true;
+			if (!input.shiftKey && !input.ctrlKey) control.right = true;
 			break;
 		case "Comma":
 			player.selectedBlock[input.shiftKey?1:0]--;
