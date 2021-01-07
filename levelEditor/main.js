@@ -54,6 +54,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
 	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.ctrlKey) {
+		if (input.button == 0) control.lmb = true;
 		if (input.button == 2) {
 			player.playerFocus = true;
 			adjustScreen()
