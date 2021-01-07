@@ -53,7 +53,12 @@ const bannedBlock = [4,19,20];
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
 	let yb = Math.floor(input.offsetY/blockSize);
-	if (input.shiftKey) {
+	if (input.ctrlKey) {
+		if (input.button == 2) {
+			player.playerFocus = true;
+			adjustScreen()
+		}
+	} else if (input.shiftKey) {
 		if (input.button == 1) {
 			player.selectedBlock[1] = getBlockType(xb,yb);
 			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
@@ -104,11 +109,13 @@ id("levelLayer").addEventListener("mousedown", function(input){
 });
 id("levelLayer").addEventListener("mousemove", function(input){
 	if (input.ctrlKey) {
-		player.playerFocus = false;
-		id("playerLayer").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
-		id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
-		id("playerLayer").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
-		id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
+		if (control.lmb) {
+			player.playerFocus = false;
+			id("playerLayer").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
+			id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
+			id("playerLayer").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
+			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
+		}
 	} else if (!input.shiftKey) {
 		let xb = Math.floor(input.offsetX/blockSize);
 		let yb = Math.floor(input.offsetY/blockSize);
@@ -268,9 +275,6 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "KeyR":
 			respawn();
-			break;
-		case "KeyF":
-			player.playerFocus = true;
 			break;
 		case "KeyG":
 			player.godMode = !player.godMode;
