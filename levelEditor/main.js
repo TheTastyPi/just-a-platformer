@@ -704,7 +704,7 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",38) && timerOn && !player.godMode) respawn();
 			if (isTouching("any",39) && !timerOn && !player.godMode) respawn();
 			// portal
-			if (ifTouching("any",41)) {
+			if (isTouching("any",41)) {
 				let coord = getCoord(41);
 				player.x = level[coord[0]][coord[1]][1]*blockSize+blockSize/2-playerSize;
 				player.y = level[coord[0]][coord[1]][2]*blockSize+blockSize/2-playerSize;
