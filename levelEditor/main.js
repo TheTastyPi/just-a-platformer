@@ -686,12 +686,12 @@ function nextFrame(timeStamp) {
 		}
 		// key input
 		if (control.left && player.xv > -player.moveSpeed) {
-			player.xv -= player.moveSpeed*dt;
-			if (player.xv < -player.moveSpeed) player.xv = -player.moveSpeed;
+			player.xv -= player.moveSpeed*dt/(noFriction?5:1);
+			if (player.xv < -player.moveSpeed/(noFriction?5:1);) player.xv = -player.moveSpeed/(noFriction?5:1);;
 		}
 		if (control.right && player.xv < player.moveSpeed) {
-			player.xv += player.moveSpeed*dt;
-			if (player.xv > player.moveSpeed) player.xv = player.moveSpeed;
+			player.xv += player.moveSpeed*dt/(noFriction?5:1);
+			if (player.xv > player.moveSpeed/(noFriction?5:1);) player.xv = player.moveSpeed/(noFriction?5:1);;
 		}
 		// draw checks
 		if (player.x != xprev || player.y != yprev) drawPlayer();
