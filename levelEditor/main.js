@@ -38,7 +38,7 @@ var level = [
 	[1,0,0,0,0,0,0,0,1],
 	[1,1,1,1,1,1,1,1,1]
 ];
-const hasHitbox = [1,5,11,24,25,26,33,37];
+const hasHitbox = [1,5,11,24,25,26,33,37,40];
 const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Activated Check Point (Unavailable)","Bounce Block", // basic (0,1,2,3,4,5)
 		   "G-Up Field","G-Down Field","G-Low Field","G-Medium Field","G-High Field", // grav (6,7,8,9,10)
 		   "Wall-Jump Block","0-Jump Field","1-Jump Field","2-Jump Field","3-Jump Field","Inf-Jump Field", // jumping (11,12,13,14,15,16)
@@ -865,6 +865,9 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 				lL.fillStyle = "#00000000";
 			} else lL.fillStyle = "#66666688";
 			break;
+		case 40:
+			lL.fillStyle = "#8888FF";
+			break;
 		default:
 			lL.fillStyle = "#00000000";
 	}
@@ -1415,6 +1418,16 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
 			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
 			lL.stroke();
+			break;
+		case 40:
+			lL.strokeStyle = "#444488";
+			lL.beginPath();
+			lL.moveTo(xb+blockSize/2,yb+blockSize/25*3);
+			lL.lineTo(xb+blockSize/25*3,yb+blockSize/2);
+			lL.moveTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+			lL.lineTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+			lL.moveTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
+			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/2);
 			break;
 	}
 }
