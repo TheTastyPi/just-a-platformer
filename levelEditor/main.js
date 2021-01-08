@@ -1457,7 +1457,7 @@ function init() {
 			});
 			blockDisp.appendChild(button);
 			blockDisp.appendChild(document.createElement("br"));
-			blockDisp.appendChild(document.createTextNode(blockName(blockSelect[i])));
+			blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
 			currentSect.appendChild(blockDisp);
 		}
 	}
