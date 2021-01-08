@@ -743,10 +743,11 @@ function movePlayer() {
 		if (lvly > 0) lvly = 0;
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
-	id("player").style.left = lvlx+player.x+"px";
-	id("player").style.top = lvly+player.y+"px";
+	id("player").style.left = lvlx+Math.floor(player.x)+"px";
+	id("player").style.top = lvly+Math.floor(player.y)+"px";
 	id("player").style.width = playerSize+"px";
 	id("player").style.height = playerSize+"px";
+	adjustScreen();
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
