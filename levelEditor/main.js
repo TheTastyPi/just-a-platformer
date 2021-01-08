@@ -1438,6 +1438,8 @@ function init() {
 			id("blockSelect").appendChild(currentSect);
 			let title = document.createElement("div");
 			title.appendChild(document.createTextNode(blockSelect[i]));
+			title.style.minWidth = "100%";
+			currentSect.appendChild(title);
 			blockAmt = 0;
 		} else {
 			let blockDisp = document.createElement("div");
