@@ -1426,7 +1426,6 @@ function arraysEqual(a, b) {
 function init() {
 	toStart();
 	drawLevel();
-	let currentBlock;
 	let currentSect;
 	for (let i in blockSelect) {
 		if (typeof(blockSelect[i]) == "string") {
@@ -1434,9 +1433,11 @@ function init() {
 			currentSect.style.height = "100%";
 			currentSect.style.width = "100px";
 			currentSect.style.display = "flex";
+			currentSect.style.margin = "0";
 			id("blockSelect").appendChild(currentSect);
-			currentSect.appendChild(document.createTextNode(blockSelect[i]));
-			currentSect.appendChild(document.createElement("br"));
+			let title = document.createElement("div");
+			title.appendChild(document.createTextNode(blockSelect[i]));
+			title.minWidth = "100px";
 		} else {
 			let blockDisp = document.createElement("div");
 			let button = document.createElement("canvas");
@@ -1456,7 +1457,6 @@ function init() {
 				}
 			});
 			blockDisp.style.textAlign = "center";
-			blockDisp.style.margin = "0";
 			blockDisp.appendChild(button);
 			blockDisp.appendChild(document.createElement("br"));
 			blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
