@@ -48,9 +48,9 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Force Field L","Force Field R","Force Field U","Force Field D", // force (27,28,29,30)
 		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B", // switchables (31,32,33,34,35)
 		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
-		   "Ice Block"]; // other stuff (40)
+		   "Ice Block","Portal"]; // other stuff (40,41)
 const bannedBlock = [4,19,20];
-const blockSelect = ["Special",17,3,18,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,40,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
+const blockSelect = ["Special",17,3,18,41,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,40,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
@@ -77,6 +77,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		}
 	} else {
 		if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
+			control.lmb = true;
 			if (player.selectedBlock[0] == 17) {
 				if (level[player.spawnPoint[0]] != undefined) {
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
@@ -86,8 +87,21 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 			}
-			level[xb][yb] = player.selectedBlock[0];
-			control.lmb = true;
+			if (player.selectedBlock[0] == 41) {
+				control.lmb = false;
+				control.rmb = false;
+				let coord = prompt("Please enter teleport coordinate in the form of '[x,y]'.");
+				try {
+					coord = JSON.parse(coord);
+					if (coord[0] < 0 || coord[0] > level.length-1 || coord[1] < 0 || coord[1] > level.length[0] - 1) {
+						alert("Invalid coordinate");
+					} else level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
+				} catch(err) {
+					alert("Invalid coordinate");
+				}
+			} else {
+				level[xb][yb] = player.selectedBlock[0];
+			}
 			drawLevel();
 		} else if (input.button == 1) {
 			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
@@ -284,6 +298,8 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "KeyE":
 			if (input.shiftKey) {
+				control.lmb = false;
+				control.rmb = false;
 				let data = prompt("Please enter level data.");
 				if (data) {
 					data = JSON.parse(data);
@@ -306,6 +322,8 @@ document.addEventListener("keydown", function(input){
 					drawLevel();
 				}
 			} else {
+				control.lmb = false;
+				control.rmb = false;
 				let adjustedLevel = deepCopy(level);
 				for (let x in adjustedLevel) {
 					for (let y in adjustedLevel[x]){
@@ -356,6 +374,7 @@ function getBlockType(x,y) {
 	if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
 		return 1;
 	}
+	if (typeof(level[x][y]) == "object") return level[x][y][0];
 	return level[x][y];
 }
 function isTouching(dir, type) {
@@ -684,6 +703,12 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",35) && !player.switchOn && !player.godMode) respawn();
 			if (isTouching("any",38) && timerOn && !player.godMode) respawn();
 			if (isTouching("any",39) && !timerOn && !player.godMode) respawn();
+			// portal
+			if (ifTouching("any",41)) {
+				let coord = getCoord(41);
+				player.x = level[coord[0]][coord[1]][1]*blockSize+blockSize/2-playerSize;
+				player.y = level[coord[0]][coord[1]][2]*blockSize+blockSize/2-playerSize;
+			}
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
 				player.x = 0;
