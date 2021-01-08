@@ -744,8 +744,6 @@ function movePlayer() {
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
 	id("player").style.transform = "translate("+(lvlx+Math.floor(player.x))+"px,"+(lvly+Math.floor(player.y))+"px)";
-	id("player").style.width = playerSize+"px";
-	id("player").style.height = playerSize+"px";
 	adjustScreen();
 }
 function drawLevel() {
