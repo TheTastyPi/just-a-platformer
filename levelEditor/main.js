@@ -1434,6 +1434,7 @@ function init() {
 			currentSect = document.createElement("div");
 			currentSect.style.height = "100%";
 			currentSect.style.display = "flex";
+			currentSect.style.flexFlow = "wrap";
 			currentSect.style.marginRight = "5px";
 			id("blockSelect").appendChild(currentSect);
 			let title = document.createElement("div");
