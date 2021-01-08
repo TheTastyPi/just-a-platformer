@@ -278,8 +278,8 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "KeyB":
 			if (id("blockSelect").style.display != "none") {
-				id("control").style.display = "none";
-			} else if (id("control").style.display != "flex") id("control").style.display = "flex";
+				id("blockSelect").style.display = "none";
+			} else if (id("blockSelect").style.display != "flex") id("control").style.display = "flex";
 			break;
 		case "KeyE":
 			if (input.shiftKey) {
