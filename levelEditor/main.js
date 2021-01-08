@@ -47,9 +47,10 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Bounce Block++","G-Bounce Up","G-Bounce Down", // more bounce (24,25,26)
 		   "Force Field L","Force Field R","Force Field U","Force Field D", // force (27,28,29,30)
 		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B", // switchables (31,32,33,34,35)
-		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B"]; // timer (36,37,38,39)
+		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
+		   "Ice Block"]; // other stuff (40)
 const bannedBlock = [4,19,20];
-const blockSelect = ["Special",17,3,18,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
+const blockSelect = ["Special",17,3,18,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,40,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
@@ -460,6 +461,7 @@ var canSwitch = true;
 var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
+var noFriction = false;
 function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
@@ -472,7 +474,7 @@ function nextFrame(timeStamp) {
 		let shouldDrawLevel = false;
 		for (let i = 0; i < simReruns; i++) {
 			// velocity change
-			player.xv *= Math.pow(0.5,dt/12);
+			if (!noFriction) player.xv *= Math.pow(0.5,dt/12);
 			if (Math.abs(player.xv) < 5) player.xv = 0;
 			player.yv += player.g * dt / 500 * gameSpeed;
 			if (player.yv > player.g && player.g > 0) player.yv = player.g;
@@ -530,6 +532,13 @@ function nextFrame(timeStamp) {
 					player.g = -player.g;
 					player.yv = player.g/2;
 				}
+				if (((getBlockType(x2b,y1b) == 40 && getBlockType(x1b,y1b) == 40)
+				   || ((getBlockType(x2b,y1b) == 40 || getBlockType(x1b,y1b) == 40)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y1b)) || hasHitbox.includes(getBlockType(x2b,y1b+1)))
+					   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
+				   && player.g < 0) {
+					noFriction = true;
+				} else if (i == 0) noFriction = false
 				player.y = (y1b + 1) * blockSize;
 				if (player.g < 0 && player.yv <= 0) player.currentJumps = player.maxJumps;
 			} else if (player.g < 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
@@ -554,6 +563,13 @@ function nextFrame(timeStamp) {
 					player.g = -player.g;
 					player.yv = player.g/2;
 				}
+				if (((getBlockType(x2b,y2b) == 40 && getBlockType(x1b,y2b) == 40)
+				   || ((getBlockType(x2b,y2b) == 40 || getBlockType(x1b,y2b) == 40)
+				       && ((!hasHitbox.includes(getBlockType(x2b,y2b)) || hasHitbox.includes(getBlockType(x2b,y2b-1))) 
+					   || (!hasHitbox.includes(getBlockType(x1b,y2b)) || hasHitbox.includes(getBlockType(x1b,y2b-1))))))
+				   && player.g > 0) {
+					noFriction = true;
+				} else if (i == 0) noFriction = false;
 				player.y = y2b * blockSize - playerSize;
 				if (player.g > 0 && player.yv >= 0) player.currentJumps = player.maxJumps;
 			} else if (player.g > 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
