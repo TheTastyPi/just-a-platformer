@@ -1430,14 +1430,15 @@ function init() {
 	let currentSect;
 	for (let i in blockSelect) {
 		if (typeof(blockSelect[i]) == "string") {
-			currentSect = document.createElement("span");
+			currentSect = document.createElement("div");
 			currentSect.style.height = "100%";
-			currentSect.style.textAlign = "center";
+			currentSect.style.width = "100px";
+			currentSect.style.display = "flex";
 			id("blockSelect").appendChild(currentSect);
 			currentSect.appendChild(document.createTextNode(blockSelect[i]));
 			currentSect.appendChild(document.createElement("br"));
 		} else {
-			let blockDisp = document.createElement("span");
+			let blockDisp = document.createElement("div");
 			let button = document.createElement("canvas");
 			button.id = "blockSelect" + blockSelect[i];
 			button.height = blockSize;
@@ -1447,13 +1448,14 @@ function init() {
 				if (input.button == 0 && player.selectedBlock[0] != blockSelect[i]) {
 					id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
 					player.selectedBlock[0] = blockSelect[i];
-					button.style.boxShadow = "0 0 0 10px #FF0000";
+					button.style.boxShadow = "0 0 0 5px #FF0000";
 				} else if (input.button == 2 && player.selectedBlock[1] != blockSelect[i]) {
 					id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
 					player.selectedBlock[1] = blockSelect[i];
-					button.style.boxShadow = "0 0 0 10px #0000FF";
+					button.style.boxShadow = "0 0 0 5px #0000FF";
 				}
 			});
+			blockDisp.style.textAlign = "center";
 			blockDisp.appendChild(button);
 			blockDisp.appendChild(document.createElement("br"));
 			blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
