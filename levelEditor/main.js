@@ -1456,6 +1456,7 @@ function init() {
 				}
 			});
 			blockDisp.style.textAlign = "center";
+			blockDisp.style.margin = "0";
 			blockDisp.appendChild(button);
 			blockDisp.appendChild(document.createElement("br"));
 			blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
