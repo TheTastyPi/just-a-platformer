@@ -745,6 +745,8 @@ function movePlayer() {
 	}
 	id("player").style.left = lvlx+player.x+"px";
 	id("player").style.right = lvly+player.y+"px";
+	id("player").style.width = playerSize+"px";
+	id("player").style.height = playerSize+"px";
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
