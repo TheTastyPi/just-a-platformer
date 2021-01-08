@@ -279,7 +279,7 @@ document.addEventListener("keydown", function(input){
 		case "KeyB":
 			if (id("blockSelect").style.display != "none") {
 				id("blockSelect").style.display = "none";
-			} else if (id("blockSelect").style.display != "flex") id("control").style.display = "flex";
+			} else if (id("blockSelect").style.display != "flex") id("blockSelect").style.display = "flex";
 			break;
 		case "KeyE":
 			if (input.shiftKey) {
