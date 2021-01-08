@@ -1430,7 +1430,7 @@ function init() {
 	let currentSect;
 	for (let i in blockSelect) {
 		if (typeof(blockSelect[i]) == "string") {
-			if (currentSect) currentSect.style.width = blockSize*blockAmt+"px";
+			if (currentSect) currentSect.style.width = (blockSize+5)*blockAmt+"px";
 			currentSect = document.createElement("div");
 			currentSect.style.height = "100%";
 			currentSect.style.display = "flex";
