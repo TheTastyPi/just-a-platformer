@@ -753,7 +753,7 @@ function drawLevel() {
 	let lL = canvas.getContext("2d");
 	canvas.width = level.length*blockSize;
 	canvas.height = level[0].length*blockSize;
-	drawPlayer();
+	movePlayer();
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
 		for (let y in level[x]) {
