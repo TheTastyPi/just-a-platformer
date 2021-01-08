@@ -1453,11 +1453,11 @@ function init() {
 				if (input.button == 0 && player.selectedBlock[0] != blockSelect[i] && player.selectedBlock[1] != blockSelect[i]) {
 					id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
 					player.selectedBlock[0] = blockSelect[i];
-					button.style.boxShadow = "0 0 0 5px #FF0000 inset";
+					button.style.boxShadow = "0 0 0 5px #FF0000";
 				} else if (input.button == 2 && player.selectedBlock[0] != blockSelect[i] && player.selectedBlock[1] != blockSelect[i]) {
 					id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
 					player.selectedBlock[1] = blockSelect[i];
-					button.style.boxShadow = "0 0 0 5px #0000FF inset";
+					button.style.boxShadow = "0 0 0 5px #0000FF";
 				}
 			});
 			blockDisp.style.width = blockSize+"px";
@@ -1470,8 +1470,8 @@ function init() {
 			currentSect.style.minWidth = (blockSize+5)*blockAmt+"px";
 		}
 	}
-	id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF inset";
-	id("blockSelect1").style.boxShadow = "0 0 0 5px #FF0000 inset";
+	id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";
+	id("blockSelect1").style.boxShadow = "0 0 0 5px #FF0000";
 }
 
 init();
