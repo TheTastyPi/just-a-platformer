@@ -1469,6 +1469,8 @@ function init() {
 			currentSect.style.minWidth = (blockSize+5)*blockAmt+"px";
 		}
 	}
+	id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";
+	id("blockSelect1").style.boxShadow = "0 0 0 5px #FF0000";
 }
 
 init();
