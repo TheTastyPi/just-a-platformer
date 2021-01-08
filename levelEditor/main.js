@@ -1434,9 +1434,8 @@ function init() {
 			currentSect.style.height = "100%";
 			currentSect.style.textAlign = "center";
 			id("blockSelect").appendChild(currentSect);
-			let title = document.createElement("div");
-			title.appendChild(document.createTextNode(blockSelect[i]));
-			currentSect.appendChild(title);
+			currentSect.appendChild(document.createTextNode(blockSelect[i]));
+			currentSect.appendChild(document.createElement("br"));
 		} else {
 			let blockDisp = document.createElement("span");
 			let button = document.createElement("canvas");
