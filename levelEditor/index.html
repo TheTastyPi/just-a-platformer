@@ -6,7 +6,7 @@
 	<body onresize="adjustScreen()" style="height:100%; margin:0; overflow:hidden; background:#EEEEEE; font-family:monospace">
 		<canvas id="playerLayer" style="position:absolute; background:#FFFFFF"></canvas>
 		<canvas id="levelLayer" style="position:absolute"></canvas>
-		<div style="position:absolute; background:white">
+		<div style="position:absolute; background:#00000044">
 			<span id="info">
 				[INFO]<br>
 				Width: <span id="lvlWidth">10</span><br>
@@ -32,7 +32,7 @@
 				[shift] + [E]: Import level data
 			</span>
 		</div>
-		<div id="blockSelect" style="position:absolute; bottom:0; width:100%; height:20%; display:flex; overflow-x: scroll; text-align:center"></div>
+		<div id="blockSelect" style="position:absolute; bottom:0; width:100%; height:20%; display:flex; overflow-x: scroll; text-align:center; background: #00000044"></div>
 		<textarea style="opacity: .01; height:0; position:absolute; z-index: -1; display:none" id="exportArea">export text</textarea>
 	</body>
 	<script src="main.js"></script>
