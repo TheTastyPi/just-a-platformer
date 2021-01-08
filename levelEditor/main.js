@@ -1426,18 +1426,19 @@ function arraysEqual(a, b) {
 function init() {
 	toStart();
 	drawLevel();
+	let blockAmt = 0;
 	let currentSect;
 	for (let i in blockSelect) {
 		if (typeof(blockSelect[i]) == "string") {
+			if (currentSect) currentSect.style.width = blockSize*blockAmt+"px";
 			currentSect = document.createElement("div");
 			currentSect.style.height = "100%";
-			currentSect.style.width = "100px";
 			currentSect.style.display = "flex";
-			currentSect.style.margin = "0";
+			currentSect.style.marginRight = "5px";
 			id("blockSelect").appendChild(currentSect);
 			let title = document.createElement("div");
 			title.appendChild(document.createTextNode(blockSelect[i]));
-			title.minWidth = "100px";
+			blockAmt = 0;
 		} else {
 			let blockDisp = document.createElement("div");
 			let button = document.createElement("canvas");
@@ -1457,10 +1458,12 @@ function init() {
 				}
 			});
 			blockDisp.style.textAlign = "center";
+			blockDisp.style.marginRight = "5px";
 			blockDisp.appendChild(button);
 			blockDisp.appendChild(document.createElement("br"));
 			blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
 			currentSect.appendChild(blockDisp);
+			blockAmt++;
 		}
 	}
 }
