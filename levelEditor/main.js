@@ -706,8 +706,8 @@ function nextFrame(timeStamp) {
 			// portal
 			if (isTouching("any",41)) {
 				let coord = getCoord(41);
-				player.x = level[coord[0]][coord[1]][1]*blockSize+blockSize/2-playerSize;
-				player.y = level[coord[0]][coord[1]][2]*blockSize+blockSize/2-playerSize;
+				player.x = level[coord[0]][coord[1]][1]*blockSize+(blockSize-playerSize)/2;
+				player.y = level[coord[0]][coord[1]][2]*blockSize+(blockSize-playerSize)/2;
 			}
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
