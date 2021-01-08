@@ -62,12 +62,12 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		}
 	} else if (input.shiftKey) {
 		if (input.button == 1) {
-			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
+			id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
 			player.selectedBlock[1] = getBlockType(xb,yb);
 			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
 			if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
 			if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
-			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #0000FF";
+			id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #0000FF";
 		} else {
 			player.x = input.offsetX;
 			player.y = input.offsetY;
