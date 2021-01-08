@@ -1430,7 +1430,7 @@ function init() {
 	let currentSect;
 	for (let i in blockSelect) {
 		if (typeof(blockSelect[i]) == "string") {
-			if (currentSect) currentSect.style.width = (blockSize+5)*blockAmt+"px";
+			if (currentSect) currentSect.style.minWidth = (blockSize+5)*blockAmt+"px";
 			currentSect = document.createElement("div");
 			currentSect.style.height = "100%";
 			currentSect.style.display = "flex";
@@ -1459,7 +1459,7 @@ function init() {
 					button.style.boxShadow = "0 0 0 5px #0000FF";
 				}
 			});
-			blockDisp.style.textAlign = "center";
+			blockDisp.style.width = blockSize+"px";
 			blockDisp.style.marginRight = "5px";
 			blockDisp.appendChild(button);
 			blockDisp.appendChild(document.createElement("br"));
