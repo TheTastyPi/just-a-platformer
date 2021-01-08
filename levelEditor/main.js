@@ -743,7 +743,10 @@ function movePlayer() {
 		if (lvly > 0) lvly = 0;
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
-	id("player").style.transform = "translate("+(lvlx+Math.floor(player.x))+"px,"+(lvly+Math.floor(player.y))+"px)";
+	id("player").style.left = lvlx+Math.floor(player.x)+"px";
+	id("player").style.top = lvly+Math.floor(player.y)+"px";
+	id("player").style.width = playerSize+"px";
+	id("player").style.height = playerSize+"px";
 	adjustScreen();
 }
 function drawLevel() {
@@ -1492,8 +1495,10 @@ function adjustScreen() {
 		if (lvly > 0) lvly = 0;
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
-	id("levelLayer").style.transform = "translate("+lvlx+"px,"+lvly+"px)";
-	id("background").style.transform = "translate("+lvlx+"px,"+lvly+"px)";
+	id("levelLayer").style.left = lvlx+"px";
+	id("levelLayer").style.top = lvly+"px";
+	id("background").style.left = lvlx+"px";
+	id("background").style.top = lvly+"px";
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
