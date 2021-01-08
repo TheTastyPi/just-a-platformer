@@ -1462,4 +1462,6 @@ function init() {
 		}
 	}
 }
+
+init();
 window.requestAnimationFrame(nextFrame);
