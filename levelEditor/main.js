@@ -1428,6 +1428,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.lineTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
 			lL.moveTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
 			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/2);
+			lL.stroke();
 			break;
 	}
 }
