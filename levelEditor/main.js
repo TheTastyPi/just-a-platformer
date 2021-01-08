@@ -725,21 +725,26 @@ function nextFrame(timeStamp) {
 			if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
 		}
 		// draw checks
-		if (player.x != xprev || player.y != yprev) drawPlayer();
+		if (player.x != xprev || player.y != yprev) movePlayer();
 		if (shouldDrawLevel) drawLevel();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
-function drawPlayer() {
-	let canvas = document.getElementById("playerLayer");
-	let pL = canvas.getContext("2d");
-	canvas.width = level.length*blockSize;
-	canvas.height = level[0].length*blockSize;
-	pL.clearRect(0,0,canvas.width,canvas.height);
-	pL.fillStyle = "#0000FF";
-	if (player.godMode) pL.fillStyle = "#FFFF00";
-	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
-	if (player.playerFocus) adjustScreen();
+function movePlayer() {
+	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
+	}
+	let lvly = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
+		if (lvly > 0) lvly = 0;
+		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
+	}
+	id("player").style.left = lvlx+player.x+"px";
+	id("player").style.right = lvly+player.y+"px";
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
@@ -1485,9 +1490,7 @@ function adjustScreen() {
 		if (lvly > 0) lvly = 0;
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
-	id("playerLayer").style.left = lvlx+"px";
 	id("levelLayer").style.left = lvlx+"px";
-	id("playerLayer").style.top = lvly+"px";
 	id("levelLayer").style.top = lvly+"px";
 }
 function arraysEqual(a, b) {
