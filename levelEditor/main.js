@@ -1449,11 +1449,11 @@ function init() {
 			button.width = blockSize;
 			drawBlock(button,0,0,blockSelect[i])
 			button.addEventListener("mousedown",function(input){
-				if (input.button == 0 && player.selectedBlock[0] != blockSelect[i]) {
+				if (input.button == 0 && player.selectedBlock[0] != blockSelect[i] && player.selectedBlock[1] != blockSelect[i]) {
 					id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
 					player.selectedBlock[0] = blockSelect[i];
 					button.style.boxShadow = "0 0 0 5px #FF0000";
-				} else if (input.button == 2 && player.selectedBlock[1] != blockSelect[i]) {
+				} else if (input.button == 2 && player.selectedBlock[0] != blockSelect[i] && player.selectedBlock[1] != blockSelect[i]) {
 					id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
 					player.selectedBlock[1] = blockSelect[i];
 					button.style.boxShadow = "0 0 0 5px #0000FF";
