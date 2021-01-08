@@ -62,11 +62,12 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		}
 	} else if (input.shiftKey) {
 		if (input.button == 1) {
+			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
 			player.selectedBlock[1] = getBlockType(xb,yb);
 			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
 			if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
 			if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
-			id("selectedBlock"+(input.shiftKey?1:0)).innerHTML = blockName[player.selectedBlock[input.shiftKey?1:0]];
+			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #0000FF";
 		} else {
 			player.x = input.offsetX;
 			player.y = input.offsetY;
@@ -88,11 +89,12 @@ id("levelLayer").addEventListener("mousedown", function(input){
 			control.lmb = true;
 			drawLevel();
 		} else if (input.button == 1) {
+			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
 			player.selectedBlock[0] = getBlockType(xb,yb);
 			if (player.selectedBlock[0] == 4) player.selectedBlock[0] = 3;
 			if (player.selectedBlock[0] == 19) player.selectedBlock[0] = 17;
 			if (player.selectedBlock[0] == 20) player.selectedBlock[0] = 18;
-			id("selectedBlock"+(input.shiftKey?1:0)).innerHTML = blockName[player.selectedBlock[input.shiftKey?1:0]];
+			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF0000";
 		} else if (input.button == 2 && !bannedBlock.includes(player.selectedBlock[1])) {
 			if (player.selectedBlock[1] == 17) {
 				if (level[player.spawnPoint[0]] != undefined) {
