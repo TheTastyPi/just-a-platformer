@@ -1430,7 +1430,6 @@ function init() {
 	let currentSect;
 	for (let i in blockSelect) {
 		if (typeof(blockSelect[i]) == "string") {
-			if (currentSect) currentSect.style.minWidth = (blockSize+5)*blockAmt+"px";
 			currentSect = document.createElement("div");
 			currentSect.style.height = "100%";
 			currentSect.style.display = "flex";
@@ -1467,6 +1466,7 @@ function init() {
 			blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
 			currentSect.appendChild(blockDisp);
 			blockAmt++;
+			currentSect.style.minWidth = (blockSize+5)*blockAmt+"px";
 		}
 	}
 }
