@@ -6,13 +6,11 @@
 	<body onresize="adjustScreen()" style="height:100%; margin:0; overflow:hidden; background:#EEEEEE; font-family:monospace">
 		<canvas id="playerLayer" style="position:absolute; background:#FFFFFF"></canvas>
 		<canvas id="levelLayer" style="position:absolute"></canvas>
-		<div style="position:absolute; background:white">
+		<div style="position:absolute; background:#FFFFFF88">
 			<span id="info">
 				[INFO]<br>
 				Width: <span id="lvlWidth">10</span><br>
 				Height: <span id="lvlHeight">9</span><br>
-				Left Click: <span id="selectedBlock0">Solid Block</span><br>
-				Right Click: <span id="selectedBlock1">Empty Space</span><br>
 			</span>
 			<span id="control">
 				<br>
@@ -23,8 +21,6 @@
 				[ctrl] + RMB: Refocus on player<br>
 				MMB: Select block clicked for LMB<br>
 				[shift] + MMB: Select block clicked for RMB<br>
-				[,] & [.]: Cycle LMB block type<br>
-				[shift] + [,] & [.]: Cycle RMB block type<br>
 				[shift] + [arrow]: Increase level size<br>
 				[ctrl] + [arrow]: Decrease level size<br>
 				[S]: Restart from startpoint<br>
@@ -36,6 +32,7 @@
 				[shift] + [E]: Import level data
 			</span>
 		</div>
+		<div id="blockSelect" style="position:absolute; bottom:0; width:100%; height:20%; display:flex; overflow-x: scroll; text-align:center; background: #FFFFFF88"></div>
 		<textarea style="opacity: .01; height:0; position:absolute; z-index: -1; display:none" id="exportArea">export text</textarea>
 	</body>
 	<script src="main.js"></script>
