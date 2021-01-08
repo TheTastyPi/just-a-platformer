@@ -538,10 +538,13 @@ function nextFrame(timeStamp) {
 					   || (!hasHitbox.includes(getBlockType(x1b,y1b)) || hasHitbox.includes(getBlockType(x1b,y1b+1))))))
 				   && player.g < 0) {
 					noFriction = true;
-				} else if (i == 0) noFriction = false
+				} else if (i == 0) noFriction = false;
 				player.y = (y1b + 1) * blockSize;
 				if (player.g < 0 && player.yv <= 0) player.currentJumps = player.maxJumps;
-			} else if (player.g < 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
+			} else {
+				if (player.g < 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
+				if (i == 0) noFriction = false;
+			}
 			// floor
 			if (isTouching("down")) {
 				player.yv = 0;
@@ -572,7 +575,10 @@ function nextFrame(timeStamp) {
 				} else if (i == 0) noFriction = false;
 				player.y = y2b * blockSize - playerSize;
 				if (player.g > 0 && player.yv >= 0) player.currentJumps = player.maxJumps;
-			} else if (player.g > 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
+			} else {
+				if (player.g > 0 && player.currentJumps == player.maxJumps) player.currentJumps = player.maxJumps - 1;
+				if (i == 0) noFriction = false;
+			}
 			// anti-grav
 			if (isTouching("any",6)) {
 				if (player.g > 0) player.g = -player.g;
