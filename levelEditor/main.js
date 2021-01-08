@@ -276,6 +276,11 @@ document.addEventListener("keydown", function(input){
 				id("control").style.display = "none";
 			} else if (id("control").style.display != "inline") id("control").style.display = "inline";
 			break;
+		case "KeyB":
+			if (id("blockSelect").style.display != "none") {
+				id("blockSelect").style.display = "none";
+			} else if (id("blockSelect").style.display != "flex") id("blockSelect").style.display = "flex";
+			break;
 		case "KeyE":
 			if (input.shiftKey) {
 				let data = prompt("Please enter level data.");
