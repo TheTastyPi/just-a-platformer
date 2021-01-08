@@ -899,6 +899,9 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 		case 40:
 			lL.fillStyle = "#8888FF";
 			break;
+		case 41:
+			lL.fillStyle = "#FF88FF88";
+			break;
 		default:
 			lL.fillStyle = "#00000000";
 	}
@@ -1459,6 +1462,12 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.lineTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
 			lL.moveTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
 			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/2);
+			lL.stroke();
+			break;
+		case 41:
+			lL.strokeStyle = "#88448888";
+			lL.beginPath();
+			lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,0,2*Math.PI);
 			lL.stroke();
 			break;
 	}
