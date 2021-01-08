@@ -744,7 +744,7 @@ function movePlayer() {
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
 	id("player").style.left = lvlx+player.x+"px";
-	id("player").style.right = lvly+player.y+"px";
+	id("player").style.top = lvly+player.y+"px";
 	id("player").style.width = playerSize+"px";
 	id("player").style.height = playerSize+"px";
 }
