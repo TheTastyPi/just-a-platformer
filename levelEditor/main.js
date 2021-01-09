@@ -90,12 +90,10 @@ id("levelLayer").addEventListener("mousedown", function(input){
 			if (player.selectedBlock[0] == 41) {
 				control.lmb = false;
 				control.rmb = false;
-				let coord = prompt("Please enter relative coordinate in the form of '[x,y]'. (Ex: [1,0] would teleport you one block to the right of the portal.)");
+				let coord = prompt("Please enter relative coordinate in the form of '[x,y]'. (Ex: [-1,0] would teleport you one block to the left of the portal.)");
 				try {
 					coord = JSON.parse(coord);
-					if (coord[0] < 0 || coord[0] > level.length-1 || coord[1] < 0 || coord[1] > level.length[0] - 1) {
-						alert("Invalid coordinate");
-					} else level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
+					level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
 				} catch(err) {
 					alert("Invalid coordinate");
 				}
