@@ -90,12 +90,10 @@ id("levelLayer").addEventListener("mousedown", function(input){
 			if (player.selectedBlock[0] == 41) {
 				control.lmb = false;
 				control.rmb = false;
-				let coord = prompt("Please enter teleport coordinate in the form of '[x,y]'.");
+				let coord = prompt("Please enter relative coordinate in the form of '[x,y]'. (Ex: [-1,0] would teleport you one block to the left of the portal.)");
 				try {
 					coord = JSON.parse(coord);
-					if (coord[0] < 0 || coord[0] > level.length-1 || coord[1] < 0 || coord[1] > level.length[0] - 1) {
-						alert("Invalid coordinate");
-					} else level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
+					level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
 				} catch(err) {
 					alert("Invalid coordinate");
 				}
@@ -711,8 +709,8 @@ function nextFrame(timeStamp) {
 			// portal
 			if (isTouching("any",41)) {
 				let coord = getCoord(41);
-				player.x = level[coord[0]][coord[1]][1]*blockSize+(blockSize-playerSize)/2;
-				player.y = level[coord[0]][coord[1]][2]*blockSize+(blockSize-playerSize)/2;
+				player.x = (coord[0]+level[coord[0]][coord[1]][1])*blockSize+(blockSize-playerSize)/2;
+				player.y = (coord[1]+level[coord[0]][coord[1]][2])*blockSize+(blockSize-playerSize)/2;
 			}
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
