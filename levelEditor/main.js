@@ -132,10 +132,12 @@ id("levelLayer").addEventListener("mousemove", function(input){
 	if (input.ctrlKey) {
 		if (control.lmb) {
 			player.playerFocus = false;
-			id("playerLayer").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
+			id("background").style.left = parseInt(id("background").style.left)+input.movementX+"px";
+			id("background").style.top = parseInt(id("background").style.top)+input.movementY+"px";
 			id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
-			id("playerLayer").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
 			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
+			id("playerLayer").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
+			id("playerLayer").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
 		}
 	} else if (!input.shiftKey) {
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
@@ -1506,6 +1508,8 @@ function adjustScreen() {
 	id("levelLayer").style.top = lvly+"px";
 	id("background").style.left = lvlx+"px";
 	id("background").style.top = lvly+"px";
+	id("playerLayer").style.left = "0px";
+	id("playerLayer").style.top = "0px";
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
