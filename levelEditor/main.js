@@ -481,6 +481,8 @@ var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
 var noFriction = false;
+var xprev;
+var yprev
 function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
@@ -488,8 +490,8 @@ function nextFrame(timeStamp) {
 	sinceLastTimerStage += dt;
 	if (dt < haltThreshold) {
 		dt = dt/simReruns;
-		let xprev = player.x;
-		let yprev = player.y;
+		xprev = player.x;
+		yprev = player.y;
 		let shouldDrawLevel = false;
 		for (let i = 0; i < simReruns; i++) {
 			// velocity change
@@ -725,37 +727,28 @@ function nextFrame(timeStamp) {
 			if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
 		}
 		// draw checks
-		if (player.x != xprev || player.y != yprev) movePlayer();
+		if (player.x != xprev || player.y != yprev) drawPlayer();
 		if (shouldDrawLevel) drawLevel();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
-function movePlayer() {
-	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
-	}
-	let lvly = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
-	}
-	id("player").style.transform = "translate("+(lvlx+Math.floor(player.x))+"px,"+(lvly+Math.floor(player.y))+"px)";
-	id("player").style.width = playerSize+"px";
-	id("player").style.height = playerSize+"px";
-	adjustScreen();
+function drawPlayer() {
+	let canvas = document.getElementById("playerLayer");
+	let pL = canvas.getContext("2d");
+	canvas.width = level.length*blockSize;
+	canvas.height = level[0].length*blockSize;
+	pL.clearRect(Math.floor(xprev),Math.floor(yprev),playerSize,playerSize);
+	pL.fillStyle = "#0000FF";
+	if (player.godMode) pL.fillStyle = "#FFFF00";
+	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
+	if (player.playerFocus) adjustScreen();
 }
 function drawLevel() {
 	let canvas = document.getElementById("levelLayer");
 	let lL = canvas.getContext("2d");
 	canvas.width = level.length*blockSize;
 	canvas.height = level[0].length*blockSize;
-	id("background").style.width = level.length*blockSize+"px";
-	id("background").style.height = level[0].length*blockSize+"px";
-	movePlayer();
+	drawPlayer();
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
 		for (let y in level[x]) {
@@ -1494,8 +1487,10 @@ function adjustScreen() {
 		if (lvly > 0) lvly = 0;
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
-	id("levelLayer").style.transform = "translate("+lvlx+"px,"+lvly+"px)";
-	id("background").style.transform = "translate("+lvlx+"px,"+lvly+"px)";
+	id("playerLayer").style.left = lvlx+"px";
+	id("levelLayer").style.left = lvlx+"px";
+	id("playerLayer").style.top = lvly+"px";
+	id("levelLayer").style.top = lvly+"px";
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
