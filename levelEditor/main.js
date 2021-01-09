@@ -48,9 +48,9 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Force Field L","Force Field R","Force Field U","Force Field D", // force (27,28,29,30)
 		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B", // switchables (31,32,33,34,35)
 		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
-		   "Ice Block"]; // other stuff (40)
+		   "Ice Block","Portal"]; // other stuff (40,41)
 const bannedBlock = [4,19,20];
-const blockSelect = ["Special",17,3,18,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,40,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
+const blockSelect = ["Special",17,3,18,41,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,40,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
@@ -77,6 +77,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		}
 	} else {
 		if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
+			control.lmb = true;
 			if (player.selectedBlock[0] == 17) {
 				if (level[player.spawnPoint[0]] != undefined) {
 					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
@@ -86,8 +87,21 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn];
 			}
-			level[xb][yb] = player.selectedBlock[0];
-			control.lmb = true;
+			if (player.selectedBlock[0] == 41) {
+				control.lmb = false;
+				control.rmb = false;
+				let coord = prompt("Please enter teleport coordinate in the form of '[x,y]'.");
+				try {
+					coord = JSON.parse(coord);
+					if (coord[0] < 0 || coord[0] > level.length-1 || coord[1] < 0 || coord[1] > level.length[0] - 1) {
+						alert("Invalid coordinate");
+					} else level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
+				} catch(err) {
+					alert("Invalid coordinate");
+				}
+			} else {
+				level[xb][yb] = player.selectedBlock[0];
+			}
 			drawLevel();
 		} else if (input.button == 1) {
 			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
@@ -113,6 +127,8 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	}
 });
 id("levelLayer").addEventListener("mousemove", function(input){
+	let xb = Math.floor(input.offsetX/blockSize);
+	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.ctrlKey) {
 		if (control.lmb) {
 			player.playerFocus = false;
@@ -122,8 +138,6 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
 		}
 	} else if (!input.shiftKey) {
-		let xb = Math.floor(input.offsetX/blockSize);
-		let yb = Math.floor(input.offsetY/blockSize);
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
 			if (player.selectedBlock[0] == 17) {
 				if (level[player.spawnPoint[0]] != undefined) {
@@ -150,6 +164,7 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			drawLevel();
 		}
 	}
+	id("mousePos").innerHTML = "["+xb+","+yb+"]";
 });
 id("levelLayer").addEventListener("mouseup", function(input){
 	if (input.button == 0) {
@@ -284,6 +299,8 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "KeyE":
 			if (input.shiftKey) {
+				control.lmb = false;
+				control.rmb = false;
 				let data = prompt("Please enter level data.");
 				if (data) {
 					data = JSON.parse(data);
@@ -306,6 +323,8 @@ document.addEventListener("keydown", function(input){
 					drawLevel();
 				}
 			} else {
+				control.lmb = false;
+				control.rmb = false;
 				let adjustedLevel = deepCopy(level);
 				for (let x in adjustedLevel) {
 					for (let y in adjustedLevel[x]){
@@ -356,6 +375,7 @@ function getBlockType(x,y) {
 	if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
 		return 1;
 	}
+	if (typeof(level[x][y]) == "object") return level[x][y][0];
 	return level[x][y];
 }
 function isTouching(dir, type) {
@@ -462,6 +482,8 @@ var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
 var noFriction = false;
+var xprev;
+var yprev
 function nextFrame(timeStamp) {
 	// setup stuff
 	let dt = timeStamp - lastFrame;
@@ -469,8 +491,8 @@ function nextFrame(timeStamp) {
 	sinceLastTimerStage += dt;
 	if (dt < haltThreshold) {
 		dt = dt/simReruns;
-		let xprev = player.x;
-		let yprev = player.y;
+		xprev = player.x;
+		yprev = player.y;
 		let shouldDrawLevel = false;
 		for (let i = 0; i < simReruns; i++) {
 			// velocity change
@@ -684,6 +706,12 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",35) && !player.switchOn && !player.godMode) respawn();
 			if (isTouching("any",38) && timerOn && !player.godMode) respawn();
 			if (isTouching("any",39) && !timerOn && !player.godMode) respawn();
+			// portal
+			if (isTouching("any",41)) {
+				let coord = getCoord(41);
+				player.x = level[coord[0]][coord[1]][1]*blockSize+(blockSize-playerSize)/2;
+				player.y = level[coord[0]][coord[1]][2]*blockSize+(blockSize-playerSize)/2;
+			}
 			// OoB check
 			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
 				player.x = 0;
@@ -706,21 +734,35 @@ function nextFrame(timeStamp) {
 	window.requestAnimationFrame(nextFrame);
 }
 function drawPlayer() {
-	let canvas = document.getElementById("playerLayer");
+	let canvas = id("playerLayer");
 	let pL = canvas.getContext("2d");
-	canvas.width = level.length*blockSize;
-	canvas.height = level[0].length*blockSize;
+	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
+	if (lvlx < 0) {
+		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
+		if (lvlx > 0) lvlx = 0;
+		if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
+	}
+	let lvly = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
+	if (lvly < 0) {
+		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
+		if (lvly > 0) lvly = 0;
+		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
+	}
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FFFF00";
-	pL.fillRect(Math.floor(player.x), Math.floor(player.y), playerSize, playerSize);
+	pL.fillRect(lvlx+Math.floor(player.x), lvly+Math.floor(player.y), playerSize, playerSize);
 	if (player.playerFocus) adjustScreen();
 }
 function drawLevel() {
-	let canvas = document.getElementById("levelLayer");
+	let canvas = id("levelLayer");
 	let lL = canvas.getContext("2d");
 	canvas.width = level.length*blockSize;
 	canvas.height = level[0].length*blockSize;
+	id("background").style.width = level.length*blockSize+"px";
+	id("background").style.height = level[0].length*blockSize+"px";
 	drawPlayer();
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
@@ -873,6 +915,9 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			break;
 		case 40:
 			lL.fillStyle = "#8888FF";
+			break;
+		case 41:
+			lL.fillStyle = "#FF88FF88";
 			break;
 		default:
 			lL.fillStyle = "#00000000";
@@ -1436,6 +1481,12 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/2);
 			lL.stroke();
 			break;
+		case 41:
+			lL.strokeStyle = "#88448888";
+			lL.beginPath();
+			lL.arc(xb+blockSize/2,yb+blockSize/2,blockSize/2-blockSize/25*3,0,2*Math.PI);
+			lL.stroke();
+			break;
 	}
 }
 function adjustScreen() {
@@ -1451,10 +1502,10 @@ function adjustScreen() {
 		if (lvly > 0) lvly = 0;
 		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
 	}
-	id("playerLayer").style.left = lvlx+"px";
 	id("levelLayer").style.left = lvlx+"px";
-	id("playerLayer").style.top = lvly+"px";
 	id("levelLayer").style.top = lvly+"px";
+	id("background").style.left = lvlx+"px";
+	id("background").style.top = lvly+"px";
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
