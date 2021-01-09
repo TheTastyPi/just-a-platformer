@@ -733,7 +733,7 @@ function nextFrame(timeStamp) {
 	window.requestAnimationFrame(nextFrame);
 }
 function drawPlayer() {
-	let canvas = document.getElementById("playerLayer");
+	let canvas = id("playerLayer");
 	let pL = canvas.getContext("2d");
 	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
 	if (lvlx < 0) {
@@ -756,10 +756,12 @@ function drawPlayer() {
 	if (player.playerFocus) adjustScreen();
 }
 function drawLevel() {
-	let canvas = document.getElementById("levelLayer");
+	let canvas = id("levelLayer");
 	let lL = canvas.getContext("2d");
 	canvas.width = level.length*blockSize;
 	canvas.height = level[0].length*blockSize;
+	id("background").style.width = level.length*blockSize+"px";
+	id("background").style.height = level[0].length*blockSize+"px";
 	drawPlayer();
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
