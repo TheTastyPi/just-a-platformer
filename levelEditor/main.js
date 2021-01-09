@@ -132,9 +132,9 @@ id("levelLayer").addEventListener("mousemove", function(input){
 	if (input.ctrlKey) {
 		if (control.lmb) {
 			player.playerFocus = false;
-			id("playerLayer").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
+			id("background").style.left = parseInt(id("playerLayer").style.left)+input.movementX+"px";
 			id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
-			id("playerLayer").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
+			id("background").style.top = parseInt(id("playerLayer").style.top)+input.movementY+"px";
 			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
 		}
 	} else if (!input.shiftKey) {
