@@ -127,6 +127,8 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	}
 });
 id("levelLayer").addEventListener("mousemove", function(input){
+	let xb = Math.floor(input.offsetX/blockSize);
+	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.ctrlKey) {
 		if (control.lmb) {
 			player.playerFocus = false;
@@ -136,8 +138,6 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
 		}
 	} else if (!input.shiftKey) {
-		let xb = Math.floor(input.offsetX/blockSize);
-		let yb = Math.floor(input.offsetY/blockSize);
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
 			if (player.selectedBlock[0] == 17) {
 				if (level[player.spawnPoint[0]] != undefined) {
@@ -164,6 +164,7 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			drawLevel();
 		}
 	}
+	id("mousePos").innerHTML = "["+xb+","+yb+"]";
 });
 id("levelLayer").addEventListener("mouseup", function(input){
 	if (input.button == 0) {
