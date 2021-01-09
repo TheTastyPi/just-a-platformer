@@ -1508,6 +1508,8 @@ function adjustScreen() {
 	id("levelLayer").style.top = lvly+"px";
 	id("background").style.left = lvlx+"px";
 	id("background").style.top = lvly+"px";
+	id("playerLayer").style.left = "0px";
+	id("playerLayer").style.top = "0px";
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
