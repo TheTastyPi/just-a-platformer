@@ -1505,6 +1505,7 @@ function adjustScreen() {
 	id("levelLayer").style.top = lvly+"px";
 	id("background").style.left = lvlx+"px";
 	id("background").style.top = lvly+"px";
+	drawPlayer();
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
