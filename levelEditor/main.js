@@ -674,10 +674,10 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// force field
-			if (isTouching("any",27)) player.xv = -100;
-			if (isTouching("any",28)) player.xv = 100;
-			if (isTouching("any",29)) player.yv = -100;
-			if (isTouching("any",30)) player.yv = 100;
+			if (isTouching("any",27) && player.xv > -100) player.xv = -100;
+			if (isTouching("any",28) && player.xv < 100) player.xv = 100;
+			if (isTouching("any",29) && player.yv > -100) player.yv = -100;
+			if (isTouching("any",30) && player.yv < 100) player.yv = 100;
 			// switch
 			if (isTouching("any",31)) {
 				if (canSwitch) {
