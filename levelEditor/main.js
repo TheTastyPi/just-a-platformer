@@ -338,6 +338,7 @@ document.addEventListener("keydown", function(input){
 					id("lvlHeight").innerHTML = level[0].length;
 					id("levelLayer").height = level[0].length*blockSize;
 					id("levelLayer").width = level.length*blockSize;
+					prevLevel = [];
 					toStart();
 					drawLevel();
 				}
