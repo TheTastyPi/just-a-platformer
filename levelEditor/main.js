@@ -942,6 +942,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.fillStyle = "#00000000";
 	}
 	lL.fillRect(xb, yb, blockSize, blockSize);
+	if (lL.fillStyle == "#00000000") lL.clearRect(xb, yb, blockSize, blockSize);
 	switch (type) {
 		case 2:
 			lL.strokeStyle = "#880000";
