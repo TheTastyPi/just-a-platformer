@@ -691,7 +691,7 @@ function nextFrame(timeStamp) {
 			if (sinceLastTimerStage > 1000) {
 				timerStage++;
 				sinceLastTimerStage = sinceLastTimerStage%1000;
-				shouldDrawLevel = true;
+				// shouldDrawLevel = true;
 			}
 			if (timerStage > 3) {
 				timerOn = !timerOn;
