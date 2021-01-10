@@ -796,6 +796,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	lL.lineWidth = blockSize*3/25;
 	let xb = x * blockSize;
 	let yb = y * blockSize;
+	let clear = false;
 	switch (type) {
 		case 1:
 			lL.fillStyle = "#000000";
@@ -939,10 +940,10 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.fillStyle = "#FF88FF88";
 			break;
 		default:
-			lL.fillStyle = "#00000000";
+			clear = true;
 	}
 	lL.fillRect(xb, yb, blockSize, blockSize);
-	if (lL.fillStyle == "#00000000") lL.clearRect(xb, yb, blockSize, blockSize);
+	if (clear) lL.clearRect(xb, yb, blockSize, blockSize);
 	switch (type) {
 		case 2:
 			lL.strokeStyle = "#880000";
