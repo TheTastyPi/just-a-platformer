@@ -186,6 +186,8 @@ document.addEventListener("keydown", function(input){
 					player.startPoint[1]--;
 					player.y -= blockSize;
 					id("lvlHeight").innerHTML = level[0].length;
+					id("levelLayer").height = level[0].length*blockSize;
+					prevLevel = [];
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
@@ -196,6 +198,8 @@ document.addEventListener("keydown", function(input){
 				player.startPoint[1]++;
 				player.y += blockSize;
 				id("lvlHeight").innerHTML = level[0].length;
+				id("levelLayer").height = level[0].length*blockSize;
+				prevLevel = [];
 				drawLevel();
 			}
 		case "KeyW":
@@ -220,13 +224,17 @@ document.addEventListener("keydown", function(input){
 				if (level[0].length > 1) {
 					for (let i in level) level[i].pop();
 					id("lvlHeight").innerHTML = level[0].length;
+					id("levelLayer").height = level[0].length*blockSize;
+					prevLevel = [];
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
 				for (let i in level) {
 					level[i].push(0);
 				}
-				id("lvlHeight").innerHTML = level[0].length;
+				id("lvlHeight").innerHTML = level[0].length
+				id("levelLayer").height = level[0].length*blockSize;
+				prevLevel = [];
 				drawLevel();
 			}
 			break;
@@ -238,6 +246,8 @@ document.addEventListener("keydown", function(input){
 					player.startPoint[0]--;
 					player.x -= blockSize;
 					id("lvlWidth").innerHTML = level.length;
+					id("levelLayer").width = level.length*blockSize;
+					prevLevel = [];
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
@@ -248,6 +258,9 @@ document.addEventListener("keydown", function(input){
 				player.startPoint[0]++;
 				player.x += blockSize;
 				id("lvlWidth").innerHTML = level.length;
+				id("levelLayer").width = level.length*blockSize
+				id("levelLayer").height = level[0].length*blockSize;
+				prevLevel = [];
 				drawLevel();
 			}
 		case "KeyA":
@@ -258,6 +271,8 @@ document.addEventListener("keydown", function(input){
 				if (level.length > 1) {
 					level.pop();
 					id("lvlWidth").innerHTML = level.length;
+					id("levelLayer").width = level.length*blockSize;
+					prevLevel = [];
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
@@ -265,6 +280,8 @@ document.addEventListener("keydown", function(input){
 				level[level.length-1].length = level[0].length;
 				level[level.length-1].fill(0);
 				id("lvlWidth").innerHTML = level.length;
+				id("levelLayer").width = level.length*blockSize;
+				prevLevel = [];
 				drawLevel();
 			}
 		case "KeyD":
@@ -768,17 +785,15 @@ var prevLevel = [
 	[0,0,0,0,0,0,0,0,0]
 ];
 function drawLevel() {
-	let canvas = id("levelLayer");
-	let lL = canvas.getContext("2d");
-	canvas.width = level.length*blockSize;
-	canvas.height = level[0].length*blockSize;
 	id("background").style.width = level.length*blockSize+"px";
 	id("background").style.height = level[0].length*blockSize+"px";
 	drawPlayer();
 	for (let x in level) {
 		for (let y in level[x]) {
-			if (prevLevel[x] != undefined) {
-				if (level[x][y] != prevLevel[x][y]) drawBlock(canvas,x,y);
+			if (prevLevel[x] == undefined) {
+				drawBlock(id("levelLayer"),x,y);
+			} else {
+				if (level[x][y] != prevLevel[x][y]) drawBlock(id("levelLayer"),x,y);
 			}
 		}
 	}
