@@ -777,6 +777,8 @@ function drawPlayer() {
 	if (player.playerFocus) adjustScreen();
 }
 var prevLevel = [];
+var prevSwitch = false;
+var prevTimer = 0;
 function drawLevel() {
 	let canvas = id("levelLayer");
 	id("background").style.width = level.length*blockSize+"px";
@@ -787,12 +789,16 @@ function drawLevel() {
 			if (prevLevel[x] == undefined) {
 				drawBlock(canvas,x,y);
 			} else {
-				if (level[x][y] != prevLevel[x][y]) drawBlock(canvas,x,y);
+				if (level[x][y] != prevLevel[x][y]
+				    || (player.switchOn != prevSwitch && [31,32,33,34,35].includes(level[x][y]))
+				    || (timerStage != prevTimer && [36,37,38,39].includes(level[x][y]))) drawBlock(canvas,x,y);
 			}
 		}
 	}
 	if (player.playerFocus) adjustScreen();
 	prevLevel = deepCopy(level);
+	prevSwitch = player.switchOn;
+	prevTimer = timerStage;
 }
 function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	let lL = canvas.getContext("2d");
@@ -800,6 +806,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	let xb = x * blockSize;
 	let yb = y * blockSize;
 	let clear = false;
+	lL.clearRect(xb, yb, blockSize, blockSize);
 	switch (type) {
 		case 1:
 			lL.fillStyle = "#000000";
@@ -945,8 +952,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 		default:
 			clear = true;
 	}
-	lL.fillRect(xb, yb, blockSize, blockSize);
-	if (clear) lL.clearRect(xb, yb, blockSize, blockSize);
+	if (!clear) lL.fillRect(xb, yb, blockSize, blockSize);
 	switch (type) {
 		case 2:
 			lL.strokeStyle = "#880000";
