@@ -1534,7 +1534,6 @@ function arraysEqual(a, b) {
 
 function init() {
 	toStart();
-	drawLevel();
 	let blockAmt = 0;
 	let currentSect;
 	for (let i in blockSelect) {
