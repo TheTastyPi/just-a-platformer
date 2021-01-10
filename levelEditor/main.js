@@ -708,7 +708,7 @@ function nextFrame(timeStamp) {
 			if (sinceLastTimerStage > 1000) {
 				timerStage++;
 				sinceLastTimerStage = sinceLastTimerStage%1000;
-				// shouldDrawLevel = true;
+				shouldDrawLevel = true;
 			}
 			if (timerStage > 3) {
 				timerOn = !timerOn;
@@ -1549,6 +1549,7 @@ function arraysEqual(a, b) {
 
 function init() {
 	toStart();
+	drawLevel();
 	let blockAmt = 0;
 	let currentSect;
 	for (let i in blockSelect) {
