@@ -1540,6 +1540,8 @@ function arraysEqual(a, b) {
 
 function init() {
 	toStart();
+	id("levelLayer").height = level[0].length*blockSize;
+	id("levelLayer").width = level.length*blockSize;
 	drawLevel();
 	let blockAmt = 0;
 	let currentSect;
