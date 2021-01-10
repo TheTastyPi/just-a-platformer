@@ -775,7 +775,6 @@ function drawLevel() {
 	id("background").style.width = level.length*blockSize+"px";
 	id("background").style.height = level[0].length*blockSize+"px";
 	drawPlayer();
-	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
 		for (let y in level[x]) {
 			if (prevLevel[x] != undefined) {
