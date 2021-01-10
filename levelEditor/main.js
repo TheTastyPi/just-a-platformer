@@ -336,6 +336,8 @@ document.addEventListener("keydown", function(input){
 					player.spawnPoint = deepCopy(player.startPoint);
 					id("lvlWidth").innerHTML = level.length;
 					id("lvlHeight").innerHTML = level[0].length;
+					id("levelLayer").height = level[0].length*blockSize;
+					id("levelLayer").width = level.length*blockSize;
 					toStart();
 					drawLevel();
 				}
