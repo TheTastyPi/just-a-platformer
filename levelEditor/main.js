@@ -785,15 +785,16 @@ var prevLevel = [
 	[0,0,0,0,0,0,0,0,0]
 ];
 function drawLevel() {
+	let canvas = id("levelLayer");
 	id("background").style.width = level.length*blockSize+"px";
 	id("background").style.height = level[0].length*blockSize+"px";
 	drawPlayer();
 	for (let x in level) {
 		for (let y in level[x]) {
 			if (prevLevel[x] == undefined) {
-				drawBlock(id("levelLayer"),x,y);
+				drawBlock(canvas,x,y);
 			} else {
-				if (level[x][y] != prevLevel[x][y]) drawBlock(id("levelLayer"),x,y);
+				if (level[x][y] != prevLevel[x][y]) drawBlock(canvas,x,y);
 			}
 		}
 	}
