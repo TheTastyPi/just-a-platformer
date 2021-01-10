@@ -756,6 +756,7 @@ function drawPlayer() {
 	pL.fillRect(lvlx+Math.floor(player.x), lvly+Math.floor(player.y), playerSize, playerSize);
 	if (player.playerFocus) adjustScreen();
 }
+var prevLevel;
 function drawLevel() {
 	let canvas = id("levelLayer");
 	let lL = canvas.getContext("2d");
@@ -767,10 +768,11 @@ function drawLevel() {
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
 		for (let y in level[x]) {
-			drawBlock(canvas,x,y)
+			if (level[x][y]!=prevLevel[x][y]) drawBlock(canvas,x,y);
 		}
 	}
 	if (player.playerFocus) adjustScreen();
+	prevLevel = deepCopy(level);
 }
 function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	let lL = canvas.getContext("2d");
