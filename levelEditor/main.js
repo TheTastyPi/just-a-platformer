@@ -756,7 +756,7 @@ function drawPlayer() {
 	pL.fillRect(lvlx+Math.floor(player.x), lvly+Math.floor(player.y), playerSize, playerSize);
 	if (player.playerFocus) adjustScreen();
 }
-var prevLevel;
+var prevLevel = deepCopy(level);
 function drawLevel() {
 	let canvas = id("levelLayer");
 	let lL = canvas.getContext("2d");
