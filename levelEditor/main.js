@@ -756,7 +756,17 @@ function drawPlayer() {
 	pL.fillRect(lvlx+Math.floor(player.x), lvly+Math.floor(player.y), playerSize, playerSize);
 	if (player.playerFocus) adjustScreen();
 }
-var prevLevel = [];
+var prevLevel = [
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0]
+];
 function drawLevel() {
 	let canvas = id("levelLayer");
 	let lL = canvas.getContext("2d");
@@ -769,7 +779,7 @@ function drawLevel() {
 	for (let x in level) {
 		for (let y in level[x]) {
 			if (prevLevel[x] != undefined) {
-				if (level[x][y]!=prevLevel[x][y]) drawBlock(canvas,x,y);
+				if (level[x][y] != prevLevel[x][y]) drawBlock(canvas,x,y);
 			}
 		}
 	}
