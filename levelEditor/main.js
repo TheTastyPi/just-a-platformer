@@ -768,7 +768,9 @@ function drawLevel() {
 	lL.clearRect(0,0,canvas.width,canvas.height);
 	for (let x in level) {
 		for (let y in level[x]) {
-			if (level[x][y]!=prevLevel[x][y]) drawBlock(canvas,x,y);
+			if (prevLevel[x] != undefined) {
+				if (level[x][y]!=prevLevel[x][y]) drawBlock(canvas,x,y);
+			}
 		}
 	}
 	if (player.playerFocus) adjustScreen();
