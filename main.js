@@ -514,7 +514,7 @@ document.addEventListener("keyup", function(input){
 });
 
 function newSave() {
-	return [1,6,0,7,325,1,600,[]];
+	return [1,6,0,7,325,1,600,[],0.3];
 }
 function save() {
 	let saveData = player.spawnPoint;
@@ -526,6 +526,10 @@ function load() {
 	if (localStorage.getItem('just-a-save')) {
 		let saveData = JSON.parse(localStorage.getItem('just-a-save'));
 		if (saveData[5] == "Infinity") saveData[5] = Infinity;
+		if (saveData[6] == undefined) {
+			saveData[6] = newSave()[6];
+			saveData[3] += 2;
+		}
 		player.spawnPoint = saveData;
 	}
 }
