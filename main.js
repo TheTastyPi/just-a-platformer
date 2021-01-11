@@ -477,7 +477,7 @@ document.addEventListener("keyup", function(input){
 });
 
 function newSave() {
-	return [1,6,0,5,325,1,600,[]];
+	return [1,6,0,6,325,1,600,[]];
 }
 function save() {
 	let saveData = player.spawnPoint;
