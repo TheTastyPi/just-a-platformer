@@ -535,6 +535,7 @@ function load() {
 }
 function wipeSave() {
 	if (confirm("Are you sure you want to delete your save?")) {
+		if (levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] == 4) levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][player.spawnPoint[0]][player.spawnPoint[1]] = 3;
 		player.spawnPoint = newSave();
 		save();
 		respawn();
