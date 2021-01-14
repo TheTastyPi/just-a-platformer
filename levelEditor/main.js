@@ -771,7 +771,6 @@ function drawLevel() {
 	let canvas = id("levelLayer");
 	id("background").style.width = level.length*blockSize+"px";
 	id("background").style.height = level[0].length*blockSize+"px";
-	drawPlayer();
 	for (let x in level) {
 		for (let y in level[x]) {
 			if (prevLevel[x] == undefined) {
@@ -784,6 +783,7 @@ function drawLevel() {
 		}
 	}
 	if (player.playerFocus) adjustScreen();
+	drawPlayer();
 	prevLevel = deepCopy(level);
 	prevSwitch = player.switchOn;
 	prevTimer = timerStage;
