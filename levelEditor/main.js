@@ -134,6 +134,7 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			id("background").style.top = parseInt(id("background").style.top)+input.movementY+"px";
 			id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
 			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
+			drawPlayer();
 		}
 	} else if (!input.shiftKey) {
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
