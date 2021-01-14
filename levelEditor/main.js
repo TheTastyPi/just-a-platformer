@@ -59,7 +59,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		if (input.button == 0) control.lmb = true;
 		if (input.button == 2) {
 			player.playerFocus = true;
-			adjustScreen()
+			drawPlayer();
 		}
 	} else if (input.shiftKey) {
 		if (input.button == 1) {
