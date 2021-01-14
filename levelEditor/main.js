@@ -748,8 +748,8 @@ function nextFrame(timeStamp) {
 			if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
 		}
 		// draw checks
-		if (player.x != xprev || player.y != yprev) drawPlayer();
 		if (shouldDrawLevel) drawLevel();
+		if (player.x != xprev || player.y != yprev) drawPlayer();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
