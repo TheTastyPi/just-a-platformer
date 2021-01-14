@@ -759,7 +759,7 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FFFF00";
-	pL.fillRect(id("levelLayer").style.left+Math.floor(player.x), id("levelLayer").style.top +Math.floor(player.y), playerSize, playerSize);
+	pL.fillRect(parseInt(id("levelLayer").style.left)+Math.floor(player.x), parseInt(id("levelLayer").style.top)+Math.floor(player.y), playerSize, playerSize);
 	if (player.playerFocus) adjustScreen();
 }
 var prevLevel = [];
