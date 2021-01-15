@@ -761,8 +761,8 @@ function nextFrame(timeStamp) {
 var playerxOffset = 0;
 var playeryOffset = 0;
 function drawPlayer() {
-	let lvlx = id("levelLayer").style.top.slice(0,-2);
-	let lvly = id("levelLayer").style.left.slice(0,-2);
+	let lvlx = parseInt(id("levelLayer").style.top);
+	let lvly = parseInt(id("levelLayer").style.left);
 	let canvas = id("playerLayer");
 	let pL = canvas.getContext("2d");
 	canvas.width = window.innerWidth;
