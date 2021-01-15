@@ -1510,7 +1510,6 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	}
 }
 function adjustScreen() {
-	lvlxOffset = Math.floor((window.innerWidth - level.length*blockSize) / 2);
 	if (player.playerFocus) {
 		if (lvlxOffset < 0) {
 			lvlxOffset = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
