@@ -180,6 +180,7 @@ id("levelLayer").addEventListener("mouseup", function(input){
 document.addEventListener("contextmenu", function(input){input.preventDefault();});
 
 document.addEventListener("keydown", function(input){
+	input.preventDefault();
 	let key = input.code;
 	switch(key) {
 		case "ArrowUp":
@@ -761,16 +762,18 @@ var playerxOffset = 0;
 var playeryOffset = 0;
 function drawPlayer() {
 	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
-	}
 	let lvly = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
+	if (player.playerFocus) {
+		if (lvlx < 0) {
+			lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
+			if (lvlx > 0) lvlx = 0;
+			if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
+		}
+		if (lvly < 0) {
+			lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
+			if (lvly > 0) lvly = 0;
+			if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
+		}
 	}
 	let canvas = id("playerLayer");
 	let pL = canvas.getContext("2d");
