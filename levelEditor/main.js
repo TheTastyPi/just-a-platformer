@@ -59,8 +59,6 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		if (input.button == 0) control.lmb = true;
 		if (input.button == 2) {
 			player.playerFocus = true;
-			playerxOffset = 0;
-			playeryOffset = 0;
 			adjustScreen();
 			drawPlayer();
 		}
@@ -133,12 +131,9 @@ id("levelLayer").addEventListener("mousemove", function(input){
 	if (input.ctrlKey) {
 		if (control.lmb) {
 			player.playerFocus = false;
-			id("background").style.left = parseInt(id("background").style.left)+input.movementX+"px";
-			id("background").style.top = parseInt(id("background").style.top)+input.movementY+"px";
-			id("levelLayer").style.left = parseInt(id("levelLayer").style.left)+input.movementX+"px";
-			id("levelLayer").style.top = parseInt(id("levelLayer").style.top)+input.movementY+"px";
-			playerxOffset += input.movementX;
-			playeryOffset += input.movementY;
+			lvlxOffset += input.movementX;
+			lvlyOffset += input.movementY;
+			adjustScreen();
 			drawPlayer();
 		}
 	} else if (!input.shiftKey) {
@@ -758,11 +753,9 @@ function nextFrame(timeStamp) {
 	}
 	window.requestAnimationFrame(nextFrame);
 }
-var playerxOffset = 0;
-var playeryOffset = 0;
+var lvlxOffset = 0;
+var lvlyOffset = 0;
 function drawPlayer() {
-	let lvlx = parseInt(id("levelLayer").style.left);
-	let lvly = parseInt(id("levelLayer").style.top);
 	let canvas = id("playerLayer");
 	let pL = canvas.getContext("2d");
 	canvas.width = window.innerWidth;
@@ -770,8 +763,8 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FFFF00";
-	pL.fillRect(lvlx+Math.floor(player.x), lvly+Math.floor(player.y), playerSize, playerSize);
-	if (player.playerFocus) adjustScreen();
+	pL.fillRect(lvlxOffset+Math.floor(player.x), lvlyOffset+Math.floor(player.y), playerSize, playerSize);
+	adjustScreen();
 }
 var prevLevel = [];
 var prevSwitch = false;
@@ -791,7 +784,7 @@ function drawLevel() {
 			}
 		}
 	}
-	if (player.playerFocus) adjustScreen();
+	adjustScreen();
 	drawPlayer();
 	prevLevel = deepCopy(level);
 	prevSwitch = player.switchOn;
@@ -1517,22 +1510,24 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	}
 }
 function adjustScreen() {
-	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
+	lvlxOffset = Math.floor((window.innerWidth - level.length*blockSize) / 2);
+	if (player.playerFocus) {
+		if (lvlxOffset < 0) {
+			lvlxOffset = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
+			if (lvlxOffset > 0) lvlxOffset = 0;
+			if (lvlxOffset < window.innerWidth - level.length*blockSize) lvlxOffset = Math.floor(window.innerWidth - level.length*blockSize);
+		}
+		lvlyOffset = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
+		if (lvlyOffset < 0) {
+			lvlyOffset = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
+			if (lvlyOffset > 0) lvlyOffset = 0;
+			if (lvlyOffset < window.innerHeight - level[0].length*blockSize) lvlyOffset = Math.floor(window.innerHeight - level[0].length*blockSize);
+		}
 	}
-	let lvly = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
-	if (lvly < 0) {
-		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
-	}
-	id("levelLayer").style.left = lvlx+"px";
-	id("levelLayer").style.top = lvly+"px";
-	id("background").style.left = lvlx+"px";
-	id("background").style.top = lvly+"px";
+	id("levelLayer").style.left = lvlxOffset+"px";
+	id("levelLayer").style.top = lvlyOffset+"px";
+	id("background").style.left = lvlxOffset+"px";
+	id("background").style.top = lvlyOffset+"px";
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
