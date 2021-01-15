@@ -60,7 +60,6 @@ id("levelLayer").addEventListener("mousedown", function(input){
 		if (input.button == 2) {
 			player.playerFocus = true;
 			adjustScreen();
-			drawPlayer();
 		}
 	} else if (input.shiftKey) {
 		if (input.button == 1) {
@@ -134,7 +133,7 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			lvlxOffset += input.movementX;
 			lvlyOffset += input.movementY;
 			adjustScreen();
-			drawPlayer();
+			
 		}
 	} else if (!input.shiftKey) {
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
@@ -764,7 +763,6 @@ function drawPlayer() {
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FFFF00";
 	pL.fillRect(Math.floor(lvlxOffset)+Math.floor(player.x), Math.floor(lvlyOffset)+Math.floor(player.y), playerSize, playerSize);
-	adjustScreen();
 }
 var prevLevel = [];
 var prevSwitch = false;
@@ -1529,6 +1527,7 @@ function adjustScreen() {
 	id("levelLayer").style.top = lvlyOffset+"px";
 	id("background").style.left = lvlxOffset+"px";
 	id("background").style.top = lvlyOffset+"px";
+	drawPlayer();
 }
 function arraysEqual(a, b) {
 	if (a === b) return true;
