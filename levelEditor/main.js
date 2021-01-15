@@ -133,7 +133,6 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			lvlxOffset += input.movementX;
 			lvlyOffset += input.movementY;
 			adjustScreen();
-			
 		}
 	} else if (!input.shiftKey) {
 		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
@@ -748,7 +747,7 @@ function nextFrame(timeStamp) {
 		}
 		// draw checks
 		if (shouldDrawLevel) drawLevel();
-		if (player.x != xprev || player.y != yprev) drawPlayer();
+		if (player.x != xprev || player.y != yprev) adjustScreen();
 	}
 	window.requestAnimationFrame(nextFrame);
 }
