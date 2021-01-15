@@ -761,18 +761,8 @@ function nextFrame(timeStamp) {
 var playerxOffset = 0;
 var playeryOffset = 0;
 function drawPlayer() {
-	let lvlx = Math.floor((window.innerWidth - level.length*blockSize) / 2);
-	let lvly = Math.floor((window.innerHeight - level[0].length*blockSize) / 2);
-	if (lvlx < 0) {
-		lvlx = Math.floor(window.innerWidth/2) - Math.floor(player.x+playerSize/2);
-		if (lvlx > 0) lvlx = 0;
-		if (lvlx < window.innerWidth - level.length*blockSize) lvlx = Math.floor(window.innerWidth - level.length*blockSize);
-	}
-	if (lvly < 0) {
-		lvly = Math.floor(window.innerHeight/2) - Math.floor(player.y+playerSize/2);
-		if (lvly > 0) lvly = 0;
-		if (lvly < window.innerHeight - level[0].length*blockSize) lvly = Math.floor(window.innerHeight - level[0].length*blockSize);
-	}
+	let lvlx = id("levelLayer").style.top.slice(0,-2);
+	let lvly = id("levelLayer").style.left.slice(0,-2);
 	let canvas = id("playerLayer");
 	let pL = canvas.getContext("2d");
 	canvas.width = window.innerWidth;
@@ -780,7 +770,7 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FFFF00";
-	pL.fillRect(lvlx+playerxOffset+Math.floor(player.x), lvly+playeryOffset+Math.floor(player.y), playerSize, playerSize);
+	pL.fillRect(lvlx+Math.floor(player.x), lvly+Math.floor(player.y), playerSize, playerSize);
 	if (player.playerFocus) adjustScreen();
 }
 var prevLevel = [];
