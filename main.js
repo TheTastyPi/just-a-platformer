@@ -725,6 +725,7 @@ function load() {
 			saveData[3] += 3;
 		}
 		player.spawnPoint = saveData;
+		save();
 	}
 }
 function wipeSave() {
