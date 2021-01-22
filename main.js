@@ -626,6 +626,22 @@ const levels = [
 		[1,3,1,1,1,1,1,1,1,1,1,1,1,1,1],
 		[1,14,1,0,2,0,2,0,2,0,2,0,2,0,2],
 		[1,[-1,0],1,2,0,2,0,2,0,2,0,2,0,2,0]
+	],
+	[
+		[1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+		[1,0,0,0,2,0,0,0,0,14,1,0,1,0,2],
+		[1,3,1,0,2,0,2,1,0,0,0,2,0,0,2],
+		[1,0,2,0,0,0,0,2,0,2,1,0,0,2,1],
+		[2,0,2,1,2,1,1,0,0,0,0,2,0,0,2],
+		[2,0,0,2,0,0,0,0,2,0,2,[-3,21],2,0,1],
+		[1,2,0,2,[-3,19],2,2,15,1,34,1,0,0,34,2],
+		[1,1,0,1,2,0,[-3,18],2,2,0,35,0,0,2,1],
+		[1,2,0,2,2,0,2,0,1,[-3,20],2,2,1,1,1],
+		[1,2,0,0,2,0,0,0,0,2,0,0,0,2,1],
+		[1,1,2,0,0,2,35,2,0,2,0,2,0,2,1],
+		[2,1,1,2,0,0,0,2,0,0,15,2,0,3,1],
+		[2,0,1,1,0,1,1,1,1,1,1,1,1,15,1],
+		[1,2,2,1,1,1,0,1,2,2,1,0,1,[-1,0],1]
 	]
 ]
 const hasHitbox = [1,5,11];
@@ -945,7 +961,7 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",22)) player.moveSpeed = 600;
 			if (isTouching("any",23)) player.moveSpeed = 1200;
 			// death block
-			if (isTouching("any",2) && !player.godMode) respawn();
+			if ((isTouching("any",2) || isTouching("any",-4)) && !player.godMode) respawn();
 			x1 = player.x + 1;
 			x2 = player.x+playerSize - 1;
 			y1 = player.y + 1;
@@ -970,86 +986,102 @@ function nextFrame(timeStamp) {
 			}
 			if (player.triggers.includes(0)) {
 				levels[22][6][4] = 0;
-			} else levels[22][6][4] = 2;
+			} else levels[22][6][4] = -4;
 			if (player.triggers.includes(1)) {
 				levels[22][6][5] = 0;
-			} else levels[22][6][5] = 2;
+			} else levels[22][6][5] = -4;
 			if (player.triggers.includes(2)) {
 				levels[26][27][1] = 0;
 				levels[26][27][2] = 0;
 			} else {
-				levels[26][27][1] = 2;
-				levels[26][27][2] = 2;
+				levels[26][27][1] = -4;
+				levels[26][27][2] = -4;
 			}
 			if (player.triggers.includes(3)) {
 				levels[26][28][1] = 0;
 				levels[26][28][2] = 0;
 			} else {
-				levels[26][28][1] = 2;
-				levels[26][28][2] = 2;
+				levels[26][28][1] = -4;
+				levels[26][28][2] = -4;
 			}
 			if (player.triggers.includes(4)) {
 				levels[26][29][1] = 0;
 				levels[26][29][2] = 0;
 			} else {
-				levels[26][29][1] = 2;
-				levels[26][29][2] = 2;
+				levels[26][29][1] = -4;
+				levels[26][29][2] = -4;
 			}
 			if (player.triggers.includes(5)) {
 				levels[26][31][11] = 0;
 				levels[26][31][12] = 0;
 			} else {
-				levels[26][31][11] = 2;
-				levels[26][31][12] = 2;
+				levels[26][31][11] = -4;
+				levels[26][31][12] = -4;
 			}
 			if (player.triggers.includes(6)) {
 				levels[26][32][11] = 0;
 				levels[26][32][12] = 0;
 			} else {
-				levels[26][32][11] = 2;
-				levels[26][32][12] = 2;
+				levels[26][32][11] = -4;
+				levels[26][32][12] = -4;
 			}
 			if (player.triggers.includes(7)) {
 				levels[26][33][11] = 0;
 				levels[26][33][12] = 0;
 			} else {
-				levels[26][33][11] = 2;
-				levels[26][33][12] = 2;
+				levels[26][33][11] = -4;
+				levels[26][33][12] = -4;
 			}
 			if (player.triggers.includes(8)) {
 				levels[26][38][1] = 0;
-			} else levels[26][38][1] = 2;
+			} else levels[26][38][1] = -4;
 			if (player.triggers.includes(9)) {
 				levels[26][39][1] = 0;
-			} else levels[26][39][1] = 2;
+			} else levels[26][39][1] = -4;
 			if (player.triggers.includes(10)) {
 				levels[32][15][3] = 0;
-			} else levels[32][15][3] = 2;
+			} else levels[32][15][3] = -4;
 			if (player.triggers.includes(11)) {
 				levels[32][9][1] = 0;
-			} else levels[32][9][1] = 2;
+			} else levels[32][9][1] = -4;
 			if (player.triggers.includes(12)) {
 				levels[32][7][3] = 0;
-			} else levels[32][7][3] = 2;
+			} else levels[32][7][3] = -4;
 			if (player.triggers.includes(13)) {
 				levels[32][3][3] = 0;
-			} else levels[32][3][3] = 2;
+			} else levels[32][3][3] = -4;
 			if (player.triggers.includes(14)) {
 				levels[32][1][4] = 0;
-			} else levels[32][1][4] = 2;
+			} else levels[32][1][4] = -4;
 			if (player.triggers.includes(15)) {
 				levels[35][15][4] = 0;
 				levels[35][15][5] = 0;
 			} else {
-				levels[35][15][4] = 2;
-				levels[35][15][5] = 2;
+				levels[35][15][4] = -4;
+				levels[35][15][5] = -4;
 			}
 			if (player.triggers.includes(16)) {
 				levels[43][11][1] = 0;
-			} else levels[43][11][1] = 2;
+			} else levels[43][11][1] = -4;
 			if (player.triggers.includes(17)) {
 				levels[43][1][7] = 0;
-			} else levels[43][1][7] = 2;
+			} else levels[43][1][7] = -4;
+			if (player.triggers.includes(18)) {
+				levels[44][10][6] = 0;
+			} else levels[44][10][6] = -4;
+			if (player.triggers.includes(19)) {
+				levels[44][5][9] = 0;
+			} else levels[44][5][9] = -4;
+			if (player.triggers.includes(20)) {
+				levels[44][7][10] = 0;
+				levels[44][6][9] = -4;
+			} else {
+				levels[44][7][10] = 2;
+				levels[44][6][9] = 0;
+			}
+			if (player.triggers.includes(21)) {
+				levels[44][6][13] = 0;
+			} else levels[44][6][13] = 2;
 			// level warp
 			if (isTouching("any",-2)) {
 				let coord = getCoord(-1);
@@ -1124,6 +1156,9 @@ function drawLevel() {
 			let yb = y * blockSize;
 			let type = getBlockType(x,y);
 			switch (type) {
+				case -4:
+					lL.fillStyle = "00880088";
+					break;
 				case -3:
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
 						lL.fillStyle = "#00880088";
@@ -1191,6 +1226,18 @@ function drawLevel() {
 			}
 			lL.fillRect(xb, yb, blockSize, blockSize);
 			switch (type) {
+				case -4:
+					lL.strokeStyle = "#00880088";
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.stroke();
+
+					lL.beginPath();
+					lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
+					lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
+					lL.stroke();
+					break;
 				case -3:
 					lL.lineWidth = blockSize/25;
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
