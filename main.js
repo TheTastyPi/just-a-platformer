@@ -1157,7 +1157,7 @@ function drawLevel() {
 			let type = getBlockType(x,y);
 			switch (type) {
 				case -4:
-					lL.fillStyle = "00FF0088";
+					lL.fillStyle = "#00FF0088";
 					break;
 				case -3:
 					if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
