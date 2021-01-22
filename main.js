@@ -691,6 +691,9 @@ document.addEventListener("keydown", function(input){
 		case "Delete":
 			wipeSave();
 			break;
+		case "KeyR":
+			respawn();
+			break;
 	}
 });
 
