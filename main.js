@@ -721,8 +721,8 @@ function load() {
 		let saveData = JSON.parse(localStorage.getItem('just-a-save'));
 		if (saveData[5] == "Infinity") saveData[5] = Infinity;
 		if (saveData[8] == undefined) {
-			saveData[8] = newSave()[6];
-			saveData[8] += 3;
+			saveData[8] = newSave()[8];
+			saveData[3] += 3;
 		}
 		player.spawnPoint = saveData;
 	}
