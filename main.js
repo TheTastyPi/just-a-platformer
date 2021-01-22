@@ -1076,12 +1076,12 @@ function nextFrame(timeStamp) {
 				levels[44][7][10] = 0;
 				levels[44][6][9] = -4;
 			} else {
-				levels[44][7][10] = 2;
+				levels[44][7][10] = -4;
 				levels[44][6][9] = 0;
 			}
 			if (player.triggers.includes(21)) {
 				levels[44][6][13] = 0;
-			} else levels[44][6][13] = 2;
+			} else levels[44][6][13] = -4;
 			// level warp
 			if (isTouching("any",-2)) {
 				let coord = getCoord(-1);
