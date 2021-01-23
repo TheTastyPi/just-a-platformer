@@ -50,7 +50,7 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B", // switchables (31,32,33,34,35)
 		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
 		   "Ice Block","Portal", // other stuff (40,41)
-		   "Jump Block A","Jump Block B","Jump Death Block A","Jump Death Block B" // jump-toggle (42,43,44,45)
+		   "Jump Block A","Jump Block B","Jump Death Block A","Jump Death Block B", // jump-toggle (42,43,44,45)
 		   "Text Block" // text block (46)
 		  ]; 
 const bannedBlock = [4,19,20];
