@@ -23,11 +23,13 @@
 				[ctrl] + RMB: Refocus on player<br>
 				MMB: Select block clicked for LMB<br>
 				[shift] + MMB: Select block clicked for RMB<br>
+				[alt] + LMB: Edit block property (if any)<br>
 				[shift] + [arrow]: Increase level size<br>
 				[ctrl] + [arrow]: Decrease level size<br>
-				[S]: Restart from startpoint<br>
 				[R]: Respawn from last checkpoint<br>
+				[shift] + [R]: Restart from startpoint<br>
 				[G]: Toggle god mode (no-death + inf jump)<br>
+				[N]: Toggle noclip<br>
 				[I]: Toggle info display<br>
 				[C]: Toggle control display<br>
 				[B]: Toggle block selection<br>
@@ -36,6 +38,9 @@
 			</span>
 		</div>
 		<div id="blockSelect" style="position:absolute; bottom:0; width:100%; height:20%; display:flex; overflow-x: scroll; text-align:center; background: #FFFFFF88"></div>
+		<div id="textBlockText" style="position:absolute; background:#00000088; color:#FFFFFF; display:none; transform: translate(-50%, -50%);"></div>
+		<div id="tooltip" style="position:absolute; background:#00000088; color:#FFFFFF; display:none;"></div>
+		<div id="editProperty" style="position:absolute; background:#00000088; color:#FFFFFF; display:none; left:50%; top:50%; transform: translate(-50%, -50%);"></div>
 		<textarea style="opacity: .01; height:0; position:absolute; z-index: -1; display:none" id="exportArea">export text</textarea>
 	</body>
 	<script src="main.js"></script>

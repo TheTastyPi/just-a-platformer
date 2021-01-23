@@ -19,6 +19,7 @@ const player = {
 	switchOn: false,
 	jumpOn: false,
 	godMode: false,
+	noclip: false,
 	selectedBlock: [1,0],
 	playerFocus: true,
 };
@@ -27,6 +28,8 @@ const control = {
 	rmb: false,
 	left: false,
 	right: false,
+	up: false,
+	down: false
 };
 var level = [
 	[1,1,1,1,1,1,1,1,1],
@@ -50,10 +53,11 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Switch Block","Toggle Block A","Toggle Block B","Toggle Death Block A","Toggle Death Block B", // switchables (31,32,33,34,35)
 		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
 		   "Ice Block","Portal", // other stuff (40,41)
-		   "Jump Block A","Jump Block B","Jump Death Block A","Jump Death Block B" // jump-toggle (42,43,44,45)
+		   "Jump Block A","Jump Block B","Jump Death Block A","Jump Death Block B", // jump-toggle (42,43,44,45)
+		   "Text Block" // text block (46)
 		  ]; 
 const bannedBlock = [4,19,20];
-const blockSelect = ["Special",17,3,18,41,
+const blockSelect = ["Special",17,3,18,41,46,
 		     "Basic",0,1,2,
 		     "Gravity",6,7,8,9,10,25,26,
 		     "Jumping",5,24,11,12,13,14,15,16,
@@ -63,117 +67,157 @@ const blockSelect = ["Special",17,3,18,41,
 		     "Timer",36,37,38,39,
 		     "Jump-Toggle",42,43,44,45
 		    ];
+const blockProperty = {
+	41: ["TP Offset X","TP Offset Y"],
+	46: ["Text"]
+};
+const defaultProperty = {
+	41: [0,0],
+	46: ["Text"]
+};
+const propertyType = {
+	41: ["number","number"],
+	46: ["any"]
+}
+var editProperty = false;
 
 id("levelLayer").addEventListener("mousedown", function(input){
-	let xb = Math.floor(input.offsetX/blockSize);
-	let yb = Math.floor(input.offsetY/blockSize);
-	if (input.ctrlKey) {
-		if (input.button == 0) control.lmb = true;
-		if (input.button == 2) {
-			player.playerFocus = true;
-			adjustScreen();
-		}
-	} else if (input.shiftKey) {
-		if (input.button == 1) {
-			id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
-			player.selectedBlock[1] = getBlockType(xb,yb);
-			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
-			if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
-			if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
-			id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #0000FF";
-		} else {
-			player.x = input.offsetX;
-			player.y = input.offsetY;
-			player.xv = 0;
-			player.yv = 0;
-		}
-	} else {
-		if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
-			control.lmb = true;
-			if (player.selectedBlock[0] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+	if (!editProperty) {
+		let xb = Math.floor(input.offsetX/blockSize);
+		let yb = Math.floor(input.offsetY/blockSize);
+		if (input.altKey) {
+			if (input.button == 0) {
+				openPropertyMenu(xb,yb);
 			}
-			if (player.selectedBlock[0] == 41) {
-				control.lmb = false;
-				control.rmb = false;
-				let coord = prompt("Please enter relative coordinate in the form of '[x,y]'. (Ex: [-1,0] would teleport you one block to the left of the portal.)");
-				try {
-					coord = JSON.parse(coord);
-					level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
-				} catch(err) {
-					alert("Invalid coordinate");
-				}
+		} else if (input.ctrlKey) {
+			if (input.button == 0) control.lmb = true;
+			if (input.button == 2) {
+				player.playerFocus = true;
+				adjustScreen();
+			}
+		} else if (input.shiftKey) {
+			if (input.button == 1) {
+				id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
+				player.selectedBlock[1] = getBlockType(xb,yb);
+				if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
+				if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
+				if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
+				id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #0000FF";
 			} else {
-				level[xb][yb] = player.selectedBlock[0];
+				player.x = input.offsetX;
+				player.y = input.offsetY;
+				player.xv = 0;
+				player.yv = 0;
 			}
-			drawLevel();
-		} else if (input.button == 1) {
-			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
-			player.selectedBlock[0] = getBlockType(xb,yb);
-			if (player.selectedBlock[0] == 4) player.selectedBlock[0] = 3;
-			if (player.selectedBlock[0] == 19) player.selectedBlock[0] = 17;
-			if (player.selectedBlock[0] == 20) player.selectedBlock[0] = 18;
-			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF0000";
-		} else if (input.button == 2 && !bannedBlock.includes(player.selectedBlock[1])) {
-			if (player.selectedBlock[1] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+		} else {
+			if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
+				control.lmb = true;
+				if (player.selectedBlock[0] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				if (Object.keys(blockProperty).includes(String(player.selectedBlock[0]))) {
+					control.lmb = false;
+					control.rmb = false;
+					level[xb][yb] = [player.selectedBlock[0]];
+					for (let i in defaultProperty[player.selectedBlock[0]]) {
+						level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[0]][i];
+					}
+					openPropertyMenu(xb,yb);
+				} else level[xb][yb] = player.selectedBlock[0];
+				drawLevel();
+			} else if (input.button == 1) {
+				id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
+				player.selectedBlock[0] = getBlockType(xb,yb);
+				if (player.selectedBlock[0] == 4) player.selectedBlock[0] = 3;
+				if (player.selectedBlock[0] == 19) player.selectedBlock[0] = 17;
+				if (player.selectedBlock[0] == 20) player.selectedBlock[0] = 18;
+				id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF0000";
+			} else if (input.button == 2 && !bannedBlock.includes(player.selectedBlock[1])) {
+				if (player.selectedBlock[1] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				}
+				if (Object.keys(blockProperty).includes(String(player.selectedBlock[1]))) {
+					control.lmb = false;
+					control.rmb = false;
+					level[xb][yb] = [player.selectedBlock[1]];
+					for (let i in defaultProperty[player.selectedBlock[1]]) {
+						level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[1]][i];
+					}
+					openPropertyMenu(xb,yb);
+				} else level[xb][yb] = player.selectedBlock[1];
+				control.rmb = true;
+				drawLevel();
 			}
-			level[xb][yb] = player.selectedBlock[1];
-			control.rmb = true;
-			drawLevel();
 		}
 	}
 });
 id("levelLayer").addEventListener("mousemove", function(input){
-	let xb = Math.floor(input.offsetX/blockSize);
-	let yb = Math.floor(input.offsetY/blockSize);
-	if (input.ctrlKey) {
-		if (control.lmb) {
-			player.playerFocus = false;
-			lvlxOffset += input.movementX;
-			lvlyOffset += input.movementY;
-			adjustScreen();
+	if (!editProperty) {
+		let xb = Math.floor(input.offsetX/blockSize);
+		let yb = Math.floor(input.offsetY/blockSize);
+		if (input.ctrlKey) {
+			if (control.lmb) {
+				player.playerFocus = false;
+				lvlxOffset += input.movementX;
+				lvlyOffset += input.movementY;
+				adjustScreen();
+			}
+		} else if (!input.shiftKey) {
+			if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
+				if (player.selectedBlock[0] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				}
+				level[xb][yb] = player.selectedBlock[0];
+				drawLevel();
+			} else if (control.rmb && !bannedBlock.includes(player.selectedBlock[1])) {
+				if (player.selectedBlock[0] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				}
+				level[xb][yb] = player.selectedBlock[1];
+				drawLevel();
+			}
 		}
-	} else if (!input.shiftKey) {
-		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
-			if (player.selectedBlock[0] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+		id("mousePos").innerHTML = "["+xb+","+yb+"]";
+		if (Object.keys(blockProperty).includes(String(getBlockType(xb,yb)))) {
+			let text = "";
+			for (let i in blockProperty[getBlockType(xb,yb)]) {
+				text += blockProperty[getBlockType(xb,yb)][i];
+				text += ": ";
+				text += level[xb][yb][parseInt(i)+1];
+				text += "<br>";
 			}
-			level[xb][yb] = player.selectedBlock[0];
-			drawLevel();
-		} else if (control.rmb && !bannedBlock.includes(player.selectedBlock[1])) {
-			if (player.selectedBlock[0] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-			}
-			level[xb][yb] = player.selectedBlock[1];
-			drawLevel();
+			id("tooltip").innerHTML = text;
+			id("tooltip").style.display = "block";
+			id("tooltip").style.left = input.offsetX+lvlxOffset+5+"px";
+			id("tooltip").style.top = input.offsetY+lvlyOffset-id("tooltip").clientHeight-5+"px";
+		} else {
+			id("tooltip").style.display = "none";
 		}
 	}
-	id("mousePos").innerHTML = "["+xb+","+yb+"]";
 });
 id("levelLayer").addEventListener("mouseup", function(input){
 	if (input.button == 0) {
@@ -182,214 +226,242 @@ id("levelLayer").addEventListener("mouseup", function(input){
 		control.rmb = false;
 	}
 });
+id("levelLayer").addEventListener("mouseleave", function(input){
+	id("tooltip").style.display = "none";
+});
 document.addEventListener("contextmenu", function(input){input.preventDefault();});
 
 document.addEventListener("keydown", function(input){
-	input.preventDefault();
-	let key = input.code;
-	switch(key) {
-		case "ArrowUp":
-			if (input.ctrlKey) {
-				if (level[0].length > 1) {
-					for (let i in level) level[i].shift();
-					player.spawnPoint[1]--;
-					player.startPoint[1]--;
-					player.y -= blockSize;
-					id("lvlHeight").innerHTML = level[0].length;
-					id("levelLayer").height = level[0].length*blockSize;
-					prevLevel = [];
-					drawLevel();
-				}
-			} else if (input.shiftKey) {
-				for (let i in level) {
-					level[i].unshift(0);
-				}
-				player.spawnPoint[1]++;
-				player.startPoint[1]++;
-				player.y += blockSize;
-				id("lvlHeight").innerHTML = level[0].length;
-				id("levelLayer").height = level[0].length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-		case "KeyW":
-			if (!input.shiftKey && !input.ctrlKey) {
-				if (player.canWalljump) {
-					player.jumpOn = !player.jumpOn;
-					drawLevel();
-					if (player.wallJumpDir == "left") {
-						player.xv = -player.moveSpeed;
-						player.yv = -Math.sign(player.g)*player.jumpHeight;
+	if (!editProperty) {
+		let key = input.code;
+		switch(key) {
+			case "ArrowUp":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level[0].length > 1) {
+						for (let i in level) level[i].shift();
+						player.spawnPoint[1]--;
+						player.startPoint[1]--;
+						player.y -= blockSize;
+						id("lvlHeight").innerHTML = level[0].length;
+						id("levelLayer").height = level[0].length*blockSize;
+						prevLevel = [];
+						drawLevel();
 					}
-					if (player.wallJumpDir == "right") {
-						player.xv = player.moveSpeed;
-						player.yv = -Math.sign(player.g)*player.jumpHeight;
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					for (let i in level) {
+						level[i].unshift(0);
 					}
-				} else if (player.currentJumps > 0 || player.godMode) {
-					player.jumpOn = !player.jumpOn;
-					drawLevel();
-					player.yv = -Math.sign(player.g)*player.jumpHeight;
-					player.currentJumps--;
-				}
-			}
-			break;
-		case "ArrowDown":
-			if (input.ctrlKey) {
-				if (level[0].length > 1) {
-					for (let i in level) level[i].pop();
+					player.spawnPoint[1]++;
+					player.startPoint[1]++;
+					player.y += blockSize;
 					id("lvlHeight").innerHTML = level[0].length;
 					id("levelLayer").height = level[0].length*blockSize;
 					prevLevel = [];
 					drawLevel();
 				}
-			} else if (input.shiftKey) {
-				for (let i in level) {
-					level[i].push(0);
+			case "KeyW":
+				if (!input.shiftKey && !input.ctrlKey) {
+					control.up = true;
+					if (player.canWalljump) {
+						player.jumpOn = !player.jumpOn;
+						drawLevel();
+						if (player.wallJumpDir == "left") {
+							player.xv = -player.moveSpeed;
+							player.yv = -Math.sign(player.g)*player.jumpHeight;
+						}
+						if (player.wallJumpDir == "right") {
+							player.xv = player.moveSpeed;
+							player.yv = -Math.sign(player.g)*player.jumpHeight;
+						}
+					} else if (player.currentJumps > 0 || player.godMode) {
+						player.jumpOn = !player.jumpOn;
+						drawLevel();
+						player.yv = -Math.sign(player.g)*player.jumpHeight;
+						player.currentJumps--;
+					}
 				}
-				id("lvlHeight").innerHTML = level[0].length
-				id("levelLayer").height = level[0].length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-			break;
-		case "ArrowLeft":
-			if (input.ctrlKey) {
-				if (level.length > 1) {
-					level.shift();
-					player.spawnPoint[0]--;
-					player.startPoint[0]--;
-					player.x -= blockSize;
-					id("lvlWidth").innerHTML = level.length;
-					id("levelLayer").width = level.length*blockSize;
-					prevLevel = [];
-					drawLevel();
-				}
-			} else if (input.shiftKey) {
-				level.unshift([]);
-				level[0].length = level[1].length;
-				level[0].fill(0);
-				player.spawnPoint[0]++;
-				player.startPoint[0]++;
-				player.x += blockSize;
-				id("lvlWidth").innerHTML = level.length;
-				id("levelLayer").width = level.length*blockSize
-				id("levelLayer").height = level[0].length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-		case "KeyA":
-			if (!input.shiftKey && !input.ctrlKey) control.left = true;
-			break;
-		case "ArrowRight":
-			if (input.ctrlKey) {
-				if (level.length > 1) {
-					level.pop();
-					id("lvlWidth").innerHTML = level.length;
-					id("levelLayer").width = level.length*blockSize;
-					prevLevel = [];
-					drawLevel();
-				}
-			} else if (input.shiftKey) {
-				level.push([]);
-				level[level.length-1].length = level[0].length;
-				level[level.length-1].fill(0);
-				id("lvlWidth").innerHTML = level.length;
-				id("levelLayer").width = level.length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-		case "KeyD":
-			if (!input.shiftKey && !input.ctrlKey) control.right = true;
-			break;
-		case "Equal":
-			break;
-		case "KeyS":
-			toStart();
-			break;
-		case "KeyR":
-			respawn();
-			break;
-		case "KeyG":
-			player.godMode = !player.godMode;
-			drawPlayer();
-			break;
-		case "KeyI":
-			if (id("info").style.display != "none") {
-				id("info").style.display = "none";
-			} else if (id("info").style.display != "inline") id("info").style.display = "inline";
-			break;
-		case "KeyC":
-			if (id("control").style.display != "none") {
-				id("control").style.display = "none";
-			} else if (id("control").style.display != "inline") id("control").style.display = "inline";
-			break;
-		case "KeyB":
-			if (id("blockSelect").style.display != "none") {
-				id("blockSelect").style.display = "none";
-			} else if (id("blockSelect").style.display != "flex") id("blockSelect").style.display = "flex";
-			break;
-		case "KeyE":
-			if (input.shiftKey) {
-				control.lmb = false;
-				control.rmb = false;
-				let data = prompt("Please enter level data.");
-				if (data) {
-					data = JSON.parse(data);
-					level = data[0];
-					player.startPoint = data[1];
-					if (!player.startPoint[3]) player.startPoint[3] = 1;
-					if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
-					if (!player.startPoint[4]) player.startPoint[4] = 600;
-					if (player.startPoint[4] == 100) player.startPoint[4] = 300;
-					if (player.startPoint[4] == 200) player.startPoint[4] = 600;
-					if (player.startPoint[4] == 400) player.startPoint[4] = 1200;
-					if (player.startPoint[4] == 325) player.startPoint[4] = 300;
-					if (player.startPoint[4] == 750) player.startPoint[4] = 600;
-					if (player.startPoint[4] == 1500) player.startPoint[4] = 1200;
-					if (!player.startPoint[5]) player.startPoint[5] = false;
-					player.spawnPoint = deepCopy(player.startPoint);
-					id("lvlWidth").innerHTML = level.length;
-					id("lvlHeight").innerHTML = level[0].length;
+				break;
+			case "ArrowDown":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level[0].length > 1) {
+						for (let i in level) level[i].pop();
+						id("lvlHeight").innerHTML = level[0].length;
+						id("levelLayer").height = level[0].length*blockSize;
+						prevLevel = [];
+						drawLevel();
+					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					for (let i in level) {
+						level[i].push(0);
+					}
+					id("lvlHeight").innerHTML = level[0].length
 					id("levelLayer").height = level[0].length*blockSize;
+					prevLevel = [];
+					drawLevel();
+				}
+			case "KeyS":
+				if (!input.shiftKey && !input.ctrlKey) control.down = true;
+				break;
+			case "ArrowLeft":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level.length > 1) {
+						level.shift();
+						player.spawnPoint[0]--;
+						player.startPoint[0]--;
+						player.x -= blockSize;
+						id("lvlWidth").innerHTML = level.length;
+						id("levelLayer").width = level.length*blockSize;
+						prevLevel = [];
+						drawLevel();
+					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					level.unshift([]);
+					level[0].length = level[1].length;
+					level[0].fill(0);
+					player.spawnPoint[0]++;
+					player.startPoint[0]++;
+					player.x += blockSize;
+					id("lvlWidth").innerHTML = level.length;
+					id("levelLayer").width = level.length*blockSize
+					id("levelLayer").height = level[0].length*blockSize;
+					prevLevel = [];
+					drawLevel();
+				}
+			case "KeyA":
+				if (!input.shiftKey && !input.ctrlKey) control.left = true;
+				break;
+			case "ArrowRight":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level.length > 1) {
+						level.pop();
+						id("lvlWidth").innerHTML = level.length;
+						id("levelLayer").width = level.length*blockSize;
+						prevLevel = [];
+						drawLevel();
+					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					level.push([]);
+					level[level.length-1].length = level[0].length;
+					level[level.length-1].fill(0);
+					id("lvlWidth").innerHTML = level.length;
 					id("levelLayer").width = level.length*blockSize;
 					prevLevel = [];
+					drawLevel();
+				}
+			case "KeyD":
+				if (!input.shiftKey && !input.ctrlKey) control.right = true;
+				break;
+			case "Equal":
+				break;
+			case "KeyR":
+				if (input.shiftKey) {
 					toStart();
-					drawLevel();
-				}
-			} else {
-				control.lmb = false;
-				control.rmb = false;
-				let adjustedLevel = deepCopy(level);
-				for (let x in adjustedLevel) {
-					for (let y in adjustedLevel[x]){
-						if (adjustedLevel[x][y] == 4) adjustedLevel[x][y] = 3;
-						if (adjustedLevel[x][y] == 19) adjustedLevel[x][y] = 17;
-						if (adjustedLevel[x][y] == 20) adjustedLevel[x][y] = 18;
+				} else respawn();
+				break;
+			case "KeyG":
+				player.godMode = !player.godMode;
+				drawPlayer();
+				break;
+			case "KeyN":
+				player.noclip = !player.noclip;
+				drawPlayer();
+				break;
+			case "KeyI":
+				if (id("info").style.display != "none") {
+					id("info").style.display = "none";
+				} else if (id("info").style.display != "inline") id("info").style.display = "inline";
+				break;
+			case "KeyC":
+				if (id("control").style.display != "none") {
+					id("control").style.display = "none";
+				} else if (id("control").style.display != "inline") id("control").style.display = "inline";
+				break;
+			case "KeyB":
+				if (id("blockSelect").style.display != "none") {
+					id("blockSelect").style.display = "none";
+				} else if (id("blockSelect").style.display != "flex") id("blockSelect").style.display = "flex";
+				break;
+			case "KeyE":
+				if (input.shiftKey) {
+					control.lmb = false;
+					control.rmb = false;
+					let data = prompt("Please enter level data.");
+					if (data) {
+						data = JSON.parse(data);
+						level = data[0];
+						player.startPoint = data[1];
+						if (!player.startPoint[3]) player.startPoint[3] = 1;
+						if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
+						if (!player.startPoint[4]) player.startPoint[4] = 600;
+						if (player.startPoint[4] == 100) player.startPoint[4] = 300;
+						if (player.startPoint[4] == 200) player.startPoint[4] = 600;
+						if (player.startPoint[4] == 400) player.startPoint[4] = 1200;
+						if (player.startPoint[4] == 325) player.startPoint[4] = 300;
+						if (player.startPoint[4] == 750) player.startPoint[4] = 600;
+						if (player.startPoint[4] == 1500) player.startPoint[4] = 1200;
+						if (!player.startPoint[5]) player.startPoint[5] = false;
+						player.spawnPoint = deepCopy(player.startPoint);
+						id("lvlWidth").innerHTML = level.length;
+						id("lvlHeight").innerHTML = level[0].length;
+						id("levelLayer").height = level[0].length*blockSize;
+						id("levelLayer").width = level.length*blockSize;
+						prevLevel = [];
+						toStart();
+						drawLevel();
 					}
+				} else {
+					control.lmb = false;
+					control.rmb = false;
+					let adjustedLevel = deepCopy(level);
+					for (let x in adjustedLevel) {
+						for (let y in adjustedLevel[x]){
+							if (adjustedLevel[x][y] == 4) adjustedLevel[x][y] = 3;
+							if (adjustedLevel[x][y] == 19) adjustedLevel[x][y] = 17;
+							if (adjustedLevel[x][y] == 20) adjustedLevel[x][y] = 18;
+						}
+					}
+					let startData = player.startPoint
+					if (startData[3] == Infinity) startData[3] = "Infinity";
+					id("exportArea").value = JSON.stringify([adjustedLevel,startData]);
+					id("exportArea").style.display = "inline";
+					id("exportArea").select();
+					document.execCommand("copy")
+					id("exportArea").style.display = "none";
+					alert("Level data copied to clipboard!");
 				}
-				let startData = player.startPoint
-				if (startData[3] == Infinity) startData[3] = "Infinity";
-				id("exportArea").value = JSON.stringify([adjustedLevel,startData]);
-				id("exportArea").style.display = "inline";
-				id("exportArea").select();
-				document.execCommand("copy")
-				id("exportArea").style.display = "none";
-				alert("Level data copied to clipboard!");
-			}
-			break;
+				break;
+		}
 	}
 });
 document.addEventListener("keyup", function(input){
-	let key = input.code;
-	switch(key) {
-		case "ArrowLeft":
-		case "KeyA":
-			control.left = false;
-			break;
-		case "ArrowRight":
-		case "KeyD":
-			control.right = false;
-			break;
+	if (!editProperty) {
+		let key = input.code;
+		switch(key) {
+			case "ArrowLeft":
+			case "KeyA":
+				control.left = false;
+				break;
+			case "ArrowRight":
+			case "KeyD":
+				control.right = false;
+				break;
+			case "ArrowUp":
+			case "KeyW":
+				control.up = false;
+				break;
+			case "ArrowDown":
+			case "KeyS":
+				control.down = false;
+				break;
+		}
 	}
 });
 
@@ -413,6 +485,7 @@ function getBlockType(x,y) {
 	return level[x][y];
 }
 function isTouching(dir, type) {
+	if (player.noclip) return false;
 	let x1 = player.x;
 	let x2 = player.x+playerSize;
 	let y1 = player.y;
@@ -509,6 +582,60 @@ function respawn() {
 	player.jumpOn = player.spawnPoint[6];
 	if (shouldDraw) drawLevel();
 }
+function openPropertyMenu(x,y) {
+	let type = getBlockType(x,y);
+	if (Object.keys(blockProperty).includes(String(type))) {
+		let props = blockProperty[type];
+		let menu = id("editProperty");
+		menu.innerHTML = "";
+		for (let i in props) {
+			let sect = document.createElement("div");
+			menu.appendChild(sect);
+			let label = document.createElement("label");
+			label.innerHTML = props[i] + ": ";
+			label.for = "prop"+props[i];
+			sect.appendChild(label);
+			let input = document.createElement("input");
+			input.id = "prop"+props[i];
+			input.name = "prop"+props[i];
+			input.value = level[x][y][parseInt(i)+1];
+			sect.appendChild(input);
+		}
+		let confirm = document.createElement("button");
+		confirm.innerHTML = "confirm";
+		confirm.onclick = function() {
+			let err = false;
+			for (let i in props) {
+				let newVal = id("prop"+props[i]).value;
+				if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
+				if (typeof(newVal) == propertyType[type][i] || propertyType[type][i] == "any") {
+					level[x][y][parseInt(i)+1] = newVal;
+				} else {
+					err = true;
+					alert("Invalid value!");
+					id("prop"+props[i]).value = "";
+				}
+			}
+			if (!err) {
+				menu.style.display = "none";
+				editProperty = false;
+			}
+		}
+		menu.appendChild(confirm);
+		let cancel = document.createElement("button");
+		cancel.innerHTML = "cancel";
+		cancel.onclick = function() {
+			menu.style.display = "none";
+			editProperty = false;
+		}
+		menu.appendChild(cancel);
+		menu.onkeydown = function(input) {
+			if (input.code == "Enter") confirm.click();
+		}
+		menu.style.display = "block";
+		editProperty = true;
+	}
+}
 
 var lastFrame = 0;
 var haltThreshold = 100;
@@ -518,6 +645,7 @@ var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
 var noFriction = false;
+var prevTextCoord;
 var xprev;
 var yprev;
 function nextFrame(timeStamp) {
@@ -537,6 +665,10 @@ function nextFrame(timeStamp) {
 			player.yv += player.g * dt / 500 * gameSpeed;
 			if (player.yv > player.g && player.g > 0) player.yv = player.g;
 			if (player.yv < player.g && player.g < 0) player.yv = player.g;
+			if (player.noclip) {
+				player.xv = 0;
+				player.yv = 0;
+			}
 			// position change based on velocity
 			player.x += player.xv * dt / 500 * gameSpeed;
 			player.y += player.yv * dt / 500 * gameSpeed;
@@ -740,6 +872,21 @@ function nextFrame(timeStamp) {
 			if (player.jumpOn) {
 				hasHitbox[9] = 42;
 			} else hasHitbox[9] = 43;
+			// text block
+			if (isTouching("any",46)) {
+				let coord = getCoord(46);
+				if (!arraysEqual(prevTextCoord,coord)) {
+					let text = level[coord[0]][coord[1]][1];
+					id("textBlockText").innerHTML = text;
+					id("textBlockText").style.display = "block";
+					id("textBlockText").style.left = coord[0]*blockSize+blockSize/2+lvlxOffset+"px";
+					id("textBlockText").style.top = coord[1]*blockSize+blockSize/2+lvlyOffset+"px";
+					prevTextCoord = coord;
+				}
+			} else {
+				id("textBlockText").style.display = "none";
+				prevTextCoord = [];
+			}
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
@@ -755,19 +902,26 @@ function nextFrame(timeStamp) {
 				player.y = (coord[1]+level[coord[0]][coord[1]][2])*blockSize+(blockSize-playerSize)/2;
 			}
 			// OoB check
-			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
-				player.x = 0;
-				player.y = 0;
-			}
+			if (player.x < 0) player.x = 0;
+			if (player.x > level.length*blockSize-playerSize) player.x = level.length*blockSize-playerSize;
+			if (player.y < 0) player.y = 0;
+			if (player.y > level[0].length*blockSize-playerSize) player.y = level[0].length*blockSize-playerSize;
 		}
 		// key input
-		if (control.left && player.xv > -player.moveSpeed) {
-			player.xv -= player.moveSpeed*dt/(noFriction?5:1);
-			if (player.xv < -player.moveSpeed/(noFriction?5:1)) player.xv = -player.moveSpeed/(noFriction?5:1);
-		}
-		if (control.right && player.xv < player.moveSpeed) {
-			player.xv += player.moveSpeed*dt/(noFriction?5:1);
-			if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
+		if (player.noclip) {
+			if (control.left) player.x-=simReruns*dt/4;
+			if (control.right) player.x+=simReruns*dt/4;
+			if (control.up) player.y-=simReruns*dt/4;
+			if (control.down) player.y+=simReruns*dt/4;
+		} else {
+			if (control.left && player.xv > -player.moveSpeed) {
+				player.xv -= player.moveSpeed*dt/(noFriction?5:1);
+				if (player.xv < -player.moveSpeed/(noFriction?5:1)) player.xv = -player.moveSpeed/(noFriction?5:1);
+			}
+			if (control.right && player.xv < player.moveSpeed) {
+				player.xv += player.moveSpeed*dt/(noFriction?5:1);
+				if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
+			}
 		}
 		// draw checks
 		if (shouldDrawLevel) drawLevel();
@@ -785,6 +939,7 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FF00FF";
+	if (player.noclip) pL.fillStyle += "88";
 	pL.fillRect(Math.floor(player.x) + lvlxOffset, Math.floor(player.y) + lvlyOffset, playerSize, playerSize);
 }
 var prevLevel = [];
@@ -982,6 +1137,9 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			if (player.jumpOn) {
 				lL.fillStyle = "#00000000";
 			} else lL.fillStyle = "#884400";
+			break;
+		case 46:
+			lL.fillStyle = "#0000FF88";
 			break;
 		default:
 			clear = true;
@@ -1601,6 +1759,14 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
 			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
 			lL.stroke();
+			break;
+		case 46:
+			lL.strokeStyle = "#00008888";
+			lL.fillStyle = "#00008888";
+			lL.font = blockSize + "px serif";
+			lL.textAlign = "center";
+			lL.textBaseline = "middle";
+			lL.fillText("T",xb+blockSize/2,yb+blockSize/2+blockSize/50*3);
 			break;
 	}
 }
