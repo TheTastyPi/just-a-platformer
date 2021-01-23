@@ -935,7 +935,7 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FF00FF";
-	if (player.noclip) pL.fillStyle = += "88";
+	if (player.noclip) pL.fillStyle += "88";
 	pL.fillRect(Math.floor(player.x) + lvlxOffset, Math.floor(player.y) + lvlyOffset, playerSize, playerSize);
 }
 var prevLevel = [];
