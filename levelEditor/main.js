@@ -114,7 +114,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				control.lmb = false;
 				control.rmb = false;
 				let text = prompt("Please enter text that will be displayed.");
-				level[xb][yb] = [player.selectedBlock[0],text];
+				if (text) level[xb][yb] = [player.selectedBlock[0],text];
 			} else {
 				level[xb][yb] = player.selectedBlock[0];
 			}
@@ -1625,7 +1625,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.arc(xb+blockSize/2,yb+blockSize/4,blockSize/4-blockSize/25*3,0,2*Math.PI);
 			lL.fill();
 			
-			lL.lineWidth = blockSize/2-blockSize/50*3;
+			lL.lineWidth = blockSize/8-blockSize/50*3;
 			lL.beginPath();
 			lL.moveTo(xb+blockSize/2,yb+blockSize/2);
 			lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
