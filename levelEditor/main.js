@@ -1633,7 +1633,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.font = blockSize + "px serif";
 			lL.textAlign = "center";
 			lL.textBaseline = "middle";
-			lL.fillText("T",xb+blockSize/2,yb+blockSize/2+blockSize/25);
+			lL.fillText("T",xb+blockSize/2,yb+blockSize/2+blockSize/50*3);
 			break;
 	}
 }
