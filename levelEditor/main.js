@@ -370,7 +370,7 @@ document.addEventListener("keydown", function(input){
 				player.godMode = !player.godMode;
 				drawPlayer();
 				break;
-			case "KeyG":
+			case "KeyN":
 				player.noclip = !player.noclip;
 				drawPlayer();
 				break;
