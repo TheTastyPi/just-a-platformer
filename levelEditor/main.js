@@ -627,7 +627,7 @@ var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
 var noFriction = false;
-var textShown = false;
+var prevTextCoord;
 var xprev;
 var yprev;
 function nextFrame(timeStamp) {
@@ -852,14 +852,14 @@ function nextFrame(timeStamp) {
 			} else hasHitbox[9] = 43;
 			// text block
 			if (isTouching("any",46)) {
-				if (!textShown) {
-					let coord = getCoord(46);
+				let coord = getCoord(46);
+				if (prevTextCoord != coord) {
 					let text = level[coord[0]][coord[1]][1];
 					id("textBlockText").innerHTML = text;
 					id("textBlockText").style.display = "block";
 					id("textBlockText").style.left = coord[0]*blockSize+blockSize/2+lvlxOffset+"px";
 					id("textBlockText").style.top = coord[1]*blockSize+blockSize/2+lvlyOffset+"px";
-					textShown = true;
+					prevTextCoord = coord;
 				}
 			} else {
 				id("textBlockText").style.display = "none";
