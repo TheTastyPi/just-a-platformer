@@ -905,10 +905,10 @@ function nextFrame(timeStamp) {
 		}
 		// key input
 		if (player.noclip) {
-			if (control.left) player.x-=player.moveSpeed/1000*dt;
-			if (control.right) player.x+=player.moveSpeed/1000*dt;
-			if (control.up) player.y-=player.moveSpeed/1000*dt;
-			if (control.down) player.y+=player.moveSpeed/1000*dt;
+			if (control.left) player.x-=player.moveSpeed/1000*simReruns*dt;
+			if (control.right) player.x+=player.moveSpeed/1000*simReruns*dt;
+			if (control.up) player.y-=player.moveSpeed/1000*simReruns*dt;
+			if (control.down) player.y+=player.moveSpeed/1000*simReruns*dt;
 		} else {
 			if (control.left && player.xv > -player.moveSpeed) {
 				player.xv -= player.moveSpeed*dt/(noFriction?5:1);
