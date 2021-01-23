@@ -750,7 +750,9 @@ function nextFrame(timeStamp) {
 			if (isTouching("any",46)) {
 				let coord = getCoord(46);
 				let text = level[coord[0]][coord[1]][1];
-			}
+				id("centerText").innerHTML = text;
+				id("centerText").style.display = "block";
+			} else id("centerText").style.display = "none";
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
@@ -993,6 +995,9 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			if (player.jumpOn) {
 				lL.fillStyle = "#00000000";
 			} else lL.fillStyle = "#884400";
+			break;
+		case 46:
+			lL.fillStyle = "#0000FF88";
 			break;
 		default:
 			clear = true;
@@ -1612,6 +1617,16 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.moveTo(xb+blockSize/25*3,yb+blockSize-blockSize/25*3);
 			lL.lineTo(xb+blockSize-blockSize/25*3,yb+blockSize/25*3);
 			lL.stroke();
+			break;
+		case 46:
+			lL.fillStyle = "#00008888";
+			lL.beginPath();
+			lL.arc(xb+blockSize/2,yb+blockSize/4,blockSize/4-blockSize/25*3,0,2*Math.PI);
+			lL.fill();
+			
+			lL.beginPath();
+			lL.moveTo(xb+blockSize/2,yb+blockSize/2);
+			lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
 			break;
 	}
 }
