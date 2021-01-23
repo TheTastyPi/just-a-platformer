@@ -481,11 +481,11 @@ function getBlockType(x,y) {
 	if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
 		return 1;
 	}
-	if (player.noclip) return 0;
 	if (typeof(level[x][y]) == "object") return level[x][y][0];
 	return level[x][y];
 }
 function isTouching(dir, type) {
+	if (player.noclip) return false;
 	let x1 = player.x;
 	let x2 = player.x+playerSize;
 	let y1 = player.y;
@@ -902,10 +902,10 @@ function nextFrame(timeStamp) {
 				player.y = (coord[1]+level[coord[0]][coord[1]][2])*blockSize+(blockSize-playerSize)/2;
 			}
 			// OoB check
-			if (player.x < -1 || player.x > level.length*blockSize || player.y < -1 || player.y > level[0].length*blockSize) {
-				player.x = 0;
-				player.y = 0;
-			}
+			if (player.x < 0) player.x = 0;
+			if (player.x > level.length*blockSize-playerSize) player.x = level.length*blockSize-playerSize;
+			if (player.y < 0) player.y = 0;
+			if (player.y > level[0].length*blockSize-playerSize) player.y = level[0].length*blockSize-playerSize;
 		}
 		// key input
 		if (player.noclip) {
