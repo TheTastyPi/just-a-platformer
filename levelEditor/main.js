@@ -1619,11 +1619,13 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.stroke();
 			break;
 		case 46:
+			lL.strokeStyle = "#00008888";
 			lL.fillStyle = "#00008888";
 			lL.beginPath();
 			lL.arc(xb+blockSize/2,yb+blockSize/4,blockSize/4-blockSize/25*3,0,2*Math.PI);
 			lL.fill();
 			
+			lL.lineWidth = blockSize/2-blockSize/50*3;
 			lL.beginPath();
 			lL.moveTo(xb+blockSize/2,yb+blockSize/2);
 			lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
