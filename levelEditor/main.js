@@ -73,7 +73,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
 	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.altKey) {
-		if (control.lmb) {
+		if (input.button == 0) {
 			let type = getBlockType(xb,yb);
 			if (Object.keys(blockProperty).includes(type)) {
 				let props = blockProperty[type];
