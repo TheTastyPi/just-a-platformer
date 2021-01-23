@@ -216,6 +216,7 @@ document.addEventListener("keydown", function(input){
 			if (!input.shiftKey && !input.ctrlKey) {
 				if (player.canWalljump) {
 					player.jumpOn = !player.jumpOn;
+					drawLevel();
 					if (player.wallJumpDir == "left") {
 						player.xv = -player.moveSpeed;
 						player.yv = -Math.sign(player.g)*player.jumpHeight;
@@ -226,6 +227,7 @@ document.addEventListener("keydown", function(input){
 					}
 				} else if (player.currentJumps > 0 || player.godMode) {
 					player.jumpOn = !player.jumpOn;
+					drawLevel();
 					player.yv = -Math.sign(player.g)*player.jumpHeight;
 					player.currentJumps--;
 				}
