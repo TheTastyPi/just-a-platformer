@@ -200,8 +200,6 @@ id("levelLayer").addEventListener("mousemove", function(input){
 		}
 		id("mousePos").innerHTML = "["+xb+","+yb+"]";
 		if (Object.keys(blockProperty).includes(String(getBlockType(xb,yb)))) {
-			id("tooltip").style.left = input.offsetX+lvlxOffset+5+"px";
-			id("tooltip").style.top = input.offsetY+lvlyOffset-id("tooltip").clientHeight-5+"px";
 			let text = "";
 			for (let i in blockProperty[getBlockType(xb,yb)]) {
 				text += blockProperty[getBlockType(xb,yb)][i];
@@ -210,6 +208,8 @@ id("levelLayer").addEventListener("mousemove", function(input){
 				text += "<br>";
 			}
 			id("tooltip").innerHTML = text;
+			id("tooltip").style.left = input.offsetX+lvlxOffset+5+"px";
+			id("tooltip").style.top = input.offsetY+lvlyOffset-id("tooltip").clientHeight-5+"px";
 			id("tooltip").style.display = "block";
 		} else {
 			id("tooltip").style.display = "none";
