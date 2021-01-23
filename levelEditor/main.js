@@ -503,8 +503,8 @@ function respawn() {
 	player.g = player.spawnPoint[2];
 	player.maxJumps = player.spawnPoint[3];
 	player.currentJumps = player.maxJumps -1;
-	let shouldDraw = player.switchOn != player.spawnPoint[5];
 	player.moveSpeed = player.spawnPoint[4];
+	let shouldDraw = (player.switchOn != player.spawnPoint[5] || player.jumpOn != player.spawnPoint[6]);
 	player.switchOn = player.spawnPoint[5];
 	player.jumpOn = player.spawnPoint[6];
 	if (shouldDraw) drawLevel();
