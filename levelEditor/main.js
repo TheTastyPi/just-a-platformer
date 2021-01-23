@@ -79,123 +79,127 @@ const propertyType = {
 var editProperty = false;
 
 id("levelLayer").addEventListener("mousedown", function(input){
-	let xb = Math.floor(input.offsetX/blockSize);
-	let yb = Math.floor(input.offsetY/blockSize);
-	if (input.altKey) {
-		if (input.button == 0) {
-			openPropertyMenu(xb,yb);
-		}
-	} else if (input.ctrlKey) {
-		if (input.button == 0) control.lmb = true;
-		if (input.button == 2) {
-			player.playerFocus = true;
-			adjustScreen();
-		}
-	} else if (input.shiftKey) {
-		if (input.button == 1) {
-			id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
-			player.selectedBlock[1] = getBlockType(xb,yb);
-			if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
-			if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
-			if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
-			id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #0000FF";
+	if (!editProperty) {
+		let xb = Math.floor(input.offsetX/blockSize);
+		let yb = Math.floor(input.offsetY/blockSize);
+		if (input.altKey) {
+			if (input.button == 0) {
+				openPropertyMenu(xb,yb);
+			}
+		} else if (input.ctrlKey) {
+			if (input.button == 0) control.lmb = true;
+			if (input.button == 2) {
+				player.playerFocus = true;
+				adjustScreen();
+			}
+		} else if (input.shiftKey) {
+			if (input.button == 1) {
+				id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "";
+				player.selectedBlock[1] = getBlockType(xb,yb);
+				if (player.selectedBlock[1] == 4) player.selectedBlock[1] = 3;
+				if (player.selectedBlock[1] == 19) player.selectedBlock[1] = 17;
+				if (player.selectedBlock[1] == 20) player.selectedBlock[1] = 18;
+				id("blockSelect"+player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #0000FF";
+			} else {
+				player.x = input.offsetX;
+				player.y = input.offsetY;
+				player.xv = 0;
+				player.yv = 0;
+			}
 		} else {
-			player.x = input.offsetX;
-			player.y = input.offsetY;
-			player.xv = 0;
-			player.yv = 0;
-		}
-	} else {
-		if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
-			control.lmb = true;
-			if (player.selectedBlock[0] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+			if (input.button == 0 && !bannedBlock.includes(player.selectedBlock[0])) {
+				control.lmb = true;
+				if (player.selectedBlock[0] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				if (Object.keys(blockProperty).includes(String(player.selectedBlock[0]))) {
+					control.lmb = false;
+					control.rmb = false;
+					level[xb][yb] = [player.selectedBlock[0]];
+					for (let i in defaultProperty[player.selectedBlock[0]]) {
+						level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[0]][i];
+					}
+					openPropertyMenu(xb,yb);
+				} else level[xb][yb] = player.selectedBlock[0];
+				drawLevel();
+			} else if (input.button == 1) {
+				id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
+				player.selectedBlock[0] = getBlockType(xb,yb);
+				if (player.selectedBlock[0] == 4) player.selectedBlock[0] = 3;
+				if (player.selectedBlock[0] == 19) player.selectedBlock[0] = 17;
+				if (player.selectedBlock[0] == 20) player.selectedBlock[0] = 18;
+				id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF0000";
+			} else if (input.button == 2 && !bannedBlock.includes(player.selectedBlock[1])) {
+				if (player.selectedBlock[1] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				}
+				if (Object.keys(blockProperty).includes(String(player.selectedBlock[1]))) {
+					control.lmb = false;
+					control.rmb = false;
+					level[xb][yb] = [player.selectedBlock[1]];
+					for (let i in defaultProperty[player.selectedBlock[1]]) {
+						level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[1]][i];
+					}
+					openPropertyMenu(xb,yb);
+				} else level[xb][yb] = player.selectedBlock[1];
+				control.rmb = true;
+				drawLevel();
 			}
-			if (Object.keys(blockProperty).includes(String(player.selectedBlock[0]))) {
-				control.lmb = false;
-				control.rmb = false;
-				level[xb][yb] = [player.selectedBlock[0]];
-				for (let i in defaultProperty[player.selectedBlock[0]]) {
-					level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[0]][i];
-				}
-				openPropertyMenu(xb,yb);
-			} else level[xb][yb] = player.selectedBlock[0];
-			drawLevel();
-		} else if (input.button == 1) {
-			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
-			player.selectedBlock[0] = getBlockType(xb,yb);
-			if (player.selectedBlock[0] == 4) player.selectedBlock[0] = 3;
-			if (player.selectedBlock[0] == 19) player.selectedBlock[0] = 17;
-			if (player.selectedBlock[0] == 20) player.selectedBlock[0] = 18;
-			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF0000";
-		} else if (input.button == 2 && !bannedBlock.includes(player.selectedBlock[1])) {
-			if (player.selectedBlock[1] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-			}
-			if (Object.keys(blockProperty).includes(String(player.selectedBlock[1]))) {
-				control.lmb = false;
-				control.rmb = false;
-				level[xb][yb] = [player.selectedBlock[1]];
-				for (let i in defaultProperty[player.selectedBlock[1]]) {
-					level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[1]][i];
-				}
-				openPropertyMenu(xb,yb);
-			} else level[xb][yb] = player.selectedBlock[1];
-			control.rmb = true;
-			drawLevel();
 		}
 	}
 });
 id("levelLayer").addEventListener("mousemove", function(input){
-	let xb = Math.floor(input.offsetX/blockSize);
-	let yb = Math.floor(input.offsetY/blockSize);
-	if (input.ctrlKey) {
-		if (control.lmb) {
-			player.playerFocus = false;
-			lvlxOffset += input.movementX;
-			lvlyOffset += input.movementY;
-			adjustScreen();
-		}
-	} else if (!input.shiftKey) {
-		if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
-			if (player.selectedBlock[0] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+	if (!editProperty) {
+		let xb = Math.floor(input.offsetX/blockSize);
+		let yb = Math.floor(input.offsetY/blockSize);
+		if (input.ctrlKey) {
+			if (control.lmb) {
+				player.playerFocus = false;
+				lvlxOffset += input.movementX;
+				lvlyOffset += input.movementY;
+				adjustScreen();
 			}
-			level[xb][yb] = player.selectedBlock[0];
-			drawLevel();
-		} else if (control.rmb && !bannedBlock.includes(player.selectedBlock[1])) {
-			if (player.selectedBlock[0] == 17) {
-				if (level[player.spawnPoint[0]] != undefined) {
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-					if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+		} else if (!input.shiftKey) {
+			if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
+				if (player.selectedBlock[0] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 				}
-				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
-				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				level[xb][yb] = player.selectedBlock[0];
+				drawLevel();
+			} else if (control.rmb && !bannedBlock.includes(player.selectedBlock[1])) {
+				if (player.selectedBlock[0] == 17) {
+					if (level[player.spawnPoint[0]] != undefined) {
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 4) level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 17) level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
+						if (level[player.spawnPoint[0]][player.spawnPoint[1]] == 20) level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
+					}
+					player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+					player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
+				}
+				level[xb][yb] = player.selectedBlock[1];
+				drawLevel();
 			}
-			level[xb][yb] = player.selectedBlock[1];
-			drawLevel();
 		}
+		id("mousePos").innerHTML = "["+xb+","+yb+"]";
 	}
-	id("mousePos").innerHTML = "["+xb+","+yb+"]";
 });
 id("levelLayer").addEventListener("mouseup", function(input){
 	if (input.button == 0) {
