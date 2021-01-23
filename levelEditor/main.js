@@ -50,7 +50,15 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
 		   "Ice Block","Portal"]; // other stuff (40,41)
 const bannedBlock = [4,19,20];
-const blockSelect = ["Special",17,3,18,41,"Basic",0,1,2,"Gravity",6,7,8,9,10,25,26,"Jumping",5,24,11,12,13,14,15,16,"Speed",21,22,23,40,"Force",27,28,29,30,"Switch",31,32,33,34,35,"Timer",36,37,38,39];
+const blockSelect = ["Special",17,3,18,41,
+		     "Basic",0,1,2,
+		     "Gravity",6,7,8,9,10,25,26,
+		     "Jumping",5,24,11,12,13,14,15,16,
+		     "Speed",21,22,23,40,
+		     "Force",27,28,29,30,
+		     "Switch",31,32,33,34,35,
+		     "Timer",36,37,38,39
+		    ];
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
@@ -868,10 +876,10 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.fillStyle = "#FF00FF";
 			break;
 		case 25:
-			lL.fillStyle = "#FF0000";
+			lL.fillStyle = "#FF8888";
 			break;
 		case 26:
-			lL.fillStyle = "#00FFFF";
+			lL.fillStyle = "#88FFFF";
 			break;
 		case 27:
 			lL.fillStyle = "#00000088";
@@ -1265,7 +1273,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.stroke();
 			break;
 		case 25:
-			lL.strokeStyle = "#880000";
+			lL.strokeStyle = "#884444";
 			lL.beginPath();
 			lL.moveTo(xb+blockSize/25*3,yb+blockSize/5*2);
 			lL.lineTo(xb+blockSize/2,yb+blockSize/5);
@@ -1279,7 +1287,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.stroke();;
 			break;
 		case 26:
-			lL.strokeStyle = "#008888";
+			lL.strokeStyle = "#448888";
 			lL.beginPath();
 			lL.moveTo(xb+blockSize/25*3,yb+blockSize/5);
 			lL.lineTo(xb+blockSize/2,yb+blockSize/5*2);
