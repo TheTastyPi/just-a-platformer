@@ -199,7 +199,7 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			}
 		}
 		id("mousePos").innerHTML = "["+xb+","+yb+"]";
-		if (Object.keys(blockProperty).includes(getBlockType(xb,yb))) {
+		if (Object.keys(blockProperty).includes(String(getBlockType(xb,yb)))) {
 			id("tooltip").left = input.offsetX;
 			id("tooltip").top = input.offsetY;
 			let text = "";
