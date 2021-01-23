@@ -208,9 +208,9 @@ id("levelLayer").addEventListener("mousemove", function(input){
 				text += "<br>";
 			}
 			id("tooltip").innerHTML = text;
+			id("tooltip").style.display = "block";
 			id("tooltip").style.left = input.offsetX+lvlxOffset+5+"px";
 			id("tooltip").style.top = input.offsetY+lvlyOffset-id("tooltip").clientHeight-5+"px";
-			id("tooltip").style.display = "block";
 		} else {
 			id("tooltip").style.display = "none";
 		}
