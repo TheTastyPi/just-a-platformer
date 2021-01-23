@@ -199,6 +199,21 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			}
 		}
 		id("mousePos").innerHTML = "["+xb+","+yb+"]";
+		if (Object.keys(blockProperty).includes(level[xb][yb])) {
+			id("tooltip").left = input.offsetX;
+			id("tooltip").top = input.offsetY;
+			let text = "";
+			for (let i in blockProperty[level[xb][yb]]) {
+				text += blockProperty[level[xb][yb]][i];
+				text += ": ";
+				text += level[xb][yb][i+1];
+				text += "\n";
+			}
+			id("tooltip").innerHTML = text;
+			id("tooltip").style.display = "block";
+		} else {
+			id("tooltip").style.display = "none";
+		}
 	}
 });
 id("levelLayer").addEventListener("mouseup", function(input){
