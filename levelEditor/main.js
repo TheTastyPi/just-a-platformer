@@ -863,7 +863,7 @@ function nextFrame(timeStamp) {
 				}
 			} else {
 				id("textBlockText").style.display = "none";
-				textShown = false;
+				prevTextCoord = [];
 			}
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
