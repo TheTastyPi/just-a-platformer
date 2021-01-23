@@ -524,6 +524,7 @@ var timerOn = false;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
 var noFriction = false;
+var textShown = false;
 var xprev;
 var yprev;
 function nextFrame(timeStamp) {
@@ -748,11 +749,17 @@ function nextFrame(timeStamp) {
 			} else hasHitbox[9] = 43;
 			// text block
 			if (isTouching("any",46)) {
-				let coord = getCoord(46);
-				let text = level[coord[0]][coord[1]][1];
-				id("centerText").innerHTML = text;
-				id("centerText").style.display = "block";
-			} else id("centerText").style.display = "none";
+				if (!textShown) {
+					let coord = getCoord(46);
+					let text = level[coord[0]][coord[1]][1];
+					id("centerText").innerHTML = text;
+					id("centerText").style.display = "block";
+					textShown = true;
+				}
+			} else {
+				id("centerText").style.display = "none";
+				textShown = false;
+			}
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
