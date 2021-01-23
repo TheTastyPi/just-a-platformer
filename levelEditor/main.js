@@ -145,7 +145,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				control.rmb = false;
 				level[xb][yb] = [player.selectedBlock[1]];
 				for (let i in defaultProperty[player.selectedBlock[1]]) {
-					level[xb][yb][i+1] = defaultProperty[player.selectedBlock[1]][i];
+					level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[1]][i];
 				}
 				openPropertyMenu(xb,yb);
 			} else level[xb][yb] = player.selectedBlock[1];
