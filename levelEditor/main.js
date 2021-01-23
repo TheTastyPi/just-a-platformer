@@ -551,13 +551,11 @@ function openPropertyMenu(x,y) {
 		for (let i in props) {
 			let sect = document.createElement("div");
 			menu.appendChild(sect);
-			let label = document.createElement("label");
+			let label = document.createElement("span");
 			label.innerHTML = props[i] + ": ";
-			label.for = "prop"+props[i];
 			sect.appendChild(label);
-			let input = document.createElement("input");
+			let input = document.createElement("textarea");
 			input.id = "prop"+props[i];
-			input.name = "prop"+props[i];
 			input.value = level[x][y][parseInt(i)+1];
 			sect.appendChild(input);
 		}
