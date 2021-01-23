@@ -738,8 +738,8 @@ function nextFrame(timeStamp) {
 			} else hasHitbox[7] = 37;
 			// jump-toggle
 			if (player.jumpOn) {
-				hasHitbox[8] = 42;
-			} else hasHitbox[8] = 43;
+				hasHitbox[9] = 42;
+			} else hasHitbox[9] = 43;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
