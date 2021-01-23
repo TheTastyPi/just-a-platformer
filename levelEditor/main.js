@@ -589,6 +589,9 @@ function openPropertyMenu(x,y) {
 			editProperty = false;
 		}
 		menu.appendChild(cancel);
+		menu.onkeydown = function(input) {
+			if (input.code == "Enter") confirm.click();
+		}
 		menu.style.display = "block";
 		editProperty = true;
 	}
