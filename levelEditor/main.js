@@ -233,11 +233,11 @@ id("levelLayer").addEventListener("mouseup", function(input){
 document.addEventListener("contextmenu", function(input){input.preventDefault();});
 
 document.addEventListener("keydown", function(input){
-	input.preventDefault();
 	let key = input.code;
 	switch(key) {
 		case "ArrowUp":
 			if (input.ctrlKey) {
+				input.preventDefault();
 				if (level[0].length > 1) {
 					for (let i in level) level[i].shift();
 					player.spawnPoint[1]--;
@@ -249,6 +249,7 @@ document.addEventListener("keydown", function(input){
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
+				input.preventDefault();
 				for (let i in level) {
 					level[i].unshift(0);
 				}
@@ -283,6 +284,7 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "ArrowDown":
 			if (input.ctrlKey) {
+				input.preventDefault();
 				if (level[0].length > 1) {
 					for (let i in level) level[i].pop();
 					id("lvlHeight").innerHTML = level[0].length;
@@ -291,6 +293,7 @@ document.addEventListener("keydown", function(input){
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
+				input.preventDefault();
 				for (let i in level) {
 					level[i].push(0);
 				}
@@ -302,6 +305,7 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "ArrowLeft":
 			if (input.ctrlKey) {
+				input.preventDefault();
 				if (level.length > 1) {
 					level.shift();
 					player.spawnPoint[0]--;
@@ -313,6 +317,7 @@ document.addEventListener("keydown", function(input){
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
+				input.preventDefault();
 				level.unshift([]);
 				level[0].length = level[1].length;
 				level[0].fill(0);
@@ -330,6 +335,7 @@ document.addEventListener("keydown", function(input){
 			break;
 		case "ArrowRight":
 			if (input.ctrlKey) {
+				input.preventDefault();
 				if (level.length > 1) {
 					level.pop();
 					id("lvlWidth").innerHTML = level.length;
@@ -338,6 +344,7 @@ document.addEventListener("keydown", function(input){
 					drawLevel();
 				}
 			} else if (input.shiftKey) {
+				input.preventDefault();
 				level.push([]);
 				level[level.length-1].length = level[0].length;
 				level[level.length-1].fill(0);
