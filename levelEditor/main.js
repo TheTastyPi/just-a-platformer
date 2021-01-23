@@ -853,7 +853,7 @@ function nextFrame(timeStamp) {
 			// text block
 			if (isTouching("any",46)) {
 				let coord = getCoord(46);
-				if (prevTextCoord != coord) {
+				if (!arraysEqual(prevTextCoord,coord)) {
 					let text = level[coord[0]][coord[1]][1];
 					id("textBlockText").innerHTML = text;
 					id("textBlockText").style.display = "block";
