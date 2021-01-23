@@ -72,6 +72,10 @@ const defaultProperty = {
 	41: [0,0],
 	46: ["Text"]
 };
+const propertyType = {
+	41: ["number","number"],
+	46: ["any"]
+}
 var editProperty = false;
 
 id("levelLayer").addEventListener("mousedown", function(input){
@@ -560,13 +564,22 @@ function openPropertyMenu(x,y) {
 		let confirm = document.createElement("button");
 		confirm.innerHTML = "confirm";
 		confirm.onclick = function() {
+			let err = false;
 			for (let i in props) {
 				let newVal = id("prop"+props[i]).value;
 				if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
-				level[x][y][parseInt(i)+1] = newVal;
+				if (typeof(newVal) == propertyType[type][i] || if propertyType[type][i] == "any") {
+					level[x][y][parseInt(i)+1] = newVal;
+				} else {
+					err = true;
+					alert("Invalid value!");
+					id("prop"+props[i]).value = "";
+				}
 			}
-			menu.style.display = "none";
-			editProperty = false;
+			if (!err) {
+				menu.style.display = "none";
+				editProperty = false;
+			}
 		}
 		menu.appendChild(confirm);
 		let cancel = document.createElement("button");
