@@ -64,6 +64,10 @@ const blockSelect = ["Special",17,3,18,41,46,
 		     "Timer",36,37,38,39,
 		     "Jump-Toggle",42,43,44,45
 		    ];
+const blockProperty = {
+	41: ["TP Offset X","TP Offset Y"],
+	46: ["Text"]
+};
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
@@ -145,7 +149,44 @@ id("levelLayer").addEventListener("mousedown", function(input){
 id("levelLayer").addEventListener("mousemove", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
 	let yb = Math.floor(input.offsetY/blockSize);
-	if (input.ctrlKey) {
+	if (input.altKey) {
+		if (control.lmb) {
+			let type = getBlockType(xb,yb);
+			if (Object.keys(blockProperty).includes(type)) {
+				let props = blockProperty[type];
+				let menu = id("editProperty");
+				for (let i in props) {
+					let sect = document.createElement("div");
+					menu.appendChild(sect);
+					let label = document.createElement("label");
+					label.innerHTML = props[i];
+					label.for = "prop"+props[i];
+					sect.appendChild(label);
+					let input = document.createElement("input");
+					input.id = "prop"+props[i];
+					input.name = "prop"+props[i];
+					input.value = level[xb][yb][i+1];
+					sect.appendChild(input);
+				}
+				let confirm = document.createElement("button");
+				confirm.innerHTML = "confirm";
+				confirm.onclick = function() {
+					for (let i in props) {
+						level[xb][yb][i+1] = id("prop"+props[i]).value;
+					}
+					menu.style.display = "none";
+				}
+				menu.appendChild(confirm);
+				let cancel = document.createElement("button");
+				cancel.innerHTML = "cancel";
+				cancel.onclick = function() {
+					menu.style.display = "none";
+				}
+				menu.appendChild(cancel);
+				menu.style.display = "block";
+			}
+		}
+	} else if (input.ctrlKey) {
 		if (control.lmb) {
 			player.playerFocus = false;
 			lvlxOffset += input.movementX;
