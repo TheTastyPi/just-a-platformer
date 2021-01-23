@@ -51,9 +51,10 @@ const blockName = ["Empty Space","Solid Block","Death Block","Check Point","Acti
 		   "Timer Block A","Timer Block B","Timer Death Block A","Timer Death Block B", // timer (36,37,38,39)
 		   "Ice Block","Portal", // other stuff (40,41)
 		   "Jump Block A","Jump Block B","Jump Death Block A","Jump Death Block B" // jump-toggle (42,43,44,45)
+		   "Text Block" // text block (46)
 		  ]; 
 const bannedBlock = [4,19,20];
-const blockSelect = ["Special",17,3,18,41,
+const blockSelect = ["Special",17,3,18,41,46,
 		     "Basic",0,1,2,
 		     "Gravity",6,7,8,9,10,25,26,
 		     "Jumping",5,24,11,12,13,14,15,16,
@@ -109,6 +110,11 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				} catch(err) {
 					alert("Invalid coordinate");
 				}
+			} else if (player.selectedBlock[0] == 46) {
+				control.lmb = false;
+				control.rmb = false;
+				let text = prompt("Please enter text that will be displayed.");
+				level[xb][yb] = [player.selectedBlock[0],text];
 			} else {
 				level[xb][yb] = player.selectedBlock[0];
 			}
@@ -740,6 +746,11 @@ function nextFrame(timeStamp) {
 			if (player.jumpOn) {
 				hasHitbox[9] = 42;
 			} else hasHitbox[9] = 43;
+			// text block
+			if (isTouching("any",46)) {
+				let coord = getCoord(46);
+				let text = level[coord[0]][coord[1]][1];
+			}
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
 			if (isTouching("any",34) && player.switchOn && !player.godMode) respawn();
