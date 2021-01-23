@@ -69,7 +69,7 @@ const blockSelect = ["Special",17,3,18,41,46,
 		    ];
 const blockProperty = {
 	41: ["TP Offset X","TP Offset Y"],
-	46: ["Text"]
+	46: ["Text (type <br> for line breaks)"]
 };
 const defaultProperty = {
 	41: [0,0],
