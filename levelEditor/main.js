@@ -754,8 +754,8 @@ function nextFrame(timeStamp) {
 					let text = level[coord[0]][coord[1]][1];
 					id("textBlockText").innerHTML = text;
 					id("textBlockText").style.display = "block";
-					id("textBlockText").style.left = player.x+lvlxOffset+"px";
-					id("textBlockText").style.top = player.y+lvlyOffset+"px";
+					id("textBlockText").style.left = coord[0]*blockSize+lvlxOffset+"px";
+					id("textBlockText").style.top = coord[1]*blockSize+lvlyOffset+"px";
 					textShown = true;
 				}
 			} else {
