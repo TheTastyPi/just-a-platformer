@@ -440,7 +440,7 @@ document.addEventListener("keydown", function(input){
 				break;
 			case "Delete":
 				if (input.shiftKey) {
-					level = level.fill(0);
+					for (let i in level) level[i] = level[i].fill(0);
 					drawLevel();
 				}
 				break;
