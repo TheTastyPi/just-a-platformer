@@ -89,14 +89,14 @@ id("levelLayer").addEventListener("mousedown", function(input){
 					let input = document.createElement("input");
 					input.id = "prop"+props[i];
 					input.name = "prop"+props[i];
-					input.value = level[xb][yb][i+1];
+					input.value = level[xb][yb][parseInt(i)+1];
 					sect.appendChild(input);
 				}
 				let confirm = document.createElement("button");
 				confirm.innerHTML = "confirm";
 				confirm.onclick = function() {
 					for (let i in props) {
-						level[xb][yb][i+1] = id("prop"+props[i]).value;
+						level[xb][yb][parseInt(i)+1] = id("prop"+props[i]).value;
 					}
 					menu.style.display = "none";
 				}
