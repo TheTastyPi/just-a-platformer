@@ -1632,7 +1632,8 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			lL.fillStyle = "#00008888";
 			lL.font = blockSize + "px serif";
 			lL.textAlign = "center";
-			lL.fillText("T",xb+blockSize/2,yb+blockSize);
+			lL.textBaseline = "middle";
+			lL.fillText("T",xb+blockSize/2,yb+blockSize/2+blockSize/25);
 			break;
 	}
 }
