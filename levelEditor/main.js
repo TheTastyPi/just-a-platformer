@@ -75,7 +75,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	if (input.altKey) {
 		if (input.button == 0) {
 			let type = getBlockType(xb,yb);
-			if (Object.keys(blockProperty).includes(type)) {
+			if (Object.keys(blockProperty).includes(String(type))) {
 				let props = blockProperty[type];
 				let menu = id("editProperty");
 				for (let i in props) {
