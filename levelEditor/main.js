@@ -568,7 +568,7 @@ function openPropertyMenu(x,y) {
 			for (let i in props) {
 				let newVal = id("prop"+props[i]).value;
 				if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
-				if (typeof(newVal) == propertyType[type][i] || if propertyType[type][i] == "any") {
+				if (typeof(newVal) == propertyType[type][i] || propertyType[type][i] == "any") {
 					level[x][y][parseInt(i)+1] = newVal;
 				} else {
 					err = true;
