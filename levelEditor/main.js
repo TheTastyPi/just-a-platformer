@@ -438,6 +438,12 @@ document.addEventListener("keydown", function(input){
 					alert("Level data copied to clipboard!");
 				}
 				break;
+			case "Delete":
+				if (input.shiftKey) {
+					level = level.fill(0);
+					drawLevel();
+				}
+				break;
 		}
 	}
 });
@@ -593,6 +599,7 @@ function openPropertyMenu(x,y) {
 			menu.appendChild(sect);
 			let label = document.createElement("span");
 			label.innerHTML = props[i] + ": ";
+			label.style.verticalAlign = "1em";
 			sect.appendChild(label);
 			let input = document.createElement("textarea");
 			input.id = "prop"+props[i];
