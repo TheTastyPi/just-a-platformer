@@ -200,14 +200,14 @@ id("levelLayer").addEventListener("mousemove", function(input){
 		}
 		id("mousePos").innerHTML = "["+xb+","+yb+"]";
 		if (Object.keys(blockProperty).includes(String(getBlockType(xb,yb)))) {
-			id("tooltip").style.left = input.offsetX+lvlxOffset+"px";
-			id("tooltip").style.top = input.offsetY+lvlyOffset+"px";
+			id("tooltip").style.left = input.offsetX+lvlxOffset+5+"px";
+			id("tooltip").style.top = input.offsetY+lvlyOffset-id("tooltip").clientHeight-5+"px";
 			let text = "";
 			for (let i in blockProperty[getBlockType(xb,yb)]) {
 				text += blockProperty[getBlockType(xb,yb)][i];
 				text += ": ";
 				text += level[xb][yb][parseInt(i)+1];
-				text += "\n";
+				text += "<br>";
 			}
 			id("tooltip").innerHTML = text;
 			id("tooltip").style.display = "block";
@@ -222,6 +222,9 @@ id("levelLayer").addEventListener("mouseup", function(input){
 	} else if (input.button == 2) {
 		control.rmb = false;
 	}
+});
+id("levelLayer").addEventListener("mouseleave", function(input){
+	id("tooltip").style.display = "none";
 });
 document.addEventListener("contextmenu", function(input){input.preventDefault();});
 
