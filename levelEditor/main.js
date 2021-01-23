@@ -118,7 +118,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				control.rmb = false;
 				level[xb][yb] = [player.selectedBlock[0]];
 				for (let i in defaultProperty[player.selectedBlock[0]]) {
-					level[xb][yb][i+1] = defaultProperty[player.selectedBlock[0]][i];
+					level[xb][yb][parseInt(i)+1] = defaultProperty[player.selectedBlock[0]][i];
 				}
 				openPropertyMenu(xb,yb);
 			} else level[xb][yb] = player.selectedBlock[0];
@@ -548,7 +548,7 @@ function openPropertyMenu(x,y) {
 			let sect = document.createElement("div");
 			menu.appendChild(sect);
 			let label = document.createElement("label");
-			label.innerHTML = props[i];
+			label.innerHTML = props[i] + ": ";
 			label.for = "prop"+props[i];
 			sect.appendChild(label);
 			let input = document.createElement("input");
