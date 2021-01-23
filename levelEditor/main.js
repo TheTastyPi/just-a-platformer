@@ -75,46 +75,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 	let yb = Math.floor(input.offsetY/blockSize);
 	if (input.altKey) {
 		if (input.button == 0) {
-			let type = getBlockType(xb,yb);
-			if (Object.keys(blockProperty).includes(String(type))) {
-				let props = blockProperty[type];
-				let menu = id("editProperty");
-				menu.innerHTML = "";
-				for (let i in props) {
-					let sect = document.createElement("div");
-					menu.appendChild(sect);
-					let label = document.createElement("label");
-					label.innerHTML = props[i];
-					label.for = "prop"+props[i];
-					sect.appendChild(label);
-					let input = document.createElement("input");
-					input.id = "prop"+props[i];
-					input.name = "prop"+props[i];
-					input.value = level[xb][yb][parseInt(i)+1];
-					sect.appendChild(input);
-				}
-				let confirm = document.createElement("button");
-				confirm.innerHTML = "confirm";
-				confirm.onclick = function() {
-					for (let i in props) {
-						let newVal = id("prop"+props[i]).value;
-						if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
-						level[xb][yb][parseInt(i)+1] = newVal;
-					}
-					menu.style.display = "none";
-					editProperty = false;
-				}
-				menu.appendChild(confirm);
-				let cancel = document.createElement("button");
-				cancel.innerHTML = "cancel";
-				cancel.onclick = function() {
-					menu.style.display = "none";
-					editProperty = false;
-				}
-				menu.appendChild(cancel);
-				menu.style.display = "block";
-				editProperty = true;
-			}
+			openPropertyMenu(xb,yb);
 		}
 	} else if (input.ctrlKey) {
 		if (input.button == 0) control.lmb = true;
@@ -148,21 +109,10 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 			}
-			if (player.selectedBlock[0] == 41) {
+			if (Object.keys(blockProperty).includes(String(player.selectedBlock[0]))) {
 				control.lmb = false;
 				control.rmb = false;
-				let coord = prompt("Please enter relative coordinate in the form of '[x,y]'. (Ex: [-1,0] would teleport you one block to the left of the portal.)");
-				try {
-					coord = JSON.parse(coord);
-					level[xb][yb] = [player.selectedBlock[0],coord[0],coord[1]];
-				} catch(err) {
-					alert("Invalid coordinate");
-				}
-			} else if (player.selectedBlock[0] == 46) {
-				control.lmb = false;
-				control.rmb = false;
-				let text = prompt("Please enter text that will be displayed.");
-				if (text) level[xb][yb] = [player.selectedBlock[0],text];
+				openPropertyMenu(xb,yb);
 			} else {
 				level[xb][yb] = player.selectedBlock[0];
 			}
@@ -573,6 +523,48 @@ function respawn() {
 	player.switchOn = player.spawnPoint[5];
 	player.jumpOn = player.spawnPoint[6];
 	if (shouldDraw) drawLevel();
+}
+function openPropertyMenu(x,y) {
+	let type = getBlockType(x,y);
+	if (Object.keys(blockProperty).includes(String(type))) {
+		let props = blockProperty[type];
+		let menu = id("editProperty");
+		menu.innerHTML = "";
+		for (let i in props) {
+			let sect = document.createElement("div");
+			menu.appendChild(sect);
+			let label = document.createElement("label");
+			label.innerHTML = props[i];
+			label.for = "prop"+props[i];
+			sect.appendChild(label);
+			let input = document.createElement("input");
+			input.id = "prop"+props[i];
+			input.name = "prop"+props[i];
+			input.value = level[x][y][parseInt(i)+1];
+			sect.appendChild(input);
+		}
+		let confirm = document.createElement("button");
+		confirm.innerHTML = "confirm";
+		confirm.onclick = function() {
+			for (let i in props) {
+				let newVal = id("prop"+props[i]).value;
+				if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
+				level[x][y][parseInt(i)+1] = newVal;
+			}
+			menu.style.display = "none";
+			editProperty = false;
+		}
+		menu.appendChild(confirm);
+		let cancel = document.createElement("button");
+		cancel.innerHTML = "cancel";
+		cancel.onclick = function() {
+			menu.style.display = "none";
+			editProperty = false;
+		}
+		menu.appendChild(cancel);
+		menu.style.display = "block";
+		editProperty = true;
+	}
 }
 
 var lastFrame = 0;
