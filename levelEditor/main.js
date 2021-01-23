@@ -68,6 +68,10 @@ const blockProperty = {
 	41: ["TP Offset X","TP Offset Y"],
 	46: ["Text"]
 };
+const defaultProperty = {
+	41: [0,0],
+	46: ["Text"]
+};
 var editProperty = false;
 
 id("levelLayer").addEventListener("mousedown", function(input){
@@ -113,10 +117,11 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				control.lmb = false;
 				control.rmb = false;
 				level[xb][yb] = [player.selectedBlock[0]];
+				for (let i in defaultProperty[player.selectedBlock[0]]) {
+					level[xb][yb][i+1] = defaultProperty[player.selectedBlock[0]][i];
+				}
 				openPropertyMenu(xb,yb);
-			} else {
-				level[xb][yb] = player.selectedBlock[0];
-			}
+			} else level[xb][yb] = player.selectedBlock[0];
 			drawLevel();
 		} else if (input.button == 1) {
 			id("blockSelect"+player.selectedBlock[0]).style.boxShadow = "";
@@ -135,7 +140,15 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				player.startPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 				player.spawnPoint = [xb,yb,player.g,player.maxJumps,player.moveSpeed,player.switchOn,player.jumpOn];
 			}
-			level[xb][yb] = player.selectedBlock[1];
+			if (Object.keys(blockProperty).includes(String(player.selectedBlock[1]))) {
+				control.lmb = false;
+				control.rmb = false;
+				level[xb][yb] = [player.selectedBlock[1]];
+				for (let i in defaultProperty[player.selectedBlock[1]]) {
+					level[xb][yb][i+1] = defaultProperty[player.selectedBlock[1]][i];
+				}
+				openPropertyMenu(xb,yb);
+			} else level[xb][yb] = player.selectedBlock[1];
 			control.rmb = true;
 			drawLevel();
 		}
