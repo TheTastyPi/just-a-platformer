@@ -736,7 +736,7 @@ function nextFrame(timeStamp) {
 			} else hasHitbox[7] = 37;
 			// jump-toggle
 			if (player.jumpOn) {
-				hasHitBox[8] = 42;
+				hasHitbox[8] = 42;
 			} else hasHitbox[8] = 43;
 			// death block
 			if (isTouching("any",2) && !player.godMode) respawn();
@@ -788,6 +788,7 @@ function drawPlayer() {
 var prevLevel = [];
 var prevSwitch = false;
 var prevTimer = 0;
+var prevJumpState = false;
 function drawLevel() {
 	let canvas = id("levelLayer");
 	id("background").style.width = level.length*blockSize+"px";
@@ -799,7 +800,8 @@ function drawLevel() {
 			} else {
 				if (level[x][y] != prevLevel[x][y]
 				    || (player.switchOn != prevSwitch && [31,32,33,34,35].includes(level[x][y]))
-				    || (timerStage != prevTimer && [36,37,38,39].includes(level[x][y]))) drawBlock(canvas,x,y);
+				    || (timerStage != prevTimer && [36,37,38,39].includes(level[x][y])) 
+				    || (player.jumpOn != prevJumpState && [42,43,44,45].includes(level[x][y]))) drawBlock(canvas,x,y);
 			}
 		}
 	}
@@ -808,6 +810,7 @@ function drawLevel() {
 	prevLevel = deepCopy(level);
 	prevSwitch = player.switchOn;
 	prevTimer = timerStage;
+	prevJumpState = player.jumpOn;
 }
 function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 	let lL = canvas.getContext("2d");
