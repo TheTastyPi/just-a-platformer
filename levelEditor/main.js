@@ -752,12 +752,14 @@ function nextFrame(timeStamp) {
 				if (!textShown) {
 					let coord = getCoord(46);
 					let text = level[coord[0]][coord[1]][1];
-					id("centerText").innerHTML = text;
-					id("centerText").style.display = "block";
+					id("textBlockText").innerHTML = text;
+					id("textBlockText").style.display = "block";
+					id("textBlockText").style.left = player.x+lvlxOffset+"px";
+					id("textBlockText").style.top = player.y+lvlyOffset+"px";
 					textShown = true;
 				}
 			} else {
-				id("centerText").style.display = "none";
+				id("textBlockText").style.display = "none";
 				textShown = false;
 			}
 			// death block
@@ -1634,7 +1636,7 @@ function drawBlock(canvas,x,y,type = getBlockType(x,y)) {
 			
 			lL.lineWidth = blockSize/2-blockSize/25*6;
 			lL.beginPath();
-			lL.moveTo(xb+blockSize/2,yb+blockSize/2);
+			lL.moveTo(xb+blockSize/2,yb+blockSize/2-blockSize/50*3);
 			lL.lineTo(xb+blockSize/2,yb+blockSize-blockSize/25*3);
 			lL.stroke();
 			break;
