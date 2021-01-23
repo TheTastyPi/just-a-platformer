@@ -112,6 +112,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 			if (Object.keys(blockProperty).includes(String(player.selectedBlock[0]))) {
 				control.lmb = false;
 				control.rmb = false;
+				level[xb][yb] = [player.selectedBlock[0]];
 				openPropertyMenu(xb,yb);
 			} else {
 				level[xb][yb] = player.selectedBlock[0];
