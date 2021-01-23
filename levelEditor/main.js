@@ -635,7 +635,7 @@ function openPropertyMenu(x,y) {
 		}
 		menu.appendChild(cancel);
 		menu.onkeydown = function(input) {
-			if (input.code == "Enter") confirm.click();
+			if (input.code == "Enter" && !input.shiftKey) confirm.click();
 		}
 		menu.style.display = "block";
 		editProperty = true;
