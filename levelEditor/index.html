@@ -23,6 +23,7 @@
 				[ctrl] + RMB: Refocus on player<br>
 				MMB: Select block clicked for LMB<br>
 				[shift] + MMB: Select block clicked for RMB<br>
+				[alt] + LMB: Edit block property (if any)<br>
 				[shift] + [arrow]: Increase level size<br>
 				[ctrl] + [arrow]: Decrease level size<br>
 				[S]: Restart from startpoint<br>
@@ -38,6 +39,7 @@
 		<div id="blockSelect" style="position:absolute; bottom:0; width:100%; height:20%; display:flex; overflow-x: scroll; text-align:center; background: #FFFFFF88"></div>
 		<div id="textBlockText" style="position:absolute; background:#FFFFFF88; display:none; transform: translate(-50%, -50%);"></div>
 		<div id="tooltip" style="position:absolute; background:#FFFFFF88; display:none;"></div>
+		<div id="editProperty" style="position:absolute; background:#FFFFFF88; display:none; left:50%; top:50%; transform: translate(-50%, -50%);"></div>
 		<textarea style="opacity: .01; height:0; position:absolute; z-index: -1; display:none" id="exportArea">export text</textarea>
 	</body>
 	<script src="main.js"></script>
