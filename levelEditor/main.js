@@ -97,7 +97,9 @@ id("levelLayer").addEventListener("mousedown", function(input){
 				confirm.innerHTML = "confirm";
 				confirm.onclick = function() {
 					for (let i in props) {
-						level[xb][yb][parseInt(i)+1] = id("prop"+props[i]).value;
+						let newVal = id("prop"+props[i]).value;
+						if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
+						level[xb][yb][parseInt(i)+1] = newVal;
 					}
 					menu.style.display = "none";
 					editProperty = false;
