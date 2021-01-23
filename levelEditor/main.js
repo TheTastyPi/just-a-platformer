@@ -662,9 +662,13 @@ function nextFrame(timeStamp) {
 			// velocity change
 			if (!noFriction) player.xv *= Math.pow(0.5,dt/12);
 			if (Math.abs(player.xv) < 5) player.xv = 0;
-			if (!player.noclip) player.yv += player.g * dt / 500 * gameSpeed;
+			player.yv += player.g * dt / 500 * gameSpeed;
 			if (player.yv > player.g && player.g > 0) player.yv = player.g;
 			if (player.yv < player.g && player.g < 0) player.yv = player.g;
+			if (player.noclip) {
+				player.xv = 0;
+				player.yv = 0;
+			}
 			// position change based on velocity
 			player.x += player.xv * dt / 500 * gameSpeed;
 			player.y += player.yv * dt / 500 * gameSpeed;
@@ -905,10 +909,10 @@ function nextFrame(timeStamp) {
 		}
 		// key input
 		if (player.noclip) {
-			if (control.left) player.x-=player.moveSpeed/1000*simReruns*dt;
-			if (control.right) player.x+=player.moveSpeed/1000*simReruns*dt;
-			if (control.up) player.y-=player.moveSpeed/1000*simReruns*dt;
-			if (control.down) player.y+=player.moveSpeed/1000*simReruns*dt;
+			if (control.left) player.x-=player.moveSpeed/2000*simReruns*dt;
+			if (control.right) player.x+=player.moveSpeed/2000*simReruns*dt;
+			if (control.up) player.y-=player.moveSpeed/2000*simReruns*dt;
+			if (control.down) player.y+=player.moveSpeed/2000*simReruns*dt;
 		} else {
 			if (control.left && player.xv > -player.moveSpeed) {
 				player.xv -= player.moveSpeed*dt/(noFriction?5:1);
