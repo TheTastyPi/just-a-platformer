@@ -78,6 +78,7 @@ id("levelLayer").addEventListener("mousedown", function(input){
 			if (Object.keys(blockProperty).includes(String(type))) {
 				let props = blockProperty[type];
 				let menu = id("editProperty");
+				menu.innerHTML = "";
 				for (let i in props) {
 					let sect = document.createElement("div");
 					menu.appendChild(sect);
