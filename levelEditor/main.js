@@ -481,11 +481,11 @@ function getBlockType(x,y) {
 	if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
 		return 1;
 	}
+	if (player.noclip) return 0;
 	if (typeof(level[x][y]) == "object") return level[x][y][0];
 	return level[x][y];
 }
 function isTouching(dir, type) {
-	if (player.noclip) return false;
 	let x1 = player.x;
 	let x2 = player.x+playerSize;
 	let y1 = player.y;
