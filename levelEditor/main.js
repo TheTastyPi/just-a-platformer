@@ -68,6 +68,7 @@ const blockProperty = {
 	41: ["TP Offset X","TP Offset Y"],
 	46: ["Text"]
 };
+var editProperty = false;
 
 id("levelLayer").addEventListener("mousedown", function(input){
 	let xb = Math.floor(input.offsetX/blockSize);
@@ -99,15 +100,18 @@ id("levelLayer").addEventListener("mousedown", function(input){
 						level[xb][yb][parseInt(i)+1] = id("prop"+props[i]).value;
 					}
 					menu.style.display = "none";
+					editProperty = false;
 				}
 				menu.appendChild(confirm);
 				let cancel = document.createElement("button");
 				cancel.innerHTML = "cancel";
 				cancel.onclick = function() {
 					menu.style.display = "none";
+					editProperty = false;
 				}
 				menu.appendChild(cancel);
 				menu.style.display = "block";
+				editProperty = true;
 			}
 		}
 	} else if (input.ctrlKey) {
@@ -233,218 +237,222 @@ id("levelLayer").addEventListener("mouseup", function(input){
 document.addEventListener("contextmenu", function(input){input.preventDefault();});
 
 document.addEventListener("keydown", function(input){
-	let key = input.code;
-	switch(key) {
-		case "ArrowUp":
-			if (input.ctrlKey) {
-				input.preventDefault();
-				if (level[0].length > 1) {
-					for (let i in level) level[i].shift();
-					player.spawnPoint[1]--;
-					player.startPoint[1]--;
-					player.y -= blockSize;
+	if (!editProperty) {
+		let key = input.code;
+		switch(key) {
+			case "ArrowUp":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level[0].length > 1) {
+						for (let i in level) level[i].shift();
+						player.spawnPoint[1]--;
+						player.startPoint[1]--;
+						player.y -= blockSize;
+						id("lvlHeight").innerHTML = level[0].length;
+						id("levelLayer").height = level[0].length*blockSize;
+						prevLevel = [];
+						drawLevel();
+					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					for (let i in level) {
+						level[i].unshift(0);
+					}
+					player.spawnPoint[1]++;
+					player.startPoint[1]++;
+					player.y += blockSize;
 					id("lvlHeight").innerHTML = level[0].length;
 					id("levelLayer").height = level[0].length*blockSize;
 					prevLevel = [];
 					drawLevel();
 				}
-			} else if (input.shiftKey) {
-				input.preventDefault();
-				for (let i in level) {
-					level[i].unshift(0);
-				}
-				player.spawnPoint[1]++;
-				player.startPoint[1]++;
-				player.y += blockSize;
-				id("lvlHeight").innerHTML = level[0].length;
-				id("levelLayer").height = level[0].length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-		case "KeyW":
-			if (!input.shiftKey && !input.ctrlKey) {
-				if (player.canWalljump) {
-					player.jumpOn = !player.jumpOn;
-					drawLevel();
-					if (player.wallJumpDir == "left") {
-						player.xv = -player.moveSpeed;
+			case "KeyW":
+				if (!input.shiftKey && !input.ctrlKey) {
+					if (player.canWalljump) {
+						player.jumpOn = !player.jumpOn;
+						drawLevel();
+						if (player.wallJumpDir == "left") {
+							player.xv = -player.moveSpeed;
+							player.yv = -Math.sign(player.g)*player.jumpHeight;
+						}
+						if (player.wallJumpDir == "right") {
+							player.xv = player.moveSpeed;
+							player.yv = -Math.sign(player.g)*player.jumpHeight;
+						}
+					} else if (player.currentJumps > 0 || player.godMode) {
+						player.jumpOn = !player.jumpOn;
+						drawLevel();
 						player.yv = -Math.sign(player.g)*player.jumpHeight;
+						player.currentJumps--;
 					}
-					if (player.wallJumpDir == "right") {
-						player.xv = player.moveSpeed;
-						player.yv = -Math.sign(player.g)*player.jumpHeight;
-					}
-				} else if (player.currentJumps > 0 || player.godMode) {
-					player.jumpOn = !player.jumpOn;
-					drawLevel();
-					player.yv = -Math.sign(player.g)*player.jumpHeight;
-					player.currentJumps--;
 				}
-			}
-			break;
-		case "ArrowDown":
-			if (input.ctrlKey) {
-				input.preventDefault();
-				if (level[0].length > 1) {
-					for (let i in level) level[i].pop();
-					id("lvlHeight").innerHTML = level[0].length;
+				break;
+			case "ArrowDown":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level[0].length > 1) {
+						for (let i in level) level[i].pop();
+						id("lvlHeight").innerHTML = level[0].length;
+						id("levelLayer").height = level[0].length*blockSize;
+						prevLevel = [];
+						drawLevel();
+					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					for (let i in level) {
+						level[i].push(0);
+					}
+					id("lvlHeight").innerHTML = level[0].length
 					id("levelLayer").height = level[0].length*blockSize;
 					prevLevel = [];
 					drawLevel();
 				}
-			} else if (input.shiftKey) {
-				input.preventDefault();
-				for (let i in level) {
-					level[i].push(0);
-				}
-				id("lvlHeight").innerHTML = level[0].length
-				id("levelLayer").height = level[0].length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-			break;
-		case "ArrowLeft":
-			if (input.ctrlKey) {
-				input.preventDefault();
-				if (level.length > 1) {
-					level.shift();
-					player.spawnPoint[0]--;
-					player.startPoint[0]--;
-					player.x -= blockSize;
-					id("lvlWidth").innerHTML = level.length;
-					id("levelLayer").width = level.length*blockSize;
-					prevLevel = [];
-					drawLevel();
-				}
-			} else if (input.shiftKey) {
-				input.preventDefault();
-				level.unshift([]);
-				level[0].length = level[1].length;
-				level[0].fill(0);
-				player.spawnPoint[0]++;
-				player.startPoint[0]++;
-				player.x += blockSize;
-				id("lvlWidth").innerHTML = level.length;
-				id("levelLayer").width = level.length*blockSize
-				id("levelLayer").height = level[0].length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-		case "KeyA":
-			if (!input.shiftKey && !input.ctrlKey) control.left = true;
-			break;
-		case "ArrowRight":
-			if (input.ctrlKey) {
-				input.preventDefault();
-				if (level.length > 1) {
-					level.pop();
-					id("lvlWidth").innerHTML = level.length;
-					id("levelLayer").width = level.length*blockSize;
-					prevLevel = [];
-					drawLevel();
-				}
-			} else if (input.shiftKey) {
-				input.preventDefault();
-				level.push([]);
-				level[level.length-1].length = level[0].length;
-				level[level.length-1].fill(0);
-				id("lvlWidth").innerHTML = level.length;
-				id("levelLayer").width = level.length*blockSize;
-				prevLevel = [];
-				drawLevel();
-			}
-		case "KeyD":
-			if (!input.shiftKey && !input.ctrlKey) control.right = true;
-			break;
-		case "Equal":
-			break;
-		case "KeyS":
-			toStart();
-			break;
-		case "KeyR":
-			respawn();
-			break;
-		case "KeyG":
-			player.godMode = !player.godMode;
-			drawPlayer();
-			break;
-		case "KeyI":
-			if (id("info").style.display != "none") {
-				id("info").style.display = "none";
-			} else if (id("info").style.display != "inline") id("info").style.display = "inline";
-			break;
-		case "KeyC":
-			if (id("control").style.display != "none") {
-				id("control").style.display = "none";
-			} else if (id("control").style.display != "inline") id("control").style.display = "inline";
-			break;
-		case "KeyB":
-			if (id("blockSelect").style.display != "none") {
-				id("blockSelect").style.display = "none";
-			} else if (id("blockSelect").style.display != "flex") id("blockSelect").style.display = "flex";
-			break;
-		case "KeyE":
-			if (input.shiftKey) {
-				control.lmb = false;
-				control.rmb = false;
-				let data = prompt("Please enter level data.");
-				if (data) {
-					data = JSON.parse(data);
-					level = data[0];
-					player.startPoint = data[1];
-					if (!player.startPoint[3]) player.startPoint[3] = 1;
-					if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
-					if (!player.startPoint[4]) player.startPoint[4] = 600;
-					if (player.startPoint[4] == 100) player.startPoint[4] = 300;
-					if (player.startPoint[4] == 200) player.startPoint[4] = 600;
-					if (player.startPoint[4] == 400) player.startPoint[4] = 1200;
-					if (player.startPoint[4] == 325) player.startPoint[4] = 300;
-					if (player.startPoint[4] == 750) player.startPoint[4] = 600;
-					if (player.startPoint[4] == 1500) player.startPoint[4] = 1200;
-					if (!player.startPoint[5]) player.startPoint[5] = false;
-					player.spawnPoint = deepCopy(player.startPoint);
-					id("lvlWidth").innerHTML = level.length;
-					id("lvlHeight").innerHTML = level[0].length;
-					id("levelLayer").height = level[0].length*blockSize;
-					id("levelLayer").width = level.length*blockSize;
-					prevLevel = [];
-					toStart();
-					drawLevel();
-				}
-			} else {
-				control.lmb = false;
-				control.rmb = false;
-				let adjustedLevel = deepCopy(level);
-				for (let x in adjustedLevel) {
-					for (let y in adjustedLevel[x]){
-						if (adjustedLevel[x][y] == 4) adjustedLevel[x][y] = 3;
-						if (adjustedLevel[x][y] == 19) adjustedLevel[x][y] = 17;
-						if (adjustedLevel[x][y] == 20) adjustedLevel[x][y] = 18;
+				break;
+			case "ArrowLeft":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level.length > 1) {
+						level.shift();
+						player.spawnPoint[0]--;
+						player.startPoint[0]--;
+						player.x -= blockSize;
+						id("lvlWidth").innerHTML = level.length;
+						id("levelLayer").width = level.length*blockSize;
+						prevLevel = [];
+						drawLevel();
 					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					level.unshift([]);
+					level[0].length = level[1].length;
+					level[0].fill(0);
+					player.spawnPoint[0]++;
+					player.startPoint[0]++;
+					player.x += blockSize;
+					id("lvlWidth").innerHTML = level.length;
+					id("levelLayer").width = level.length*blockSize
+					id("levelLayer").height = level[0].length*blockSize;
+					prevLevel = [];
+					drawLevel();
 				}
-				let startData = player.startPoint
-				if (startData[3] == Infinity) startData[3] = "Infinity";
-				id("exportArea").value = JSON.stringify([adjustedLevel,startData]);
-				id("exportArea").style.display = "inline";
-				id("exportArea").select();
-				document.execCommand("copy")
-				id("exportArea").style.display = "none";
-				alert("Level data copied to clipboard!");
-			}
-			break;
+			case "KeyA":
+				if (!input.shiftKey && !input.ctrlKey) control.left = true;
+				break;
+			case "ArrowRight":
+				if (input.ctrlKey) {
+					input.preventDefault();
+					if (level.length > 1) {
+						level.pop();
+						id("lvlWidth").innerHTML = level.length;
+						id("levelLayer").width = level.length*blockSize;
+						prevLevel = [];
+						drawLevel();
+					}
+				} else if (input.shiftKey) {
+					input.preventDefault();
+					level.push([]);
+					level[level.length-1].length = level[0].length;
+					level[level.length-1].fill(0);
+					id("lvlWidth").innerHTML = level.length;
+					id("levelLayer").width = level.length*blockSize;
+					prevLevel = [];
+					drawLevel();
+				}
+			case "KeyD":
+				if (!input.shiftKey && !input.ctrlKey) control.right = true;
+				break;
+			case "Equal":
+				break;
+			case "KeyS":
+				toStart();
+				break;
+			case "KeyR":
+				respawn();
+				break;
+			case "KeyG":
+				player.godMode = !player.godMode;
+				drawPlayer();
+				break;
+			case "KeyI":
+				if (id("info").style.display != "none") {
+					id("info").style.display = "none";
+				} else if (id("info").style.display != "inline") id("info").style.display = "inline";
+				break;
+			case "KeyC":
+				if (id("control").style.display != "none") {
+					id("control").style.display = "none";
+				} else if (id("control").style.display != "inline") id("control").style.display = "inline";
+				break;
+			case "KeyB":
+				if (id("blockSelect").style.display != "none") {
+					id("blockSelect").style.display = "none";
+				} else if (id("blockSelect").style.display != "flex") id("blockSelect").style.display = "flex";
+				break;
+			case "KeyE":
+				if (input.shiftKey) {
+					control.lmb = false;
+					control.rmb = false;
+					let data = prompt("Please enter level data.");
+					if (data) {
+						data = JSON.parse(data);
+						level = data[0];
+						player.startPoint = data[1];
+						if (!player.startPoint[3]) player.startPoint[3] = 1;
+						if (player.startPoint[3] == "Infinity") player.startPoint[3] = Infinity;
+						if (!player.startPoint[4]) player.startPoint[4] = 600;
+						if (player.startPoint[4] == 100) player.startPoint[4] = 300;
+						if (player.startPoint[4] == 200) player.startPoint[4] = 600;
+						if (player.startPoint[4] == 400) player.startPoint[4] = 1200;
+						if (player.startPoint[4] == 325) player.startPoint[4] = 300;
+						if (player.startPoint[4] == 750) player.startPoint[4] = 600;
+						if (player.startPoint[4] == 1500) player.startPoint[4] = 1200;
+						if (!player.startPoint[5]) player.startPoint[5] = false;
+						player.spawnPoint = deepCopy(player.startPoint);
+						id("lvlWidth").innerHTML = level.length;
+						id("lvlHeight").innerHTML = level[0].length;
+						id("levelLayer").height = level[0].length*blockSize;
+						id("levelLayer").width = level.length*blockSize;
+						prevLevel = [];
+						toStart();
+						drawLevel();
+					}
+				} else {
+					control.lmb = false;
+					control.rmb = false;
+					let adjustedLevel = deepCopy(level);
+					for (let x in adjustedLevel) {
+						for (let y in adjustedLevel[x]){
+							if (adjustedLevel[x][y] == 4) adjustedLevel[x][y] = 3;
+							if (adjustedLevel[x][y] == 19) adjustedLevel[x][y] = 17;
+							if (adjustedLevel[x][y] == 20) adjustedLevel[x][y] = 18;
+						}
+					}
+					let startData = player.startPoint
+					if (startData[3] == Infinity) startData[3] = "Infinity";
+					id("exportArea").value = JSON.stringify([adjustedLevel,startData]);
+					id("exportArea").style.display = "inline";
+					id("exportArea").select();
+					document.execCommand("copy")
+					id("exportArea").style.display = "none";
+					alert("Level data copied to clipboard!");
+				}
+				break;
+		}
 	}
 });
 document.addEventListener("keyup", function(input){
-	let key = input.code;
-	switch(key) {
-		case "ArrowLeft":
-		case "KeyA":
-			control.left = false;
-			break;
-		case "ArrowRight":
-		case "KeyD":
-			control.right = false;
-			break;
+	if (!editProperty) {
+		let key = input.code;
+		switch(key) {
+			case "ArrowLeft":
+			case "KeyA":
+				control.left = false;
+				break;
+			case "ArrowRight":
+			case "KeyD":
+				control.right = false;
+				break;
+		}
 	}
 });
 
