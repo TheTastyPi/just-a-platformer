@@ -203,8 +203,8 @@ id("levelLayer").addEventListener("mousemove", function(input){
 			id("tooltip").left = input.offsetX;
 			id("tooltip").top = input.offsetY;
 			let text = "";
-			for (let i in blockProperty[level[xb][yb]]) {
-				text += blockProperty[level[xb][yb]][i];
+			for (let i in blockProperty[getBlockType(xb,yb)]) {
+				text += blockProperty[getBlockType(xb,yb)][i];
 				text += ": ";
 				text += level[xb][yb][i+1];
 				text += "\n";
