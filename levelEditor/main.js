@@ -19,6 +19,7 @@ const player = {
 	switchOn: false,
 	jumpOn: false,
 	godMode: false,
+	noclip: false,
 	selectedBlock: [1,0],
 	playerFocus: true,
 };
@@ -27,6 +28,8 @@ const control = {
 	rmb: false,
 	left: false,
 	right: false,
+	up: false,
+	down: false
 };
 var level = [
 	[1,1,1,1,1,1,1,1,1],
@@ -260,6 +263,7 @@ document.addEventListener("keydown", function(input){
 				}
 			case "KeyW":
 				if (!input.shiftKey && !input.ctrlKey) {
+					control.up = true;
 					if (player.canWalljump) {
 						player.jumpOn = !player.jumpOn;
 						drawLevel();
@@ -299,6 +303,8 @@ document.addEventListener("keydown", function(input){
 					prevLevel = [];
 					drawLevel();
 				}
+			case "KeyS":
+				if (!input.shiftKey && !input.ctrlKey) control.down = true;
 				break;
 			case "ArrowLeft":
 				if (input.ctrlKey) {
@@ -355,14 +361,17 @@ document.addEventListener("keydown", function(input){
 				break;
 			case "Equal":
 				break;
-			case "KeyS":
-				toStart();
-				break;
 			case "KeyR":
-				respawn();
+				if (input.shiftKey) {
+					toStart();
+				} else respawn();
 				break;
 			case "KeyG":
 				player.godMode = !player.godMode;
+				drawPlayer();
+				break;
+			case "KeyG":
+				player.noclip = !player.noclip;
 				drawPlayer();
 				break;
 			case "KeyI":
@@ -444,6 +453,14 @@ document.addEventListener("keyup", function(input){
 			case "KeyD":
 				control.right = false;
 				break;
+			case "ArrowUp":
+			case "KeyW":
+				control.up = false;
+				break;
+			case "ArrowDown":
+			case "KeyS":
+				control.down = false;
+				break;
 		}
 	}
 });
@@ -468,6 +485,7 @@ function getBlockType(x,y) {
 	return level[x][y];
 }
 function isTouching(dir, type) {
+	if (player.noclip) return false;
 	let x1 = player.x;
 	let x2 = player.x+playerSize;
 	let y1 = player.y;
@@ -644,7 +662,7 @@ function nextFrame(timeStamp) {
 			// velocity change
 			if (!noFriction) player.xv *= Math.pow(0.5,dt/12);
 			if (Math.abs(player.xv) < 5) player.xv = 0;
-			player.yv += player.g * dt / 500 * gameSpeed;
+			if (!player.noclip) player.yv += player.g * dt / 500 * gameSpeed;
 			if (player.yv > player.g && player.g > 0) player.yv = player.g;
 			if (player.yv < player.g && player.g < 0) player.yv = player.g;
 			// position change based on velocity
@@ -886,13 +904,20 @@ function nextFrame(timeStamp) {
 			}
 		}
 		// key input
-		if (control.left && player.xv > -player.moveSpeed) {
-			player.xv -= player.moveSpeed*dt/(noFriction?5:1);
-			if (player.xv < -player.moveSpeed/(noFriction?5:1)) player.xv = -player.moveSpeed/(noFriction?5:1);
-		}
-		if (control.right && player.xv < player.moveSpeed) {
-			player.xv += player.moveSpeed*dt/(noFriction?5:1);
-			if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
+		if (player.noclip) {
+			if (control.left) player.x-=player.moveSpeed/1000*dt;
+			if (control.right) player.x+=player.moveSpeed/1000*dt;
+			if (control.up) player.y-=player.moveSpeed/1000*dt;
+			if (control.down) player.y+=player.moveSpeed/1000*dt;
+		} else {
+			if (control.left && player.xv > -player.moveSpeed) {
+				player.xv -= player.moveSpeed*dt/(noFriction?5:1);
+				if (player.xv < -player.moveSpeed/(noFriction?5:1)) player.xv = -player.moveSpeed/(noFriction?5:1);
+			}
+			if (control.right && player.xv < player.moveSpeed) {
+				player.xv += player.moveSpeed*dt/(noFriction?5:1);
+				if (player.xv > player.moveSpeed/(noFriction?5:1)) player.xv = player.moveSpeed/(noFriction?5:1);
+			}
 		}
 		// draw checks
 		if (shouldDrawLevel) drawLevel();
@@ -910,6 +935,7 @@ function drawPlayer() {
 	pL.clearRect(0,0,canvas.width,canvas.height);
 	pL.fillStyle = "#0000FF";
 	if (player.godMode) pL.fillStyle = "#FF00FF";
+	if (player.noclip) pL.fillStyle = += "88";
 	pL.fillRect(Math.floor(player.x) + lvlxOffset, Math.floor(player.y) + lvlyOffset, playerSize, playerSize);
 }
 var prevLevel = [];
