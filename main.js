@@ -810,10 +810,10 @@ function isTouching(dir, type) {
 			&& player.yv > 0;
 			break;
 		case "any":
-			x1 = player.x + 1;
-			x2 = player.x+playerSize - 1;
-			y1 = player.y + 1;
-			y2 = player.y+playerSize - 1;
+			x1 = player.x + 0.000001;
+			x2 = player.x+playerSize - 0.000001;
+			y1 = player.y + 0.000001;
+			y2 = player.y+playerSize - 0.000001;
 			x1b = Math.floor(x1/blockSize);
 			x2b = Math.floor(x2/blockSize);
 			y1b = Math.floor(y1/blockSize);
