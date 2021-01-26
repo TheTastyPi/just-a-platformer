@@ -206,7 +206,7 @@ const propertyLimit = {
   41: ["none", "none"],
   46: ["none"],
   47: [[0, 1000]],
-  48: [[-1000, 1000]],
+  48: [[-2000, 2000]],
   49: [[0, Infinity]],
   50: [[0, 2000]],
   51: [
@@ -975,7 +975,7 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
       let err = false;
       for (let i in props) {
         let newVal = id("prop" + props[i]).value;
-        if (newVal == parseInt(newVal)) newVal = parseInt(newVal);
+        if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
         if (newVal == "Infinity") newVal = Infinity;
         if (
           (typeof newVal == propertyType[type][i] ||
