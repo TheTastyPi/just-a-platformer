@@ -805,8 +805,8 @@ document.addEventListener("keydown", function (input) {
                     if (adjustedLevel[x][y][i] == 4) {
                       adjustedLevel[x][y][i] = 3;
                       break;
-                    } else if (adjustedLevel[x][y][i] == 17) {
-                      adjustedLevel[x][y][i] = 19;
+                    } else if (adjustedLevel[x][y][i] == 19) {
+                      adjustedLevel[x][y][i] = 17;
                       break;
                     } else if (adjustedLevel[x][y][i] == 20) {
                       adjustedLevel[x][y][i] = 18;
