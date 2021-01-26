@@ -255,13 +255,40 @@ id("levelLayer").addEventListener("mousedown", function (input) {
       }
     } else if (input.shiftKey) {
       if (input.button === 1) {
-        id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
-        player.selectedBlock[1] = getBlockType(xb, yb);
+        if (player.selectedBlock[0] == player.selectedBlock[1]) {
+          id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "#0 0 0 5px FF0000";
+        } else {
+          id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
+        }
+        player.selectedBlock[1] = getBlockType(xb, yb, false);
         if (player.selectedBlock[1] === 4) player.selectedBlock[1] = 3;
         if (player.selectedBlock[1] === 19) player.selectedBlock[1] = 17;
         if (player.selectedBlock[1] === 20) player.selectedBlock[1] = 18;
-        id("blockSelect" + player.selectedBlock[1]).style.boxShadow =
-          "0 0 0 5px #0000FF";
+        if (hasProperty(player.selectedBlock[1])) {
+          for (let i in defaultProperty[player.selectedBlock[1]]) {
+            defaultProperty[player.selectedBlock[1]][i] = level[xb][yb][parseInt(i) + 1];
+            if (
+              propertyType[player.selectedBlock[1]][i] === "block"
+            ) {
+              if (defaultProperty[player.selectedBlock[1]][i] == 4) {
+                defaultProperty[player.selectedBlock[1]][i] = 3;
+                break;
+              } else if (defaultProperty[player.selectedBlock[1]][i] == 17) {
+                defaultProperty[player.selectedBlock[1]][i] = 19;
+                break;
+              } else if (defaultProperty[player.selectedBlock[1]][i] == 20) {
+                defaultProperty[player.selectedBlock[1]][i] = 18;
+                break;
+              }
+            }
+          }
+          drawBlock(id("blockSelect" + player.selectedBlock[1]), 0, 0, player.selectedBlock[1], 0, 0, 1, true);
+        }
+        if (player.selectedBlock[0] == player.selectedBlock[1]) {
+          id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #FF00FF";
+        } else {
+          id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #0000FF";
+        }
       } else {
         player.x = input.offsetX;
         player.y = input.offsetY;
@@ -337,13 +364,40 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         } else level[xb][yb] = player.selectedBlock[0];
         drawLevel();
       } else if (input.button === 1) {
-        id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
-        player.selectedBlock[0] = getBlockType(xb, yb);
+        if (player.selectedBlock[1] == player.selectedBlock[0]) {
+          id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #0000FF";
+        } else {
+          id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
+        }
+        player.selectedBlock[0] = getBlockType(xb, yb, false);
         if (player.selectedBlock[0] === 4) player.selectedBlock[0] = 3;
         if (player.selectedBlock[0] === 19) player.selectedBlock[0] = 17;
         if (player.selectedBlock[0] === 20) player.selectedBlock[0] = 18;
-        id("blockSelect" + player.selectedBlock[0]).style.boxShadow =
-          "0 0 0 5px #FF0000";
+        if (hasProperty(player.selectedBlock[0])) {
+          for (let i in defaultProperty[player.selectedBlock[0]]) {
+            defaultProperty[player.selectedBlock[0]][i] = level[xb][yb][parseInt(i) + 1];
+            if (
+              propertyType[player.selectedBlock[0]][i] === "block"
+            ) {
+              if (defaultProperty[player.selectedBlock[0]][i] == 4) {
+                defaultProperty[player.selectedBlock[0]][i] = 3;
+                break;
+              } else if (defaultProperty[player.selectedBlock[0]][i] == 17) {
+                defaultProperty[player.selectedBlock[0]][i] = 19;
+                break;
+              } else if (defaultProperty[player.selectedBlock[0]][i] == 20) {
+                defaultProperty[player.selectedBlock[0]][i] = 18;
+                break;
+              }
+            }
+          }
+          drawBlock(id("blockSelect" + player.selectedBlock[0]), 0, 0, player.selectedBlock[0], 0, 0, 1, true);
+        }
+        if (player.selectedBlock[1] == player.selectedBlock[0]) {
+          id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF00FF";
+        } else {
+          id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #FF0000";
+        }
       } else if (
         input.button === 2 &&
         !bannedBlock.includes(player.selectedBlock[1])
@@ -3308,24 +3362,36 @@ function init() {
       button.width = blockSize;
       drawBlock(button, 0, 0, blockSelect[i], 0, 0, 1, true);
       button.addEventListener("mousedown", function (input) {
-        if (input.button == 0 && input.altKey) {
+        if (input.button == 0 && control.f) {
           openPropertyMenu(0, 0, blockSelect[i], true);
         } else if (
-          input.button == 0 &&
-          player.selectedBlock[0] != blockSelect[i] &&
-          player.selectedBlock[1] != blockSelect[i]
+          input.button == 0
         ) {
-          id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
+          if (player.selectedBlock[1] == player.selectedBlock[0]) {
+            id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "0 0 0 5px #0000FF";
+          } else {
+            id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
+          }
+          if (player.selectedBlock[1] == blockSelect[i]) {
+            button.style.boxShadow = "0 0 0 5px #FF00FF";
+          } else {
+            button.style.boxShadow = "0 0 0 5px #FF0000";
+          }
           player.selectedBlock[0] = blockSelect[i];
-          button.style.boxShadow = "0 0 0 5px #FF0000";
         } else if (
-          input.button == 2 &&
-          player.selectedBlock[0] != blockSelect[i] &&
-          player.selectedBlock[1] != blockSelect[i]
+          input.button == 2
         ) {
-          id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
+          if (player.selectedBlock[0] == player.selectedBlock[1]) {
+            id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "0 0 0 5px #FF0000";
+          } else {
+            id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
+          }
+          if (player.selectedBlock[0] == blockSelect[i]) {
+            button.style.boxShadow = "0 0 0 5px #FF00FF";
+          } else {
+            button.style.boxShadow = "0 0 0 5px #0000FF";
+          }
           player.selectedBlock[1] = blockSelect[i];
-          button.style.boxShadow = "0 0 0 5px #0000FF";
         }
       });
       if (hasProperty(blockSelect[i])) {
