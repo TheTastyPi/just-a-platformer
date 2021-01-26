@@ -30,7 +30,8 @@ const control = {
   left: false,
   right: false,
   up: false,
-  down: false
+  down: false,
+  f: false
 };
 var level = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -241,9 +242,10 @@ id("levelLayer").addEventListener("mousedown", function (input) {
   if (!editProperty) {
     let xb = Math.floor(input.offsetX / blockSize);
     let yb = Math.floor(input.offsetY / blockSize);
-    if (input.altKey) {
+    if (control.f) {
       if (input.button === 0) {
         openPropertyMenu(xb, yb);
+        control.f = false;
       }
     } else if (input.ctrlKey) {
       if (input.button === 0) control.lmb = true;
@@ -721,7 +723,8 @@ document.addEventListener("keydown", function (input) {
       case "KeyD":
         if (!input.shiftKey && !input.ctrlKey) control.right = true;
         break;
-      case "Equal":
+      case "KeyF":
+        control.f = true;
         break;
       case "KeyR":
         if (input.shiftKey) {
@@ -856,6 +859,9 @@ document.addEventListener("keyup", function (input) {
       case "ArrowDown":
       case "KeyS":
         control.down = false;
+        break;
+      case "KeyF":
+        control.f = false;
         break;
       default:
     }
@@ -3323,7 +3329,7 @@ function init() {
         }
       });
       if (hasProperty(blockSelect[i])) {
-        addTooltip(button, "[alt] + LMB to edit default properties");
+        addTooltip(button, "[F] + LMB to edit default properties");
       }
       blockDisp.style.width = blockSize + "px";
       blockDisp.style.marginRight = "5px";
