@@ -1315,9 +1315,10 @@ var yprev;
 function nextFrame(timeStamp) {
   // setup stuff
   let dt = timeStamp - lastFrame;
+  dt *= gameSpeed;
   lastFrame = timeStamp;
   sinceLastTimerStage += dt;
-  if (dt < haltThreshold) {
+  if (dt < haltThreshold * gameSpeed) {
     dt = dt / simReruns;
     xprev = player.x;
     yprev = player.y;
@@ -1326,7 +1327,7 @@ function nextFrame(timeStamp) {
       // velocity change
       if (!noFriction) player.xv *= Math.pow(0.5, dt / 12);
       if (Math.abs(player.xv) < 5) player.xv = 0;
-      player.yv += ((player.g * dt) / 500) * gameSpeed;
+      player.yv += (player.g * dt) / 500;
       if (player.yv > player.g && player.g > 0) player.yv = player.g;
       if (player.yv < player.g && player.g < 0) player.yv = player.g;
       if (player.noclip) {
@@ -1334,8 +1335,8 @@ function nextFrame(timeStamp) {
         player.yv = 0;
       }
       // position change based on velocity
-      player.x += ((player.xv * dt) / 500) * gameSpeed;
-      player.y += ((player.yv * dt) / 500) * gameSpeed;
+      player.x += (player.xv * dt) / 500;
+      player.y += (player.yv * dt) / 500;
       // collision detection
       let x1 = player.x;
       let x2 = player.x + playerSize;
@@ -2114,16 +2115,16 @@ function drawBlock(
       lL.fillStyle = "#0000FF88";
       break;
     case 47:
-      lL.fillStyle = "#888888";
+      lL.fillStyle = `hsl(${(data[1] / 1000) * 360},100%,50%)`;
       break;
     case 48:
-      lL.fillStyle = "#88888888";
+      lL.fillStyle = `hsla(${(data[1] / 2000) * 360},100%,50%,0.5)`;
       break;
     case 49:
-      lL.fillStyle = "#88888888";
+      lL.fillStyle = `hsla(${(data[1] * 360) / 10},100%,50%,0.5)`;
       break;
     case 50:
-      lL.fillStyle = "#88888888";
+      lL.fillStyle = `hsla(${(data[1] / 2000) * 360},100%,50%,0.5)`;
       break;
     case 51:
       lL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
@@ -3162,7 +3163,7 @@ function drawBlock(
       );
       break;
     case 47:
-      lL.strokeStyle = "#444444";
+      lL.strokeStyle = `hsl(${(data[1] / 1000) * 360},100%,25%)`;
       lL.beginPath();
       lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 4);
       lL.lineTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
@@ -3179,7 +3180,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 48:
-      lL.strokeStyle = "#44444488";
+      lL.strokeStyle = `hsla(${(data[1] / 2000) * 360},100%,25%,0.5)`;
       lL.lineWidth = blockSize / 25;
       lL.strokeRect(
         xb + (blockSize - blockSize / 5) / 2,
@@ -3202,7 +3203,7 @@ function drawBlock(
       }
       break;
     case 49:
-      lL.strokeStyle = "#44444488";
+      lL.strokeStyle = `hsla(${(data[1] * 360) / 10},100%,25%,0.5)`;
       lL.lineWidth = blockSize / 25;
       lL.beginPath();
       lL.moveTo(
@@ -3218,7 +3219,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 50:
-      lL.strokeStyle = "#44444488";
+      lL.strokeStyle = `hsla(${(data[1] / 2000) * 360},100%,25%,0.5)`;
       lL.lineWidth = blockSize / 25;
       for (let i = 1; i < 3; i++) {
         lL.beginPath();
