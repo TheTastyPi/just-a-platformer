@@ -245,7 +245,6 @@ id("levelLayer").addEventListener("mousedown", function (input) {
     if (control.f) {
       if (input.button === 0) {
         openPropertyMenu(xb, yb);
-        control.f = false;
       }
     } else if (input.ctrlKey) {
       if (input.button === 0) control.lmb = true;
@@ -945,6 +944,7 @@ document.addEventListener("keyup", function (input) {
 });
 
 function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
+  control.f = false;
   if (hasProperty(type)) {
     let props = blockProperty[type];
     let menu = id("editProperty");
@@ -1817,8 +1817,8 @@ function nextFrame(timeStamp) {
         !player.noclip
       )
         respawn();
-      // portal
       if (isTouching("any", 41)) {
+        // portal
         let coord = getCoord(41);
         player.x =
           (coord[0] + level[coord[0]][coord[1]][1]) * blockSize +
