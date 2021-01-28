@@ -675,18 +675,41 @@ document.addEventListener("keydown", function (input) {
     let key = input.code;
     switch (key) {
       case "ArrowUp":
-        if (input.ctrlKey) {
+        if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
+          let dw = prompt(
+            "Please enter desired amount of rows added. (Negatives allowed)"
+          );
+          if (dw == parseInt(dw)) {
+            dw = parseInt(dw);
+          } else break;
+          input.preventDefault();
+          for (let i in level) {
+            if (dw > 0) for (let j = 0; j < dw; j++) level[i].unshift(0);
+            if (dw < 0) {
+              for (let j = 0; j > dw; j--) {
+                if (level[0].length > 1) level[i].shift();
+              }
+            }
+          }
+          player.spawnPoint[1] += dw;
+          player.startPoint[1] += dw;
+          player.y += blockSize * dw;
+          id("lvlHeight").innerHTML = level[0].length;
+          id("levelLayer").height = level[0].length * blockSize;
+          prevLevel = [];
+          drawLevel();
+        } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level[0].length > 1) {
             for (let i in level) level[i].shift();
-            player.spawnPoint[1]--;
-            player.startPoint[1]--;
-            player.y -= blockSize;
-            id("lvlHeight").innerHTML = level[0].length;
-            id("levelLayer").height = level[0].length * blockSize;
-            prevLevel = [];
-            drawLevel();
           }
+          player.spawnPoint[1]--;
+          player.startPoint[1]--;
+          player.y -= blockSize;
+          id("lvlHeight").innerHTML = level[0].length;
+          id("levelLayer").height = level[0].length * blockSize;
+          prevLevel = [];
+          drawLevel();
         } else if (input.shiftKey) {
           input.preventDefault();
           for (let i in level) {
@@ -701,7 +724,7 @@ document.addEventListener("keydown", function (input) {
           drawLevel();
         }
       case "KeyW":
-        if (!input.shiftKey && !input.ctrlKey) {
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
           control.up = true;
           if (player.canWalljump) {
             player.jumpOn = !player.jumpOn;
@@ -723,15 +746,38 @@ document.addEventListener("keydown", function (input) {
         }
         break;
       case "ArrowDown":
-        if (input.ctrlKey) {
+        if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
+          let dw = prompt(
+            "Please enter desired amount of rows added. (Negatives allowed)"
+          );
+          if (dw == parseInt(dw)) {
+            dw = parseInt(dw);
+          } else break;
+          input.preventDefault();
+          for (let i in level) {
+            if (dw > 0) for (let j = 0; j < dw; j++) level[i].push(0);
+            if (dw < 0) {
+              for (let j = 0; j > dw; j--) {
+                if (level[0].length > 1) level[i].pop();
+              }
+            }
+          }
+          player.spawnPoint[1] += dw;
+          player.startPoint[1] += dw;
+          player.y += blockSize * dw;
+          id("lvlHeight").innerHTML = level[0].length;
+          id("levelLayer").height = level[0].length * blockSize;
+          prevLevel = [];
+          drawLevel();
+        } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level[0].length > 1) {
             for (let i in level) level[i].pop();
-            id("lvlHeight").innerHTML = level[0].length;
-            id("levelLayer").height = level[0].length * blockSize;
-            prevLevel = [];
-            drawLevel();
           }
+          id("lvlHeight").innerHTML = level[0].length;
+          id("levelLayer").height = level[0].length * blockSize;
+          prevLevel = [];
+          drawLevel();
         } else if (input.shiftKey) {
           input.preventDefault();
           for (let i in level) {
@@ -743,10 +789,38 @@ document.addEventListener("keydown", function (input) {
           drawLevel();
         }
       case "KeyS":
-        if (!input.shiftKey && !input.ctrlKey) control.down = true;
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
+          control.down = true;
         break;
       case "ArrowLeft":
-        if (input.ctrlKey) {
+        if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
+          let dw = prompt(
+            "Please enter desired amount of columns added. (Negatives allowed)"
+          );
+          if (dw == parseInt(dw)) {
+            dw = parseInt(dw);
+          } else break;
+          input.preventDefault();
+          if (dw > 0) {
+            for (let j = 0; j < dw; j++) {
+              level.unshift([]);
+              level[0].length = level[1].length;
+              level[0].fill(0);
+            }
+          }
+          if (dw < 0) {
+            for (let j = 0; j > dw; j--) {
+              if (level.length > 1) level.shift();
+            }
+          }
+          player.spawnPoint[1] += dw;
+          player.startPoint[1] += dw;
+          player.y += blockSize * dw;
+          id("lvlWidth").innerHTML = level.length;
+          id("levelLayer").width = level.length * blockSize;
+          prevLevel = [];
+          drawLevel();
+        } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level.length > 1) {
             level.shift();
@@ -768,15 +842,39 @@ document.addEventListener("keydown", function (input) {
           player.x += blockSize;
           id("lvlWidth").innerHTML = level.length;
           id("levelLayer").width = level.length * blockSize;
-          id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
         }
       case "KeyA":
-        if (!input.shiftKey && !input.ctrlKey) control.left = true;
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
+          control.left = true;
         break;
       case "ArrowRight":
-        if (input.ctrlKey) {
+        if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
+          let dw = prompt(
+            "Please enter desired amount of columns added. (Negatives allowed)"
+          );
+          if (dw == parseInt(dw)) {
+            dw = parseInt(dw);
+          } else break;
+          input.preventDefault();
+          if (dw > 0) {
+            for (let j = 0; j < dw; j++) {
+              level.push([]);
+              level[level.length - 1].length = level[0].length;
+              level[level.length - 1].fill(0);
+            }
+          }
+          if (dw < 0) {
+            for (let j = 0; j > dw; j--) {
+              if (level.length > 1) level.pop();
+            }
+          }
+          id("lvlWidth").innerHTML = level.length;
+          id("levelLayer").width = level.length * blockSize;
+          prevLevel = [];
+          drawLevel();
+        } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level.length > 1) {
             level.pop();
@@ -796,7 +894,8 @@ document.addEventListener("keydown", function (input) {
           drawLevel();
         }
       case "KeyD":
-        if (!input.shiftKey && !input.ctrlKey) control.right = true;
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
+          control.right = true;
         break;
       case "KeyF":
         control.f = true;
@@ -1895,8 +1994,10 @@ function drawLevel() {
       if (prevLevel[x] == undefined) {
         drawBlock(canvas, parseInt(x), parseInt(y));
       } else {
+        let prevBlock = prevLevel[x][y];
+        if (prevBlock == undefined) prevBlock = 0;
         if (
-          level[x][y] != prevLevel[x][y] ||
+          level[x][y] != prevBlock ||
           (player.switchOn != prevSwitch &&
             [31, 32, 33, 34, 35].includes(level[x][y])) ||
           (timerStage != prevTimer && [36, 37, 38, 39].includes(level[x][y])) ||
