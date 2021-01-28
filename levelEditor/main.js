@@ -174,9 +174,9 @@ const blockProperty = {
   49: ["Jumps"],
   50: ["Speed"],
   51: ["ColorR", "ColorG", "ColorB"],
-  52: ["BlockA", "BlockB"],
-  53: ["BlockA", "BlockB"],
-  54: ["BlockA", "BlockB"]
+  52: ["BlockA", "BlockB", "Invert"],
+  53: ["BlockA", "BlockB", "Invert"],
+  54: ["BlockA", "BlockB", "Invert"]
 };
 const defaultProperty = {
   41: [0, 0],
@@ -186,9 +186,9 @@ const defaultProperty = {
   49: [1],
   50: [600],
   51: [127, 127, 255],
-  52: [0, 1],
-  53: [0, 1],
-  54: [0, 1]
+  52: [0, 1, false],
+  53: [0, 1, false],
+  54: [0, 1, false]
 };
 const propertyType = {
   41: ["number", "number"],
@@ -198,9 +198,9 @@ const propertyType = {
   49: ["number"],
   50: ["number"],
   51: ["number", "number", "number"],
-  52: ["block", "block"],
-  53: ["block", "block"],
-  54: ["block", "block"]
+  52: ["block", "block", "boolean"],
+  53: ["block", "block", "boolean"],
+  54: ["block", "block", "boolean"]
 };
 const propertyLimit = {
   41: ["none", "none"],
@@ -214,18 +214,9 @@ const propertyLimit = {
     [0, 255],
     [0, 255]
   ],
-  52: [
-    [0, blockName.length - 1],
-    [0, blockName.length - 1]
-  ],
-  53: [
-    [0, blockName.length - 1],
-    [0, blockName.length - 1]
-  ],
-  54: [
-    [0, blockName.length - 1],
-    [0, blockName.length - 1]
-  ]
+  52: [[0, blockName.length - 1], [0, blockName.length - 1], "none"],
+  53: [[0, blockName.length - 1], [0, blockName.length - 1], "none"],
+  54: [[0, blockName.length - 1], [0, blockName.length - 1], "none"]
 };
 var editProperty = false;
 
@@ -1070,6 +1061,10 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
             currentSect.appendChild(option);
           }
         }
+      } else if (propertyType[type][i] === "boolean") {
+        label.style.verticalAlign = "-0.25em";
+        input = document.createElement("input");
+        input.type = "checkbox";
       } else {
         label.style.verticalAlign = "1em";
         input = document.createElement("textarea");
@@ -1096,6 +1091,8 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
       let err = false;
       for (let i in props) {
         let newVal = id("prop" + props[i]).value;
+        if (propertyType[type][i] == "boolean")
+          newVal = id("prop" + props[i]).checked;
         if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
         if (newVal == "Infinity") newVal = Infinity;
         if (
@@ -1187,7 +1184,7 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
     };
     menu.appendChild(cancel);
     menu.onkeydown = function (input) {
-      if (input.code == "Enter" && !input.shiftKey) confirm.click();
+      if (input.code === "Enter" && !input.shiftKey) confirm.click();
     };
     menu.style.display = "block";
     editProperty = true;
@@ -1228,17 +1225,17 @@ function getBlockType(x, y, subtype = true) {
   if (typeof level[x][y] === "object") {
     if (subtype) {
       if (level[x][y][0] === 52) {
-        if (player.switchOn) {
+        if (player.switchOn !== level[x][y][3]) {
           return level[x][y][1];
         } else return level[x][y][2];
       }
       if (level[x][y][0] === 53) {
-        if (player.timerOn) {
+        if (player.timerOn !== level[x][y][3]) {
           return level[x][y][1];
         } else return level[x][y][2];
       }
       if (level[x][y][0] === 54) {
-        if (player.jumpOn) {
+        if (player.jumpOn !== level[x][y][3]) {
           return level[x][y][1];
         } else return level[x][y][2];
       }
@@ -1887,10 +1884,18 @@ function nextFrame(timeStamp) {
           let text = level[coord[0]][coord[1]][1];
           id("textBlockText").innerHTML = text;
           id("textBlockText").style.display = "block";
-          id("textBlockText").style.left =
-            coord[0] * blockSize + blockSize / 2 + lvlxOffset + "px";
-          id("textBlockText").style.top =
-            coord[1] * blockSize + blockSize / 2 + lvlyOffset + "px";
+          let x = coord[0] * blockSize + blockSize / 2 + lvlxOffset;
+          if (x < id("textBlockText").clientWidth / 2)
+            x = id("textBlockText").clientWidth / 2;
+          if (x > window.innerWidth - id("textBlockText").clientWidth / 2)
+            x = window.innerWidth - id("textBlockText").clientWidth / 2;
+          let y = coord[1] * blockSize + blockSize / 2 + lvlyOffset;
+          if (y < id("textBlockText").clientHeight / 2)
+            y = id("textBlockText").clientHeight / 2;
+          if (y > window.innerHeight - id("textBlockText").clientHeight / 2)
+            y = window.innerHeight - id("textBlockText").clientHeight / 2;
+          id("textBlockText").style.left = x + "px";
+          id("textBlockText").style.top = y + "px";
           prevTextCoord = coord;
         }
       } else {
@@ -3334,7 +3339,7 @@ function drawBlock(
       }
       break;
     case 52:
-      if (sOn) {
+      if (sOn !== data[3]) {
         drawBlock(canvas, x, y, data[1]);
         drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2);
       } else {
@@ -3357,7 +3362,7 @@ function drawBlock(
       lL.setLineDash([]);
       break;
     case 53:
-      if (tOn) {
+      if (tOn !== data[3]) {
         drawBlock(canvas, x, y, data[1]);
         drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2);
       } else {
@@ -3392,7 +3397,7 @@ function drawBlock(
       lL.setLineDash([]);
       break;
     case 54:
-      if (jOn) {
+      if (jOn !== data[3]) {
         drawBlock(canvas, x, y, data[1]);
         drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2);
       } else {
