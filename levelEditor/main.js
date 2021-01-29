@@ -305,10 +305,11 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             "0 0 0 5px #0000FF";
         }
       } else {
-        player.x = input.offsetX;
-        player.y = input.offsetY;
+        player.x = input.offsetX - playerSize/2;
+        player.y = input.offsetY - playerSize/2;
         player.xv = 0;
         player.yv = 0;
+        drawPlayer();
       }
     } else {
       if (
@@ -1476,6 +1477,7 @@ function nextFrame(timeStamp) {
     yprev = player.y;
     let shouldDrawLevel = false;
     for (let i = 0; i < simReruns; i++) {
+      let shouldDie = false;
       // velocity change
       if (!noFriction) player.xv *= Math.pow(0.5, dt / 12);
       if (Math.abs(player.xv) < 5) player.xv = 0;
@@ -1959,27 +1961,63 @@ function nextFrame(timeStamp) {
         prevTextCoord = [];
       }
       // death block
-      if (isTouching("any", 2) && !player.godMode) respawn();
-      if (isTouching("any", 34) && player.switchOn && !player.godMode)
-        respawn();
-      if (isTouching("any", 35) && !player.switchOn && !player.godMode)
-        respawn();
-      if (isTouching("any", 38) && player.timerOn && !player.godMode) respawn();
-      if (isTouching("any", 39) && !player.timerOn && !player.godMode)
-        respawn();
-      if (isTouching("any", 44) && player.jumpOn && !player.godMode) respawn();
-      if (isTouching("any", 45) && !player.jumpOn && !player.godMode) respawn();
+      if (isTouching("any", 2)) shouldDie = true;
+      if (isTouching("any", 34) && player.switchOn)
+        shouldDie = true;
+      if (isTouching("any", 35) && !player.switchOn)
+        shouldDie = true;
+      if (isTouching("any", 38) && player.timerOn) shouldDie = true;
+      if (isTouching("any", 39) && !player.timerOn)
+        shouldDie = true;
+      if (isTouching("any", 44) && player.jumpOn) shouldDie = true;
+      if (isTouching("any", 45) && !player.jumpOn) shouldDie = true;
       if (
         hasHitbox.includes(getBlockType(x1b, y1b)) &&
         hasHitbox.includes(getBlockType(x2b, y1b)) &&
         hasHitbox.includes(getBlockType(x1b, y2b)) &&
         hasHitbox.includes(getBlockType(x2b, y2b)) &&
-        !player.godMode &&
         !player.noclip
-      )
-        respawn();
+      ) {
+        let cx = x1+playerSize/2;
+        let cy = y1+playerSize/2;
+        let cxb = Math.floor(cx / blockSize);
+        let cyb = Math.floor(cy / blockSize);
+        let dx1 = cx%blockSize;
+        let dx2 = blockSize-dx1;
+        let dy1 = cy%blockSize;
+        let dy2 = blockSize-dy1;
+        let list = [dx1,dx2,dy1,dy2].sort();
+        let maybeShouldDie = true;
+        for (let i in list) {
+          if (list[i] < blockSize/2) {
+            if (list[i] == dx1 && !hasHitbox.includes(getBlockType(cxb-1, cyb))) {
+              player.xv = 0;
+              player.x = cxb * blockSize - playerSize;
+              maybeShouldDie = false;
+              break;
+            } else if (list[i] == dx2 && !hasHitbox.includes(getBlockType(cxb+1, cyb))) {
+              player.xv = 0;
+              player.x = (cxb+1) * blockSize;
+              maybeShouldDie = false;
+              break;
+            } else if (list[i] == dy1 && !hasHitbox.includes(getBlockType(cxb, cyb-1))) {
+              player.yv = 0;
+              player.y = cyb * blockSize - playerSize;
+              maybeShouldDie = false;
+              break;
+            } else if (list[i] == dy2 && !hasHitbox.includes(getBlockType(cxb, cyb+1))) {
+              player.yv = 0;
+              player.y = (cyb+1) * blockSize;
+              maybeShouldDie = false;
+              break;
+            }
+          }
+        }
+        if (maybeShouldDie) shouldDie = true;
+      }
+      if (!player.godMode && shouldDie) respawn(); 
+      // portal
       if (isTouching("any", 41)) {
-        // portal
         let coord = getCoord(41);
         player.x =
           (coord[0] + level[coord[0]][coord[1]][1]) * blockSize +
