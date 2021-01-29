@@ -218,6 +218,20 @@ const propertyLimit = {
   53: [[0, blockName.length - 1], [0, blockName.length - 1], "none"],
   54: [[0, blockName.length - 1], [0, blockName.length - 1], "none"]
 };
+var prevVersions = [
+  [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 1],
+    [1, 0, 1, 1, 0, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 0, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ]
+];
+var currentVersion = 0;
 var editProperty = false;
 
 document.addEventListener("mousedown", function (input) {
@@ -653,9 +667,13 @@ id("levelLayer").addEventListener("mouseup", function (input) {
   } else if (input.button === 2) {
     control.rmb = false;
   }
+  if (!arraysEqual(level, prevVersions[currentVersion])) addVersion();
 });
 id("levelLayer").addEventListener("mouseleave", function () {
   id("tooltip").style.display = "none";
+  control.lmb = false;
+  control.rmb = false;
+  if (!arraysEqual(level, prevVersions[currentVersion])) addVersion();
 });
 document.addEventListener("contextmenu", function (input) {
   input.preventDefault();
@@ -689,6 +707,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level[0].length > 1) {
@@ -701,6 +720,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         } else if (input.shiftKey) {
           input.preventDefault();
           for (let i in level) {
@@ -713,6 +733,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         }
       case "KeyW":
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
@@ -760,6 +781,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level[0].length > 1) {
@@ -769,6 +791,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         } else if (input.shiftKey) {
           input.preventDefault();
           for (let i in level) {
@@ -778,6 +801,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         }
       case "KeyS":
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
@@ -811,6 +835,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level.length > 1) {
@@ -822,6 +847,7 @@ document.addEventListener("keydown", function (input) {
             id("levelLayer").width = level.length * blockSize;
             prevLevel = [];
             drawLevel();
+            addVersion();
           }
         } else if (input.shiftKey) {
           input.preventDefault();
@@ -835,6 +861,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         }
       case "KeyA":
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
@@ -865,6 +892,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           input.preventDefault();
           if (level.length > 1) {
@@ -873,6 +901,7 @@ document.addEventListener("keydown", function (input) {
             id("levelLayer").width = level.length * blockSize;
             prevLevel = [];
             drawLevel();
+            addVersion();
           }
         } else if (input.shiftKey) {
           input.preventDefault();
@@ -883,6 +912,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          addVersion();
         }
       case "KeyD":
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
@@ -952,6 +982,7 @@ document.addEventListener("keydown", function (input) {
             drawLevel();
           }
         } else {
+          if (!editProperty) input.preventDefault();
           control.lmb = false;
           control.rmb = false;
           let adjustedLevel = deepCopy(level);
@@ -989,6 +1020,7 @@ document.addEventListener("keydown", function (input) {
           if (startData[3] === Infinity) startData[3] = "Infinity";
           id("exportArea").value = JSON.stringify([adjustedLevel, startData]);
           id("exportArea").style.display = "inline";
+          id("exportArea").focus();
           id("exportArea").select();
           document.execCommand("copy");
           id("exportArea").style.display = "none";
@@ -999,6 +1031,21 @@ document.addEventListener("keydown", function (input) {
         if (input.shiftKey) {
           for (let i in level) level[i] = level[i].fill(0);
           drawLevel();
+        }
+        break;
+      case "KeyZ":
+        if (input.ctrlKey || input.metaKey) {
+          if (input.shiftKey) {
+            if (currentVersion < prevVersions.length - 1) {
+              currentVersion++;
+              level = deepCopy(prevVersions[currentVersion]);
+              drawLevel();
+            }
+          } else if (currentVersion > 0) {
+            currentVersion--;
+            level = deepCopy(prevVersions[currentVersion]);
+            drawLevel();
+          }
         }
         break;
       default:
@@ -1033,6 +1080,11 @@ document.addEventListener("keyup", function (input) {
   }
 });
 
+function addVersion() {
+  currentVersion++;
+  prevVersions.length = currentVersion;
+  prevVersions.push(deepCopy(level));
+}
 function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
   control.f = false;
   if (hasProperty(type)) {
@@ -1159,20 +1211,24 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
           }
           if (editDefault) {
             defaultProperty[type][i] = newVal;
-            drawBlock(id("blockSelect" + type), 0, 0, type, 0, 0, 1, true);
           } else {
             level[x][y][parseInt(i) + 1] = newVal;
           }
           drawLevel();
         } else {
           err = true;
-          alert("Invalid value!");
           id("prop" + props[i]).value = "";
         }
       }
       if (!err) {
         menu.style.display = "none";
+        if (!editDefault) {
+          drawBlock(id("blockSelect" + type), 0, 0, type, 0, 0, 1, true);
+          addVersion();
+        }
         editProperty = false;
+      } else {
+        alert("Invalid value!");
       }
     };
     menu.appendChild(confirm);
@@ -3462,7 +3518,9 @@ function arraysEqual(a, b) {
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
   for (var i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
+    if (typeof a[i] === "object" || typeof b[i] === "object") {
+      if (!arraysEqual(a[i],b[i])) return false;
+    } else if (a[i] !== b[i]) return false;
   }
   return true;
 }
