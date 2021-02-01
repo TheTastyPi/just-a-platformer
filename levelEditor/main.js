@@ -954,7 +954,22 @@ document.addEventListener("keydown", function (input) {
           id("blockSelect").style.display = "flex";
         break;
       case "KeyE":
-        if (input.shiftKey) {
+        if (input.ctrlKey || input.metaKey) {
+          control.lmb = false;
+          control.rmb = false;
+          let data = prompt("Please enter level data.");
+          if (data) {
+            data = JSON.parse(data);
+            level = data;
+            id("lvlWidth").innerHTML = level.length;
+            id("lvlHeight").innerHTML = level[0].length;
+            id("levelLayer").height = level[0].length * blockSize;
+            id("levelLayer").width = level.length * blockSize;
+            prevLevel = [];
+            toStart();
+            drawLevel();
+          }
+        } else if (input.shiftKey) {
           control.lmb = false;
           control.rmb = false;
           let data = prompt("Please enter level data.");
@@ -995,7 +1010,7 @@ document.addEventListener("keydown", function (input) {
                 adjustedLevel[x][y] = 17;
               } else if (adjustedLevel[x][y] == 20) {
                 adjustedLevel[x][y] = 18;
-              } else {
+              } else if (hasProperty(adjustedLevel[x][y])) {
                 for (let i in adjustedLevel[x][y]) {
                   if (i == 0) continue;
                   if (
