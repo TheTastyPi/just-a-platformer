@@ -695,6 +695,7 @@ document.addEventListener("keydown", function (input) {
       break;
     case "KeyR":
       respawn();
+      drawLevel();
       break;
     case "KeyI":
       openInfo();
