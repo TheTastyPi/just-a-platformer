@@ -1225,7 +1225,7 @@ function nextFrame(timeStamp) {
         levels[42][12][9] = 0;
       } else levels[42][12][9] = -4;
       if (player.triggers.includes(17)) {
-        levels[42][1][1] = 0;
+        levels[42][1][1] = 12;
       } else levels[42][1][1] = -4;
       if (player.triggers.includes(18)) {
         levels[44][10][6] = 0;
