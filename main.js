@@ -696,6 +696,9 @@ document.addEventListener("keydown", function (input) {
     case "KeyR":
       respawn();
       break;
+    case "KeyI":
+      openInfo();
+      break;
   }
 });
 
@@ -712,6 +715,12 @@ document.addEventListener("keyup", function (input) {
       break;
   }
 });
+
+function openInfo() {
+  if (id("info").style.bottom == "0%") {
+    id("info").style.bottom = "100%";
+  } else id("info").style.bottom = "0%";
+}
 
 function newSave() {
   return [1, 6, 0, 8, 325, 1, 600, [], currentVersion];
@@ -1313,7 +1322,7 @@ function nextFrame(timeStamp) {
   window.requestAnimationFrame(nextFrame);
 }
 function drawPlayer() {
-  let canvas = document.getElementById("playerLayer");
+  let canvas = id("playerLayer");
   let pL = canvas.getContext("2d");
   canvas.width = levels[player.currentLevel].length * blockSize;
   canvas.height = levels[player.currentLevel][0].length * blockSize;
@@ -1328,7 +1337,7 @@ function drawPlayer() {
   adjustScreen();
 }
 function drawLevel() {
-  let canvas = document.getElementById("levelLayer");
+  let canvas = id("levelLayer");
   let lL = canvas.getContext("2d");
   canvas.width = levels[player.currentLevel].length * blockSize;
   canvas.height = levels[player.currentLevel][0].length * blockSize;
@@ -1976,10 +1985,10 @@ function adjustScreen() {
         window.innerHeight - levels[player.currentLevel][0].length * blockSize
       );
   }
-  document.getElementById("playerLayer").style.left = lvlx + "px";
-  document.getElementById("levelLayer").style.left = lvlx + "px";
-  document.getElementById("playerLayer").style.top = lvly + "px";
-  document.getElementById("levelLayer").style.top = lvly + "px";
+  id("playerLayer").style.left = lvlx + "px";
+  id("levelLayer").style.left = lvlx + "px";
+  id("playerLayer").style.top = lvly + "px";
+  id("levelLayer").style.top = lvly + "px";
 }
 function arraysEqual(a, b) {
   if (a === b) return true;
@@ -1990,6 +1999,7 @@ function arraysEqual(a, b) {
   }
   return true;
 }
+var id = (x) => document.getElementById(x);
 
 load();
 respawn();
