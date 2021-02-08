@@ -475,6 +475,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           if (level[0].length > 1) {
@@ -487,6 +488,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         } else if (input.shiftKey) {
           for (let i in level) {
@@ -499,6 +501,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         }
       case "KeyW":
@@ -546,6 +549,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           if (level[0].length > 1) {
@@ -555,6 +559,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         } else if (input.shiftKey) {
           for (let i in level) {
@@ -564,6 +569,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         }
       case "KeyS":
@@ -597,6 +603,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           if (level.length > 1) {
@@ -608,6 +615,7 @@ document.addEventListener("keydown", function (input) {
             id("levelLayer").width = level.length * blockSize;
             prevLevel = [];
             drawLevel();
+            drawGrid();
             addVersion();
           }
         } else if (input.shiftKey) {
@@ -621,6 +629,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         }
       case "KeyA":
@@ -651,6 +660,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         } else if (input.ctrlKey || input.metaKey) {
           if (level.length > 1) {
@@ -659,6 +669,7 @@ document.addEventListener("keydown", function (input) {
             id("levelLayer").width = level.length * blockSize;
             prevLevel = [];
             drawLevel();
+            drawGrid();
             addVersion();
           }
         } else if (input.shiftKey) {
@@ -669,6 +680,7 @@ document.addEventListener("keydown", function (input) {
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
           drawLevel();
+          drawGrid();
           addVersion();
         }
       case "KeyD":
@@ -691,23 +703,29 @@ document.addEventListener("keydown", function (input) {
         player.noclip = !player.noclip;
         drawPlayer();
         break;
-      case "KeyI":
+      case "Digit1":
         if (id("info").style.display !== "none") {
           id("info").style.display = "none";
         } else if (id("info").style.display !== "inline")
           id("info").style.display = "inline";
         break;
-      case "KeyC":
+      case "Digit2":
         if (id("control").style.display !== "none") {
           id("control").style.display = "none";
         } else if (id("control").style.display !== "inline")
           id("control").style.display = "inline";
         break;
-      case "KeyB":
+      case "Digit3":
         if (id("blockSelect").style.display !== "none") {
           id("blockSelect").style.display = "none";
         } else if (id("blockSelect").style.display !== "flex")
           id("blockSelect").style.display = "flex";
+        break;
+      case "Digit4":
+        if (id("grid").style.display !== "none") {
+          id("grid").style.display = "none";
+        } else if (id("grid").style.display !== "block")
+          id("grid").style.display = "block";
         break;
       case "KeyE":
         if (input.ctrlKey || input.metaKey) {

@@ -1522,6 +1522,31 @@ function drawBlock(
   }
   blockSize /= size;
 }
+function drawGrid() {
+  let canvas = id("grid");
+  let g = canvas.getContext("2d");
+  g.strokeStyle = "#888888";
+  g.lineWidth = blockSize / 25;
+  canvas.width = level.length * blockSize;
+  canvas.height = level[0].length * blockSize;
+  for (let x in level) {
+    x = parseInt(x);
+    if (x === 0) continue;
+    g.beginPath();
+    g.moveTo(blockSize * x, 0);
+    g.lineTo(blockSize * x, canvas.height);
+    g.stroke();
+  }
+  for (let y in level[0]) {
+    y = parseInt(y);
+    if (y === 0) continue;
+    g.beginPath();
+    g.moveTo(0, blockSize * y);
+    g.lineTo(canvas.width, blockSize * y);
+    g.stroke();
+  }
+  adjustScreen();
+}
 function adjustScreen() {
   if (player.playerFocus) {
     lvlxOffset = Math.floor((window.innerWidth - level.length * blockSize) / 2);
@@ -1554,5 +1579,7 @@ function adjustScreen() {
   id("levelLayer").style.top = lvlyOffset + "px";
   id("background").style.left = lvlxOffset + "px";
   id("background").style.top = lvlyOffset + "px";
+  id("grid").style.left = lvlxOffset + "px";
+  id("grid").style.top = lvlyOffset + "px";
   drawPlayer();
 }

@@ -102,9 +102,15 @@ function nextFrame(timeStamp) {
       // velocity change
       player.xv *= Math.pow(0.5, dt / 12);
       if (Math.abs(player.xv) < 5) player.xv = 0;
-      player.yv += ((player.g * dt) / 500) * gameSpeed;
-      if (player.yv > player.g && player.g > 0) player.yv = player.g;
-      if (player.yv < player.g && player.g < 0) player.yv = player.g;
+      if (
+        (player.yv > player.g && player.g > 0) ||
+        (player.yv < player.g && player.g < 0)
+      ) {
+        player.yv -= (player.g * dt) / 500;
+        if (Math.abs(player.yv) < player.g) player.yv = player.g;
+      } else {
+        player.yv += (player.g * dt) / 500;
+      }
       // position change based on velocity
       player.x += ((player.xv * dt) / 500) * gameSpeed;
       player.y += ((player.yv * dt) / 500) * gameSpeed;
