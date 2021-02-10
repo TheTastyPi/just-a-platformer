@@ -1477,6 +1477,7 @@ function toStart() {
   player.timerOn = player.startPoint[7];
   timerStage = 0;
   sinceLastTimerStage = 0;
+  player.xg = player.startPoint[8];
   if (shouldDraw) drawLevel();
 }
 function respawn() {
@@ -1498,6 +1499,7 @@ function respawn() {
   player.timerOn = player.spawnPoint[7];
   timerStage = 0;
   sinceLastTimerStage = 0;
+  player.xg = player.spawnPoint[8];
   if (shouldDraw) drawLevel();
 }
 function arraysEqual(a, b) {
