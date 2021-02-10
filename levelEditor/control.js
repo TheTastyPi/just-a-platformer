@@ -124,7 +124,8 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
           player.spawnPoint = [
             xb,
@@ -134,7 +135,8 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
         }
         if (hasProperty(player.selectedBlock[0])) {
@@ -236,7 +238,8 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
           player.spawnPoint = [
             xb,
@@ -246,7 +249,8 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
         }
         if (hasProperty(player.selectedBlock[1])) {
@@ -319,7 +323,8 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
           player.spawnPoint = [
             xb,
@@ -329,7 +334,8 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
         }
         if (hasProperty(player.selectedBlock[0])) {
@@ -385,7 +391,8 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
           player.spawnPoint = [
             xb,
@@ -395,7 +402,8 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             player.moveSpeed,
             player.switchOn,
             player.jumpOn,
-            player.timerOn
+            player.timerOn,
+            player.xg
           ];
         }
         if (hasProperty(player.selectedBlock[1])) {

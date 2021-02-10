@@ -1,7 +1,7 @@
 var gameSpeed = 1;
 const player = {
-  startPoint: [4, 5, 325, 1, 600, false, false, false],
-  spawnPoint: [4, 5, 325, 1, 600, false, false, false],
+  startPoint: [4, 5, 325, 1, 600, false, false, false, false],
+  spawnPoint: [4, 5, 325, 1, 600, false, false, false, false],
   x: 0,
   y: 0,
   xv: 0,
@@ -798,7 +798,8 @@ function nextFrame(timeStamp) {
           player.moveSpeed,
           player.switchOn,
           player.jumpOn,
-          player.timerOn
+          player.timerOn,
+          player.xg
         ];
         if (type !== 3) {
           for (let i in level[coord[0]][coord[1]]) {
@@ -859,7 +860,8 @@ function nextFrame(timeStamp) {
           player.moveSpeed,
           player.switchOn,
           player.jumpOn,
-          player.timerOn
+          player.timerOn,
+          player.xg
         ];
         if (type !== 18) {
           for (let i in level[coord[0]][coord[1]]) {
@@ -920,7 +922,8 @@ function nextFrame(timeStamp) {
           player.moveSpeed,
           player.switchOn,
           player.jumpOn,
-          player.timerOn
+          player.timerOn,
+          player.xg
         ];
         if (type !== 19) {
           for (let i in level[coord[0]][coord[1]]) {
@@ -1190,7 +1193,8 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
               player.moveSpeed,
               player.switchOn,
               player.jumpOn,
-              player.timerOn
+              player.timerOn,
+              player.xg
             ];
             player.spawnPoint = [
               x,
@@ -1200,7 +1204,8 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
               player.moveSpeed,
               player.switchOn,
               player.jumpOn,
-              player.timerOn
+              player.timerOn,
+              player.xg
             ];
           }
           if (editDefault) {
