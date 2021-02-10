@@ -42,7 +42,7 @@ var level = [
   [1, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
-const hasHitbox = [1, 5, 11, 24, 25, 26, 33, 37, 40, 43, 47, 51];
+const hasHitbox = [1, 5, 11, 24, 25, 26, 33, 37, 40, 43, 47, 51, 61, 62];
 const blockName = [
   "Empty Space",
   "Solid Block",
@@ -104,7 +104,9 @@ const blockName = [
   "One-Way Block U",
   "One-Way Block D", // one-way (55,56,57,58)
   "G-Left Field",
-  "G-Right Field", // g-sideways (59,60)
+  "G-Right Field",
+  "G-Bounce Left",
+  "G-Bounce Right" // g-sideways (59,60,61,62)
 ];
 const bannedBlock = [4, 19, 20];
 const blockSelect = [
@@ -130,6 +132,8 @@ const blockSelect = [
   48,
   25,
   26,
+  61,
+  62,
   "Jumping",
   5,
   24,
@@ -181,7 +185,7 @@ const blockProperty = {
   41: ["TP Offset X", "TP Offset Y"],
   46: ["Text"],
   47: ["Power"],
-  48: ["Gravity"],
+  48: ["Gravity","Horizontal"],
   49: ["Jumps"],
   50: ["Speed"],
   51: ["ColorR", "ColorG", "ColorB"],
@@ -193,7 +197,7 @@ const defaultProperty = {
   41: [0, 0],
   46: ["Text"],
   47: [275],
-  48: [325],
+  48: [325, false],
   49: [1],
   50: [600],
   51: [127, 127, 255],
@@ -205,7 +209,7 @@ const propertyType = {
   41: ["number", "number"],
   46: ["any"],
   47: ["number"],
-  48: ["number"],
+  48: ["number", "boolean"],
   49: ["number"],
   50: ["number"],
   51: ["number", "number", "number"],
@@ -217,7 +221,7 @@ const propertyLimit = {
   41: ["none", "none"],
   46: ["none"],
   47: [[0, 1000]],
-  48: [[-2000, 2000]],
+  48: [[-2000, 2000], "none"],
   49: [[0, Infinity]],
   50: [[0, 2000]],
   51: [
@@ -345,18 +349,6 @@ function nextFrame(timeStamp) {
             player.xv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
           }
           if (
-            ((getBlockType(x1b, y2b) === 26 && getBlockType(x1b, y1b) === 26) ||
-              (isTouching("left", 26) &&
-                (!hasHitbox.includes(getBlockType(x1b, y2b)) ||
-                  hasHitbox.includes(getBlockType(x1b + 1, y2b)) ||
-                  !hasHitbox.includes(getBlockType(x1b, y1b)) ||
-                  hasHitbox.includes(getBlockType(x1b + 1, y1b))))) &&
-            player.g < 0
-          ) {
-            player.g = -player.g;
-            player.xv = player.g / 2;
-          }
-          if (
             ((getBlockType(x1b, y2b) === 40 && getBlockType(x1b, y1b) === 40) ||
               (isTouching("left", 40) &&
                 (!hasHitbox.includes(getBlockType(x1b, y2b)) ||
@@ -378,6 +370,18 @@ function nextFrame(timeStamp) {
             player.canWalljump = true;
             player.wallJumpDir = "right";
           } else if (i === 0) player.canWalljump = false;
+        }
+        if (
+          (getBlockType(x1b, y2b) === 62 && getBlockType(x1b, y1b) === 62) ||
+          (isTouching("left", 62) &&
+            (!hasHitbox.includes(getBlockType(x1b, y2b)) ||
+              hasHitbox.includes(getBlockType(x1b + 1, y2b)) ||
+              !hasHitbox.includes(getBlockType(x1b, y1b)) ||
+              hasHitbox.includes(getBlockType(x1b + 1, y1b))))
+        ) {
+          player.xg = true;
+          player.g = -player.g;
+          player.xv = player.g / 2;
         }
         if (player.xv < 0) player.xv = 0;
         player.x = (x1b + 1) * blockSize;
@@ -417,18 +421,6 @@ function nextFrame(timeStamp) {
             player.xv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
           }
           if (
-            ((getBlockType(x2b, y2b) == 25 && getBlockType(x2b, y1b) == 25) ||
-              (isTouching("right", 25) &&
-                (!hasHitbox.includes(getBlockType(x2b, y2b)) ||
-                  hasHitbox.includes(getBlockType(x2b - 1, y2b)) ||
-                  !hasHitbox.includes(getBlockType(x2b, y1b)) ||
-                  hasHitbox.includes(getBlockType(x2b - 1, y1b))))) &&
-            player.g > 0
-          ) {
-            player.g = -player.g;
-            player.xv = player.g / 2;
-          }
-          if (
             ((getBlockType(x2b, y2b) == 40 && getBlockType(x2b, y1b) == 40) ||
               (isTouching("right", 40) &&
                 (!hasHitbox.includes(getBlockType(x2b, y2b)) ||
@@ -450,6 +442,18 @@ function nextFrame(timeStamp) {
             player.canWalljump = true;
             player.wallJumpDir = "left";
           } else if (i === 0) player.canWalljump = false;
+        }
+        if (
+          (getBlockType(x2b, y2b) == 61 && getBlockType(x2b, y1b) == 61) ||
+          (isTouching("right", 61) &&
+            (!hasHitbox.includes(getBlockType(x2b, y2b)) ||
+              hasHitbox.includes(getBlockType(x2b - 1, y2b)) ||
+              !hasHitbox.includes(getBlockType(x2b, y1b)) ||
+              hasHitbox.includes(getBlockType(x2b - 1, y1b))))
+        ) {
+          player.xg = true;
+          player.g = -player.g;
+          player.xv = player.g / 2;
         }
         if (player.xv > 0) player.xv = 0;
         player.x = x2b * blockSize - playerSize;
@@ -507,18 +511,6 @@ function nextFrame(timeStamp) {
             player.yv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
           }
           if (
-            ((getBlockType(x2b, y1b) === 26 && getBlockType(x1b, y1b) === 26) ||
-              (isTouching("up", 26) &&
-                (!hasHitbox.includes(getBlockType(x2b, y1b)) ||
-                  hasHitbox.includes(getBlockType(x2b, y1b + 1)) ||
-                  !hasHitbox.includes(getBlockType(x1b, y1b)) ||
-                  hasHitbox.includes(getBlockType(x1b, y1b + 1))))) &&
-            player.g < 0
-          ) {
-            player.g = -player.g;
-            player.yv = player.g / 2;
-          }
-          if (
             ((getBlockType(x2b, y1b) == 40 && getBlockType(x1b, y1b) == 40) ||
               (isTouching("up", 40) &&
                 (!hasHitbox.includes(getBlockType(x2b, y1b)) ||
@@ -531,6 +523,18 @@ function nextFrame(timeStamp) {
           } else if (i == 0) noFriction = false;
           if (player.g < 0 && player.yv <= 0)
             player.currentJumps = player.maxJumps;
+        }
+        if (
+          (getBlockType(x2b, y1b) === 26 && getBlockType(x1b, y1b) === 26) ||
+          (isTouching("up", 26) &&
+            (!hasHitbox.includes(getBlockType(x2b, y1b)) ||
+              hasHitbox.includes(getBlockType(x2b, y1b + 1)) ||
+              !hasHitbox.includes(getBlockType(x1b, y1b)) ||
+              hasHitbox.includes(getBlockType(x1b, y1b + 1))))
+        ) {
+          player.xg = false;
+          player.g = -player.g;
+          player.yv = player.g / 2;
         }
         if (player.yv < 0) player.yv = 0;
         player.y = (y1b + 1) * blockSize;
@@ -579,18 +583,6 @@ function nextFrame(timeStamp) {
             player.yv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
           }
           if (
-            ((getBlockType(x2b, y2b) == 25 && getBlockType(x1b, y2b) == 25) ||
-              (isTouching("down", 25) &&
-                (!hasHitbox.includes(getBlockType(x2b, y2b)) ||
-                  hasHitbox.includes(getBlockType(x2b, y2b - 1)) ||
-                  !hasHitbox.includes(getBlockType(x1b, y2b)) ||
-                  hasHitbox.includes(getBlockType(x1b, y2b - 1))))) &&
-            player.g > 0
-          ) {
-            player.g = -player.g;
-            player.yv = player.g / 2;
-          }
-          if (
             ((getBlockType(x2b, y2b) == 40 && getBlockType(x1b, y2b) == 40) ||
               (isTouching("down", 40) &&
                 (!hasHitbox.includes(getBlockType(x2b, y2b)) ||
@@ -603,6 +595,18 @@ function nextFrame(timeStamp) {
           } else if (i == 0) noFriction = false;
           if (player.g > 0 && player.yv >= 0)
             player.currentJumps = player.maxJumps;
+        }
+        if (
+          (getBlockType(x2b, y2b) == 25 && getBlockType(x1b, y2b) == 25) ||
+          (isTouching("down", 25) &&
+            (!hasHitbox.includes(getBlockType(x2b, y2b)) ||
+              hasHitbox.includes(getBlockType(x2b, y2b - 1)) ||
+              !hasHitbox.includes(getBlockType(x1b, y2b)) ||
+              hasHitbox.includes(getBlockType(x1b, y2b - 1))))
+        ) {
+          player.xg = false;
+          player.g = -player.g;
+          player.yv = player.g / 2;
         }
         if (player.yv > 0) player.yv = 0;
         player.y = y2b * blockSize - playerSize;
@@ -696,6 +700,7 @@ function nextFrame(timeStamp) {
       if (isTouching("any", 48)) {
         let coord = getCoord(48);
         player.g = level[coord[0]][coord[1]][1];
+        player.xg = level[coord[0]][coord[1]][2];
       }
       // multi-jump
       if (isTouching("any", 12)) {
@@ -1112,9 +1117,17 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
       }
       input.id = "prop" + props[i];
       if (editDefault) {
-        input.value = defaultProperty[type][i];
+        if (propertyType[type][i] === "boolean") {
+          input.checked = defaultProperty[type][i];
+        } else {
+          input.value = defaultProperty[type][i];
+        }
       } else {
-        input.value = level[x][y][parseInt(i) + 1];
+        if (propertyType[type][i] === "boolean") {
+          input.checked = level[x][y][parseInt(i) + 1];
+        } else {
+          input.value = level[x][y][parseInt(i) + 1];
+        }
       }
       sect.appendChild(input);
     }

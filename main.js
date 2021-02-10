@@ -89,8 +89,9 @@ var lastFrame = 0;
 function nextFrame(timeStamp) {
   // setup stuff
   let dt = timeStamp - lastFrame;
+  dt *= gameSpeed;
   lastFrame = timeStamp;
-  if (dt < 100) {
+  if (dt < 100 * gameSpeed) {
     dt = dt / 100;
     let xprev = player.x;
     let yprev = player.y;
@@ -112,8 +113,8 @@ function nextFrame(timeStamp) {
         player.yv += (player.g * dt) / 500;
       }
       // position change based on velocity
-      player.x += ((player.xv * dt) / 500) * gameSpeed;
-      player.y += ((player.yv * dt) / 500) * gameSpeed;
+      player.x += (player.xv * dt) / 500;
+      player.y += (player.yv * dt) / 500;
       // collision detection
       let x1 = player.x;
       let x2 = player.x + playerSize;
