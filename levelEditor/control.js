@@ -768,18 +768,18 @@ document.addEventListener("keydown", function (input) {
           if (data) {
             data = JSON.parse(data);
             level = data[0];
-            player.startPoint = data[1];
-            if (!player.startPoint[3]) player.startPoint[3] = 1;
+            player.startPoint = getDefaultSpawn();
+            for (let i in data[1]) {
+              if (data[1][i] !== undefined) player.startPoint[i] = data[1][i];
+            }
             if (player.startPoint[3] === "Infinity")
               player.startPoint[3] = Infinity;
-            if (!player.startPoint[4]) player.startPoint[4] = 600;
             if (player.startPoint[4] === 100) player.startPoint[4] = 300;
             if (player.startPoint[4] === 200) player.startPoint[4] = 600;
             if (player.startPoint[4] === 400) player.startPoint[4] = 1200;
             if (player.startPoint[4] === 325) player.startPoint[4] = 300;
             if (player.startPoint[4] === 750) player.startPoint[4] = 600;
             if (player.startPoint[4] === 1500) player.startPoint[4] = 1200;
-            if (!player.startPoint[5]) player.startPoint[5] = false;
             player.spawnPoint = deepCopy(player.startPoint);
             id("lvlWidth").innerHTML = level.length;
             id("lvlHeight").innerHTML = level[0].length;

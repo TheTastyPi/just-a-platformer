@@ -1,7 +1,7 @@
 var gameSpeed = 1;
 const player = {
-  startPoint: [4, 5, 325, 1, 600, false, false, false, false],
-  spawnPoint: [4, 5, 325, 1, 600, false, false, false, false],
+  startPoint: getDefaultSpawn(),
+  spawnPoint: getDefaultSpawn(),
   x: 0,
   y: 0,
   xv: 0,
@@ -1457,6 +1457,9 @@ function getCoord(type) {
   } else if (getBlockType(x2b, y2b) === type) {
     return [x2b, y2b];
   }
+}
+function getDefaultSpawn() {
+  return [4, 5, 325, 1, 600, false, false, false, false];
 }
 function toStart() {
   player.x = player.startPoint[0] * blockSize + (blockSize - playerSize) / 2;
