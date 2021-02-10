@@ -270,6 +270,12 @@ function drawBlock(
     case 51:
       lL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
       break;
+    case 59:
+      lL.fillStyle = "#FF88FF88";
+      break;
+    case 60:
+      lL.fillStyle = "#FFBB8888";
+      break;
     default:
       clear = true;
   }
@@ -1517,6 +1523,63 @@ function drawBlock(
         (blockSize / 25) * 3,
         (blockSize / 25) * 6
       );
+      break;
+    case 59:
+      lL.strokeStyle = "#88008888";
+      lL.lineWidth = blockSize / 25;
+      lL.strokeRect(
+        xb + blockSize - blockSize / 5 - (blockSize / 25) * 3,
+        yb + (blockSize - blockSize / 5) / 2,
+        blockSize / 5,
+        blockSize / 5
+      );
+
+      lL.beginPath();
+      lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.lineTo(
+        xb + blockSize - blockSize / 5 - (blockSize / 25) * 6,
+        yb + blockSize / 2
+      );
+      lL.stroke();
+
+      lL.beginPath();
+      lL.moveTo(
+        xb + (blockSize / 25) * 6,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.lineTo(
+        xb + (blockSize / 25) * 6,
+        yb + blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.stroke();
+      break;
+    case 60:
+      lL.strokeStyle = "#88440088";
+      lL.lineWidth = blockSize / 25;
+      lL.strokeRect(
+        xb + (blockSize / 25) * 3,
+        yb + (blockSize - blockSize / 5) / 2,
+        blockSize / 5,
+        blockSize / 5
+      );
+
+      lL.beginPath();
+      lL.moveTo(xb + blockSize - (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.lineTo(xb + blockSize / 5 + (blockSize / 25) * 6, yb + blockSize / 2);
+      lL.stroke();
+
+      lL.beginPath();
+      lL.moveTo(
+        xb + blockSize - (blockSize / 25) * 6,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize - (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 6,
+        yb + blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.stroke();
       break;
     default:
   }

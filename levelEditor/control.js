@@ -518,10 +518,20 @@ document.addEventListener("keydown", function (input) {
               player.xv = 600;
               player.yv = -Math.sign(player.g) * player.jumpHeight;
             }
+            if (player.wallJumpDir == "up") {
+              player.yv = -600;
+              player.xv = -Math.sign(player.g) * player.jumpHeight;
+            }
+            if (player.wallJumpDir == "down") {
+              player.yv = 600;
+              player.xv = -Math.sign(player.g) * player.jumpHeight;
+            }
           } else if (player.currentJumps > 0 || player.godMode) {
             player.jumpOn = !player.jumpOn;
             drawLevel();
-            player.yv = -Math.sign(player.g) * player.jumpHeight;
+            if (player.xg) {
+              player.xv = -Math.sign(player.g) * player.jumpHeight;
+            } else player.yv = -Math.sign(player.g) * player.jumpHeight;
             player.currentJumps--;
           }
         }
