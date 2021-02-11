@@ -1,5 +1,7 @@
 var gameSpeed = 1;
 const player = {
+  currentSave: undefined,
+  autoSave: true,
   startPoint: getDefaultSpawn(),
   spawnPoint: getDefaultSpawn(),
   x: 0,
@@ -29,7 +31,7 @@ const control = {
   right: false,
   up: false,
   down: false,
-  f: false
+  e: false
 };
 var level = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -185,7 +187,7 @@ const blockProperty = {
   41: ["TP Offset X", "TP Offset Y"],
   46: ["Text"],
   47: ["Power"],
-  48: ["Gravity","Horizontal"],
+  48: ["Gravity", "Horizontal"],
   49: ["Jumps"],
   50: ["Speed"],
   51: ["ColorR", "ColorG", "ColorB"],
@@ -246,6 +248,7 @@ var prevVersions = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1]
   ]
 ];
+var sinceLastSave = 0;
 var currentVersion = 0;
 var editProperty = false;
 var lastFrame = 0;
@@ -263,6 +266,11 @@ function nextFrame(timeStamp) {
   let dt = timeStamp - lastFrame;
   dt *= gameSpeed;
   lastFrame = timeStamp;
+  sinceLastSave += dt;
+  if (sinceLastSave > 5000) {
+    save(true);
+    sinceLastSave = 0;
+  }
   sinceLastTimerStage += dt;
   if (dt < haltThreshold * gameSpeed) {
     dt = dt / simReruns;
@@ -1074,8 +1082,273 @@ function addVersion() {
   prevVersions.length = currentVersion;
   prevVersions.push(deepCopy(level));
 }
+function removeChecks(levelData) {
+  let adjustedLevel = deepCopy(levelData);
+  for (let x in adjustedLevel) {
+    for (let y in adjustedLevel[x]) {
+      if (adjustedLevel[x][y] == 4) {
+        adjustedLevel[x][y] = 3;
+      } else if (adjustedLevel[x][y] == 19) {
+        adjustedLevel[x][y] = 17;
+      } else if (adjustedLevel[x][y] == 20) {
+        adjustedLevel[x][y] = 18;
+      } else if (hasProperty(adjustedLevel[x][y])) {
+        for (let i in adjustedLevel[x][y]) {
+          if (i == 0) continue;
+          if (
+            propertyType[adjustedLevel[x][y][0]][parseInt(i) - 1] === "block"
+          ) {
+            if (adjustedLevel[x][y][i] == 4) {
+              adjustedLevel[x][y][i] = 3;
+              break;
+            } else if (adjustedLevel[x][y][i] == 19) {
+              adjustedLevel[x][y][i] = 17;
+              break;
+            } else if (adjustedLevel[x][y][i] == 20) {
+              adjustedLevel[x][y][i] = 18;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  return adjustedLevel;
+}
+function addSave() {
+  let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+  let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+  let name = prompt("Please enter save name.");
+  while (saveList.includes(name)) {
+    name = prompt(
+      `There's already a save named '${name}'. Please enter a different name.`
+    );
+  }
+  saves[name] = [deepCopy(level), deinfinify(player.startPoint), name];
+  saveList.push(name);
+  localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  player.currentSave = name;
+  updateSaveMenu();
+}
+function save(auto = false) {
+  if (player.currentSave !== undefined) {
+    let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+    saves[player.currentSave] = [
+      removeChecks(level),
+      deinfinify(player.startPoint),
+      player.currentSave
+    ];
+    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    if (!auto) alert("Saved.");
+  } else if (!auto) alert("No save is currently selected.");
+}
+function load(name) {
+  let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+  level = saves[name][0];
+  let start = infinify(saves[name][1]);
+  player.startPoint = getDefaultSpawn();
+  for (let i in start) {
+    if (start[i] !== undefined) player.startPoint[i] = start[i];
+  }
+  player.spawnPoint = deepCopy(player.startPoint);
+  player.currentSave = name;
+  id("lvlWidth").innerHTML = level.length;
+  id("lvlHeight").innerHTML = level[0].length;
+  id("levelLayer").height = level[0].length * blockSize;
+  id("levelLayer").width = level.length * blockSize;
+  prevLevel = [];
+  toStart();
+  drawLevel();
+  drawGrid();
+  updateSaveMenu();
+}
+function exportSave(name) {
+  let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+  id("exportArea").value = JSON.stringify(saves[name]);
+  id("exportArea").style.display = "inline";
+  id("exportArea").focus();
+  id("exportArea").select();
+  document.execCommand("copy");
+  id("exportArea").style.display = "none";
+  alert("Level data copied to clipboard!");
+}
+function importSave() {
+  let data = prompt("Please enter level data.");
+  if (data) {
+    data = JSON.parse(data);
+    let name = data[2];
+    let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+    let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+    if (name === undefined)
+      name = prompt(
+        "The imported level does not have a name. Please enter a name."
+      );
+    while (saveList.includes(name)) {
+      name = prompt(
+        `There's already a save named '${name}'. Please enter a different name.`
+      );
+    }
+    saves[name] = data;
+    saveList.push(name);
+    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    updateSaveMenu();
+  }
+}
+function deleteSave(name) {
+  if (confirm("Are you sure you want to delete this save?")) {
+    let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+    let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+    delete saves[name];
+    saveList.splice(
+      saveList.findIndex((x) => x === name),
+      1
+    );
+    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    if (player.currentSave === name) player.currentSave = undefined;
+    updateSaveMenu();
+  }
+}
+function moveSave(name, dir) {
+  let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+  let index = saveList.findIndex((x) => x === name);
+  if (dir === "up" && index !== 0) {
+    let temp = saveList[index];
+    saveList[index] = saveList[index - 1];
+    saveList[index - 1] = temp;
+  }
+  if (dir === "down" && index !== saveList.length - 1) {
+    let temp = saveList[index];
+    saveList[index] = saveList[index + 1];
+    saveList[index + 1] = temp;
+  }
+  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  updateSaveMenu();
+}
+function renameSave(name) {
+  let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+  let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+  let index = saveList.findIndex((x) => x === name);
+  let newName = prompt("Please enter the new save name.");
+  while (saveList.includes(newName)) {
+    newName = prompt(
+      `There's already a save named '${newName}'. Please enter a different name.`
+    );
+  }
+  saves[newName] = deepCopy(saves[name]);
+  delete saves[name];
+  saveList[index] = newName;
+  localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  updateSaveMenu();
+}
+function copySave(name) {
+  let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+  let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+  let index = saveList.findIndex((x) => x === name);
+  let newName = prompt("Please enter a name for the copy.");
+  while (saveList.includes(newName)) {
+    newName = prompt(
+      `There's already a save named '${newName}'. Please enter a different name.`
+    );
+  }
+  saves[newName] = deepCopy(saves[name]);
+  saveList.splice(index + 1, 0, newName);
+  localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  updateSaveMenu();
+}
+function toggleAutoSave() {
+  player.autoSave = !player.autoSave;
+  if (player.autoSave) {
+    id("autoSaveButton").innerHTML = "Auto Save: On";
+  } else id("autoSaveButton").innerHTML = "Auto Save: Off";
+}
+function toggleSaveMenu() {
+  if (id("saveMenu").style.display === "none") {
+    id("saveMenu").style.display = "block";
+    updateSaveMenu();
+  } else id("saveMenu").style.display = "none";
+}
+function updateSaveMenu() {
+  let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
+  id("saveList").innerHTML = "";
+  for (let i in saveList) {
+    let name = saveList[i];
+    let saveSect = document.createElement("div");
+    saveSect.appendChild(document.createTextNode(name));
+    saveSect.appendChild(document.createElement("br"));
+
+    if (player.currentSave === name) {
+      saveSect.style.background = "#0000FF44";
+      let saveButton = document.createElement("button");
+      saveButton.innerHTML = "Save";
+      saveButton.addEventListener("mousedown", function () {
+        save();
+      });
+      saveSect.appendChild(saveButton);
+    }
+
+    let loadButton = document.createElement("button");
+    loadButton.innerHTML = "Load";
+    loadButton.addEventListener("mousedown", function () {
+      load(name);
+    });
+    saveSect.appendChild(loadButton);
+
+    let exportButton = document.createElement("button");
+    exportButton.innerHTML = "Export";
+    exportButton.addEventListener("mousedown", function () {
+      exportSave(name);
+    });
+    saveSect.appendChild(exportButton);
+
+    saveSect.appendChild(document.createElement("br"));
+
+    let deleteButton = document.createElement("button");
+    deleteButton.innerHTML = "Delete";
+    deleteButton.addEventListener("mousedown", function () {
+      deleteSave(name);
+    });
+    saveSect.appendChild(deleteButton);
+
+    let renameButton = document.createElement("button");
+    renameButton.innerHTML = "Rename";
+    renameButton.addEventListener("mousedown", function () {
+      renameSave(name);
+    });
+    saveSect.appendChild(renameButton);
+
+    let copyButton = document.createElement("button");
+    copyButton.innerHTML = "Copy";
+    copyButton.addEventListener("mousedown", function () {
+      copySave(name);
+    });
+    saveSect.appendChild(copyButton);
+
+    saveSect.appendChild(document.createElement("br"));
+
+    let moveUpButton = document.createElement("button");
+    moveUpButton.innerHTML = "Move Up";
+    moveUpButton.addEventListener("mousedown", function () {
+      moveSave(name, "up");
+    });
+    saveSect.appendChild(moveUpButton);
+
+    let moveDownButton = document.createElement("button");
+    moveDownButton.innerHTML = "Move Down";
+    moveDownButton.addEventListener("mousedown", function () {
+      moveSave(name, "down");
+    });
+    saveSect.appendChild(moveDownButton);
+
+    id("saveList").appendChild(saveSect);
+  }
+}
 function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
-  control.f = false;
+  control.e = false;
   if (hasProperty(type)) {
     let props = blockProperty[type];
     let menu = id("editProperty");
@@ -1516,6 +1789,20 @@ function arraysEqual(a, b) {
   }
   return true;
 }
+function deinfinify(obj) {
+  obj = deepCopy(obj);
+  for (let i in obj) {
+    if (obj[i] == Infinity) obj[i] = "Infinity";
+  }
+  return obj;
+}
+function infinify(obj) {
+  obj = deepCopy(obj);
+  for (let i in obj) {
+    if (obj[i] == "Infinity") obj[i] = Infinity;
+  }
+  return obj;
+}
 function init() {
   toStart();
   id("levelLayer").height = level[0].length * blockSize;
@@ -1546,7 +1833,7 @@ function init() {
       button.width = blockSize;
       drawBlock(button, 0, 0, blockSelect[i], 0, 0, 1, true);
       button.addEventListener("mousedown", function (input) {
-        if (input.button == 0 && control.f) {
+        if (input.button == 0 && control.e) {
           openPropertyMenu(0, 0, blockSelect[i], true);
         } else if (input.button == 0) {
           if (player.selectedBlock[1] == player.selectedBlock[0]) {
@@ -1591,6 +1878,11 @@ function init() {
   }
   id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";
   id("blockSelect1").style.boxShadow = "0 0 0 5px #FF0000";
+  if (!localStorage.getItem("just-an-editor-save")) {
+    localStorage.setItem("just-an-editor-save", "{}");
+    localStorage.setItem("just-a-save-list", "[]");
+  }
+  addTooltip(id("autoSaveButton"), "Saves once every 5 seconds");
 }
 
 init();

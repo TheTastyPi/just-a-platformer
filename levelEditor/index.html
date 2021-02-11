@@ -33,7 +33,7 @@
         [ctrl] + RMB: Refocus on player<br />
         MMB: Copy block clicked for LMB<br />
         [shift] + MMB: Copy block clicked for RMB<br />
-        [F] + LMB: Edit block property (if any)<br />
+        [E] + LMB: Edit block property (if any)<br />
         [shift] + [arrow]: Increase level size<br />
         [ctrl] + [arrow]: Decrease level size<br />
         [shift] + [ctrl] + [arrow]: Change the level size by a specified
@@ -49,8 +49,8 @@
         [2]: Toggle control display<br />
         [3]: Toggle block selection<br />
         [4]: Toggle grid<br />
-        [E]: Export level data<br />
-        [shift] + [E]: Import level data
+        [shift] + [F]: Save level to selected save<br />
+        [ctrl] + [F]: Open save menu
       </span>
     </div>
     <div
@@ -89,6 +89,30 @@
         transform: translate(-50%, -50%);
       "
     ></div>
+    <div
+      id="saveMenu"
+      style="
+        position: absolute;
+        background: #00000088;
+        color: #ffffff;
+        display: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      "
+    >
+      <div id="saveList" style="height: 90%;"></div>
+      <div id="saveBottom" style="text-align: right; height: 10%;">
+        <button id="addSaveButton" onclick="addSave()">Add Save</button>
+        <button id="importSaveButton" onclick="importSave()">
+          Import Save
+        </button>
+        <button id="autoSaveButton" onclick="toggleAutoSave()">
+          Auto Save: On
+        </button>
+        <button id="closeButton" onclick="toggleSaveMenu()">Close</button>
+      </div>
+    </div>
     <div
       id="tooltip"
       style="

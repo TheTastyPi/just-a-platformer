@@ -13,7 +13,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
     window.focus();
     let xb = Math.floor(input.offsetX / blockSize);
     let yb = Math.floor(input.offsetY / blockSize);
-    if (control.f) {
+    if (control.e) {
       if (input.button === 0) {
         openPropertyMenu(xb, yb);
       }
@@ -705,8 +705,8 @@ document.addEventListener("keydown", function (input) {
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
           control.right = true;
         break;
-      case "KeyF":
-        control.f = true;
+      case "KeyE":
+        control.e = true;
         break;
       case "KeyR":
         if (input.shiftKey) {
@@ -745,93 +745,13 @@ document.addEventListener("keydown", function (input) {
         } else if (id("grid").style.display !== "block")
           id("grid").style.display = "block";
         break;
-      case "KeyE":
-        if (input.ctrlKey || input.metaKey) {
+      case "KeyF":
+        if (input.shiftKey) {
+          save();
+        } else if (input.ctrlKey) {
           control.lmb = false;
           control.rmb = false;
-          let data = prompt("Please enter level data.");
-          if (data) {
-            data = JSON.parse(data);
-            level = data;
-            id("lvlWidth").innerHTML = level.length;
-            id("lvlHeight").innerHTML = level[0].length;
-            id("levelLayer").height = level[0].length * blockSize;
-            id("levelLayer").width = level.length * blockSize;
-            prevLevel = [];
-            toStart();
-            drawLevel();
-          }
-        } else if (input.shiftKey) {
-          control.lmb = false;
-          control.rmb = false;
-          let data = prompt("Please enter level data.");
-          if (data) {
-            data = JSON.parse(data);
-            level = data[0];
-            player.startPoint = getDefaultSpawn();
-            for (let i in data[1]) {
-              if (data[1][i] !== undefined) player.startPoint[i] = data[1][i];
-            }
-            if (player.startPoint[3] === "Infinity")
-              player.startPoint[3] = Infinity;
-            if (player.startPoint[4] === 100) player.startPoint[4] = 300;
-            if (player.startPoint[4] === 200) player.startPoint[4] = 600;
-            if (player.startPoint[4] === 400) player.startPoint[4] = 1200;
-            if (player.startPoint[4] === 325) player.startPoint[4] = 300;
-            if (player.startPoint[4] === 750) player.startPoint[4] = 600;
-            if (player.startPoint[4] === 1500) player.startPoint[4] = 1200;
-            player.spawnPoint = deepCopy(player.startPoint);
-            id("lvlWidth").innerHTML = level.length;
-            id("lvlHeight").innerHTML = level[0].length;
-            id("levelLayer").height = level[0].length * blockSize;
-            id("levelLayer").width = level.length * blockSize;
-            prevLevel = [];
-            toStart();
-            drawLevel();
-          }
-        } else {
-          control.lmb = false;
-          control.rmb = false;
-          let adjustedLevel = deepCopy(level);
-          for (let x in adjustedLevel) {
-            for (let y in adjustedLevel[x]) {
-              if (adjustedLevel[x][y] == 4) {
-                adjustedLevel[x][y] = 3;
-              } else if (adjustedLevel[x][y] == 19) {
-                adjustedLevel[x][y] = 17;
-              } else if (adjustedLevel[x][y] == 20) {
-                adjustedLevel[x][y] = 18;
-              } else if (hasProperty(adjustedLevel[x][y])) {
-                for (let i in adjustedLevel[x][y]) {
-                  if (i == 0) continue;
-                  if (
-                    propertyType[adjustedLevel[x][y][0]][parseInt(i) - 1] ===
-                    "block"
-                  ) {
-                    if (adjustedLevel[x][y][i] == 4) {
-                      adjustedLevel[x][y][i] = 3;
-                      break;
-                    } else if (adjustedLevel[x][y][i] == 19) {
-                      adjustedLevel[x][y][i] = 17;
-                      break;
-                    } else if (adjustedLevel[x][y][i] == 20) {
-                      adjustedLevel[x][y][i] = 18;
-                      break;
-                    }
-                  }
-                }
-              }
-            }
-          }
-          let startData = player.startPoint;
-          if (startData[3] === Infinity) startData[3] = "Infinity";
-          id("exportArea").value = JSON.stringify([adjustedLevel, startData]);
-          id("exportArea").style.display = "inline";
-          id("exportArea").focus();
-          id("exportArea").select();
-          document.execCommand("copy");
-          id("exportArea").style.display = "none";
-          alert("Level data copied to clipboard!");
+          toggleSaveMenu();
         }
         break;
       case "Delete":
@@ -879,8 +799,8 @@ document.addEventListener("keyup", function (input) {
       case "KeyS":
         control.down = false;
         break;
-      case "KeyF":
-        control.f = false;
+      case "KeyE":
+        control.e = false;
         break;
       default:
     }
