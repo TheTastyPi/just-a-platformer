@@ -23,8 +23,10 @@ function drawPlayer() {
 }
 var prevLevel = [];
 var prevSwitch = false;
-var prevTimer = 0;
+var prevTimer = false;
+var prevTimerStage = 0;
 var prevJumpState = false;
+var prevSpawnPos = [];
 function drawLevel() {
   let canvas = id("levelLayer");
   id("background").style.width = level.length * blockSize + "px";
@@ -40,9 +42,15 @@ function drawLevel() {
           level[x][y] != prevBlock ||
           (player.switchOn != prevSwitch &&
             [31, 32, 33, 34, 35].includes(level[x][y])) ||
-          (timerStage != prevTimer && [36, 37, 38, 39].includes(level[x][y])) ||
+          ((timerStage != prevTimerStage || player.timerOn != prevTimer) &&
+            [36, 37, 38, 39].includes(level[x][y])) ||
           (player.jumpOn != prevJumpState &&
-            [42, 43, 44, 45].includes(level[x][y]))
+            [42, 43, 44, 45].includes(level[x][y])) ||
+          (!arraysEqual(prevSpawnPos, [
+            player.spawnPoint[0],
+            player.spawnPoint[1]
+          ]) &&
+            [3, 17, 18].includes(level[x][y]))
         )
           drawBlock(canvas, parseInt(x), parseInt(y));
       }
@@ -52,8 +60,10 @@ function drawLevel() {
   drawPlayer();
   prevLevel = deepCopy(level);
   prevSwitch = player.switchOn;
-  prevTimer = timerStage;
+  prevTimer = player.timerOn;
+  prevTimerStage = timerStage;
   prevJumpState = player.jumpOn;
+  prevSpawnPos = [player.spawnPoint[0], player.spawnPoint[1]];
 }
 function drawBlock(
   canvas,
@@ -81,12 +91,15 @@ function drawBlock(
   }
   let sOn = player.switchOn;
   let tOn = player.timerOn;
-  let tSt = timerStage;
+  let tMs =
+    timerStage * Math.min(1000, player.timerInterval / 4) + sinceLastTimerStage;
+  let tIn = player.timerInterval;
   let jOn = player.jumpOn;
   if (useDefault) {
     sOn = false;
     tOn = false;
-    tSt = 0;
+    tMs = 0;
+    tIn = 4000;
     jOn = false;
   }
   lL.clearRect(xb, yb, blockSize, blockSize);
@@ -98,10 +111,9 @@ function drawBlock(
       lL.fillStyle = "#FF0000";
       break;
     case 3:
-      lL.fillStyle = "#00888888";
-      break;
-    case 4:
-      lL.fillStyle = "#00FFFF88";
+      if (isSpawn(x, y)) {
+        lL.fillStyle = "#00FFFF88";
+      } else lL.fillStyle = "#00888888";
       break;
     case 5:
       lL.fillStyle = "#FFFF00";
@@ -140,16 +152,14 @@ function drawBlock(
       lL.fillStyle = "#FF880088";
       break;
     case 17:
-      lL.fillStyle = "#FFFF0088";
+      if (isSpawn(x, y)) {
+        lL.fillStyle = "#FFFF0088";
+      } else lL.fillStyle = "#88880088";
       break;
     case 18:
-      lL.fillStyle = "#88880088";
-      break;
-    case 19:
-      lL.fillStyle = "#88880088";
-      break;
-    case 20:
-      lL.fillStyle = "#FFFF0088";
+      if (isSpawn(x, y)) {
+        lL.fillStyle = "#FFFF0088";
+      } else lL.fillStyle = "#88880088";
       break;
     case 21:
       lL.fillStyle = "#00880088";
@@ -282,6 +292,9 @@ function drawBlock(
     case 62:
       lL.fillStyle = "#FFBB88";
       break;
+    case 63:
+      lL.fillStyle = "#BBBBBB88";
+      break;
     default:
       clear = true;
   }
@@ -309,18 +322,9 @@ function drawBlock(
       lL.stroke();
       break;
     case 3:
-      lL.strokeStyle = "#00444488";
-      lL.beginPath();
-      lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
-      lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
-      lL.lineTo(
-        xb + blockSize - (blockSize / 25) * 3,
-        yb + (blockSize / 25) * 3
-      );
-      lL.stroke();
-      break;
-    case 4:
-      lL.strokeStyle = "#00888888";
+      if (isSpawn(x, y)) {
+        lL.strokeStyle = "#00888888";
+      } else lL.strokeStyle = "#00444488";
       lL.beginPath();
       lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
       lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
@@ -715,7 +719,9 @@ function drawBlock(
       lL.stroke();
       break;
     case 17:
-      lL.strokeStyle = "#88880088";
+      if (isSpawn(x, y)) {
+        lL.strokeStyle = "#88880088";
+      } else lL.strokeStyle = "#44440088";
       lL.beginPath();
       lL.arc(
         xb + blockSize / 2,
@@ -727,30 +733,9 @@ function drawBlock(
       lL.stroke();
       break;
     case 18:
-      lL.strokeStyle = "#44440088";
-      lL.beginPath();
-      lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
-      lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
-      lL.lineTo(
-        xb + blockSize - (blockSize / 25) * 3,
-        yb + (blockSize / 25) * 3
-      );
-      lL.stroke();
-      break;
-    case 19:
-      lL.strokeStyle = "#44440088";
-      lL.beginPath();
-      lL.arc(
-        xb + blockSize / 2,
-        yb + blockSize / 2,
-        blockSize / 2 - (blockSize / 25) * 3,
-        0,
-        2 * Math.PI
-      );
-      lL.stroke();
-      break;
-    case 20:
-      lL.strokeStyle = "#88880088";
+      if (isSpawn(x, y)) {
+        lL.strokeStyle = "#88880088";
+      } else lL.strokeStyle = "#44440088";
       lL.beginPath();
       lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
       lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
@@ -1057,7 +1042,7 @@ function drawBlock(
         yb + blockSize / 2,
         blockSize / 2 - (blockSize / 25) * 3,
         -Math.PI / 2,
-        (Math.PI / 2) * (tSt - 1)
+        (tMs / tIn) * 2 * Math.PI - Math.PI / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
       lL.fill();
@@ -1081,7 +1066,7 @@ function drawBlock(
         yb + blockSize / 2,
         blockSize / 2 - (blockSize / 25) * 3,
         -Math.PI / 2,
-        (Math.PI / 2) * (tSt - 1)
+        (tMs / tIn) * 2 * Math.PI - Math.PI / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
       lL.fill();
@@ -1105,7 +1090,7 @@ function drawBlock(
         yb + blockSize / 2,
         blockSize / 2 - (blockSize / 25) * 3,
         -Math.PI / 2,
-        (Math.PI / 2) * (tSt - 1)
+        (tMs / tIn) * 2 * Math.PI - Math.PI / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
       lL.fill();
@@ -1149,7 +1134,7 @@ function drawBlock(
         yb + blockSize / 2,
         blockSize / 2 - (blockSize / 25) * 3,
         -Math.PI / 2,
-        (Math.PI / 2) * (timerStage - 1)
+        (tMs / tIn) * 2 * Math.PI - Math.PI / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
       lL.fill();
@@ -1427,7 +1412,7 @@ function drawBlock(
         yb + blockSize / 2,
         blockSize / 2 - (blockSize / 25) * 3,
         -Math.PI / 2,
-        (Math.PI / 2) * (tSt - 1)
+        (tMs / tIn) * 2 * Math.PI - Math.PI / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
       lL.fill();
@@ -1623,6 +1608,47 @@ function drawBlock(
         yb + blockSize - (blockSize / 25) * 3
       );
       lL.stroke();
+      break;
+    case 63:
+      let minAngle = (data[1] / (60 * 1000) / 60) * 2 * Math.PI;
+      let secAngle = ((data[1] % (60 * 1000)) / 60000) * 2 * Math.PI;
+      lL.strokeStyle = "#66666688";
+      lL.lineWidth = (blockSize / 25) * 2;
+      lL.lineCap = "round";
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(
+        xb +
+          blockSize / 2 +
+          (blockSize / 50) * 19 * Math.cos(Math.PI / 2 - minAngle),
+        yb +
+          blockSize / 2 -
+          (blockSize / 50) * 19 * Math.sin(Math.PI / 2 - minAngle)
+      );
+      lL.stroke();
+
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(
+        xb +
+          blockSize / 2 +
+          (blockSize / 50) * 19 * Math.cos(Math.PI / 2 - secAngle),
+        yb +
+          blockSize / 2 -
+          (blockSize / 50) * 19 * Math.sin(Math.PI / 2 - secAngle)
+      );
+      lL.stroke();
+      lL.lineCap = "butt";
+
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
       break;
     default:
   }

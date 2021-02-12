@@ -6,7 +6,10 @@ function drawPlayer() {
   canvas.width = levels[player.currentLevel].length * blockSize;
   canvas.height = levels[player.currentLevel][0].length * blockSize;
   pL.clearRect(0, 0, canvas.width, canvas.height);
-  pL.fillStyle = "#0000FF";
+  let ratio = player.currentJumps / player.maxJumps;
+  if (player.maxJumps === Infinity) ratio = 1;
+  if (player.maxJumps === 0) ratio = 0;
+  pL.fillStyle = `rgb(${255 - ratio * 255},0,${ratio * 255})`;
   pL.fillRect(
     Math.floor(player.x),
     Math.floor(player.y),

@@ -32,25 +32,10 @@ id("levelLayer").addEventListener("mousedown", function (input) {
           id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
         }
         player.selectedBlock[1] = getBlockType(xb, yb, false);
-        if (player.selectedBlock[1] === 4) player.selectedBlock[1] = 3;
-        if (player.selectedBlock[1] === 19) player.selectedBlock[1] = 17;
-        if (player.selectedBlock[1] === 20) player.selectedBlock[1] = 18;
         if (hasProperty(player.selectedBlock[1])) {
           for (let i in defaultProperty[player.selectedBlock[1]]) {
             defaultProperty[player.selectedBlock[1]][i] =
               level[xb][yb][parseInt(i) + 1];
-            if (propertyType[player.selectedBlock[1]][i] === "block") {
-              if (defaultProperty[player.selectedBlock[1]][i] == 4) {
-                defaultProperty[player.selectedBlock[1]][i] = 3;
-                break;
-              } else if (defaultProperty[player.selectedBlock[1]][i] == 17) {
-                defaultProperty[player.selectedBlock[1]][i] = 19;
-                break;
-              } else if (defaultProperty[player.selectedBlock[1]][i] == 20) {
-                defaultProperty[player.selectedBlock[1]][i] = 18;
-                break;
-              }
-            }
           }
           drawBlock(
             id("blockSelect" + player.selectedBlock[1]),
@@ -78,66 +63,10 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         drawPlayer();
       }
     } else {
-      if (
-        input.button === 0 &&
-        !bannedBlock.includes(player.selectedBlock[0])
-      ) {
+      if (input.button === 0) {
         control.lmb = true;
         if (player.selectedBlock[0] === 17) {
-          let spawnPoint = level[player.spawnPoint[0]][player.spawnPoint[1]];
-          if (spawnPoint == 4) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-          } else if (spawnPoint == 17) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-          } else if (spawnPoint == 20) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-          } else {
-            for (let i in spawnPoint) {
-              if (i == 0) continue;
-              if (
-                propertyType[
-                  getBlockType(
-                    player.spawnPoint[0],
-                    player.spawnPoint[1],
-                    false
-                  )
-                ][parseInt(i) - 1] === "block"
-              ) {
-                if (spawnPoint[i] == 4) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 3;
-                  break;
-                } else if (spawnPoint[i] == 17) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 19;
-                  break;
-                } else if (spawnPoint[i] == 20) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 18;
-                  break;
-                }
-              }
-            }
-          }
-          player.startPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
-          player.spawnPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
+          setSpawn(xb, yb, true);
         }
         if (hasProperty(player.selectedBlock[0])) {
           level[xb][yb] = [player.selectedBlock[0]];
@@ -155,25 +84,10 @@ id("levelLayer").addEventListener("mousedown", function (input) {
           id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
         }
         player.selectedBlock[0] = getBlockType(xb, yb, false);
-        if (player.selectedBlock[0] === 4) player.selectedBlock[0] = 3;
-        if (player.selectedBlock[0] === 19) player.selectedBlock[0] = 17;
-        if (player.selectedBlock[0] === 20) player.selectedBlock[0] = 18;
         if (hasProperty(player.selectedBlock[0])) {
           for (let i in defaultProperty[player.selectedBlock[0]]) {
             defaultProperty[player.selectedBlock[0]][i] =
               level[xb][yb][parseInt(i) + 1];
-            if (propertyType[player.selectedBlock[0]][i] === "block") {
-              if (defaultProperty[player.selectedBlock[0]][i] == 4) {
-                defaultProperty[player.selectedBlock[0]][i] = 3;
-                break;
-              } else if (defaultProperty[player.selectedBlock[0]][i] == 17) {
-                defaultProperty[player.selectedBlock[0]][i] = 19;
-                break;
-              } else if (defaultProperty[player.selectedBlock[0]][i] == 20) {
-                defaultProperty[player.selectedBlock[0]][i] = 18;
-                break;
-              }
-            }
           }
           drawBlock(
             id("blockSelect" + player.selectedBlock[0]),
@@ -193,76 +107,18 @@ id("levelLayer").addEventListener("mousedown", function (input) {
           id("blockSelect" + player.selectedBlock[0]).style.boxShadow =
             "0 0 0 5px #FF0000";
         }
-      } else if (
-        input.button === 2 &&
-        !bannedBlock.includes(player.selectedBlock[1])
-      ) {
+      } else if (input.button === 2) {
+        control.rmb = true;
         if (player.selectedBlock[1] === 17) {
-          let spawnPoint = level[player.spawnPoint[0]][player.spawnPoint[1]];
-          if (spawnPoint == 4) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-          } else if (spawnPoint == 17) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-          } else if (spawnPoint == 20) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-          } else {
-            for (let i in spawnPoint) {
-              if (i == 0) continue;
-              if (
-                propertyType[
-                  getBlockType(
-                    player.spawnPoint[0],
-                    player.spawnPoint[1],
-                    false
-                  )
-                ][parseInt(i) - 1] === "block"
-              ) {
-                if (spawnPoint[i] == 4) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 3;
-                  break;
-                } else if (spawnPoint[i] == 17) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 19;
-                  break;
-                } else if (spawnPoint[i] == 20) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 18;
-                  break;
-                }
-              }
-            }
-          }
-          player.startPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
-          player.spawnPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
+          setSpawn(xb, yb, true);
         }
         if (hasProperty(player.selectedBlock[1])) {
-          control.lmb = false;
-          control.rmb = false;
           level[xb][yb] = [player.selectedBlock[1]];
           for (let i in defaultProperty[player.selectedBlock[1]]) {
             level[xb][yb][parseInt(i) + 1] =
               defaultProperty[player.selectedBlock[1]][i];
           }
         } else level[xb][yb] = player.selectedBlock[1];
-        control.rmb = true;
         drawLevel();
       }
     }
@@ -281,62 +137,9 @@ id("levelLayer").addEventListener("mousemove", function (input) {
         adjustScreen();
       }
     } else if (!input.shiftKey) {
-      if (control.lmb && !bannedBlock.includes(player.selectedBlock[0])) {
+      if (control.lmb) {
         if (player.selectedBlock[0] === 17) {
-          let spawnPoint = level[player.spawnPoint[0]][player.spawnPoint[1]];
-          if (spawnPoint == 4) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-          } else if (spawnPoint == 17) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-          } else if (spawnPoint == 20) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-          } else {
-            for (let i in spawnPoint) {
-              if (i == 0) continue;
-              if (
-                propertyType[
-                  getBlockType(
-                    player.spawnPoint[0],
-                    player.spawnPoint[1],
-                    false
-                  )
-                ][parseInt(i) - 1] === "block"
-              ) {
-                if (spawnPoint[i] == 4) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 3;
-                  break;
-                } else if (spawnPoint[i] == 17) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 19;
-                  break;
-                } else if (spawnPoint[i] == 20) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 18;
-                  break;
-                }
-              }
-            }
-          }
-          player.startPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
-          player.spawnPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
+          setSpawn(xb, yb, true);
         }
         if (hasProperty(player.selectedBlock[0])) {
           level[xb][yb] = [player.selectedBlock[0]];
@@ -346,65 +149,9 @@ id("levelLayer").addEventListener("mousemove", function (input) {
           }
         } else level[xb][yb] = player.selectedBlock[0];
         drawLevel();
-      } else if (
-        control.rmb &&
-        !bannedBlock.includes(player.selectedBlock[1])
-      ) {
-        if (player.selectedBlock[0] === 17) {
-          let spawnPoint = level[player.spawnPoint[0]][player.spawnPoint[1]];
-          if (spawnPoint == 4) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 3;
-          } else if (spawnPoint == 17) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 19;
-          } else if (spawnPoint == 20) {
-            level[player.spawnPoint[0]][player.spawnPoint[1]] = 18;
-          } else {
-            for (let i in spawnPoint) {
-              if (i == 0) continue;
-              if (
-                propertyType[
-                  getBlockType(
-                    player.spawnPoint[0],
-                    player.spawnPoint[1],
-                    false
-                  )
-                ][parseInt(i) - 1] === "block"
-              ) {
-                if (spawnPoint[i] == 4) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 3;
-                  break;
-                } else if (spawnPoint[i] == 17) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 19;
-                  break;
-                } else if (spawnPoint[i] == 20) {
-                  level[player.spawnPoint[0]][player.spawnPoint[1]][i] = 18;
-                  break;
-                }
-              }
-            }
-          }
-          player.startPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
-          player.spawnPoint = [
-            xb,
-            yb,
-            player.g,
-            player.maxJumps,
-            player.moveSpeed,
-            player.switchOn,
-            player.jumpOn,
-            player.timerOn,
-            player.xg
-          ];
+      } else if (control.rmb) {
+        if (player.selectedBlock[1] === 17) {
+          setSpawn(xb, yb, true);
         }
         if (hasProperty(player.selectedBlock[1])) {
           level[xb][yb] = [player.selectedBlock[1]];
