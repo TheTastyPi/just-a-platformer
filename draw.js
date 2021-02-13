@@ -46,10 +46,9 @@ function drawLevel() {
           lL.fillStyle = "#FF0000";
           break;
         case 3:
-          lL.fillStyle = "#00888888";
-          break;
-        case 4:
-          lL.fillStyle = "#00FFFF88";
+          if (isSpawn(x, y)) {
+            lL.fillStyle = "#00FFFF88";
+          } else lL.fillStyle = "#00888888";
           break;
         case 5:
           lL.fillStyle = "#FFFF00";
@@ -178,18 +177,9 @@ function drawLevel() {
           lL.stroke();
           break;
         case 3:
-          lL.strokeStyle = "#00444488";
-          lL.beginPath();
-          lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
-          lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
-          lL.lineTo(
-            xb + blockSize - (blockSize / 25) * 3,
-            yb + (blockSize / 25) * 3
-          );
-          lL.stroke();
-          break;
-        case 4:
-          lL.strokeStyle = "#00888888";
+          if (isSpawn(x, y)) {
+            lL.strokeStyle = "#00888888";
+          } else lL.strokeStyle = "#00444488";
           lL.beginPath();
           lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
           lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);

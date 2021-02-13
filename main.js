@@ -62,11 +62,22 @@ document.addEventListener("keydown", function (input) {
       wipeSave();
       break;
     case "KeyR":
-      respawn();
-      drawLevel();
+      if (input.shiftKey) {
+        if (confirm("Are you sure you want to go back to the start?")) {
+          player.spawnPoint = newSave();
+          player.spawnPoint[7] = player.triggers;
+          respawn();
+          drawLevel();
+        }
+      } else {
+        respawn();
+        drawLevel();
+      }
       break;
     case "KeyI":
       openInfo();
+      break;
+    default:
       break;
   }
 });
@@ -193,29 +204,22 @@ function nextFrame(timeStamp) {
         player.currentJumps = player.maxJumps - 1;
       // checkpoint
       if (isTouching("any", 3)) {
-        if (
-          levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][
-            player.spawnPoint[0]
-          ][player.spawnPoint[1]] == 4
-        )
-          levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][
-            player.spawnPoint[0]
-          ][player.spawnPoint[1]] = 3;
         let coord = getCoord(3);
-        player.spawnPoint = [
-          coord[0],
-          coord[1],
-          player.levelCoord[0],
-          player.levelCoord[1],
-          player.g,
-          player.maxJumps,
-          player.moveSpeed,
-          [...player.triggers],
-          currentVersion
-        ];
-        levels[player.currentLevel][coord[0]][coord[1]] = 4;
-        shouldDrawLevel = true;
-        save();
+        if (!isSpawn(coord[0], coord[1])) {
+          player.spawnPoint = [
+            coord[0],
+            coord[1],
+            player.levelCoord[0],
+            player.levelCoord[1],
+            player.g,
+            player.maxJumps,
+            player.moveSpeed,
+            [...player.triggers],
+            currentVersion
+          ];
+          shouldDrawLevel = true;
+          save();
+        }
       }
       // anti-grav
       if (isTouching("any", 6)) {
@@ -573,6 +577,14 @@ function wipeSave() {
     drawLevel();
     drawPlayer();
   }
+}
+function isSpawn(x, y) {
+  return (
+    player.spawnPoint[2] == player.levelCoord[0] &&
+    player.spawnPoint[3] == player.levelCoord[1] &&
+    player.spawnPoint[0] == x &&
+    player.spawnPoint[1] == y
+  );
 }
 function respawn() {
   player.levelCoord = [player.spawnPoint[2], player.spawnPoint[3]];
