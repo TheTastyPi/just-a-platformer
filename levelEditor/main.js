@@ -186,6 +186,10 @@ const blockSelect = [
   54
 ];
 const blockProperty = {
+  27: ["Power"],
+  28: ["Power"],
+  29: ["Power"],
+  30: ["Power"],
   41: ["TP Offset X", "TP Offset Y"],
   46: ["Text"],
   47: ["Power"],
@@ -199,6 +203,10 @@ const blockProperty = {
   63: ["Interval"]
 };
 const defaultProperty = {
+  27: [100],
+  28: [100],
+  29: [100],
+  30: [100],
   41: [0, 0],
   46: ["Text"],
   47: [275],
@@ -212,6 +220,10 @@ const defaultProperty = {
   63: [4000]
 };
 const propertyType = {
+  27: ["number"],
+  28: ["number"],
+  29: ["number"],
+  30: ["number"],
   41: ["number", "number"],
   46: ["any"],
   47: ["number"],
@@ -225,6 +237,10 @@ const propertyType = {
   63: ["number"]
 };
 const propertyLimit = {
+  27: [[0,1000]],
+  28: [[0,1000]],
+  29: [[0,1000]],
+  30: [[0,1000]],
   41: ["none", "none"],
   46: ["none"],
   47: [[0, 1000]],
@@ -236,9 +252,9 @@ const propertyLimit = {
     [0, 255],
     [0, 255]
   ],
-  52: [[0, blockName.length - 1], [0, blockName.length - 1], "none"],
-  53: [[0, blockName.length - 1], [0, blockName.length - 1], "none"],
-  54: [[0, blockName.length - 1], [0, blockName.length - 1], "none"],
+  52: ["none", "none", "none"],
+  53: ["none", "none", "none"],
+  54: ["none", "none", "none"],
   63: [[500, 60 * 60 * 1000]]
 };
 var prevVersions = [
@@ -256,7 +272,7 @@ var prevVersions = [
 ];
 var sinceLastSave = 0;
 var currentVersion = 0;
-var editProperty = false;
+var editDisabled = false;
 var lastFrame = 0;
 var haltThreshold = 100;
 var simReruns = 100;
@@ -359,8 +375,8 @@ function nextFrame(timeStamp) {
                   hasHitbox.includes(getBlockType(x1b + 1, y1b))))) &&
             player.g < 0
           ) {
-            let coord = getCoord(47);
-            player.xv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
+            let props = getProps(47);
+            player.xv = -Math.sign(player.g) * props[1];
           }
           if (
             ((getBlockType(x1b, y2b) === 40 && getBlockType(x1b, y1b) === 40) ||
@@ -431,8 +447,8 @@ function nextFrame(timeStamp) {
                   hasHitbox.includes(getBlockType(x2b - 1, y1b))))) &&
             player.g > 0
           ) {
-            let coord = getCoord(47);
-            player.xv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
+            let props = getProps(47);
+            player.xv = -Math.sign(player.g) * props[1];
           }
           if (
             ((getBlockType(x2b, y2b) == 40 && getBlockType(x2b, y1b) == 40) ||
@@ -521,8 +537,8 @@ function nextFrame(timeStamp) {
                   hasHitbox.includes(getBlockType(x1b, y1b + 1))))) &&
             player.g < 0
           ) {
-            let coord = getCoord(47);
-            player.yv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
+            let props = getProps(47);
+            player.yv = -Math.sign(player.g) * props[1];
           }
           if (
             ((getBlockType(x2b, y1b) == 40 && getBlockType(x1b, y1b) == 40) ||
@@ -593,8 +609,8 @@ function nextFrame(timeStamp) {
                   hasHitbox.includes(getBlockType(x1b, y2b - 1))))) &&
             player.g > 0
           ) {
-            let coord = getCoord(47);
-            player.yv = -Math.sign(player.g) * level[coord[0]][coord[1]][1];
+            let props = getProps(47);
+            player.yv = -Math.sign(player.g) * props[1];
           }
           if (
             ((getBlockType(x2b, y2b) == 40 && getBlockType(x1b, y2b) == 40) ||
@@ -712,59 +728,35 @@ function nextFrame(timeStamp) {
       if (isTouching("any", 9)) player.g = Math.sign(player.g) * 325;
       if (isTouching("any", 10)) player.g = Math.sign(player.g) * 650;
       if (isTouching("any", 48)) {
-        let coord = getCoord(48);
-        player.g = level[coord[0]][coord[1]][1];
-        player.xg = level[coord[0]][coord[1]][2];
+        let props = getProps(48);
+        player.g = props[1];
+        player.xg = props[2];
       }
       // multi-jump
       if (isTouching("any", 12)) {
         player.maxJumps = 0;
-        if (
-          player.currentJumps != player.maxJumps &&
-          player.currentJumps != player.maxJumps - 1
-        )
-          player.currentJumps = player.maxJumps - 1;
+        player.currentJumps = player.maxJumps - 1;
       }
       if (isTouching("any", 13)) {
         player.maxJumps = 1;
-        if (
-          player.currentJumps != player.maxJumps &&
-          player.currentJumps != player.maxJumps - 1
-        )
-          player.currentJumps = player.maxJumps - 1;
+        player.currentJumps = player.maxJumps - 1;
       }
       if (isTouching("any", 14)) {
         player.maxJumps = 2;
-        if (
-          player.currentJumps != player.maxJumps &&
-          player.currentJumps != player.maxJumps - 1
-        )
-          player.currentJumps = player.maxJumps - 1;
+        player.currentJumps = player.maxJumps - 1;
       }
       if (isTouching("any", 15)) {
         player.maxJumps = 3;
-        if (
-          player.currentJumps != player.maxJumps &&
-          player.currentJumps != player.maxJumps - 1
-        )
-          player.currentJumps = player.maxJumps - 1;
+        player.currentJumps = player.maxJumps - 1;
       }
       if (isTouching("any", 16)) {
         player.maxJumps = Infinity;
-        if (
-          player.currentJumps != player.maxJumps &&
-          player.currentJumps != player.maxJumps - 1
-        )
-          player.currentJumps = player.maxJumps - 1;
+        player.currentJumps = player.maxJumps - 1;
       }
       if (isTouching("any", 49)) {
-        let coord = getCoord(49);
-        player.maxJumps = level[coord[0]][coord[1]][1];
-        if (
-          player.currentJumps != player.maxJumps &&
-          player.currentJumps != player.maxJumps - 1
-        )
-          player.currentJumps = player.maxJumps - 1;
+        let props = getProps(49);
+        player.maxJumps = props[1];
+        player.currentJumps = player.maxJumps - 1;
       }
       // checkpoint
       if (isTouching("any", 3)) {
@@ -793,14 +785,26 @@ function nextFrame(timeStamp) {
       if (isTouching("any", 22)) player.moveSpeed = 600;
       if (isTouching("any", 23)) player.moveSpeed = 1200;
       if (isTouching("any", 50)) {
-        let coord = getCoord(50);
-        player.moveSpeed = level[coord[0]][coord[1]][1];
+        let props = getProps(50);
+        player.moveSpeed = props[1];
       }
       // force field
-      if (isTouching("any", 27) && player.xv > -100) player.xv = -100;
-      if (isTouching("any", 28) && player.xv < 100) player.xv = 100;
-      if (isTouching("any", 29) && player.yv > -100) player.yv = -100;
-      if (isTouching("any", 30) && player.yv < 100) player.yv = 100;
+      if (isTouching("any", 27)) {
+        let props = getProps(27);
+        player.xv = Math.min(player.xv,-props[1]);
+      }
+      if (isTouching("any", 28)) {
+        let props = getProps(28);
+        player.xv = Math.max(player.xv,props[1]);
+      }
+      if (isTouching("any", 29)) {
+        let props = getProps(29);
+        player.yv = Math.min(player.yv,-props[1]);
+      }
+      if (isTouching("any", 30)) {
+        let props = getProps(30);
+        player.yv = Math.max(player.yv,props[1]);
+      }
       // switch
       if (isTouching("any", 31)) {
         if (canSwitch) {
@@ -827,8 +831,8 @@ function nextFrame(timeStamp) {
         hasHitbox[7] = 36;
       } else hasHitbox[7] = 37;
       if (isTouching("any", 63)) {
-        let coord = getCoord(63);
-        player.timerInterval = level[coord[0]][coord[1]][1];
+        let props = getProps(63);
+        player.timerInterval = props[1];
       }
       // jump-toggle
       if (player.jumpOn) {
@@ -838,7 +842,7 @@ function nextFrame(timeStamp) {
       if (isTouching("any", 46)) {
         let coord = getCoord(46);
         if (!arraysEqual(prevTextCoord, coord)) {
-          let text = level[coord[0]][coord[1]][1];
+          let text = getProps(46)[1];
           id("textBlockText").innerHTML = text;
           id("textBlockText").style.display = "block";
           let x = coord[0] * blockSize + blockSize / 2 + lvlxOffset;
@@ -871,12 +875,11 @@ function nextFrame(timeStamp) {
       // portal
       if (isTouching("any", 41)) {
         let coord = getCoord(41);
+        let props = getProps(41);
         player.x =
-          (coord[0] + level[coord[0]][coord[1]][1]) * blockSize +
-          (blockSize - playerSize) / 2;
+          (coord[0] + props[1]) * blockSize + (blockSize - playerSize) / 2;
         player.y =
-          (coord[1] + level[coord[0]][coord[1]][2]) * blockSize +
-          (blockSize - playerSize) / 2;
+          (coord[1] + props[2]) * blockSize + (blockSize - playerSize) / 2;
       }
       // OoB check
       if (player.x < 0) player.x = 0;
@@ -1100,8 +1103,12 @@ function toggleAutoSave() {
 function toggleSaveMenu() {
   if (id("saveMenu").style.display === "none") {
     id("saveMenu").style.display = "block";
+    editDisabled = true;
     updateSaveMenu();
-  } else id("saveMenu").style.display = "none";
+  } else {
+    id("saveMenu").style.display = "none";
+    editDisabled = false;
+  }
 }
 function updateSaveMenu() {
   let saveList = JSON.parse(localStorage.getItem("just-a-save-list"));
@@ -1178,11 +1185,26 @@ function updateSaveMenu() {
     id("saveList").appendChild(saveSect);
   }
 }
-function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
+function openPropertyMenu(
+  x,
+  y,
+  type = getBlockType(x, y, false),
+  editDefault = false,
+  subProp = false,
+  subPropName
+) {
   control.e = false;
   if (hasProperty(type)) {
     let props = blockProperty[type];
     let menu = id("editProperty");
+    if (subProp) {
+      menu = id("editProperty2");
+      id("editProperty")
+        .querySelectorAll("select, input, textarea, button")
+        .forEach(function (ele) {
+          ele.disabled = true;
+        });
+    }
     menu.innerHTML = "";
     for (let i in props) {
       let sect = document.createElement("div");
@@ -1194,20 +1216,37 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
       if (propertyType[type][i] === "block") {
         input = document.createElement("select");
         let currentSect;
-        for (let i in blockSelect) {
-          if (typeof blockSelect[i] === "string") {
+        for (let j in blockSelect) {
+          if (typeof blockSelect[j] === "string") {
             currentSect = document.createElement("optGroup");
-            currentSect.label = blockSelect[i];
+            currentSect.label = blockSelect[j];
             input.appendChild(currentSect);
-          } else if (!hasProperty(blockSelect[i])) {
+          } else if (
+            !hasProperty(blockSelect[j]) ||
+            !propertyType[blockSelect[j]].includes("block")
+          ) {
             let option = document.createElement("option");
-            option.innerHTML = blockName[blockSelect[i]];
-            option.value = blockSelect[i];
+            option.innerHTML = blockName[blockSelect[j]];
+            if (hasProperty(blockSelect[j])) {
+              option.id = "prop" + props[i] + "Option" + blockSelect[j];
+              let newVal = [blockSelect[j]];
+              if (level[x][y][i][0] === blockSelect[j]) {
+                for (let k in level[x][y][i]) {
+                  if (k == 0) continue;
+                  newVal.push(level[x][y][i][k]);
+                }
+              } else {
+                for (let k in defaultProperty[blockSelect[j]]) {
+                  newVal.push(defaultProperty[blockSelect[j]][k]);
+                }
+              }
+              option.value = JSON.stringify(newVal);
+            } else option.value = blockSelect[j];
             currentSect.appendChild(option);
           }
         }
       } else if (propertyType[type][i] === "boolean") {
-        label.style.verticalAlign = "-0.25em";
+        label.style.verticalAlign = "0.20em";
         input = document.createElement("input");
         input.type = "checkbox";
       } else {
@@ -1222,21 +1261,45 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
         } else text = "No limits";
         addTooltip(input, text);
       }
-      input.id = "prop" + props[i];
+      let startVal;
       if (editDefault) {
-        if (propertyType[type][i] === "boolean") {
-          input.checked = defaultProperty[type][i];
-        } else {
-          input.value = defaultProperty[type][i];
-        }
+        startVal = defaultProperty[type][i];
+      } else if (subProp) {
+        startVal = JSON.parse(id(subPropName).value)[parseInt(i) + 1];
       } else {
-        if (propertyType[type][i] === "boolean") {
-          input.checked = level[x][y][parseInt(i) + 1];
-        } else {
-          input.value = level[x][y][parseInt(i) + 1];
-        }
+        startVal = level[x][y][parseInt(i) + 1];
       }
+      if (typeof startVal === "object") startVal = JSON.stringify(startVal);
+      if (propertyType[type][i] === "boolean") {
+        input.checked = startVal;
+      } else {
+        input.value = startVal;
+      }
+      input.id = "prop" + props[i];
       sect.appendChild(input);
+      if (propertyType[type][i] === "block") {
+        let editSubProp = document.createElement("button");
+        editSubProp.innerHTML = "Edit Property";
+        if (hasProperty(JSON.parse(input.value)[0])) {
+          editSubProp.style.display = "inline";
+        } else editSubProp.style.display = "none";
+        input.addEventListener("input", function () {
+          if (hasProperty(JSON.parse(input.value)[0])) {
+            editSubProp.style.display = "inline";
+          } else editSubProp.style.display = "none";
+        });
+        editSubProp.addEventListener("click", function () {
+          openPropertyMenu(
+            0,
+            0,
+            JSON.parse(input.value)[0],
+            false,
+            true,
+            input.id + "Option" + JSON.parse(input.value)[0]
+          );
+        });
+        sect.appendChild(editSubProp);
+      }
     }
     let confirm = document.createElement("button");
     confirm.innerHTML = "confirm";
@@ -1249,14 +1312,29 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
         if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
         if (newVal == "Infinity") newVal = Infinity;
         if (
-          (typeof newVal == propertyType[type][i] ||
-            propertyType[type][i] == "any" ||
-            (propertyType[type][i] == "block" && typeof newVal == "number")) &&
-          ((newVal >= propertyLimit[type][i][0] &&
-            newVal <= propertyLimit[type][i][1]) ||
-            propertyLimit[type][i] == "none")
+          !(
+            (typeof newVal == propertyType[type][i] ||
+              propertyType[type][i] == "any" ||
+              propertyType[type][i] == "block") &&
+            ((newVal >= propertyLimit[type][i][0] &&
+              newVal <= propertyLimit[type][i][1]) ||
+              propertyLimit[type][i] == "none")
+          )
         ) {
-          if (propertyType[type][i] == "block" && newVal == 17) {
+          err = true;
+          id("prop" + props[i]).value = "";
+          break;
+        }
+      }
+      if (!err) {
+        for (let i in props) {
+          let newVal = id("prop" + props[i]).value;
+          if (propertyType[type][i] == "boolean")
+            newVal = id("prop" + props[i]).checked;
+          if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
+          if (newVal == "Infinity") newVal = Infinity;
+          if (propertyType[type][i] == "block") newVal = JSON.parse(newVal);
+          if (propertyType[type][i] == "block" && newVal[0] == 17) {
             player.startPoint = [
               x,
               y,
@@ -1272,22 +1350,27 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
           }
           if (editDefault) {
             defaultProperty[type][i] = newVal;
+          } else if (subProp) {
+            let value = JSON.parse(id(subPropName).value);
+            value[parseInt(i) + 1] = newVal;
+            id(subPropName).value = JSON.stringify(value);
           } else {
             level[x][y][parseInt(i) + 1] = newVal;
           }
-          drawLevel();
-        } else {
-          err = true;
-          id("prop" + props[i]).value = "";
         }
-      }
-      if (!err) {
+        drawLevel();
         menu.style.display = "none";
         if (!editDefault) {
           drawBlock(id("blockSelect" + type), 0, 0, type, 0, 0, 1, true);
           addVersion();
         }
-        editProperty = false;
+        if (subProp) {
+          id("editProperty")
+            .querySelectorAll("select, input, textarea, button")
+            .forEach(function (ele) {
+              ele.disabled = false;
+            });
+        } else editDisabled = false;
       } else {
         alert("Invalid value!");
       }
@@ -1297,14 +1380,20 @@ function openPropertyMenu(x, y, type = getBlockType(x, y, false), editDefault) {
     cancel.innerHTML = "cancel";
     cancel.onclick = function () {
       menu.style.display = "none";
-      editProperty = false;
+      if (subProp) {
+        id("editProperty")
+          .querySelectorAll("select, input, textarea, button")
+          .forEach(function (ele) {
+            ele.disabled = false;
+          });
+      } else editDisabled = false;
     };
     menu.appendChild(cancel);
     menu.onkeydown = function (input) {
       if (input.code === "Enter" && !input.shiftKey) confirm.click();
     };
     menu.style.display = "block";
-    editProperty = true;
+    editDisabled = true;
   }
 }
 function addTooltip(elem, text) {
@@ -1339,27 +1428,26 @@ function getBlockType(x, y, subtype = true) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
     return 1;
   }
-  if (typeof level[x][y] === "object") {
-    if (subtype) {
-      if (level[x][y][0] === 52) {
-        if (player.switchOn !== level[x][y][3]) {
-          return level[x][y][1];
-        } else return level[x][y][2];
-      }
-      if (level[x][y][0] === 53) {
-        if (player.timerOn !== level[x][y][3]) {
-          return level[x][y][1];
-        } else return level[x][y][2];
-      }
-      if (level[x][y][0] === 54) {
-        if (player.jumpOn !== level[x][y][3]) {
-          return level[x][y][1];
-        } else return level[x][y][2];
-      }
+  let type = level[x][y];
+  if (subtype) {
+    if (type[0] === 52) {
+      if (player.switchOn !== type[3]) {
+        type = type[1];
+      } else type = type[2];
     }
-    return level[x][y][0];
+    if (type[0] === 53) {
+      if (player.timerOn !== type[3]) {
+        type = type[1];
+      } else type = type[2];
+    }
+    if (type[0] === 54) {
+      if (player.jumpOn !== type[3]) {
+        type = type[1];
+      } else type = type[2];
+    }
   }
-  return level[x][y];
+  if (typeof type === "object") return type[0];
+  return type;
 }
 function isTouching(dir, type) {
   if (player.noclip) return false;
@@ -1520,6 +1608,19 @@ function getCoord(type) {
     return [x2b, y2b];
   }
 }
+function getProps(type, subBlock) {
+  let coord = getCoord(type);
+  let block = level[coord[0]][coord[1]];
+  if (block[0] !== type) {
+    if (subBlock !== undefined) {
+      return block[subBlock];
+    } else {
+      for (let i in block) {
+        if (block[i][0] == type) return block[i];
+      }
+    }
+  } else return block;
+}
 function getDefaultSpawn() {
   return [4, 5, 325, 1, 600, false, false, false, false];
 }
@@ -1568,6 +1669,7 @@ function respawn() {
   if (shouldDraw) drawLevel();
 }
 function arraysEqual(a, b) {
+  if (typeof a !== "object" || typeof b !== "object") return a === b;
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;

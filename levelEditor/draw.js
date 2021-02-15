@@ -39,7 +39,7 @@ function drawLevel() {
         let prevBlock = prevLevel[x][y];
         if (prevBlock == undefined) prevBlock = 0;
         if (
-          level[x][y] != prevBlock ||
+          !arraysEqual(level[x][y], prevBlock) ||
           (player.switchOn != prevSwitch &&
             [31, 32, 33, 34, 35].includes(level[x][y])) ||
           ((timerStage != prevTimerStage || player.timerOn != prevTimer) &&
@@ -75,6 +75,7 @@ function drawBlock(
   size = 1,
   useDefault = false
 ) {
+  if (typeof type === "object") type = type[0];
   blockSize *= size;
   let lL = canvas.getContext("2d");
   lL.lineWidth = (blockSize * 3) / 25;
@@ -86,7 +87,15 @@ function drawBlock(
     data = level[x][y];
     if (useDefault) {
       data = defaultProperty[type].slice();
-      data.unshift(0);
+      data.unshift(type);
+    }
+    if (data[0] !== type) {
+      for (let i in data) {
+        if (data[i][0] === type) {
+          data = data[i];
+          break;
+        }
+      }
     }
   }
   let sOn = player.switchOn;
@@ -1373,10 +1382,10 @@ function drawBlock(
     case 52:
       if (sOn !== data[3]) {
         drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2);
+        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
       } else {
         drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2);
+        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
       }
 
       lL.fillStyle = "#00880044";
@@ -1396,10 +1405,10 @@ function drawBlock(
     case 53:
       if (tOn !== data[3]) {
         drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2);
+        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
       } else {
         drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2);
+        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
       }
 
       lL.fillStyle = "#88888844";
@@ -1431,10 +1440,10 @@ function drawBlock(
     case 54:
       if (jOn !== data[3]) {
         drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2);
+        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
       } else {
         drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2);
+        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
       }
 
       lL.fillStyle = "#88440044";
@@ -1461,6 +1470,12 @@ function drawBlock(
         (blockSize / 25) * 6,
         (blockSize / 25) * 3
       );
+      lL.strokeStyle = "#00000088";
+      lL.beginPath();
+      lL.moveTo(xb + (blockSize * 3) / 4, yb + blockSize / 4);
+      lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(xb + (blockSize * 3) / 4, yb + (blockSize * 3) / 4);
+      lL.stroke();
       break;
     case 56:
       lL.fillStyle = "#000000";
@@ -1482,6 +1497,12 @@ function drawBlock(
         (blockSize / 25) * 6,
         (blockSize / 25) * 3
       );
+      lL.strokeStyle = "#00000088";
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 4, yb + blockSize / 4);
+      lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(xb + blockSize / 4, yb + (blockSize * 3) / 4);
+      lL.stroke();
       break;
     case 57:
       lL.fillStyle = "#000000";
@@ -1493,6 +1514,12 @@ function drawBlock(
         (blockSize / 25) * 3,
         (blockSize / 25) * 6
       );
+      lL.strokeStyle = "#00000088";
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 4, yb + (blockSize * 3) / 4);
+      lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(xb + (blockSize * 3) / 4, yb + (blockSize * 3) / 4);
+      lL.stroke();
       break;
     case 58:
       lL.fillStyle = "#000000";
@@ -1514,6 +1541,12 @@ function drawBlock(
         (blockSize / 25) * 3,
         (blockSize / 25) * 6
       );
+      lL.strokeStyle = "#00000088";
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 4, yb + blockSize / 4);
+      lL.lineTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(xb + (blockSize * 3) / 4, yb + blockSize / 4);
+      lL.stroke();
       break;
     case 59:
       lL.strokeStyle = "#88008888";

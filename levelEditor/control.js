@@ -8,7 +8,7 @@ document.addEventListener("mousedown", function (input) {
   }
 });
 id("levelLayer").addEventListener("mousedown", function (input) {
-  if (!editProperty) {
+  if (!editDisabled) {
     input.preventDefault();
     window.focus();
     let xb = Math.floor(input.offsetX / blockSize);
@@ -125,7 +125,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
   }
 });
 id("levelLayer").addEventListener("mousemove", function (input) {
-  if (!editProperty) {
+  if (!editDisabled) {
     input.preventDefault();
     let xb = Math.floor(input.offsetX / blockSize);
     let yb = Math.floor(input.offsetY / blockSize);
@@ -170,7 +170,17 @@ id("levelLayer").addEventListener("mousemove", function (input) {
         text += blockProperty[getBlockType(xb, yb, false)][i];
         text += ": ";
         if (propertyType[getBlockType(xb, yb, false)][i] === "block") {
-          text += blockName[level[xb][yb][parseInt(i) + 1]];
+          if (typeof level[xb][yb][parseInt(i) + 1] === "object") {
+            text += blockName[level[xb][yb][parseInt(i) + 1][0]];
+            for (let j in level[xb][yb][parseInt(i) + 1]) {
+              if (j == 0) continue;
+              text += "<br>";
+              text += "  ";
+              text += blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1];
+              text += ": ";
+              text += level[xb][yb][parseInt(i) + 1][j];
+            }
+          } else text += blockName[level[xb][yb][parseInt(i) + 1]];
         } else text += level[xb][yb][parseInt(i) + 1];
         text += "<br>";
       }
@@ -203,7 +213,7 @@ document.addEventListener("contextmenu", function (input) {
 });
 
 document.addEventListener("keydown", function (input) {
-  if (!editProperty) {
+  if (!editDisabled) {
     input.preventDefault();
     let key = input.code;
     switch (key) {
@@ -527,7 +537,7 @@ document.addEventListener("keydown", function (input) {
   }
 });
 document.addEventListener("keyup", function (input) {
-  if (!editProperty) {
+  if (!editDisabled) {
     let key = input.code;
     switch (key) {
       case "ArrowLeft":
