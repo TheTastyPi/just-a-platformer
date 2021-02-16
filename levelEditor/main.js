@@ -980,6 +980,7 @@ function save(auto = false) {
 function load(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
   level = saves[name][0];
+  level=level.map((x)=>x.map((y)=>((((26<y)&&(31>y))?([y,100]):y))))
   let start = infinify(saves[name][1]);
   player.startPoint = getDefaultSpawn();
   for (let i in start) {
