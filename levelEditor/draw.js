@@ -41,16 +41,20 @@ function drawLevel() {
         if (
           !arraysEqual(level[x][y], prevBlock) ||
           (player.switchOn != prevSwitch &&
-            [31, 32, 33, 34, 35].includes(level[x][y])) ||
+            [31, 32, 33, 34, 35, 52].includes(getBlockType(x, y, false))) ||
           ((timerStage != prevTimerStage || player.timerOn != prevTimer) &&
-            [36, 37, 38, 39].includes(level[x][y])) ||
+            [36, 37, 38, 39, 53].includes(getBlockType(x, y, false))) ||
           (player.jumpOn != prevJumpState &&
-            [42, 43, 44, 45].includes(level[x][y])) ||
+            [42, 43, 44, 45, 54].includes(x, y, false)) ||
           (!arraysEqual(prevSpawnPos, [
             player.spawnPoint[0],
             player.spawnPoint[1]
           ]) &&
-            [3, 17, 18].includes(level[x][y]))
+            (arraysEqual(prevSpawnPos, [parseInt(x), parseInt(y)]) ||
+              arraysEqual(
+                [player.spawnPoint[0], player.spawnPoint[1]],
+                [parseInt(x), parseInt(y)]
+              )))
         )
           drawBlock(canvas, parseInt(x), parseInt(y));
       }

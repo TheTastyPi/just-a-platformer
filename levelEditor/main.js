@@ -237,10 +237,10 @@ const propertyType = {
   63: ["number"]
 };
 const propertyLimit = {
-  27: [[0,1000]],
-  28: [[0,1000]],
-  29: [[0,1000]],
-  30: [[0,1000]],
+  27: [[0, 1000]],
+  28: [[0, 1000]],
+  29: [[0, 1000]],
+  30: [[0, 1000]],
   41: ["none", "none"],
   46: ["none"],
   47: [[0, 1000]],
@@ -303,8 +303,10 @@ function nextFrame(timeStamp) {
       let shouldDie = false;
       // velocity change
       if (player.xg) {
-        if (!noFriction) player.yv *= Math.pow(0.5, dt / 12);
-        if (Math.abs(player.yv) < 5) player.yv = 0;
+        if (!noFriction) {
+          player.yv *= Math.pow(0.5, dt / 6);
+          if (Math.abs(player.yv) < 1) player.yv = 0;
+        }
         if (
           (player.xv > player.g && player.g > 0) ||
           (player.xv < player.g && player.g < 0)
@@ -315,8 +317,10 @@ function nextFrame(timeStamp) {
           player.xv += (player.g * dt) / 500;
         }
       } else {
-        if (!noFriction) player.xv *= Math.pow(0.5, dt / 12);
-        if (Math.abs(player.xv) < 5) player.xv = 0;
+        if (!noFriction) {
+          player.xv *= Math.pow(0.5, dt / 6);
+          if (Math.abs(player.xv) < 1) player.xv = 0;
+        }
         if (
           (player.yv > player.g && player.g > 0) ||
           (player.yv < player.g && player.g < 0)
@@ -791,19 +795,19 @@ function nextFrame(timeStamp) {
       // force field
       if (isTouching("any", 27)) {
         let props = getProps(27);
-        player.xv = Math.min(player.xv,-props[1]);
+        player.xv = Math.min(player.xv, -props[1]);
       }
       if (isTouching("any", 28)) {
         let props = getProps(28);
-        player.xv = Math.max(player.xv,props[1]);
+        player.xv = Math.max(player.xv, props[1]);
       }
       if (isTouching("any", 29)) {
         let props = getProps(29);
-        player.yv = Math.min(player.yv,-props[1]);
+        player.yv = Math.min(player.yv, -props[1]);
       }
       if (isTouching("any", 30)) {
         let props = getProps(30);
-        player.yv = Math.max(player.yv,props[1]);
+        player.yv = Math.max(player.yv, props[1]);
       }
       // switch
       if (isTouching("any", 31)) {
@@ -897,23 +901,23 @@ function nextFrame(timeStamp) {
       if (control.down) player.y += (simReruns * dt) / 4;
     } else if (player.xg) {
       if (control.left && player.yv > -player.moveSpeed) {
-        player.yv -= (player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.yv -= (player.moveSpeed * dt * 2) / (noFriction ? 5 : 1);
         if (player.yv < -player.moveSpeed / (noFriction ? 5 : 1))
           player.yv = -player.moveSpeed / (noFriction ? 5 : 1);
       }
       if (control.right && player.yv < player.moveSpeed) {
-        player.yv += (player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.yv += (player.moveSpeed * dt * 2) / (noFriction ? 5 : 1);
         if (player.yv > player.moveSpeed / (noFriction ? 5 : 1))
           player.yv = player.moveSpeed / (noFriction ? 5 : 1);
       }
     } else {
       if (control.left && player.xv > -player.moveSpeed) {
-        player.xv -= (player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.xv -= (player.moveSpeed * dt * 2) / (noFriction ? 5 : 1);
         if (player.xv < -player.moveSpeed / (noFriction ? 5 : 1))
           player.xv = -player.moveSpeed / (noFriction ? 5 : 1);
       }
       if (control.right && player.xv < player.moveSpeed) {
-        player.xv += (player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.xv += (player.moveSpeed * dt * 2) / (noFriction ? 5 : 1);
         if (player.xv > player.moveSpeed / (noFriction ? 5 : 1))
           player.xv = player.moveSpeed / (noFriction ? 5 : 1);
       }
@@ -1230,7 +1234,15 @@ function openPropertyMenu(
             if (hasProperty(blockSelect[j])) {
               option.id = "prop" + props[i] + "Option" + blockSelect[j];
               let newVal = [blockSelect[j]];
-              if (level[x][y][i][0] === blockSelect[j]) {
+              if (
+                editDefault &&
+                defaultProperty[type][i][0] === blockSelect[j]
+              ) {
+                for (let k in defaultProperty[type][i]) {
+                  if (k == 0) continue;
+                  newVal.push(defaultProperty[type][i][k]);
+                }
+              } else if (!editDefault && level[x][y][i][0] === blockSelect[j]) {
                 for (let k in level[x][y][i]) {
                   if (k == 0) continue;
                   newVal.push(level[x][y][i][k]);
@@ -1361,9 +1373,8 @@ function openPropertyMenu(
         drawLevel();
         menu.style.display = "none";
         if (!editDefault) {
-          drawBlock(id("blockSelect" + type), 0, 0, type, 0, 0, 1, true);
           addVersion();
-        }
+        } else drawBlock(id("blockSelect" + type), 0, 0, type, 0, 0, 1, true);
         if (subProp) {
           id("editProperty")
             .querySelectorAll("select, input, textarea, button")
