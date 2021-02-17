@@ -934,6 +934,10 @@ function addVersion() {
   currentVersion++;
   prevVersions.length = currentVersion;
   prevVersions.push(deepCopy(level));
+  if (currentVersion >= 25) {
+    currentVersion--;
+    prevVersions.shift();
+  }
 }
 function setSpawn(x, y, start = false) {
   player.spawnPoint = [
