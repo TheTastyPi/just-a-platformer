@@ -984,7 +984,17 @@ function save(auto = false) {
 function load(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
   level = saves[name][0];
-  level=level.map((x)=>x.map((y)=>((((26<y)&&(31>y))?([y,100]):y))))
+  level = level.map((x) =>
+    x.map(function (y) {
+      if (hasProperty(y)) {
+        if (typeof y !== "object") y = [y];
+        if (y.length - 1 !== defaultProperty[y].length) {
+          y = y.concat(defaultProperty[y].slice(1 - y.length));
+        }
+      }
+      return y;
+    })
+  );
   let start = infinify(saves[name][1]);
   player.startPoint = getDefaultSpawn();
   for (let i in start) {
