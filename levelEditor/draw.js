@@ -45,7 +45,7 @@ function drawLevel() {
           ((timerStage != prevTimerStage || player.timerOn != prevTimer) &&
             [36, 37, 38, 39, 53].includes(getBlockType(x, y, false))) ||
           (player.jumpOn != prevJumpState &&
-            [42, 43, 44, 45, 54].includes(x, y, false)) ||
+            [42, 43, 44, 45, 54].includes(getBlockType(x, y, false))) ||
           (!arraysEqual(prevSpawnPos, [
             player.spawnPoint[0],
             player.spawnPoint[1]
