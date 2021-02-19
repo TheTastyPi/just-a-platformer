@@ -41,11 +41,14 @@ function drawLevel() {
         if (
           !arraysEqual(level[x][y], prevBlock) ||
           (player.switchOn != prevSwitch &&
-            [31, 32, 33, 34, 35, 52].includes(getBlockType(x, y, false))) ||
+            ([31, 32, 33, 34, 35, 52].includes(getBlockType(x, y, false)) ||
+              blockIncludes(level[x][y], [31, 32, 33, 34, 35, 52]))) ||
           ((timerStage != prevTimerStage || player.timerOn != prevTimer) &&
-            [36, 37, 38, 39, 53].includes(getBlockType(x, y, false))) ||
+            ([36, 37, 38, 39, 53].includes(getBlockType(x, y, false)) ||
+              blockIncludes(level[x][y], [36, 37, 38, 39, 53]))) ||
           (player.jumpOn != prevJumpState &&
-            [42, 43, 44, 45, 54].includes(getBlockType(x, y, false))) ||
+            ([42, 43, 44, 45, 54].includes(getBlockType(x, y, false)) ||
+              blockIncludes(level[x][y], [42, 43, 44, 45, 54]))) ||
           (!arraysEqual(prevSpawnPos, [
             player.spawnPoint[0],
             player.spawnPoint[1]

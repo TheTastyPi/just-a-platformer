@@ -65,9 +65,6 @@ id("levelLayer").addEventListener("mousedown", function (input) {
     } else {
       if (input.button === 0) {
         control.lmb = true;
-        if (player.selectedBlock[0] === 17) {
-          setSpawn(xb, yb, true);
-        }
         if (hasProperty(player.selectedBlock[0])) {
           level[xb][yb] = [player.selectedBlock[0]];
           for (let i in defaultProperty[player.selectedBlock[0]]) {
@@ -75,6 +72,10 @@ id("levelLayer").addEventListener("mousedown", function (input) {
               defaultProperty[player.selectedBlock[0]][i];
           }
         } else level[xb][yb] = player.selectedBlock[0];
+        if (player.selectedBlock[0] === 17) {
+          setSpawn(xb, yb, true);
+          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+        }
         drawLevel();
       } else if (input.button === 1) {
         if (player.selectedBlock[1] == player.selectedBlock[0]) {
@@ -109,9 +110,6 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         }
       } else if (input.button === 2) {
         control.rmb = true;
-        if (player.selectedBlock[1] === 17) {
-          setSpawn(xb, yb, true);
-        }
         if (hasProperty(player.selectedBlock[1])) {
           level[xb][yb] = [player.selectedBlock[1]];
           for (let i in defaultProperty[player.selectedBlock[1]]) {
@@ -119,6 +117,10 @@ id("levelLayer").addEventListener("mousedown", function (input) {
               defaultProperty[player.selectedBlock[1]][i];
           }
         } else level[xb][yb] = player.selectedBlock[1];
+        if (player.selectedBlock[1] === 17) {
+          setSpawn(xb, yb, true);
+          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+        }
         drawLevel();
       }
     }
@@ -138,9 +140,6 @@ id("levelLayer").addEventListener("mousemove", function (input) {
       }
     } else if (!input.shiftKey) {
       if (control.lmb) {
-        if (player.selectedBlock[0] === 17) {
-          setSpawn(xb, yb, true);
-        }
         if (hasProperty(player.selectedBlock[0])) {
           level[xb][yb] = [player.selectedBlock[0]];
           for (let i in defaultProperty[player.selectedBlock[0]]) {
@@ -148,11 +147,12 @@ id("levelLayer").addEventListener("mousemove", function (input) {
               defaultProperty[player.selectedBlock[0]][i];
           }
         } else level[xb][yb] = player.selectedBlock[0];
+        if (player.selectedBlock[0] === 17) {
+          setSpawn(xb, yb, true);
+          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+        }
         drawLevel();
       } else if (control.rmb) {
-        if (player.selectedBlock[1] === 17) {
-          setSpawn(xb, yb, true);
-        }
         if (hasProperty(player.selectedBlock[1])) {
           level[xb][yb] = [player.selectedBlock[1]];
           for (let i in defaultProperty[player.selectedBlock[1]]) {
@@ -160,6 +160,10 @@ id("levelLayer").addEventListener("mousemove", function (input) {
               defaultProperty[player.selectedBlock[1]][i];
           }
         } else level[xb][yb] = player.selectedBlock[1];
+        if (player.selectedBlock[1] === 17) {
+          setSpawn(xb, yb, true);
+          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+        }
         drawLevel();
       }
     }
