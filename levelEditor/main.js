@@ -1494,11 +1494,14 @@ function addTooltip(elem, text) {
 function hasProperty(blockId) {
   return Object.keys(blockProperty).includes(String(blockId));
 }
-function getBlockType(x, y, subtype = true, block = level[x][y]) {
+function getBlockType(x, y, subtype = true, block) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
     return 1;
   }
-  let type = block;
+  let type;
+  if (block === undefined) {
+    type = level[x][y];
+  } else type = block;
   if (subtype) {
     if (type[0] === 52) {
       if (player.switchOn !== type[3]) {
