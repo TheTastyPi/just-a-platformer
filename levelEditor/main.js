@@ -16,7 +16,7 @@ const player = {
   maxJumps: 1,
   moveSpeed: 600,
   jumpHeight: 205,
-  switchOn: false,
+  switchsOn: [],
   timerOn: false,
   timerInterval: 4000,
   jumpOn: false,
@@ -45,7 +45,22 @@ var level = [
   [1, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
-const hasHitbox = [1, 5, 11, 24, 25, 26, 33, 37, 40, 43, 47, 51, 61, 62];
+const hasHitbox = [
+  1,
+  5,
+  11,
+  24,
+  25,
+  26,
+  "[REMOVED]",
+  37,
+  40,
+  43,
+  47,
+  51,
+  61,
+  62
+];
 const blockName = [
   "Empty Space",
   "Solid Block",
@@ -190,9 +205,9 @@ const blockProperty = {
     "Start Grav",
     "Start Jump Amt",
     "Start Speed",
-    "Switch State",
-    "Timer State",
-    "Jump State",
+    "!Switch State",
+    "!Timer State",
+    "!Jump State",
     "Horizontal Grav",
     "Timer Interval"
   ],
@@ -208,6 +223,11 @@ const blockProperty = {
   28: ["Power"],
   29: ["Power"],
   30: ["Power"],
+  31: ["ID", "Single Use", "!Status"],
+  32: ["ID"],
+  33: ["ID"],
+  34: ["ID"],
+  35: ["ID"],
   41: ["TP Offset X", "TP Offset Y"],
   46: ["Text"],
   47: ["Power"],
@@ -215,18 +235,23 @@ const blockProperty = {
   49: ["Jumps"],
   50: ["Speed"],
   51: ["ColorR", "ColorG", "ColorB"],
-  52: ["BlockA", "BlockB", "Invert"],
+  52: ["BlockA", "BlockB", "Invert", "ID"],
   53: ["BlockA", "BlockB", "Invert"],
   54: ["BlockA", "BlockB", "Invert"],
   63: ["Interval"]
 };
 const defaultProperty = {
-  17: [325, 1, 600, false, false, false, false, 4000],
+  17: [325, 1, 600, [], false, false, false, 4000],
   18: [false, 325, false, 1, 600, 4000],
   27: [100],
   28: [100],
   29: [100],
   30: [100],
+  31: [0, false, "unused"],
+  32: [0],
+  33: [0],
+  34: [0],
+  35: [0],
   41: [0, 0],
   46: ["Text"],
   47: [275],
@@ -234,7 +259,7 @@ const defaultProperty = {
   49: [1],
   50: [600],
   51: [127, 127, 255],
-  52: [0, 1, false],
+  52: [0, 1, false, 0],
   53: [0, 1, false],
   54: [0, 1, false],
   63: [4000]
@@ -244,7 +269,7 @@ const propertyType = {
     "number",
     "number",
     "number",
-    "boolean",
+    "object",
     "boolean",
     "boolean",
     "boolean",
@@ -255,6 +280,11 @@ const propertyType = {
   28: ["number"],
   29: ["number"],
   30: ["number"],
+  31: ["integer", "boolean", "any"],
+  32: ["integer"],
+  33: ["integer"],
+  34: ["integer"],
+  35: ["integer"],
   41: ["number", "number"],
   46: ["any"],
   47: ["number"],
@@ -262,7 +292,7 @@ const propertyType = {
   49: ["number"],
   50: ["number"],
   51: ["number", "number", "number"],
-  52: ["block", "block", "boolean"],
+  52: ["block", "block", "boolean", "integer"],
   53: ["block", "block", "boolean"],
   54: ["block", "block", "boolean"],
   63: ["number"]
@@ -290,6 +320,11 @@ const propertyLimit = {
   28: [[0, 1000]],
   29: [[0, 1000]],
   30: [[0, 1000]],
+  31: [[0, 99], "none", "none"],
+  32: [[0, 99]],
+  33: [[0, 99]],
+  34: [[0, 99]],
+  35: [[0, 99]],
   41: ["none", "none"],
   46: ["none"],
   47: [[0, 1000]],
@@ -301,7 +336,7 @@ const propertyLimit = {
     [0, 255],
     [0, 255]
   ],
-  52: ["none", "none", "none"],
+  52: ["none", "none", "none", [0, 99]],
   53: ["none", "none", "none"],
   54: ["none", "none", "none"],
   63: [[500, 60 * 60 * 1000]]
@@ -872,15 +907,15 @@ function nextFrame(timeStamp) {
       }
       // switch
       if (isTouching("any", 31)) {
-        if (canSwitch) {
-          player.switchOn = !player.switchOn;
+        let coord = getCoord(31);
+        let props = getProps(31);
+        if (canSwitch && props[3] === "unused") {
+          if (props[2]) editProp(coord[0], coord[1], 31, 3, "used/unsaved");
+          player.switchsOn[props[1]] = !player.switchsOn[props[1]];
           shouldDrawLevel = true;
         }
         canSwitch = false;
       } else canSwitch = true;
-      if (player.switchOn) {
-        hasHitbox[6] = 32;
-      } else hasHitbox[6] = 33;
       // timer
       if (sinceLastTimerStage > Math.min(1000, player.timerInterval / 4)) {
         timerStage++;
@@ -930,8 +965,6 @@ function nextFrame(timeStamp) {
       }
       // death block
       if (isTouching("any", 2)) shouldDie = true;
-      if (isTouching("any", 34) && player.switchOn) shouldDie = true;
-      if (isTouching("any", 35) && !player.switchOn) shouldDie = true;
       if (isTouching("any", 38) && player.timerOn) shouldDie = true;
       if (isTouching("any", 39) && !player.timerOn) shouldDie = true;
       if (isTouching("any", 44) && player.jumpOn) shouldDie = true;
@@ -1007,13 +1040,24 @@ function setSpawn(x, y, start = false) {
     player.g,
     player.maxJumps,
     player.moveSpeed,
-    player.switchOn,
+    [...player.switchsOn],
     player.jumpOn,
     player.timerOn,
     player.xg,
     player.timerInterval
   ];
   if (start) player.startPoint = deepCopy(player.spawnPoint);
+  for (let x in level) {
+    for (let y in level[x]) {
+      if (
+        getBlockType(x, y) === 31 &&
+        getProps(31, false, x, y)[3] === "used/unsaved"
+      ) {
+        editProp(x, y, 31, 3, "used", true);
+        shouldDraw = true;
+      }
+    }
+  }
 }
 function isSpawn(x, y) {
   return player.spawnPoint[0] === x && player.spawnPoint[1] === y;
@@ -1065,6 +1109,8 @@ function load(name) {
   for (let i in start) {
     if (start[i] !== undefined) player.startPoint[i] = start[i];
   }
+  if (typeof player.startPoint[5] !== "object")
+    player.startPoint[5] = [player.startPoint[5]];
   player.spawnPoint = deepCopy(player.startPoint);
   player.currentSave = name;
   id("lvlWidth").innerHTML = level.length;
@@ -1277,6 +1323,7 @@ function openPropertyMenu(
   if (hasProperty(type)) {
     let props = blockProperty[type];
     let menu = id("editProperty");
+    let prefix = "";
     if (subProp) {
       menu = id("editProperty2");
       id("editProperty")
@@ -1284,9 +1331,11 @@ function openPropertyMenu(
         .forEach(function (ele) {
           ele.disabled = true;
         });
+      prefix = "sub";
     }
     menu.innerHTML = "";
     for (let i in props) {
+      if (props[i][0] === "!") continue;
       let sect = document.createElement("div");
       menu.appendChild(sect);
       let label = document.createElement("span");
@@ -1318,10 +1367,13 @@ function openPropertyMenu(
                   if (k == 0) continue;
                   newVal.push(defaultProperty[type][i][k]);
                 }
-              } else if (!editDefault && level[x][y][i][0] === blockSelect[j]) {
-                for (let k in level[x][y][i]) {
+              } else if (
+                !editDefault &&
+                level[x][y][parseInt(i) + 1][0] === blockSelect[j]
+              ) {
+                for (let k in level[x][y][parseInt(i) + 1]) {
                   if (k == 0) continue;
-                  newVal.push(level[x][y][i][k]);
+                  newVal.push(level[x][y][parseInt(i) + 1][k]);
                 }
               } else {
                 for (let k in defaultProperty[blockSelect[j]]) {
@@ -1334,11 +1386,9 @@ function openPropertyMenu(
           }
         }
       } else if (propertyType[type][i] === "boolean") {
-        label.style.verticalAlign = "0.20em";
         input = document.createElement("input");
         input.type = "checkbox";
       } else {
-        label.style.verticalAlign = "1em";
         input = document.createElement("textarea");
         let text;
         if (propertyLimit[type][i] !== "none") {
@@ -1349,6 +1399,9 @@ function openPropertyMenu(
         } else text = "No limits";
         addTooltip(input, text);
       }
+      label.style.position = "relative";
+      input.style.position = "relative";
+      input.style.verticalAlign = "middle";
       let startVal;
       if (editDefault) {
         startVal = defaultProperty[type][i];
@@ -1363,7 +1416,7 @@ function openPropertyMenu(
       } else {
         input.value = startVal;
       }
-      input.id = "prop" + props[i];
+      input.id = prefix + "prop" + props[i];
       sect.appendChild(input);
       if (propertyType[type][i] === "block") {
         let editSubProp = document.createElement("button");
@@ -1394,31 +1447,35 @@ function openPropertyMenu(
     confirm.onclick = function () {
       let err = false;
       for (let i in props) {
-        let newVal = id("prop" + props[i]).value;
-        if (propertyType[type][i] == "boolean")
-          newVal = id("prop" + props[i]).checked;
+        if (props[i][0] === "!") continue;
+        let newVal = id(prefix + "prop" + props[i]).value;
+        if (propertyType[type][i] === "boolean")
+          newVal = id(prefix + "prop" + props[i]).checked;
         if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
         if (newVal == "Infinity") newVal = Infinity;
         if (
           !(
-            (typeof newVal == propertyType[type][i] ||
-              propertyType[type][i] == "any" ||
-              propertyType[type][i] == "block") &&
+            (typeof newVal === propertyType[type][i] ||
+              propertyType[type][i] === "any" ||
+              propertyType[type][i] === "block" ||
+              (propertyType[type][i] === "integer" &&
+                parseInt(newVal) === parseFloat(newVal))) &&
             ((newVal >= propertyLimit[type][i][0] &&
               newVal <= propertyLimit[type][i][1]) ||
-              propertyLimit[type][i] == "none")
+              propertyLimit[type][i] === "none")
           )
         ) {
           err = true;
-          id("prop" + props[i]).value = "";
+          id(prefix + "prop" + props[i]).value = "";
           break;
         }
       }
       if (!err) {
         for (let i in props) {
-          let newVal = id("prop" + props[i]).value;
+          if (props[i][0] === "!") continue;
+          let newVal = id(prefix + "prop" + props[i]).value;
           if (propertyType[type][i] == "boolean")
-            newVal = id("prop" + props[i]).checked;
+            newVal = id(prefix + "prop" + props[i]).checked;
           if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
           if (newVal == "Infinity") newVal = Infinity;
           if (propertyType[type][i] == "block") newVal = JSON.parse(newVal);
@@ -1503,24 +1560,50 @@ function getBlockType(x, y, subtype = true, block) {
     type = level[x][y];
   } else type = block;
   if (subtype) {
-    if (type[0] === 52) {
-      if (player.switchOn !== type[3]) {
-        type = type[1];
-      } else type = type[2];
+    if (type[0] === 32) {
+      if (player.switchsOn[type[1]]) {
+        type = 1;
+      } else type = 0;
     }
-    if (type[0] === 53) {
-      if (player.timerOn !== type[3]) {
-        type = type[1];
-      } else type = type[2];
+    if (type[0] === 33) {
+      if (player.switchsOn[type[1]]) {
+        type = 0;
+      } else type = 1;
     }
-    if (type[0] === 54) {
-      if (player.jumpOn !== type[3]) {
-        type = type[1];
-      } else type = type[2];
+    if (type[0] === 34) {
+      if (player.switchsOn[type[1]]) {
+        type = 2;
+      } else type = 0;
+    }
+    if (type[0] === 35) {
+      if (player.switchsOn[type[1]]) {
+        type = 0;
+      } else type = 2;
+    }
+    if (hasProperty(type[0]) && propertyType[type[0]].includes("block")) {
+      type = type[getSubBlockPos(x, y)];
     }
   }
   if (typeof type === "object") return type[0];
   return type;
+}
+function getSubBlockPos(x, y) {
+  let type = level[x][y];
+  if (type[0] === 52) {
+    if (!player.switchsOn[type[4]] !== !type[3]) {
+      return 1;
+    } else return 2;
+  }
+  if (type[0] === 53) {
+    if (player.timerOn !== type[3]) {
+      return 1;
+    } else return 2;
+  }
+  if (type[0] === 54) {
+    if (player.jumpOn !== type[3]) {
+      return 1;
+    } else return 2;
+  }
 }
 function isTouching(dir, type) {
   if (player.noclip) return false;
@@ -1681,18 +1764,34 @@ function getCoord(type) {
     return [x2b, y2b];
   }
 }
-function getProps(type, subBlock) {
-  let coord = getCoord(type);
-  let block = level[coord[0]][coord[1]];
+function getProps(
+  type,
+  subBlock = false,
+  x = getCoord(type)[0],
+  y = getCoord(type)[1]
+) {
+  if (!subBlock) subBlock = getSubBlockPos(x, y);
+  let block = level[x][y];
   if (block[0] !== type) {
-    if (subBlock !== undefined) {
-      return block[subBlock];
-    } else {
-      for (let i in block) {
-        if (block[i][0] == type) return block[i];
-      }
-    }
+    return block[subBlock];
   } else return block;
+}
+function editProp(x, y, type, num, val, all = false) {
+  let block = level[x][y];
+  if (block[0] !== type) {
+    if (all) {
+      for (let i in block) {
+        if (i == 0) continue;
+        if (
+          propertyType[block[0]][parseInt(i) - 1] === "block" &&
+          block[i][0] === type
+        )
+          block[i][num] = val;
+      }
+    } else {
+      block[getSubBlockPos(x, y)][num] = val;
+    }
+  } else block[num] = val;
 }
 function levelIncludes(type) {
   return level.some((x) =>
@@ -1728,7 +1827,7 @@ function blockIncludes(block, type) {
   }
 }
 function getDefaultSpawn() {
-  return [4, 5, 325, 1, 600, false, false, false, false, 4000];
+  return [4, 5, 325, 1, 600, [], false, false, false, 4000];
 }
 function toStart() {
   player.x = player.startPoint[0] * blockSize + (blockSize - playerSize) / 2;
@@ -1740,16 +1839,24 @@ function toStart() {
   player.currentJumps = player.maxJumps - 1;
   player.moveSpeed = player.startPoint[4];
   let shouldDraw =
-    player.switchOn !== player.startPoint[5] ||
+    !arraysEqual(player.switchsOn, player.startPoint[5]) ||
     player.jumpOn !== player.startPoint[6] ||
     player.timerOn !== player.startPoint[7] ||
     timerStage !== 0;
-  player.switchOn = player.startPoint[5];
+  player.switchsOn = [...player.startPoint[5]];
   player.jumpOn = player.startPoint[6];
   player.timerOn = player.startPoint[7];
   timerStage = 0;
   sinceLastTimerStage = 0;
   player.xg = player.startPoint[8];
+  for (let x in level) {
+    for (let y in level[x]) {
+      if (blockIncludes(level[x][y], 31)) {
+        editProp(x, y, 31, 3, "unused", true);
+        shouldDraw = true;
+      }
+    }
+  }
   if (shouldDraw) drawLevel();
 }
 function respawn() {
@@ -1762,16 +1869,27 @@ function respawn() {
   player.currentJumps = player.maxJumps - 1;
   player.moveSpeed = player.spawnPoint[4];
   let shouldDraw =
-    player.switchOn !== player.spawnPoint[5] ||
+    arraysEqual(player.switchsOn, player.spawnPoint[5]) ||
     player.jumpOn !== player.spawnPoint[6] ||
     player.timerOn !== player.spawnPoint[7] ||
     timerStage !== 0;
-  player.switchOn = player.spawnPoint[5];
+  player.switchsOn = [...player.spawnPoint[5]];
   player.jumpOn = player.spawnPoint[6];
   player.timerOn = player.spawnPoint[7];
   timerStage = 0;
   sinceLastTimerStage = 0;
   player.xg = player.spawnPoint[8];
+  for (let x in level) {
+    for (let y in level[x]) {
+      if (
+        getBlockType(x, y) === 31 &&
+        getProps(31, false, x, y)[3] === "used/unsaved"
+      ) {
+        editProp(x, y, 31, 3, "unused", true);
+        shouldDraw = true;
+      }
+    }
+  }
   if (shouldDraw) drawLevel();
 }
 function deepCopy(inObject) {
@@ -1842,6 +1960,9 @@ function init() {
       button.height = blockSize;
       button.width = blockSize;
       drawBlock(button, 0, 0, blockSelect[i], 0, 0, 1, true);
+      setTimeout(function () {
+        drawBlock(button, 0, 0, blockSelect[i], 0, 0, 1, true);
+      }, 2000);
       button.addEventListener("mousedown", function (input) {
         if (input.button == 0 && control.e) {
           openPropertyMenu(0, 0, blockSelect[i], true);

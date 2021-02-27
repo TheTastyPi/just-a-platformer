@@ -1,7 +1,6 @@
 /*/
 TODO 
 - speed section
-- wall jump section
 - final section
 - secret section? :o
 /*/

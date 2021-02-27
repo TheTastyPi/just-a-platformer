@@ -22,7 +22,7 @@ function drawPlayer() {
   );
 }
 var prevLevel = [];
-var prevSwitch = false;
+var prevSwitch = [];
 var prevTimer = false;
 var prevTimerStage = 0;
 var prevJumpState = false;
@@ -40,7 +40,7 @@ function drawLevel() {
         if (prevBlock == undefined) prevBlock = 0;
         if (
           !arraysEqual(level[x][y], prevBlock) ||
-          (player.switchOn != prevSwitch &&
+          (!arraysEqual(player.switchsOn, prevSwitch) &&
             ([31, 32, 33, 34, 35, 52].includes(getBlockType(x, y, false)) ||
               blockIncludes(level[x][y], [31, 32, 33, 34, 35, 52]))) ||
           ((timerStage != prevTimerStage || player.timerOn != prevTimer) &&
@@ -66,7 +66,7 @@ function drawLevel() {
   adjustScreen();
   drawPlayer();
   prevLevel = deepCopy(level);
-  prevSwitch = player.switchOn;
+  prevSwitch = deepCopy(player.switchsOn);
   prevTimer = player.timerOn;
   prevTimerStage = timerStage;
   prevJumpState = player.jumpOn;
@@ -82,7 +82,6 @@ function drawBlock(
   size = 1,
   useDefault = false
 ) {
-  if (typeof type === "object") type = type[0];
   blockSize *= size;
   let lL = canvas.getContext("2d");
   lL.lineWidth = (blockSize * 3) / 25;
@@ -90,29 +89,26 @@ function drawBlock(
   let yb = ((y + yOffset) / size) * blockSize;
   let clear = false;
   let data;
-  if (hasProperty(type)) {
-    data = level[x][y];
+  if (typeof type === "object") {
+    data = deepCopy(type);
+    type = type[0];
+  }
+  if (hasProperty(type) && data === undefined) {
     if (useDefault) {
       data = defaultProperty[type].slice();
       data.unshift(type);
-    }
-    if (data[0] !== type) {
-      for (let i in data) {
-        if (data[i][0] === type) {
-          data = data[i];
-          break;
-        }
-      }
+    } else {
+      data = getProps(type, false, x, y);
     }
   }
-  let sOn = player.switchOn;
+  let sOn = player.switchsOn;
   let tOn = player.timerOn;
   let tMs =
     timerStage * Math.min(1000, player.timerInterval / 4) + sinceLastTimerStage;
   let tIn = player.timerInterval;
   let jOn = player.jumpOn;
   if (useDefault) {
-    sOn = false;
+    sOn = [];
     tOn = false;
     tMs = 0;
     tIn = 4000;
@@ -208,27 +204,33 @@ function drawBlock(
       lL.fillStyle = "#00000088";
       break;
     case 31:
-      if (!sOn) {
-        lL.fillStyle = "#00880088";
-      } else lL.fillStyle = "#00FF0088";
+      if (!data[2] || data[3] === "unused") {
+        if (!sOn[data[1]]) {
+          lL.fillStyle = "#00880088";
+        } else lL.fillStyle = "#00FF0088";
+      } else {
+        if (!sOn[data[1]]) {
+          lL.fillStyle = "#88000088";
+        } else lL.fillStyle = "#FF000088";
+      }
       break;
     case 32:
-      if (!sOn) {
+      if (!sOn[data[1]]) {
         lL.fillStyle = "#00000000";
       } else lL.fillStyle = "#00FF00";
       break;
     case 33:
-      if (sOn) {
+      if (sOn[data[1]]) {
         lL.fillStyle = "#00000000";
       } else lL.fillStyle = "#008800";
       break;
     case 34:
-      if (!sOn) {
+      if (!sOn[data[1]]) {
         lL.fillStyle = "#00000000";
       } else lL.fillStyle = "#00FF00";
       break;
     case 35:
-      if (sOn) {
+      if (sOn[data[1]]) {
         lL.fillStyle = "#00000000";
       } else lL.fillStyle = "#008800";
       break;
@@ -929,9 +931,13 @@ function drawBlock(
       break;
     case 31:
       lL.lineWidth = blockSize / 25;
-      if (!sOn) {
-        lL.strokeStyle = "#00440088";
-        lL.fillStyle = "#00440088";
+      if (!sOn[data[1]]) {
+        if (!data[2] || data[3] === "unused") {
+          lL.fillStyle = "#00440088";
+        } else {
+          lL.fillStyle = "#44000088";
+        }
+        lL.strokeStyle = lL.fillStyle;
         lL.strokeRect(
           xb + blockSize / 3,
           yb + (blockSize / 25) * 3,
@@ -944,9 +950,23 @@ function drawBlock(
           blockSize / 3 - (blockSize / 25) * 3,
           blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 50) * 3
         );
+
+        if (!data[2] || data[3] === "unused") {
+          lL.fillStyle = "#004400BB";
+        } else {
+          lL.fillStyle = "#440000BB";
+        }
+        lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+        lL.textAlign = "left";
+        lL.textBaseline = "top";
+        lL.fillText(data[1], xb, yb);
       } else {
-        lL.strokeStyle = "#00880088";
-        lL.fillStyle = "#00880088";
+        if (!data[2] || data[3] === "unused") {
+          lL.fillStyle = "#00880088";
+        } else {
+          lL.fillStyle = "#88000088";
+        }
+        lL.strokeStyle = lL.fillStyle;
         lL.strokeRect(
           xb + blockSize / 3,
           yb + (blockSize / 25) * 3,
@@ -959,6 +979,16 @@ function drawBlock(
           blockSize / 3 - (blockSize / 25) * 3,
           blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 50) * 3
         );
+
+        if (!data[2] || data[3] === "unused") {
+          lL.fillStyle = "#008800BB";
+        } else {
+          lL.fillStyle = "#880000BB";
+        }
+        lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+        lL.textAlign = "left";
+        lL.textBaseline = "top";
+        lL.fillText(data[1], xb, yb);
       }
       break;
     case 32:
@@ -972,6 +1002,12 @@ function drawBlock(
         blockSize - (blockSize / 25) * 2
       );
       lL.setLineDash([]);
+
+      lL.fillStyle = "#004400BB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb, yb);
       break;
     case 33:
       lL.strokeStyle = "#004400";
@@ -984,6 +1020,12 @@ function drawBlock(
         blockSize - (blockSize / 25) * 2
       );
       lL.setLineDash([]);
+
+      lL.fillStyle = "#004400BB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb, yb);
       break;
     case 34:
       lL.lineWidth = blockSize / 25;
@@ -1017,6 +1059,12 @@ function drawBlock(
       );
       lL.stroke();
       lL.lineWidth = blockSize / 25;
+
+      lL.fillStyle = "#004400BB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb, yb);
       break;
     case 35:
       lL.lineWidth = blockSize / 25;
@@ -1049,6 +1097,12 @@ function drawBlock(
         yb + (blockSize / 25) * 3
       );
       lL.stroke();
+
+      lL.fillStyle = "#004400BB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb, yb);
       break;
     case 36:
       lL.fillStyle = "#66666688";
@@ -1305,7 +1359,6 @@ function drawBlock(
       lL.stroke();
       break;
     case 46:
-      lL.strokeStyle = "#00008888";
       lL.fillStyle = "#00008888";
       lL.font = blockSize + "px serif";
       lL.textAlign = "center";
@@ -1313,7 +1366,7 @@ function drawBlock(
       lL.fillText(
         "T",
         xb + blockSize / 2,
-        yb + blockSize / 2 + (blockSize / 50) * 3
+        yb + blockSize / 2 + (blockSize / 25) * 2
       );
       break;
     case 47:
@@ -1387,7 +1440,7 @@ function drawBlock(
       }
       break;
     case 52:
-      if (sOn !== data[3]) {
+      if (!sOn[data[4]] !== !data[3]) {
         drawBlock(canvas, x, y, data[1]);
         drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
       } else {
@@ -1408,6 +1461,18 @@ function drawBlock(
         blockSize - (blockSize / 25) * 2
       );
       lL.setLineDash([]);
+
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(
+        data[4],
+        xb + (blockSize / 25),
+        yb + (blockSize / 25)
+      );
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[4], xb, yb);
       break;
     case 53:
       if (tOn !== data[3]) {

@@ -171,6 +171,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
     if (hasProperty(getBlockType(xb, yb, false))) {
       let text = "";
       for (let i in blockProperty[getBlockType(xb, yb, false)]) {
+        if (blockProperty[getBlockType(xb, yb, false)][i][0] === "!") continue;
         text += blockProperty[getBlockType(xb, yb, false)][i];
         text += ": ";
         if (propertyType[getBlockType(xb, yb, false)][i] === "block") {
@@ -178,6 +179,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             text += blockName[level[xb][yb][parseInt(i) + 1][0]];
             for (let j in level[xb][yb][parseInt(i) + 1]) {
               if (j == 0) continue;
+              if (blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1][0] === "!") continue;
               text += "<br>";
               text += "  ";
               text += blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1];
@@ -218,8 +220,10 @@ document.addEventListener("contextmenu", function (input) {
 
 document.addEventListener("keydown", function (input) {
   if (!editDisabled) {
-    input.preventDefault();
     let key = input.code;
+    if (key === "F12" || (key === "C" && input.altKey && input.metaKey)) {
+      input.preventDefault();
+    }
     switch (key) {
       case "ArrowUp":
         if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
@@ -509,7 +513,7 @@ document.addEventListener("keydown", function (input) {
       case "KeyF":
         if (input.shiftKey) {
           save();
-        } else if (input.ctrlKey) {
+        } else if ((input.ctrlKey || input.metaKey)) {
           control.lmb = false;
           control.rmb = false;
           toggleSaveMenu();
