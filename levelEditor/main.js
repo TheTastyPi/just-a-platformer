@@ -422,6 +422,32 @@ function nextFrame(timeStamp) {
       // position change based on velocity
       player.x += (player.xv * dt) / 500;
       player.y += (player.yv * dt) / 500;
+      // multi-jump
+      if (isTouching("any", 12)) {
+        player.maxJumps = 0;
+        player.currentJumps = player.maxJumps;
+      }
+      if (isTouching("any", 13)) {
+        player.maxJumps = 1;
+        player.currentJumps = player.maxJumps;
+      }
+      if (isTouching("any", 14)) {
+        player.maxJumps = 2;
+        player.currentJumps = player.maxJumps;
+      }
+      if (isTouching("any", 15)) {
+        player.maxJumps = 3;
+        player.currentJumps = player.maxJumps;
+      }
+      if (isTouching("any", 16)) {
+        player.maxJumps = Infinity;
+        player.currentJumps = player.maxJumps;
+      }
+      if (isTouching("any", 49)) {
+        let props = getProps(49);
+        player.maxJumps = props[1];
+        player.currentJumps = player.maxJumps;
+      }
       // collision detection
       let x1 = player.x;
       let x2 = player.x + playerSize;
@@ -575,13 +601,13 @@ function nextFrame(timeStamp) {
         }
         if (player.xv > 0) player.xv = 0;
         player.x = x2b * blockSize - playerSize;
-      } else if (i === 0) {
+      } else {
         if (player.xg) {
           if (player.currentJumps == player.maxJumps)
             player.currentJumps = player.maxJumps - 1;
           noFriction = false;
         } else {
-          player.canWalljump = false;
+          if (i === 0) player.canWalljump = false;
         }
       }
       // ceiling
@@ -728,9 +754,9 @@ function nextFrame(timeStamp) {
         }
         if (player.yv > 0) player.yv = 0;
         player.y = y2b * blockSize - playerSize;
-      } else if (i === 0) {
+      } else {
         if (player.xg) {
-          player.canWalljump = false;
+          if (i === 0) player.canWalljump = false;
         } else {
           if (player.currentJumps == player.maxJumps)
             player.currentJumps = player.maxJumps - 1;
@@ -819,32 +845,6 @@ function nextFrame(timeStamp) {
         let props = getProps(48);
         player.g = props[1];
         player.xg = props[2];
-      }
-      // multi-jump
-      if (isTouching("any", 12)) {
-        player.maxJumps = 0;
-        player.currentJumps = player.maxJumps - 1;
-      }
-      if (isTouching("any", 13)) {
-        player.maxJumps = 1;
-        player.currentJumps = player.maxJumps - 1;
-      }
-      if (isTouching("any", 14)) {
-        player.maxJumps = 2;
-        player.currentJumps = player.maxJumps - 1;
-      }
-      if (isTouching("any", 15)) {
-        player.maxJumps = 3;
-        player.currentJumps = player.maxJumps - 1;
-      }
-      if (isTouching("any", 16)) {
-        player.maxJumps = Infinity;
-        player.currentJumps = player.maxJumps - 1;
-      }
-      if (isTouching("any", 49)) {
-        let props = getProps(49);
-        player.maxJumps = props[1];
-        player.currentJumps = player.maxJumps - 1;
       }
       // checkpoint
       if (isTouching("any", 3)) {
@@ -1093,17 +1093,36 @@ function save(auto = false) {
 function load(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
   level = saves[name][0];
-  level = level.map((x) =>
-    x.map(function (y) {
-      if (hasProperty(y)) {
-        if (typeof y !== "object") y = [y];
-        if (y.length - 1 !== defaultProperty[y].length) {
-          y = y.concat(defaultProperty[y].slice(1 - y.length));
+  for (let x in level) {
+    for (let y in level[x]) {
+      let block = deepCopy(level[x][y]);
+      if (hasProperty(getBlockType(x, y, false))) {
+        if (typeof block !== "object") block = [block];
+        if (block.length - 1 !== defaultProperty[block[0]].length) {
+          block = block.concat(
+            defaultProperty[block[0]].slice(block.length - 1)
+          );
         }
+        if (propertyType[block[0]].includes("block")) {
+          for (let i in block) {
+            if (i == 0) continue;
+            if (
+              propertyType[block[0]][parseInt(i) - 1] === "block" &&
+              hasProperty(getBlockType(x, y, false, block[i]))
+            ) {
+              if (typeof block[i] !== "object") block[i] = [block[i]];
+              if (block[i].length - 1 !== defaultProperty[block[i][0]].length) {
+                block[i] = block[i].concat(
+                  defaultProperty[block[i][0]].slice(block[i].length - 1)
+                );
+              }
+            }
+          }
+        }
+        level[x][y] = deepCopy(block);
       }
-      return y;
-    })
-  );
+    }
+  }
   let start = infinify(saves[name][1]);
   player.startPoint = getDefaultSpawn();
   for (let i in start) {
