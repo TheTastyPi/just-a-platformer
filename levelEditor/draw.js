@@ -2,12 +2,14 @@ var playerSize = 20;
 var blockSize = 50;
 var lvlxOffset = 0;
 var lvlyOffset = 0;
+var prevPlayerx = 0;
+var prevPlayery = 0;
 function drawPlayer() {
   let canvas = id("playerLayer");
   let pL = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  pL.clearRect(0, 0, canvas.width, canvas.height);
+  pL.clearRect(prevPlayerx, prevPlayery, playerSize, playerSize);
   let ratio = player.currentJumps / player.maxJumps;
   if (player.maxJumps === Infinity) ratio = 1;
   if (player.maxJumps === 0) ratio = 0;
@@ -15,8 +17,8 @@ function drawPlayer() {
   if (player.godMode) pL.fillStyle = "#FF00FF";
   if (player.noclip) pL.fillStyle += "88";
   pL.fillRect(
-    Math.floor(player.x) + lvlxOffset,
-    Math.floor(player.y) + lvlyOffset,
+    Math.floor(player.x) + Math.floor(camx),
+    Math.floor(player.y) + Math.floor(camy),
     playerSize,
     playerSize
   );
@@ -1466,11 +1468,7 @@ function drawBlock(
       lL.font = blockSize / 3 + "px DSEG7-7SEGG";
       lL.textAlign = "left";
       lL.textBaseline = "top";
-      lL.fillText(
-        data[4],
-        xb + (blockSize / 25),
-        yb + (blockSize / 25)
-      );
+      lL.fillText(data[4], xb + blockSize / 25, yb + blockSize / 25);
       lL.fillStyle = "#000000BB";
       lL.fillText(data[4], xb, yb);
       break;
@@ -1784,7 +1782,10 @@ function drawGrid() {
   }
   adjustScreen();
 }
-function adjustScreen() {
+var camx = 0;
+var camy = 0;
+var camDelay = 10;
+function adjustScreen(instant = false) {
   if (player.playerFocus) {
     lvlxOffset = Math.floor((window.innerWidth - level.length * blockSize) / 2);
     lvlyOffset = Math.floor(
@@ -1812,11 +1813,15 @@ function adjustScreen() {
         );
     }
   }
-  id("levelLayer").style.left = lvlxOffset + "px";
-  id("levelLayer").style.top = lvlyOffset + "px";
-  id("background").style.left = lvlxOffset + "px";
-  id("background").style.top = lvlyOffset + "px";
-  id("grid").style.left = lvlxOffset + "px";
-  id("grid").style.top = lvlyOffset + "px";
+  camx = Math.floor((camx * (camDelay - 1) + lvlxOffset) / camDelay);
+  camy = Math.floor((camy * (camDelay - 1) + lvlyOffset) / camDelay);
+  if (Math.abs(camx - lvlxOffset) < 1 || instant) camx = lvlxOffset;
+  if (Math.abs(camy - lvlyOffset) < 1 || instant) camy = lvlyOffset;
+  id("levelLayer").style.left = camx + "px";
+  id("levelLayer").style.top = camy + "px";
+  id("background").style.left = camx + "px";
+  id("background").style.top = camy + "px";
+  id("grid").style.left = camx + "px";
+  id("grid").style.top = camy + "px";
   drawPlayer();
 }

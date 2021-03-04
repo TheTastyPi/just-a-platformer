@@ -525,12 +525,16 @@ function nextFrame(timeStamp) {
     // draw checks
     if (player.x != xprev || player.y != yprev) drawPlayer();
     if (
-      player.levelCoord[0] != lvlxprev ||
-      player.levelCoord[1] != lvlyprev ||
+      player.levelCoord[0] !== lvlxprev ||
+      player.levelCoord[1] !== lvlyprev ||
       !arraysEqual(player.triggers, triggersPrev) ||
       shouldDrawLevel
     )
       drawLevel();
+    if (camx !== lvlx || camy !== lvly)
+      adjustScreen(
+        player.levelCoord[0] !== lvlxprev || player.levelCoord[1] !== lvlyprev
+      );
   }
   window.requestAnimationFrame(nextFrame);
 }
@@ -575,6 +579,7 @@ function wipeSave() {
     respawn();
     drawLevel();
     drawPlayer();
+    adjustScreen(true);
   }
 }
 function isSpawn(x, y) {
@@ -757,4 +762,5 @@ load();
 respawn();
 drawPlayer();
 drawLevel();
+adjustScreen(true);
 window.requestAnimationFrame(nextFrame);

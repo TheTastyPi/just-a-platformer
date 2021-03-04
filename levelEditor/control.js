@@ -136,6 +136,8 @@ id("levelLayer").addEventListener("mousemove", function (input) {
         player.playerFocus = false;
         lvlxOffset += input.movementX;
         lvlyOffset += input.movementY;
+        camx = lvlxOffset;
+        camy = lvlyOffset;
         adjustScreen();
       }
     } else if (!input.shiftKey) {
@@ -179,7 +181,11 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             text += blockName[level[xb][yb][parseInt(i) + 1][0]];
             for (let j in level[xb][yb][parseInt(i) + 1]) {
               if (j == 0) continue;
-              if (blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1][0] === "!") continue;
+              if (
+                blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1][0] ===
+                "!"
+              )
+                continue;
               text += "<br>";
               text += "  ";
               text += blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1];
@@ -221,7 +227,7 @@ document.addEventListener("contextmenu", function (input) {
 document.addEventListener("keydown", function (input) {
   if (!editDisabled) {
     let key = input.code;
-    if (key === "F12" || (key === "C" && input.altKey && input.metaKey)) {
+    if (!(key === "F12" || (key === "C" && input.altKey && input.metaKey))) {
       input.preventDefault();
     }
     switch (key) {
@@ -513,7 +519,7 @@ document.addEventListener("keydown", function (input) {
       case "KeyF":
         if (input.shiftKey) {
           save();
-        } else if ((input.ctrlKey || input.metaKey)) {
+        } else if (input.ctrlKey || input.metaKey) {
           control.lmb = false;
           control.rmb = false;
           toggleSaveMenu();

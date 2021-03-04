@@ -625,8 +625,14 @@ function drawLevel() {
   }
   adjustScreen();
 }
-function adjustScreen() {
-  let lvlx = Math.floor(
+
+var lvlx = 0;
+var lvly = 0;
+var camx = 0;
+var camy = 0;
+var camDelay = 15;
+function adjustScreen(instant = false) {
+  lvlx = Math.floor(
     (window.innerWidth - levels[player.currentLevel].length * blockSize) / 2
   );
   if (lvlx < 0) {
@@ -641,7 +647,7 @@ function adjustScreen() {
         window.innerWidth - levels[player.currentLevel].length * blockSize
       );
   }
-  let lvly = Math.floor(
+  lvly = Math.floor(
     (window.innerHeight - levels[player.currentLevel][0].length * blockSize) / 2
   );
   if (lvly < 0) {
@@ -657,8 +663,12 @@ function adjustScreen() {
         window.innerHeight - levels[player.currentLevel][0].length * blockSize
       );
   }
-  id("playerLayer").style.left = lvlx + "px";
-  id("levelLayer").style.left = lvlx + "px";
-  id("playerLayer").style.top = lvly + "px";
-  id("levelLayer").style.top = lvly + "px";
+  camx = (camx * (camDelay - 1) + lvlx) / camDelay;
+  camy = (camy * (camDelay - 1) + lvly) / camDelay;
+  if (Math.abs(camx - lvlx) < 1 || instant) camx = lvlx;
+  if (Math.abs(camy - lvly) < 1 || instant) camy = lvly;
+  id("playerLayer").style.left = camx + "px";
+  id("levelLayer").style.left = camx + "px";
+  id("playerLayer").style.top = camy + "px";
+  id("levelLayer").style.top = camy + "px";
 }

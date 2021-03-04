@@ -1020,6 +1020,7 @@ function nextFrame(timeStamp) {
     // draw checks
     if (shouldDrawLevel) drawLevel();
     if (player.x != xprev || player.y != yprev) adjustScreen();
+    if (camx !== lvlxOffset || camy !== lvlyOffset) adjustScreen();
   }
   window.requestAnimationFrame(nextFrame);
 }
@@ -1140,6 +1141,7 @@ function load(name) {
   toStart();
   drawLevel();
   drawGrid();
+  adjustScreen(true);
   updateSaveMenu();
 }
 function exportSave(name) {
@@ -1568,7 +1570,7 @@ function addTooltip(elem, text) {
   });
 }
 function hasProperty(blockId) {
-  return Object.keys(blockProperty).includes(String(blockId));
+  return blockProperty[blockId] !== undefined;
 }
 function getBlockType(x, y, subtype = true, block) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
@@ -2033,6 +2035,7 @@ function init() {
     localStorage.setItem("just-a-save-list", "[]");
   }
   addTooltip(id("autoSaveButton"), "Saves once every 5 seconds");
+  adjustScreen(true);
 }
 
 init();
