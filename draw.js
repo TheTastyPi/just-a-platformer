@@ -30,12 +30,14 @@ function drawLevel() {
       let xb = x * blockSize;
       let yb = y * blockSize;
       let type = getBlockType(x, y);
+      let props = type;
+      if (typeof type === "object") type = type[0];
       switch (type) {
         case -4:
           lL.fillStyle = "#00FF0088";
           break;
         case -3:
-          if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
+          if (!player.triggers.includes(props[1])) {
             lL.fillStyle = "#00880088";
           } else lL.fillStyle = "#00FF0088";
           break;
@@ -123,7 +125,7 @@ function drawLevel() {
           break;
         case -3:
           lL.lineWidth = blockSize / 25;
-          if (!player.triggers.includes(levels[player.currentLevel][x][y][1])) {
+          if (!player.triggers.includes(props[1])) {
             lL.strokeStyle = "#00440088";
             lL.fillStyle = "#00440088";
             lL.strokeRect(

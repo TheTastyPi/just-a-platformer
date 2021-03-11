@@ -227,7 +227,7 @@ document.addEventListener("contextmenu", function (input) {
 document.addEventListener("keydown", function (input) {
   if (!editDisabled) {
     let key = input.code;
-    if (!(key === "F12" || (key === "C" && input.altKey && input.metaKey))) {
+    if (!(key === "F12" || (key === "KeyC" && input.altKey && input.metaKey))) {
       input.preventDefault();
     }
     switch (key) {
@@ -286,26 +286,7 @@ document.addEventListener("keydown", function (input) {
       case "KeyW":
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
           control.up = true;
-          if (player.canWalljump) {
-            player.jumpOn = !player.jumpOn;
-            drawLevel();
-            if (player.wallJumpDir == "left") {
-              player.xv = -600;
-              player.yv = -Math.sign(player.g) * player.jumpHeight;
-            }
-            if (player.wallJumpDir == "right") {
-              player.xv = 600;
-              player.yv = -Math.sign(player.g) * player.jumpHeight;
-            }
-            if (player.wallJumpDir == "up") {
-              player.yv = -600;
-              player.xv = -Math.sign(player.g) * player.jumpHeight;
-            }
-            if (player.wallJumpDir == "down") {
-              player.yv = 600;
-              player.xv = -Math.sign(player.g) * player.jumpHeight;
-            }
-          } else if (player.currentJumps > 0 || player.godMode) {
+          if ((player.currentJumps > 0 || player.godMode) && !player.canWalljump) {
             player.jumpOn = !player.jumpOn;
             drawLevel();
             if (player.xg) {

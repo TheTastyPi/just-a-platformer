@@ -100,7 +100,7 @@ function drawBlock(
       data = defaultProperty[type].slice();
       data.unshift(type);
     } else {
-      data = getProps(type, false, x, y);
+      data = level[x][y];
     }
   }
   let sOn = player.switchsOn;
@@ -1368,7 +1368,7 @@ function drawBlock(
       lL.fillText(
         "T",
         xb + blockSize / 2,
-        yb + blockSize / 2 + (blockSize / 25) * 2
+        yb + blockSize / 2 + blockSize/25*2
       );
       break;
     case 47:
