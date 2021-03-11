@@ -1,4 +1,4 @@
-#CHANGE LOG
+# CHANGE LOG
 
 5 Jan. 2021
 Editor
@@ -7,7 +7,8 @@ Editor
 - Added switch block and toggle blocks (simplified from the main game)
 - Started recording these updates
 
-##6 Jan. 2021
+## 6 Jan. 2021
+
 Main Game
 
 - Finished the gravity branch
@@ -21,7 +22,8 @@ Editor
 
 - Altered the appearance of G-Bounce Up, G-Bounce Down, and Force Fields
 
-###7 Jan. 2021
+### 7 Jan. 2021
+
 Editor
 
 - Altered the appearance on Toggle Blocks
@@ -31,7 +33,8 @@ Editor
 - Altering level size no longer let you control the player
 - Altering level size now also moves the player with it
 
-###7 Jan. 2021 #2
+### 7 Jan. 2021 #2
+
 Editor
 
 - Added the ability to drag the stage around using the mouse
@@ -42,7 +45,8 @@ Editor
 
 - Altered the appearance of timer blocks
 
-##8 Jan. 2021
+## 8 Jan. 2021
+
 Editor
 
 - Added the ability to select blocks from a list using a mouse
@@ -57,7 +61,8 @@ Editor
 
 - Added Ice Block
 
-###9 Jan. 2021
+### 9 Jan. 2021
+
 Editor
 
 - Added Portals
@@ -98,7 +103,8 @@ Editor
 - Actually fixed that bug from before since apparently I didn't actually fix it.
 - Prevented \[ctrl] + \[arrow] from doing what it normally does on macOS, whatever that does.
 
-##22 Jan. 2021
+## 22 Jan. 2021
+
 Main Game
 
 - Added the multi-jump branch
@@ -116,7 +122,8 @@ Editor
 - Added 4 new blocks
   - Jump Block A/B, Jump Death Block A/B
 
-##23 Jan. 2021 #2
+## 23 Jan. 2021 #2
+
 Editor
 
 - Added new UI for editing properties of blocks
@@ -133,7 +140,8 @@ Editor
 - Made it so that line breaks are allowed while editing block property (with \[shift]+ \[enter], as otherwise it submits)
 - Added hotkey \[shift] + \[delete] to clear level
 
-##25 Jan. 2021
+## 25 Jan. 2021
+
 Editor
 
 - Added 8 new blocks!
@@ -202,7 +210,8 @@ Editor
 - Added "Invert" property to custom toggleable blocks
 - Made it so that text from text boxes no longer goes off the screen
 
-###29 Jan. 2021
+### 29 Jan. 2021
+
 Editor
 
 - Added the ability to undo (\[ctrl]+\[z]) & redo (\[ctrl]+\[shift]+\[z])
@@ -217,13 +226,15 @@ Editor
 
 - Fixed a bug where you can hit a bounce block through a corner
 
-###31 Jan. 2021
+### 31 Jan. 2021
+
 Main Game
 
 - Nerfed gravity branch
 - Multi-jump branch is next
 
-###1 Feb. 2021
+### 1 Feb. 2021
+
 Main Game
 
 - Nerfed multi-jump branch
@@ -234,7 +245,8 @@ Main Game
 - Added an "info" menu
 - Moved some rooms around
 
-##7 Feb. 2021
+## 7 Feb. 2021
+
 Main Game
 
 - Added wall-jump branch
@@ -252,7 +264,8 @@ Editor
 - Made gravity magnitude change more gradual
 - Changed the toggle \_\_\_ hotkeys to numbers
 
-##10 Feb. 2021
+## 10 Feb. 2021
+
 Editor
 
 - Added 4 new blocks
@@ -275,7 +288,8 @@ Editor
 
 - All previous level data are now backward compatible with new features
 
-##11 Feb. 2021
+## 11 Feb. 2021
+
 Editor
 
 - Added a saving system
@@ -298,7 +312,8 @@ Main game
 - Added "return to start" hotkey \[shift] + \[R] (saves switch progress)
   - Not a "go to hub" hotkey, but it's fine right?
 
-##15 Feb. 2021
+## 15 Feb. 2021
+
 Editor
 
 - Blocks with properties are now allowed to be properties themselves
@@ -326,7 +341,8 @@ Editor
 
 - Made jump blocks actually update appearance, because I accidentally deleted a word in the code
 
-###19 Feb. 2021
+### 19 Feb. 2021
+
 Editor
 
 - Added properties to Start and Goal
@@ -337,7 +353,8 @@ Editor
 
 - Fixed gaem braeking bug that made stuff go wrong when you touch the boundaries of a level.
 
-##27 Feb. 2021
+## 27 Feb. 2021
+
 Editor
 
 - Added the "ID" and "Single Use" property to the Switch Block
@@ -360,7 +377,8 @@ Both
 
 - Made the camera movement smoother
 
-##11 Mar. 2021
+## 11 Mar. 2021
+
 Both
 
 - Completely refactored the collision system
