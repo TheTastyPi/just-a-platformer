@@ -1,6 +1,7 @@
 # CHANGE LOG
 
 5 Jan. 2021
+
 Editor
 
 - Added force field (can be used for one way passages)
@@ -18,6 +19,7 @@ Main Game
 - Fixed visual bug related to toggle blocks
 
 6 Jan. 2021 #2
+
 Editor
 
 - Altered the appearance of G-Bounce Up, G-Bounce Down, and Force Fields
@@ -41,6 +43,7 @@ Editor
 - Added the ability to refocus on the player along with that
 
 7 Jan. 2021 #3
+
 Editor
 
 - Altered the appearance of timer blocks
@@ -52,11 +55,13 @@ Editor
 - Added the ability to select blocks from a list using a mouse
 
 8 Jan. 2021 #2
+
 Editor
 
 - Added the ability to toggle the block selection UI
 
 8 Jan. 2021 #3
+
 Editor
 
 - Added Ice Block
@@ -69,23 +74,27 @@ Editor
 - Made slight optimizations
 
 9 Jan. 2021 #2
+
 Editor
 
 - Force Blocks no long set speed if player speed is higher than the set speed.
 
 9 Jan. 2021 #3
+
 Editor
 
 - Portals now use relative coordinates
   - This fixed a bug related to changing level size and portals.
 
 10 Jan. 2021
+
 Editor
 
 - Even more optimizations
   - Now @gapples2 's dropper level should be able to be played with little to no lag
 
 14 Jan. 2021
+
 Editor
 
 - Fixed a small visual bug related to moving the level.
@@ -93,11 +102,13 @@ Editor
 - Still working on the multi-jump branch.
 
 14 Jan. 2021 #2
+
 Editor
 
 - Fixed a bug caused by my previous bug fix, oops.
 
 15 Jan. 2021
+
 Editor
 
 - Actually fixed that bug from before since apparently I didn't actually fix it.
@@ -117,6 +128,7 @@ Main Game
 - oh i also added some cool tab icons. one for main game & one for the level editor
 
 23 Jan. 2021
+
 Editor
 
 - Added 4 new blocks
@@ -135,6 +147,7 @@ Editor
 - Changed restart from startpoint hotkey to \[shift] + \[R]
 
 23 Jan. 2021 #3
+
 Editor
 
 - Made it so that line breaks are allowed while editing block property (with \[shift]+ \[enter], as otherwise it submits)
@@ -159,6 +172,7 @@ Editor
 - Fixed a bug where you can take double jump to the gravity branch
 
 26 Jan. 2021
+
 Editor
 
 - Fixed a few bugs with custom toggleable blocks and checkpoints and exporting and all that
@@ -166,45 +180,53 @@ Editor
 - Changed edit property control to \[F] + LMB
 
 26 Jan. 2021 #2
+
 Both
 
 - Made non-solid blocks hitbox slightly bigger so that you can't fall off a solid block onto a death block with double jump, and waste your jump by jumping midair
 
 26 Jan. 2021 #3
+
 Editor
 
 - MMB now also copy properties
 - You can now select a single block with both LMB and RMB
 
 26 Jan. 2021 #4
+
 Editor
 
 - Non-integer value are now allowed as properties
 - Custom gravity limit has been doubled
 
 27 Jan. 2021
+
 Editor
 
 - The player now changes color from blue to red depending on number of jumps left
 - You can no longer die from suffocation while in noclip
 
 27 Jan. 2021 #2
+
 Editor
 
 - Fixed a bug related to editing default properties
 
 27 Jan. 2021 #3
+
 Editor
 
 - Custom blocks now changes color based on their property
 
 28 Jan. 2021
+
 Editor
 
 - Added the ability to change the level size by multiple blocks at once using \[shift] + \[ctrl] + \[arrow]
 - Added a max width to the control list
 
 28 Jan. 2021 #2
+
 Editor
 
 - Added "Invert" property to custom toggleable blocks
@@ -217,11 +239,13 @@ Editor
 - Added the ability to undo (\[ctrl]+\[z]) & redo (\[ctrl]+\[shift]+\[z])
 
 29 Jan. 2021 #2
+
 Editor
 
 - Changed how "player fully inside block" is handled
 
 30 Jan. 2021
+
 Editor
 
 - Fixed a bug where you can hit a bounce block through a corner
@@ -240,6 +264,7 @@ Main Game
 - Nerfed multi-jump branch
 
 2 Feb. 2021
+
 Main Game
 
 - Added an "info" menu
@@ -258,6 +283,7 @@ Main Game
 - The js is now split into multiple files
 
 8 Feb. 2021
+
 Editor
 
 - Added a grid
@@ -275,15 +301,19 @@ Editor
   - G-Bounce Right
 - Added \[Horizontal] property to Custom G-Field
 - Fixed a bug where checkboxes doesn't stay checked after confirming block properties
-  Main Game
+
+Main Game
+
 - Fixed a bug where gameSpeed doesn't function as intended
 
 10 Feb. 2021 #2
+
 Editor
 
 - Sideways gravity is now saved on checkpoint
 
 10 Feb. 2021 #3
+
 Editor
 
 - All previous level data are now backward compatible with new features
@@ -297,7 +327,8 @@ Editor
 - Removed export and import hotkey for an "open save menu" hotkey: \[ctrl] + \[F]
 - Oh and \[shift] + \[F] is save
 
-12 Feb. 2021 [MAJOR UPDATE maybe]  
+### 12 Feb. 2021
+
 Editor
 
 - Added Timer Interval Field
@@ -307,6 +338,7 @@ Editor
 - Player changes color based on jumps left, like in the editor
 
 13 Feb. 2021
+
 Main game
 
 - Added "return to start" hotkey \[shift] + \[R] (saves switch progress)
@@ -322,6 +354,7 @@ Editor
 - Changed the appearance of one-way blocks
 
 17 Feb. 2021
+
 Editor
 
 - Fixed a bug related to checkpoints and custom toggleable blocks not updating
@@ -331,12 +364,14 @@ Editor
   - Thanks ████████? I replaced almost everything you added tho :/
 
 17 Feb. 2021 #2
+
 Editor
 
 - Memory leak problem fixed maybe?
   - Added a limit to undos because I was stupid and forgot to do that before
 
 18 Feb. 2021
+
 Editor
 
 - Made jump blocks actually update appearance, because I accidentally deleted a word in the code
@@ -349,6 +384,7 @@ Editor
 - Fixed a bug where sub-blocks doesn't update appearance
 
 21 Feb. 2021
+
 Editor
 
 - Fixed gaem braeking bug that made stuff go wrong when you touch the boundaries of a level.
@@ -362,17 +398,20 @@ Editor
 - Knocking two off the list at once :o
 
 28 Feb. 2021
+
 Editor
 
 - Fixed a bug related to loading older saves
 - Fixed a bug where the player can't jump inside a 1-jump field
 
 4 Mar. 2021
+
 Main Game
 
 - Fixed a bug where you can literally skip a save wtf was I doing
 
 4 Mar. 2021 #2
+
 Both
 
 - Made the camera movement smoother
