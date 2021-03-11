@@ -93,7 +93,7 @@ document.addEventListener("keyup", function (input) {
 });
 
 var lastFrame = 0;
-var simReruns = 10;
+var simReruns = 20;
 var noFriction = false;
 function nextFrame(timeStamp) {
   // setup stuff
