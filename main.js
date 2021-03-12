@@ -108,7 +108,7 @@ function nextFrame(timeStamp) {
     let lvlyprev = player.levelCoord[1];
     let triggersPrev = [...player.triggers];
     let shouldDrawLevel = false;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < simReruns; i++) {
       // velocity change
       if (!noFriction) {
         player.xv *= Math.pow(0.5, dt / 6);
