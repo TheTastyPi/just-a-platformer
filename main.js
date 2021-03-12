@@ -1,9 +1,3 @@
-/*/
-TODO 
-- speed section
-- final section
-- secret section? :o
-/*/
 var currentVersion = 0.3;
 var gameSpeed = 1;
 var player = {
@@ -22,7 +16,8 @@ var player = {
   maxJumps: 1,
   moveSpeed: 600,
   triggers: [],
-  godMode: false
+  godMode: false,
+  reachedHub: false
 };
 const control = {
   left: false,
@@ -55,12 +50,24 @@ document.addEventListener("keydown", function (input) {
       break;
     case "KeyR":
       if (input.shiftKey) {
-        if (confirm("Are you sure you want to go back to the start?")) {
-          player.spawnPoint = newSave();
-          player.spawnPoint[7] = player.triggers;
-          respawn();
-          drawLevel();
-        }
+        if (player.reachedHub) {
+          if (confirm("Are you sure you want to go to the hub?")) {
+            player.spawnPoint = [
+              7,
+              5,
+              5,
+              4,
+              325,
+              1,
+              600,
+              [...player.triggers],
+              currentVersion,
+              true
+            ];
+            respawn();
+            drawLevel();
+          }
+        } else alert("You have not reached the hub yet.");
       } else {
         respawn();
         drawLevel();
@@ -436,6 +443,7 @@ function nextFrame(timeStamp) {
                 // checkpoint
                 case 3:
                   if (!isSpawn(x, y)) {
+                    if (player.currentLevel === 8) player.reachedHub = true;
                     player.spawnPoint = [
                       x,
                       y,
@@ -445,7 +453,8 @@ function nextFrame(timeStamp) {
                       player.maxJumps,
                       player.moveSpeed,
                       [...player.triggers],
-                      currentVersion
+                      currentVersion,
+                      player.reachedHub
                     ];
                     shouldDrawLevel = true;
                     save();
@@ -747,7 +756,7 @@ function openInfo() {
   } else id("info").style.bottom = "0%";
 }
 function newSave() {
-  return [1, 6, 0, 8, 325, 1, 600, [], currentVersion];
+  return [1, 6, 0, 8, 325, 1, 600, [], currentVersion, false];
 }
 function save() {
   let saveData = deepCopy(player.spawnPoint);
@@ -768,14 +777,6 @@ function load() {
 }
 function wipeSave() {
   if (confirm("Are you sure you want to delete your save?")) {
-    if (
-      levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][
-        player.spawnPoint[0]
-      ][player.spawnPoint[1]] == 4
-    )
-      levels[worldMap[player.spawnPoint[2]][player.spawnPoint[3]]][
-        player.spawnPoint[0]
-      ][player.spawnPoint[1]] = 3;
     player.spawnPoint = newSave();
     save();
     respawn();
@@ -803,6 +804,7 @@ function respawn() {
   player.currentJumps = player.maxJumps - 1;
   player.moveSpeed = player.spawnPoint[6];
   player.triggers = [...player.spawnPoint[7]];
+  player.reachedHub = player.spawnPoint[9];
 }
 function getBlockType(x, y) {
   let level = levels[player.currentLevel];

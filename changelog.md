@@ -433,3 +433,9 @@ Both
 - Made movement in One-Way Blocks smoother
 - Added a changelog in the files
   - It was about time
+
+#### 12 Mar. 2021
+
+Main Game
+
+- Changed \[shift] + \[R] to go to hub instead of the start
