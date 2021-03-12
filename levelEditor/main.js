@@ -417,7 +417,7 @@ function nextFrame(timeStamp) {
       let bx1 = Math.floor((player.x - 0.01) / blockSize);
       let bx2 = Math.floor((player.x + playerSize) / blockSize);
       let by1 = Math.floor((player.y - 0.01) / blockSize);
-      let by2 = Math.floor((player.y + playerSize) / blockSize);
+      let by2 = Math.floor((player.y + playerSize + 0.01) / blockSize);
       let wallLeft = false;
       let wallRight = false;
       let wallTop = false;
@@ -495,10 +495,10 @@ function nextFrame(timeStamp) {
               // velocity check
               if (player.xv < 0) {
                 onRight = false;
-              } else onLeft = false;
+              } else if (player.xv > 0) onLeft = false;
               if (player.yv < 0) {
                 onBottom = false;
-              } else onTop = false;
+              } else if (player.yv > 0) onTop = false;
               // one-way block special zone
               if ([55, 57, 58].includes(type)) onLeft = false;
               if ([56, 57, 58].includes(type)) onRight = false;

@@ -133,9 +133,9 @@ function nextFrame(timeStamp) {
       let level = levels[player.currentLevel];
       let onIce = false;
       let shouldDie = false;
-      let bx1 = Math.floor((player.x - 0.01) / blockSize);
+      let bx1 = Math.floor((player.x - 0.001) / blockSize);
       let bx2 = Math.floor((player.x + playerSize) / blockSize);
-      let by1 = Math.floor((player.y - 0.01) / blockSize);
+      let by1 = Math.floor((player.y - 0.001) / blockSize);
       let by2 = Math.floor((player.y + playerSize) / blockSize);
       let wallLeft = false;
       let wallRight = false;
@@ -387,10 +387,10 @@ function nextFrame(timeStamp) {
             let props = type;
             if (typeof type === "object") type = type[0];
             if (
-              player.x < (x + 1) * blockSize - 0.1 &&
-              player.x + playerSize > x * blockSize + 0.1 &&
-              player.y < (y + 1) * blockSize - 0.1 &&
-              player.y + playerSize > y * blockSize + 0.1
+              player.x < (x + 1) * blockSize - 0.01 &&
+              player.x + playerSize > x * blockSize + 0.01 &&
+              player.y < (y + 1) * blockSize - 0.01 &&
+              player.y + playerSize > y * blockSize + 0.01
             ) {
               switch (type) {
                 // grav-dir
