@@ -439,3 +439,12 @@ Both
 Main Game
 
 - Changed \[shift] + \[R] to go to hub instead of the start
+
+## ?? Mar. 2021
+
+Editor
+
+- Added 8 new blocks
+  - Size Large/Medium/Small Field
+  - Timer Fast/Normal/Slow Field
+  - Custom Size/Time Field

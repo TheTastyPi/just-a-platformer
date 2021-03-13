@@ -1,4 +1,3 @@
-var gameSpeed = 1;
 const player = {
   currentSave: undefined,
   autoSave: true,
@@ -23,7 +22,10 @@ const player = {
   godMode: false,
   noclip: false,
   selectedBlock: [1, 0],
-  playerFocus: true
+  playerFocus: true,
+  size: 20,
+  targetSize: 20,
+  gameSpeed: 1
 };
 const control = {
   lmb: false,
@@ -110,7 +112,15 @@ const blockName = [
   "G-Right Field",
   "G-Bounce Left",
   "G-Bounce Right", // g-sideways (59,60,61,62)
-  "Timer Interval Field" // what do i even call this (63)
+  "Timer Interval Field", // what do i even call this (63)
+  "Size Small Field",
+  "Size Medium Field",
+  "Size Large Field",
+  "Custom Size Field", // size (64,65,66,67)
+  "Time Slow Field",
+  "Time Normal Field",
+  "Time Fast Field",
+  "Custom Time Field" // time (68,69,70,71)
 ];
 const blockSelect = [
   "Special",
@@ -154,6 +164,16 @@ const blockSelect = [
   23,
   50,
   40,
+  "Size",
+  64,
+  65,
+  66,
+  67,
+  "Time",
+  68,
+  69,
+  70,
+  71,
   "One-Way",
   55,
   56,
@@ -194,7 +214,9 @@ const blockProperty = {
     "!Timer State",
     "!Jump State",
     "Horizontal Grav",
-    "Timer Interval"
+    "Timer Interval",
+    "Size",
+    "Time Speed"
   ],
   18: [
     "Use Requirements",
@@ -202,7 +224,9 @@ const blockProperty = {
     "Req Jump Amt",
     "Req Speed",
     "Horizontal Grav",
-    "Timer Interval"
+    "Timer Interval",
+    "Size",
+    "Time Speed"
   ],
   27: ["Power"],
   28: ["Power"],
@@ -223,11 +247,13 @@ const blockProperty = {
   52: ["BlockA", "BlockB", "Invert", "ID"],
   53: ["BlockA", "BlockB", "Invert"],
   54: ["BlockA", "BlockB", "Invert"],
-  63: ["Interval"]
+  63: ["Interval"],
+  67: ["Size"],
+  71: ["Time Speed"]
 };
 const defaultProperty = {
-  17: [325, 1, 600, [], false, false, false, 4000],
-  18: [false, 325, false, 1, 600, 4000],
+  17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
+  18: [false, 325, false, 1, 600, 4000, 20, 1],
   27: [100],
   28: [100],
   29: [100],
@@ -247,7 +273,9 @@ const defaultProperty = {
   52: [0, 1, false, 0],
   53: [0, 1, false],
   54: [0, 1, false],
-  63: [4000]
+  63: [4000],
+  67: [20],
+  71: [1]
 };
 const propertyType = {
   17: [
@@ -258,9 +286,20 @@ const propertyType = {
     "boolean",
     "boolean",
     "boolean",
+    "number",
+    "number",
     "number"
   ],
-  18: ["boolean", "number", "boolean", "number", "number", "number"],
+  18: [
+    "boolean",
+    "number",
+    "boolean",
+    "number",
+    "number",
+    "number",
+    "number",
+    "number"
+  ],
   27: ["number"],
   28: ["number"],
   29: ["number"],
@@ -280,7 +319,9 @@ const propertyType = {
   52: ["block", "block", "boolean", "integer"],
   53: ["block", "block", "boolean"],
   54: ["block", "block", "boolean"],
-  63: ["number"]
+  63: ["number"],
+  67: ["number"],
+  71: ["number"]
 };
 const propertyLimit = {
   17: [
@@ -291,7 +332,9 @@ const propertyLimit = {
     "none",
     "none",
     "none",
-    [500, 60 * 60 * 1000]
+    [500, 60 * 60 * 1000],
+    [1, 500],
+    [0, 5]
   ],
   18: [
     "none",
@@ -299,7 +342,9 @@ const propertyLimit = {
     "none",
     [0, Infinity],
     [0, 2000],
-    [500, 60 * 60 * 1000]
+    [500, 60 * 60 * 1000],
+    [1, 500],
+    [0, 5]
   ],
   27: [[0, 1000]],
   28: [[0, 1000]],
@@ -324,7 +369,9 @@ const propertyLimit = {
   52: ["none", "none", "none", [0, 99]],
   53: ["none", "none", "none"],
   54: ["none", "none", "none"],
-  63: [[500, 60 * 60 * 1000]]
+  63: [[500, 60 * 60 * 1000]],
+  67: [[1, 500]],
+  71: [[0, 5]]
 };
 var prevVersions = [
   [
@@ -355,7 +402,7 @@ var yprev;
 function nextFrame(timeStamp) {
   // setup stuff
   let dt = timeStamp - lastFrame;
-  dt *= gameSpeed;
+  dt *= player.gameSpeed;
   lastFrame = timeStamp;
   sinceLastSave += dt;
   if (sinceLastSave > 5000) {
@@ -363,13 +410,21 @@ function nextFrame(timeStamp) {
     sinceLastSave = 0;
   }
   sinceLastTimerStage += dt;
-  if (dt < haltThreshold * gameSpeed) {
+  if (dt < haltThreshold * player.gameSpeed) {
     dt = dt / simReruns;
     xprev = player.x;
     yprev = player.y;
     let shouldDrawLevel = false;
     for (let i = 0; i < simReruns; i++) {
       let shouldDie = false;
+      // size change
+      let prevSize = player.size;
+      player.size =
+        (player.size * (100 / dt - 1) + player.targetSize) / (100 / dt);
+      if (Math.abs(player.size - player.targetSize) < 1)
+        player.size = player.targetSize;
+      player.x -= (player.size - prevSize) / 2;
+      player.y -= (player.size - prevSize) / 2;
       // velocity change
       if (player.xg) {
         if (!noFriction) {
@@ -415,9 +470,9 @@ function nextFrame(timeStamp) {
         player.canWalljump = false;
       }
       let bx1 = Math.floor((player.x - 0.01) / blockSize);
-      let bx2 = Math.floor((player.x + playerSize) / blockSize);
+      let bx2 = Math.floor((player.x + player.size) / blockSize);
       let by1 = Math.floor((player.y - 0.01) / blockSize);
-      let by2 = Math.floor((player.y + playerSize + 0.01) / blockSize);
+      let by2 = Math.floor((player.y + player.size + 0.01) / blockSize);
       let wallLeft = false;
       let wallRight = false;
       let wallTop = false;
@@ -442,13 +497,15 @@ function nextFrame(timeStamp) {
                 (player.x - (x + 1) * blockSize) / Math.min(-1, player.xv)
               );
               let dx2 = Math.abs(
-                (player.x + playerSize - x * blockSize) / Math.max(1, player.xv)
+                (player.x + player.size - x * blockSize) /
+                  Math.max(1, player.xv)
               );
               let dy1 = Math.abs(
                 (player.y - (y + 1) * blockSize) / Math.min(-1, player.yv)
               );
               let dy2 = Math.abs(
-                (player.y + playerSize - y * blockSize) / Math.max(1, player.yv)
+                (player.y + player.size - y * blockSize) /
+                  Math.max(1, player.yv)
               );
               // top left corner
               if (x === bx1 && y === by1) {
@@ -491,7 +548,7 @@ function nextFrame(timeStamp) {
               // bottom bound
               else if (y === by2) onBottom = true;
               // inside
-              else shouldDie = true;
+              else if (hasHitbox.includes(type)) shouldDie = true;
               // velocity check
               if (player.xv < 0) {
                 onRight = false;
@@ -507,7 +564,7 @@ function nextFrame(timeStamp) {
               switch (type) {
                 case 55:
                   if (
-                    player.x + playerSize - (player.xv * dt) / 1000 - 1 >
+                    player.x + player.size - (player.xv * dt) / 1000 - 1 >
                     x * blockSize
                   )
                     onRight = false;
@@ -521,7 +578,7 @@ function nextFrame(timeStamp) {
                   break;
                 case 57:
                   if (
-                    player.y + playerSize - (player.yv * dt) / 1000 - 1 >
+                    player.y + player.size - (player.yv * dt) / 1000 - 1 >
                     y * blockSize
                   )
                     onBottom = false;
@@ -916,7 +973,7 @@ function nextFrame(timeStamp) {
           if (player.g < 0 && player.xg && player.xv <= 0) onFloor = true;
         }
         if (wallRight) {
-          player.x = bx2 * blockSize - playerSize;
+          player.x = bx2 * blockSize - player.size;
           player.xv = Math.min(0, player.xv);
           if (player.g > 0 && player.xg && player.xv >= 0) onFloor = true;
         }
@@ -926,16 +983,20 @@ function nextFrame(timeStamp) {
           if (player.g < 0 && !player.xg && player.yv <= 0) onFloor = true;
         }
         if (wallBottom) {
-          player.y = by2 * blockSize - playerSize;
+          player.y = by2 * blockSize - player.size;
           player.yv = Math.min(0, player.yv);
           if (player.g > 0 && !player.xg && player.yv >= 0) onFloor = true;
         }
         // fully in block
+        let rx1 = Math.floor(player.x / blockSize);
+        let rx2 = Math.floor((player.x + player.size) / blockSize);
+        let ry1 = Math.floor(player.y / blockSize);
+        let ry2 = Math.floor((player.y + player.size) / blockSize);
         if (
-          hasHitbox.includes(getBlockType(bx1, by1)) &&
-          hasHitbox.includes(getBlockType(bx1, by2)) &&
-          hasHitbox.includes(getBlockType(bx2, by1)) &&
-          hasHitbox.includes(getBlockType(bx2, by2))
+          hasHitbox.includes(getBlockType(rx1, ry1)) &&
+          hasHitbox.includes(getBlockType(rx1, ry2)) &&
+          hasHitbox.includes(getBlockType(rx2, ry1)) &&
+          hasHitbox.includes(getBlockType(rx2, ry2))
         )
           shouldDie = true;
         // everything else
@@ -951,9 +1012,9 @@ function nextFrame(timeStamp) {
               }
               if (
                 player.x < (x + 1) * blockSize - 0.1 &&
-                player.x + playerSize > x * blockSize + 0.1 &&
+                player.x + player.size > x * blockSize + 0.1 &&
                 player.y < (y + 1) * blockSize - 0.1 &&
-                player.y + playerSize > y * blockSize + 0.1
+                player.y + player.size > y * blockSize + 0.1
               ) {
                 switch (type) {
                   // grav-dir
@@ -1033,7 +1094,9 @@ function nextFrame(timeStamp) {
                         player.maxJumps,
                         player.moveSpeed,
                         player.xg,
-                        player.timerInterval
+                        player.timerInterval,
+                        player.size,
+                        player.gameSpeed
                       ])
                     ) {
                       if (!isSpawn(x, y)) {
@@ -1054,6 +1117,32 @@ function nextFrame(timeStamp) {
                     break;
                   case 50:
                     player.moveSpeed = props[1];
+                    break;
+                  // size
+                  case 64:
+                    player.targetSize = 10;
+                    break;
+                  case 65:
+                    player.targetSize = 20;
+                    break;
+                  case 66:
+                    player.targetSize = 40;
+                    break;
+                  case 67:
+                    player.targetSize = props[1];
+                    break;
+                  // time
+                  case 68:
+                    player.gameSpeed = 0.5;
+                    break;
+                  case 69:
+                    player.gameSpeed = 1;
+                    break;
+                  case 70:
+                    player.gameSpeed = 2;
+                    break;
+                  case 71:
+                    player.gameSpeed = props[1];
                     break;
                   // force field
                   case 27:
@@ -1123,9 +1212,11 @@ function nextFrame(timeStamp) {
                   // portal
                   case 41:
                     player.x =
-                      (x + props[1]) * blockSize + (blockSize - playerSize) / 2;
+                      (x + props[1]) * blockSize +
+                      (blockSize - player.size) / 2;
                     player.y =
-                      (y + props[2]) * blockSize + (blockSize - playerSize) / 2;
+                      (y + props[2]) * blockSize +
+                      (blockSize - player.size) / 2;
                     break;
                   default:
                     break;
@@ -1162,11 +1253,11 @@ function nextFrame(timeStamp) {
       if (!player.godMode && shouldDie) respawn();
       // OoB check
       if (player.x < 0) player.x = 0;
-      if (player.x > level.length * blockSize - playerSize)
-        player.x = level.length * blockSize - playerSize;
+      if (player.x > level.length * blockSize - player.size)
+        player.x = level.length * blockSize - player.size;
       if (player.y < 0) player.y = 0;
-      if (player.y > level[0].length * blockSize - playerSize)
-        player.y = level[0].length * blockSize - playerSize;
+      if (player.y > level[0].length * blockSize - player.size)
+        player.y = level[0].length * blockSize - player.size;
     }
     dt *= simReruns;
     // key input
@@ -1178,24 +1269,24 @@ function nextFrame(timeStamp) {
     } else if (player.xg) {
       if (control.left && player.yv > -player.moveSpeed) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.yv < -player.moveSpeed / (noFriction ? 5 : 1))
-          player.yv = -player.moveSpeed / (noFriction ? 5 : 1);
+        if (player.yv < (-player.moveSpeed * dt) / (noFriction ? 5 : 1))
+          player.yv = (-player.moveSpeed * dt) / (noFriction ? 5 : 1);
       }
       if (control.right && player.yv < player.moveSpeed) {
         player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.yv > player.moveSpeed / (noFriction ? 5 : 1))
-          player.yv = player.moveSpeed / (noFriction ? 5 : 1);
+        if (player.yv > (player.moveSpeed * dt) / (noFriction ? 5 : 1))
+          player.yv = (player.moveSpeed * dt) / (noFriction ? 5 : 1);
       }
     } else {
       if (control.left && player.xv > -player.moveSpeed) {
         player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.xv < -player.moveSpeed / (noFriction ? 5 : 1))
-          player.xv = -player.moveSpeed / (noFriction ? 5 : 1);
+        if (player.xv < (-player.moveSpeed * dt) / (noFriction ? 5 : 1))
+          player.xv = (-player.moveSpeed * dt) / (noFriction ? 5 : 1);
       }
       if (control.right && player.xv < player.moveSpeed) {
         player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.xv > player.moveSpeed / (noFriction ? 5 : 1))
-          player.xv = player.moveSpeed / (noFriction ? 5 : 1);
+        if (player.xv > (player.moveSpeed * dt) / (noFriction ? 5 : 1))
+          player.xv = (player.moveSpeed * dt) / (noFriction ? 5 : 1);
       }
     }
     if (player.canWalljump && control.up) {
@@ -1239,11 +1330,11 @@ function addVersion() {
   }
 }
 function getDefaultSpawn() {
-  return [4, 5, 325, 1, 600, [], false, false, false, 4000];
+  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1];
 }
 function toStart() {
-  player.x = player.startPoint[0] * blockSize + (blockSize - playerSize) / 2;
-  player.y = player.startPoint[1] * blockSize + (blockSize - playerSize) / 2;
+  player.x = player.startPoint[0] * blockSize + (blockSize - player.size) / 2;
+  player.y = player.startPoint[1] * blockSize + (blockSize - player.size) / 2;
   player.xv = 0;
   player.yv = 0;
   player.g = player.startPoint[2];
@@ -1261,6 +1352,9 @@ function toStart() {
   timerStage = 0;
   sinceLastTimerStage = 0;
   player.xg = player.startPoint[8];
+  player.timerInterval = player.startPoint[9];
+  player.targetSize = player.startPoint[10];
+  player.gameSpeed = player.startPoint[11];
   for (let x in level) {
     for (let y in level[x]) {
       if (blockIncludes(level[x][y], 31)) {
@@ -1272,8 +1366,8 @@ function toStart() {
   if (shouldDraw) drawLevel();
 }
 function respawn() {
-  player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize) / 2;
-  player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize) / 2;
+  player.x = player.spawnPoint[0] * blockSize + (blockSize - player.size) / 2;
+  player.y = player.spawnPoint[1] * blockSize + (blockSize - player.size) / 2;
   player.xv = 0;
   player.yv = 0;
   player.g = player.spawnPoint[2];
@@ -1291,6 +1385,9 @@ function respawn() {
   timerStage = 0;
   sinceLastTimerStage = 0;
   player.xg = player.spawnPoint[8];
+  player.timerInterval = player.spawnPoint[9];
+  player.targetSize = player.spawnPoint[10];
+  player.gameSpeed = player.spawnPoint[11];
   for (let x in level) {
     for (let y in level[x]) {
       if (blockIncludes(level[x][y], 31)) {
@@ -1312,7 +1409,9 @@ function setSpawn(x, y, start = false) {
     player.jumpOn,
     player.timerOn,
     player.xg,
-    player.timerInterval
+    player.timerInterval,
+    player.targetSize,
+    player.gameSpeed
   ];
   if (start) player.startPoint = deepCopy(player.spawnPoint);
   for (let x in level) {

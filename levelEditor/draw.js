@@ -1,4 +1,3 @@
-var playerSize = 20;
 var blockSize = 50;
 var lvlxOffset = 0;
 var lvlyOffset = 0;
@@ -9,7 +8,7 @@ function drawPlayer() {
   let pL = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  pL.clearRect(prevPlayerx, prevPlayery, playerSize, playerSize);
+  pL.clearRect(prevPlayerx, prevPlayery, player.size, player.size);
   let ratio = player.currentJumps / player.maxJumps;
   if (player.maxJumps === Infinity) ratio = 1;
   if (player.maxJumps === 0) ratio = 0;
@@ -19,8 +18,8 @@ function drawPlayer() {
   pL.fillRect(
     Math.floor(player.x) + Math.floor(camx),
     Math.floor(player.y) + Math.floor(camy),
-    playerSize,
-    playerSize
+    player.size,
+    player.size
   );
 }
 var prevLevel = [];
@@ -292,7 +291,7 @@ function drawBlock(
       lL.fillStyle = `hsla(${(data[1] / 2000) * 360},100%,50%,0.5)`;
       break;
     case 49:
-      lL.fillStyle = `hsla(${(data[1] * 360) / 10},100%,50%,0.5)`;
+      lL.fillStyle = `hsla(${(data[1] / 10) * 360},100%,50%,0.5)`;
       break;
     case 50:
       lL.fillStyle = `hsla(${(data[1] / 2000) * 360},100%,50%,0.5)`;
@@ -314,6 +313,30 @@ function drawBlock(
       break;
     case 63:
       lL.fillStyle = "#BBBBBB88";
+      break;
+    case 64:
+      lL.fillStyle = "#00008888";
+      break;
+    case 65:
+      lL.fillStyle = "#0000BB88";
+      break;
+    case 66:
+      lL.fillStyle = "#0000FF88";
+      break;
+    case 67:
+      lL.fillStyle = `hsla(${(data[1] / 500) * 360},100%,50%,0.5)`;
+      break;
+    case 68:
+      lL.fillStyle = "#88008888";
+      break;
+    case 69:
+      lL.fillStyle = "#BB00BB88";
+      break;
+    case 70:
+      lL.fillStyle = "#FF00FF88";
+      break;
+    case 71:
+      lL.fillStyle = `hsla(${(data[1] / 5) * 360},100%,50%,0.5)`;
       break;
     default:
       clear = true;
@@ -1368,7 +1391,7 @@ function drawBlock(
       lL.fillText(
         "T",
         xb + blockSize / 2,
-        yb + blockSize / 2 + blockSize/25*2
+        yb + blockSize / 2 + (blockSize / 25) * 2
       );
       break;
     case 47:
@@ -1753,6 +1776,379 @@ function drawBlock(
       );
       lL.setLineDash([]);
       break;
+    case 64:
+      lL.strokeStyle = "#00004488";
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.moveTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 3);
+      lL.lineTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize / 2 - (blockSize / 25) * 6,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 6
+      );
+
+      lL.moveTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 6,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 6
+      );
+
+      lL.moveTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize / 2 - (blockSize / 25) * 6,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 6
+      );
+
+      lL.moveTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 6,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 6
+      );
+      lL.stroke();
+      break;
+    case 65:
+      lL.strokeStyle = "#00006688";
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 4, yb + blockSize / 4 + (blockSize / 25) * 3);
+      lL.lineTo(xb + blockSize / 4, yb + blockSize / 4);
+      lL.lineTo(xb + blockSize / 4 + (blockSize / 25) * 3, yb + blockSize / 4);
+
+      lL.moveTo(
+        xb + blockSize - blockSize / 4,
+        yb + blockSize / 4 + (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize - blockSize / 4, yb + blockSize / 4);
+      lL.lineTo(
+        xb + blockSize - blockSize / 4 - (blockSize / 25) * 3,
+        yb + blockSize / 4
+      );
+
+      lL.moveTo(
+        xb + blockSize / 4,
+        yb + blockSize - blockSize / 4 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize / 4, yb + blockSize - blockSize / 4);
+      lL.lineTo(
+        xb + blockSize / 4 + (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 4
+      );
+
+      lL.moveTo(
+        xb + blockSize - blockSize / 4,
+        yb + blockSize - blockSize / 4 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize - blockSize / 4, yb + blockSize - blockSize / 4);
+      lL.lineTo(
+        xb + blockSize - blockSize / 4 - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 4
+      );
+      lL.stroke();
+      break;
+    case 66:
+      lL.strokeStyle = "#00008888";
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.moveTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 6, yb + (blockSize / 25) * 3);
+      lL.moveTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 6);
+
+      lL.moveTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize / 2 - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 6,
+        yb + (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 6
+      );
+
+      lL.moveTo(
+        xb + blockSize / 2 - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + (blockSize / 25) * 6,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 6
+      );
+
+      lL.moveTo(
+        xb + blockSize - blockSize / 2 + (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2 + (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 6,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.moveTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 6
+      );
+      lL.stroke();
+      break;
+    case 67:
+      lL.strokeStyle = `hsla(${(data[1] / 500) * 360},100%,25%,0.5)`;
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 4, yb + blockSize / 4 + (blockSize / 25) * 3);
+      lL.lineTo(xb + blockSize / 4, yb + blockSize / 4);
+      lL.lineTo(xb + blockSize / 4 + (blockSize / 25) * 3, yb + blockSize / 4);
+
+      lL.moveTo(
+        xb + blockSize - blockSize / 4,
+        yb + blockSize / 4 + (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize - blockSize / 4, yb + blockSize / 4);
+      lL.lineTo(
+        xb + blockSize - blockSize / 4 - (blockSize / 25) * 3,
+        yb + blockSize / 4
+      );
+
+      lL.moveTo(
+        xb + blockSize / 4,
+        yb + blockSize - blockSize / 4 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize / 4, yb + blockSize - blockSize / 4);
+      lL.lineTo(
+        xb + blockSize / 4 + (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 4
+      );
+
+      lL.moveTo(
+        xb + blockSize - blockSize / 4,
+        yb + blockSize - blockSize / 4 - (blockSize / 25) * 3
+      );
+      lL.lineTo(xb + blockSize - blockSize / 4, yb + blockSize - blockSize / 4);
+      lL.lineTo(
+        xb + blockSize - blockSize / 4 - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 4
+      );
+      lL.stroke();
+      break;
+    case 68:
+      lL.strokeStyle = "#44004488";
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.arc(
+        xb + blockSize / 2,
+        yb + blockSize / 2,
+        blockSize / 2 - (blockSize / 25) * 3,
+        0,
+        Math.PI * 2
+      );
+      lL.moveTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(
+        xb +
+          blockSize / 2 +
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.cos(Math.PI / 4),
+        yb +
+          blockSize / 2 -
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.sin(Math.PI / 4)
+      );
+      lL.stroke();
+      for (let i = 1; i < 3; i++) {
+        lL.beginPath();
+        lL.arc(
+          xb + blockSize / 2,
+          yb + blockSize / 2,
+          blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 25) * 3 * i,
+          (Math.PI * 3) / 2,
+          (Math.PI * 7) / 4
+        );
+        lL.stroke();
+      }
+      break;
+    case 69:
+      lL.strokeStyle = "#66006688";
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.arc(
+        xb + blockSize / 2,
+        yb + blockSize / 2,
+        blockSize / 2 - (blockSize / 25) * 3,
+        0,
+        Math.PI * 2
+      );
+      lL.moveTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(
+        xb +
+          blockSize / 2 +
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.cos(0),
+        yb +
+          blockSize / 2 -
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.sin(0)
+      );
+      lL.stroke();
+      for (let i = 1; i < 3; i++) {
+        lL.beginPath();
+        lL.arc(
+          xb + blockSize / 2,
+          yb + blockSize / 2,
+          blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 25) * 3 * i,
+          (Math.PI * 3) / 2,
+          Math.PI * 2
+        );
+        lL.stroke();
+      }
+      break;
+    case 70:
+      lL.strokeStyle = "#88008888";
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.arc(
+        xb + blockSize / 2,
+        yb + blockSize / 2,
+        blockSize / 2 - (blockSize / 25) * 3,
+        0,
+        Math.PI * 2
+      );
+      lL.moveTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(
+        xb +
+          blockSize / 2 +
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.cos(-Math.PI / 2),
+        yb +
+          blockSize / 2 -
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.sin(-Math.PI / 2)
+      );
+      lL.stroke();
+      for (let i = 1; i < 3; i++) {
+        lL.beginPath();
+        lL.arc(
+          xb + blockSize / 2,
+          yb + blockSize / 2,
+          blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 25) * 3 * i,
+          (Math.PI * 3) / 2,
+          (Math.PI * 5) / 2
+        );
+        lL.stroke();
+      }
+      break;
+    case 71:
+      lL.strokeStyle = `hsla(${(data[1] / 5) * 360},100%,25%,0.5)`;
+      lL.lineWidth = blockSize / 25;
+      lL.beginPath();
+      lL.arc(
+        xb + blockSize / 2,
+        yb + blockSize / 2,
+        blockSize / 2 - (blockSize / 25) * 3,
+        0,
+        Math.PI * 2
+      );
+      lL.moveTo(xb + blockSize / 2, yb + blockSize / 2);
+      lL.lineTo(
+        xb +
+          blockSize / 2 +
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.cos(0),
+        yb +
+          blockSize / 2 -
+          (blockSize / 2 - (blockSize / 25) * 3) * Math.sin(0)
+      );
+      lL.stroke();
+      for (let i = 1; i < 3; i++) {
+        lL.beginPath();
+        lL.arc(
+          xb + blockSize / 2,
+          yb + blockSize / 2,
+          blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 25) * 3 * i,
+          (Math.PI * 3) / 2,
+          Math.PI * 2
+        );
+        lL.stroke();
+      }
+      break;
     default:
   }
   blockSize /= size;
@@ -1794,7 +2190,7 @@ function adjustScreen(instant = false) {
     if (lvlxOffset < 0) {
       lvlxOffset =
         Math.floor(window.innerWidth / 2) -
-        Math.floor(player.x + playerSize / 2);
+        Math.floor(player.x + player.size / 2);
       if (lvlxOffset > 0) lvlxOffset = 0;
       if (lvlxOffset < window.innerWidth - level.length * blockSize)
         lvlxOffset = Math.floor(window.innerWidth - level.length * blockSize);
@@ -1805,7 +2201,7 @@ function adjustScreen(instant = false) {
     if (lvlyOffset < 0) {
       lvlyOffset =
         Math.floor(window.innerHeight / 2) -
-        Math.floor(player.y + playerSize / 2);
+        Math.floor(player.y + player.size / 2);
       if (lvlyOffset > 0) lvlyOffset = 0;
       if (lvlyOffset < window.innerHeight - level[0].length * blockSize)
         lvlyOffset = Math.floor(

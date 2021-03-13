@@ -56,8 +56,8 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             "0 0 0 5px #0000FF";
         }
       } else {
-        player.x = input.offsetX - playerSize / 2;
-        player.y = input.offsetY - playerSize / 2;
+        player.x = input.offsetX - player.size / 2;
+        player.y = input.offsetY - player.size / 2;
         player.xv = 0;
         player.yv = 0;
         drawPlayer();
