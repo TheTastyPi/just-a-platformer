@@ -455,3 +455,10 @@ Editor
 
 - Added Unstable Block
 - You now spawn on the floor instead of the center
+
+#### 17 Mar. 2021 #2
+
+Editor
+
+- Fixed a bug related to replacing a unstable block while it's break/reforming
+- Increased the lower bound of all properties of unstable block to 1
