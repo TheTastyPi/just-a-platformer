@@ -3,6 +3,7 @@
   <head>
     <title>just a platformer</title>
     <link rel="icon" type="image/png" href="pics/just-a-platformer.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   </head>
   <body
     onresize="adjustScreen()"
@@ -10,6 +11,7 @@
   >
     <canvas id="playerLayer" style="position: absolute;"></canvas>
     <canvas id="levelLayer" style="position: absolute;"></canvas>
+	<div id="mobileControls" style="position: absolute; bottom: 0; right: 0;"></div>
     <div
       id="info"
       style="
@@ -64,4 +66,5 @@
   <script src="levels.js"></script>
   <script src="draw.js"></script>
   <script src="main.js"></script>
+  <script src="mobile.js"></script>
 </html>
