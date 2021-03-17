@@ -120,7 +120,8 @@ const blockName = [
   "Time Slow Field",
   "Time Normal Field",
   "Time Fast Field",
-  "Custom Time Field" // time (68,69,70,71)
+  "Custom Time Field", // time (68,69,70,71)
+  "Unstable Block" // unstable (72)
 ];
 const blockSelect = [
   "Special",
@@ -133,6 +134,7 @@ const blockSelect = [
   0,
   1,
   51,
+  72,
   2,
   "Gravity",
   6,
@@ -169,7 +171,7 @@ const blockSelect = [
   65,
   66,
   67,
-  "Time",
+  "Time Speed",
   68,
   69,
   70,
@@ -249,7 +251,8 @@ const blockProperty = {
   54: ["BlockA", "BlockB", "Invert"],
   63: ["Interval"],
   67: ["Size"],
-  71: ["Time Speed"]
+  71: ["Time Speed"],
+  72: ["Breaking Period", "!Timer", "Reconstruction Period", "!Timer2"]
 };
 const defaultProperty = {
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
@@ -275,7 +278,8 @@ const defaultProperty = {
   54: [0, 1, false],
   63: [4000],
   67: [20],
-  71: [1]
+  71: [1],
+  72: [1000, 1000, 1000, 1000]
 };
 const propertyType = {
   17: [
@@ -321,7 +325,8 @@ const propertyType = {
   54: ["block", "block", "boolean"],
   63: ["number"],
   67: ["number"],
-  71: ["number"]
+  71: ["number"],
+  72: ["number", "number", "number", "number"]
 };
 const propertyLimit = {
   17: [
@@ -371,7 +376,8 @@ const propertyLimit = {
   54: ["none", "none", "none"],
   63: [[500, 60 * 60 * 1000]],
   67: [[1, 500]],
-  71: [[0, 5]]
+  71: [[0, 5]],
+  72: [[0, 60 * 60 * 1000], "none", [0,Infinity], "none"]
 };
 var prevVersions = [
   [
@@ -386,6 +392,7 @@ var prevVersions = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1]
   ]
 ];
+var timerList = [];
 var sinceLastSave = 0;
 var currentVersion = 0;
 var editDisabled = false;
@@ -483,7 +490,7 @@ function nextFrame(timeStamp) {
           for (let y = by1; y <= by2; y++) {
             let type = getBlockType(x, y);
             let props = [];
-            if (hasProperty(type)) {
+            if (hasProperty(getBlockType(x,y,false))) {
               if (getSubBlockPos(x, y)) {
                 props = level[x][y][getSubBlockPos(x, y)];
               } else props = level[x][y];
@@ -962,6 +969,11 @@ function nextFrame(timeStamp) {
                     break;
                 }
               }
+              if (getBlockType(x, y, false) === 72 && props[1] <= props[2]) {
+                editProp(x,y,72,2,false,props[1]);
+                addTimer(x,y,2,72);
+                shouldDrawLevel = true;
+              }
             }
           }
         }
@@ -1250,6 +1262,41 @@ function nextFrame(timeStamp) {
         player.timerOn = !player.timerOn;
         timerStage = 0;
       }
+      for (let i in timerList) {
+        let info = timerList[i];
+        let x = info[0];
+        let y = info[1];
+        let index = info[2];
+        let type = info[3];
+        let block = level[x][y];
+        if (block[0] !== type) block = block[getSubBlockPos(x,y)];
+        block[index] -= dt;
+        if (block[index] < 0) {
+          block[index] = 0;
+          timerList.splice(i,1);
+          // preform action
+          switch (type) {
+            case 72:
+              switch (index) {
+                case 2:
+                  if (block[3] === Infinity) break;
+                  block[4] = block[3];
+                  addTimer(x,y,4,72);
+                  break;
+                case 4:
+                  block[2] = block[1];
+                  break;
+                default:
+                  break;
+              }
+              break;
+            default:
+              break;
+          }
+        }
+        shouldDrawLevel = true;
+      }
+      // death
       if (!player.godMode && shouldDie) respawn();
       // OoB check
       if (player.x < 0) player.x = 0;
@@ -1333,13 +1380,11 @@ function getDefaultSpawn() {
   return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1];
 }
 function toStart() {
-  player.x = player.startPoint[0] * blockSize + (blockSize - player.size) / 2;
-  player.y = player.startPoint[1] * blockSize + (blockSize - player.size) / 2;
   player.xv = 0;
   player.yv = 0;
   player.g = player.startPoint[2];
   player.maxJumps = player.startPoint[3];
-  player.currentJumps = player.maxJumps - 1;
+  player.currentJumps = player.maxJumps;
   player.moveSpeed = player.startPoint[4];
   let shouldDraw =
     !arraysEqual(player.switchsOn, player.startPoint[5]) ||
@@ -1355,10 +1400,27 @@ function toStart() {
   player.timerInterval = player.startPoint[9];
   player.targetSize = player.startPoint[10];
   player.gameSpeed = player.startPoint[11];
+  let spawnx = player.startPoint[0] * blockSize;
+  let spawny = player.startPoint[1] * blockSize;
+  if (player.xg) {
+    spawny += (blockSize - player.size) / 2;
+    if (player.g > 0) spawnx += blockSize - player.size;
+  } else {
+    spawnx += (blockSize - player.size) / 2;
+    if (player.g > 0) spawny += blockSize - player.size;
+  }
+  player.x = spawnx;
+  player.y = spawny;
+  timerList = [];
   for (let x in level) {
     for (let y in level[x]) {
       if (blockIncludes(level[x][y], 31)) {
         editProp(x, y, 31, 3, false, "unused", true);
+        shouldDraw = true;
+      }
+      if (blockIncludes(level[x][y], 72)) {
+        editProp(x, y, 72, 2, false, false, true, 1);
+        editProp(x, y, 72, 4, false, false, true, 3);
         shouldDraw = true;
       }
     }
@@ -1366,13 +1428,11 @@ function toStart() {
   if (shouldDraw) drawLevel();
 }
 function respawn() {
-  player.x = player.spawnPoint[0] * blockSize + (blockSize - player.size) / 2;
-  player.y = player.spawnPoint[1] * blockSize + (blockSize - player.size) / 2;
   player.xv = 0;
   player.yv = 0;
   player.g = player.spawnPoint[2];
   player.maxJumps = player.spawnPoint[3];
-  player.currentJumps = player.maxJumps - 1;
+  player.currentJumps = player.maxJumps;
   player.moveSpeed = player.spawnPoint[4];
   let shouldDraw =
     arraysEqual(player.switchsOn, player.spawnPoint[5]) ||
@@ -1388,10 +1448,27 @@ function respawn() {
   player.timerInterval = player.spawnPoint[9];
   player.targetSize = player.spawnPoint[10];
   player.gameSpeed = player.spawnPoint[11];
+  let spawnx = player.spawnPoint[0] * blockSize;
+  let spawny = player.spawnPoint[1] * blockSize;
+  if (player.xg) {
+    spawny += (blockSize - player.size) / 2;
+    if (player.g > 0) spawnx += blockSize - player.size;
+  } else {
+    spawnx += (blockSize - player.size) / 2;
+    if (player.g > 0) spawny += blockSize - player.size;
+  }
+  player.x = spawnx;
+  player.y = spawny;
+  timerList = [];
   for (let x in level) {
     for (let y in level[x]) {
       if (blockIncludes(level[x][y], 31)) {
         editProp(x, y, 31, 3, "used/unsaved", "unused", true);
+        shouldDraw = true;
+      }
+      if (blockIncludes(level[x][y], 72)) {
+        editProp(x, y, 72, 2, false, false, true, 1);
+        editProp(x, y, 72, 4, false, false, true, 3);
         shouldDraw = true;
       }
     }
@@ -1937,6 +2014,11 @@ function addTooltip(elem, text) {
 function hasProperty(blockId) {
   return blockProperty[blockId] !== undefined;
 }
+function addTimer(x,y,index,type) {
+  if (!includesArray(timerList,[x,y,index,type])) {
+    timerList.push([x,y,index,type]);
+  }
+}
 function getBlockType(x, y, subtype = true, block) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
     return 1;
@@ -2012,6 +2094,11 @@ function getBlockType(x, y, subtype = true, block) {
           type = 0;
         } else type = 2;
         break;
+      case 72:
+        if (props[2] === 0) {
+          type = 0;
+        } else type = 1;
+        break;
       default:
         break;
     }
@@ -2040,7 +2127,7 @@ function getSubBlockPos(x, y) {
     } else return 2;
   }
 }
-function editProp(x, y, type, index, from, to, all = false) {
+function editProp(x, y, type, index, from, to, all = false, toIndex = false) {
   let block = level[x][y];
   if (block[0] !== type) {
     if (all) {
@@ -2050,15 +2137,23 @@ function editProp(x, y, type, index, from, to, all = false) {
           propertyType[block[0]][parseInt(i) - 1] === "block" &&
           block[i][0] === type &&
           (block[i][index] === from || from === false)
-        )
-          block[i][index] = to;
+        ) {
+          if (toIndex === false) {
+            block[i][index] = to;
+          } else block[i][index] = block[i][toIndex];
+        }
       }
     } else if (block[getSubBlockPos(x, y)][index] === from || from === false) {
       block[getSubBlockPos(x, y)][index] = to;
     }
-  } else if (block[index] === from || from === false) block[index] = to;
+  } else if (block[index] === from || from === false) {
+    if (toIndex === false) {
+      block[index] = to;
+    } else block[index] = block[toIndex];
+  }
 }
 function blockIncludes(block, type) {
+  if (block === type || block[0] === type) return true;
   if (typeof type === "object") {
     for (let j in type) {
       for (let i in block) {
@@ -2107,6 +2202,12 @@ function arraysEqual(a, b) {
     } else if (a[i] !== b[i]) return false;
   }
   return true;
+}
+function includesArray(arr, target) {
+  for (let i in arr) {
+    if (arraysEqual(arr[i],target)) return true;
+  }
+  return false;
 }
 function deinfinify(obj) {
   obj = deepCopy(obj);

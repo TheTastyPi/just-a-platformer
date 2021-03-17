@@ -338,6 +338,10 @@ function drawBlock(
     case 71:
       lL.fillStyle = `hsla(${(data[1] / 5) * 360},100%,50%,0.5)`;
       break;
+    case 72:
+      lL.fillStyle = `rgb(${(1-Math.min(data[2]/data[1],1))*255},0,0)`;
+      if (data[2] === 0) lL.fillStyle = `rgba(255,0,0,0.5)`;
+      break;
     default:
       clear = true;
   }
@@ -2148,6 +2152,19 @@ function drawBlock(
         );
         lL.stroke();
       }
+      break;
+    case 72:
+      lL.strokeStyle = `rgb(${(1-Math.min(data[2]/data[1],1))*128 + 127},127,127)`;
+      if (data[2] === 0) lL.strokeStyle = `rgba(127,0,0,0.5)`;
+      lL.fillStyle = lL.strokeStyle;
+      lL.beginPath();
+      lL.moveTo(xb+blockSize/2,yb+blockSize/25*3);
+      lL.lineTo(xb+blockSize/2,yb+blockSize/4*3);
+      lL.stroke();
+
+      lL.beginPath();
+      lL.arc(xb+blockSize/2,yb+blockSize/8*7,blockSize/25*2,0,2*Math.PI);
+      lL.fill();
       break;
     default:
   }
