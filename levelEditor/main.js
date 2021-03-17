@@ -377,7 +377,7 @@ const propertyLimit = {
   63: [[500, 60 * 60 * 1000]],
   67: [[1, 500]],
   71: [[0, 5]],
-  72: [[0, 60 * 60 * 1000], "none", [0,Infinity], "none"]
+  72: [[1, 60 * 60 * 1000], "none", [1,Infinity], "none"]
 };
 var prevVersions = [
   [
@@ -1270,8 +1270,12 @@ function nextFrame(timeStamp) {
         let type = info[3];
         let block = level[x][y];
         if (block[0] !== type) block = block[getSubBlockPos(x,y)];
+        if (block === undefined || block[0] !== type) {
+          timerList.splice(i,1);
+          continue;
+        }
         block[index] -= dt;
-        if (block[index] < 0) {
+        if (block[index] <= 0) {
           block[index] = 0;
           timerList.splice(i,1);
           // preform action
