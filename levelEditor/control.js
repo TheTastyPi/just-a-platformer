@@ -250,6 +250,7 @@ document.addEventListener("keydown", function (input) {
           player.spawnPoint[1] += dw;
           player.startPoint[1] += dw;
           player.y += blockSize * dw;
+          timerList.map(function(x){x[1]+=dw;return x});
           id("lvlHeight").innerHTML = level[0].length;
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
@@ -263,6 +264,7 @@ document.addEventListener("keydown", function (input) {
           player.spawnPoint[1]--;
           player.startPoint[1]--;
           player.y -= blockSize;
+          timerList.map(function(x){x[1]--;return x});
           id("lvlHeight").innerHTML = level[0].length;
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
@@ -276,6 +278,7 @@ document.addEventListener("keydown", function (input) {
           player.spawnPoint[1]++;
           player.startPoint[1]++;
           player.y += blockSize;
+          timerList.map(function(x){x[1]++;return x});
           id("lvlHeight").innerHTML = level[0].length;
           id("levelLayer").height = level[0].length * blockSize;
           prevLevel = [];
@@ -369,6 +372,7 @@ document.addEventListener("keydown", function (input) {
           player.spawnPoint[1] += dw;
           player.startPoint[1] += dw;
           player.y += blockSize * dw;
+          timerList.map(function(x){x[0]+=dw;return x});
           id("lvlWidth").innerHTML = level.length;
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
@@ -381,6 +385,7 @@ document.addEventListener("keydown", function (input) {
             player.spawnPoint[0]--;
             player.startPoint[0]--;
             player.x -= blockSize;
+            timerList.map(function(x){x[0]--;return x});
             id("lvlWidth").innerHTML = level.length;
             id("levelLayer").width = level.length * blockSize;
             prevLevel = [];
@@ -395,6 +400,7 @@ document.addEventListener("keydown", function (input) {
           player.spawnPoint[0]++;
           player.startPoint[0]++;
           player.x += blockSize;
+          timerList.map(function(x){x[0]++;return x});
           id("lvlWidth").innerHTML = level.length;
           id("levelLayer").width = level.length * blockSize;
           prevLevel = [];
