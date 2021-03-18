@@ -1319,25 +1319,25 @@ function nextFrame(timeStamp) {
       if (control.down) player.y += dt / 4;
     } else if (player.xg) {
       if (control.left && player.yv > -player.moveSpeed) {
-        player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.yv < (-player.moveSpeed * dt) / (noFriction ? 5 : 1))
-          player.yv = (-player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.yv < (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
+          player.yv = (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
       }
       if (control.right && player.yv < player.moveSpeed) {
-        player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.yv > (player.moveSpeed * dt) / (noFriction ? 5 : 1))
-          player.yv = (player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.yv > (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
+          player.yv = (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
       }
     } else {
       if (control.left && player.xv > -player.moveSpeed) {
-        player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.xv < (-player.moveSpeed * dt) / (noFriction ? 5 : 1))
-          player.xv = (-player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.xv < (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
+          player.xv = (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
       }
       if (control.right && player.xv < player.moveSpeed) {
-        player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-        if (player.xv > (player.moveSpeed * dt) / (noFriction ? 5 : 1))
-          player.xv = (player.moveSpeed * dt) / (noFriction ? 5 : 1);
+        player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.xv > (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
+          player.xv = (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
       }
     }
     if (player.canWalljump && control.up) {

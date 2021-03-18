@@ -714,14 +714,14 @@ function nextFrame(timeStamp) {
     dt = dt * simReruns;
     // key input
     if (control.left && player.xv > -player.moveSpeed) {
-      player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-      if (player.xv < -player.moveSpeed / (noFriction ? 5 : 1))
-        player.xv = -player.moveSpeed / (noFriction ? 5 : 1);
+      player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+      if (player.xv < -player.moveSpeed / (noFriction ? 2 : 1))
+        player.xv = -player.moveSpeed / (noFriction ? 2 : 1);
     }
     if (control.right && player.xv < player.moveSpeed) {
-      player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-      if (player.xv > player.moveSpeed / (noFriction ? 5 : 1))
-        player.xv = player.moveSpeed / (noFriction ? 5 : 1);
+      player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+      if (player.xv > player.moveSpeed / (noFriction ? 2 : 1))
+        player.xv = player.moveSpeed / (noFriction ? 2 : 1);
     }
     if (player.canWalljump && control.up) {
       if (player.wallJumpDir === "left" && control.left) {
