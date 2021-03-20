@@ -468,3 +468,21 @@ Editor
 Editor
 
 - Fixed a bug related to changing the level size while a unstable block is breaking/reforming
+
+## 20 Mar. 2021
+
+Main Game
+
+- Added a sneak peek of the speed branch
+- Made a slight adjustment to the multi-jump branch
+- Made it so that you spawn on the floor, like in the editor
+
+Both
+
+- Stopped holding jump from making you jump multiple times
+- Respawning now has a 1/3 second delay so that players can register that they've died
+
+Editor
+
+- Fixed inconsistancy with movement speed between the main game and editor
+  - Might break some levels but, eh, it had to be fixed

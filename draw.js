@@ -10,6 +10,7 @@ function drawPlayer() {
   if (player.maxJumps === Infinity) ratio = 1;
   if (player.maxJumps === 0) ratio = 0;
   pL.fillStyle = `rgb(${255 - ratio * 255},0,${ratio * 255})`;
+  if (player.isDead) pL.fillStyle += "88";
   pL.fillRect(
     Math.floor(player.x),
     Math.floor(player.y),

@@ -3,6 +3,9 @@ const player = {
   autoSave: true,
   startPoint: getDefaultSpawn(),
   spawnPoint: getDefaultSpawn(),
+  isDead: false,
+  spawnDelay: 333,
+  spawnTimer: 333,
   x: 0,
   y: 0,
   xv: 0,
@@ -12,6 +15,7 @@ const player = {
   currentJumps: 0,
   canWalljump: false,
   wallJumpDir: "left",
+  canJump: true,
   maxJumps: 1,
   moveSpeed: 600,
   jumpHeight: 205,
@@ -377,7 +381,7 @@ const propertyLimit = {
   63: [[500, 60 * 60 * 1000]],
   67: [[1, 500]],
   71: [[0, 5]],
-  72: [[1, 60 * 60 * 1000], "none", [1,Infinity], "none"]
+  72: [[1, 60 * 60 * 1000], "none", [1, Infinity], "none"]
 };
 var prevVersions = [
   [
@@ -462,7 +466,7 @@ function nextFrame(timeStamp) {
           player.yv += (player.g * dt) / 500;
         }
       }
-      if (player.noclip) {
+      if (player.noclip || player.isDead) {
         player.xv = 0;
         player.yv = 0;
       }
@@ -490,7 +494,7 @@ function nextFrame(timeStamp) {
           for (let y = by1; y <= by2; y++) {
             let type = getBlockType(x, y);
             let props = [];
-            if (hasProperty(getBlockType(x,y,false))) {
+            if (hasProperty(getBlockType(x, y, false))) {
               if (getSubBlockPos(x, y)) {
                 props = level[x][y][getSubBlockPos(x, y)];
               } else props = level[x][y];
@@ -970,8 +974,8 @@ function nextFrame(timeStamp) {
                 }
               }
               if (getBlockType(x, y, false) === 72 && props[1] <= props[2]) {
-                editProp(x,y,72,2,false,props[1]);
-                addTimer(x,y,2,72);
+                editProp(x, y, 72, 2, false, props[1]);
+                addTimer(x, y, 2, 72);
                 shouldDrawLevel = true;
               }
             }
@@ -1269,15 +1273,15 @@ function nextFrame(timeStamp) {
         let index = info[2];
         let type = info[3];
         let block = level[x][y];
-        if (block[0] !== type) block = block[getSubBlockPos(x,y)];
+        if (block[0] !== type) block = block[getSubBlockPos(x, y)];
         if (block === undefined || block[0] !== type) {
-          timerList.splice(i,1);
+          timerList.splice(i, 1);
           continue;
         }
         block[index] -= dt;
         if (block[index] <= 0) {
           block[index] = 0;
-          timerList.splice(i,1);
+          timerList.splice(i, 1);
           // preform action
           switch (type) {
             case 72:
@@ -1285,7 +1289,7 @@ function nextFrame(timeStamp) {
                 case 2:
                   if (block[3] === Infinity) break;
                   block[4] = block[3];
-                  addTimer(x,y,4,72);
+                  addTimer(x, y, 4, 72);
                   break;
                 case 4:
                   block[2] = block[1];
@@ -1301,7 +1305,11 @@ function nextFrame(timeStamp) {
         shouldDrawLevel = true;
       }
       // death
-      if (!player.godMode && shouldDie) respawn();
+      if (!player.godMode && shouldDie && !player.isDead) player.isDead = true;
+      if (player.isDead) {
+        player.spawnTimer -= dt;
+        if (player.spawnTimer <= 0) respawn();
+      }
       // OoB check
       if (player.x < 0) player.x = 0;
       if (player.x > level.length * blockSize - player.size)
@@ -1320,24 +1328,48 @@ function nextFrame(timeStamp) {
     } else if (player.xg) {
       if (control.left && player.yv > -player.moveSpeed) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.yv < (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
-          player.yv = (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.yv < -player.moveSpeed / (noFriction ? 2 : 1))
+          player.yv = -player.moveSpeed / (noFriction ? 2 : 1);
       }
       if (control.right && player.yv < player.moveSpeed) {
         player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.yv > (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
-          player.yv = (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.yv > player.moveSpeed / (noFriction ? 2 : 1))
+          player.yv = player.moveSpeed / (noFriction ? 2 : 1);
+      }
+      if (
+        control.up &&
+        player.canJump &&
+        (player.currentJumps > 0 || player.godMode) &&
+        !player.canWalljump
+      ) {
+        player.canJump = false;
+        player.jumpOn = !player.jumpOn;
+        drawLevel();
+        player.xv = -Math.sign(player.g) * player.jumpHeight;
+        player.currentJumps--;
       }
     } else {
       if (control.left && player.xv > -player.moveSpeed) {
         player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.xv < (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
-          player.xv = (-player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.xv < -player.moveSpeed / (noFriction ? 2 : 1))
+          player.xv = -player.moveSpeed / (noFriction ? 2 : 1);
       }
       if (control.right && player.xv < player.moveSpeed) {
         player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.xv > (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1))
-          player.xv = (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
+        if (player.xv > player.moveSpeed / (noFriction ? 2 : 1))
+          player.xv = player.moveSpeed / (noFriction ? 2 : 1);
+      }
+      if (
+        control.up &&
+        player.canJump &&
+        (player.currentJumps > 0 || player.godMode) &&
+        !player.canWalljump
+      ) {
+        player.canJump = false;
+        player.jumpOn = !player.jumpOn;
+        drawLevel();
+        player.yv = -Math.sign(player.g) * player.jumpHeight;
+        player.currentJumps--;
       }
     }
     if (player.canWalljump && control.up) {
@@ -1384,6 +1416,8 @@ function getDefaultSpawn() {
   return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1];
 }
 function toStart() {
+  player.spawnTimer = player.spawnDelay;
+  player.isDead = false;
   player.xv = 0;
   player.yv = 0;
   player.g = player.startPoint[2];
@@ -1432,6 +1466,8 @@ function toStart() {
   if (shouldDraw) drawLevel();
 }
 function respawn() {
+  player.spawnTimer = player.spawnDelay;
+  player.isDead = false;
   player.xv = 0;
   player.yv = 0;
   player.g = player.spawnPoint[2];
@@ -2018,9 +2054,9 @@ function addTooltip(elem, text) {
 function hasProperty(blockId) {
   return blockProperty[blockId] !== undefined;
 }
-function addTimer(x,y,index,type) {
-  if (!includesArray(timerList,[x,y,index,type])) {
-    timerList.push([x,y,index,type]);
+function addTimer(x, y, index, type) {
+  if (!includesArray(timerList, [x, y, index, type])) {
+    timerList.push([x, y, index, type]);
   }
 }
 function getBlockType(x, y, subtype = true, block) {
@@ -2209,7 +2245,7 @@ function arraysEqual(a, b) {
 }
 function includesArray(arr, target) {
   for (let i in arr) {
-    if (arraysEqual(arr[i],target)) return true;
+    if (arraysEqual(arr[i], target)) return true;
   }
   return false;
 }
