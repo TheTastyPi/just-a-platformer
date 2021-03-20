@@ -469,7 +469,7 @@ Editor
 
 - Fixed a bug related to changing the level size while a unstable block is breaking/reforming
 
-## 20 Mar. 2021
+### 20 Mar. 2021
 
 Main Game
 
