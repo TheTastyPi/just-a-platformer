@@ -484,5 +484,5 @@ Both
 
 Editor
 
-- Fixed inconsistancy with movement speed between the main game and editor
+- Fixed inconsistency with movement speed between the main game and editor
   - Might break some levels but, eh, it had to be fixed
