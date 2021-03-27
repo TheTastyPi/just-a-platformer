@@ -474,7 +474,10 @@ document.addEventListener("keydown", function (input) {
           control.right = true;
         break;
       case "KeyE":
-        control.e = true;
+			if (isMobile)
+				control.e = !control.e;
+			else
+				control.e = true;
         break;
       case "KeyR":
         if (input.shiftKey) {
@@ -502,10 +505,15 @@ document.addEventListener("keydown", function (input) {
           id("control").style.display = "inline";
         break;
       case "Digit3":
-        if (id("blockSelect").style.display !== "none") {
-          id("blockSelect").style.display = "none";
-        } else if (id("blockSelect").style.display !== "flex")
-          id("blockSelect").style.display = "flex";
+		if (id("blockSelect").style.display !== "none") {
+			id("blockSelect").style.display = "none";
+			id("mobileControls").style.bottom = 0;
+			id("mobileControlsLeft").style.bottom = 0;
+		} else if (id("blockSelect").style.display !== "flex") {
+			id("blockSelect").style.display = "flex";
+			id("mobileControls").style.bottom = "max(20%, 125px)";
+			id("mobileControlsLeft").style.bottom = "max(20%, 125px)";
+		}
         break;
       case "Digit4":
         if (id("grid").style.display !== "none") {
@@ -542,7 +550,13 @@ document.addEventListener("keydown", function (input) {
             drawLevel();
           }
         }
-        break;
+			break;
+		case "MobileSize":
+			if (id("mobileSizeMenu").style.display !== "none") {
+				id("mobileSizeMenu").style.display = "none";
+			} else if (id("mobileSizeMenu").style.display !== "inline")
+				id("mobileSizeMenu").style.display = "inline";
+			break;
       default:
     }
   }

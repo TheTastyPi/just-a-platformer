@@ -795,9 +795,9 @@ function nextFrame(timeStamp) {
 }
 
 function openInfo() {
-  if (id("info").style.bottom == "0%") {
-    id("info").style.bottom = "100%";
-  } else id("info").style.bottom = "0%";
+  if (id("mainInfo").style.bottom == "0%") {
+    id("mainInfo").style.bottom = "100%";
+  } else id("mainInfo").style.bottom = "0%";
 }
 function newSave() {
   return [1, 6, 0, 8, 325, 1, 600, [], currentVersion, false];

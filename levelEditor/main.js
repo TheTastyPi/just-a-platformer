@@ -1822,7 +1822,7 @@ function openPropertyMenu(
   subProp = false,
   subPropName
 ) {
-  control.e = false;
+  if (!isMobile) control.e = false;
   if (hasProperty(type)) {
     let props = blockProperty[type];
     let menu = id("editProperty");
@@ -1891,8 +1891,10 @@ function openPropertyMenu(
       } else if (propertyType[type][i] === "boolean") {
         input = document.createElement("input");
         input.type = "checkbox";
-      } else {
-        input = document.createElement("textarea");
+	  } else {
+		const isNumber = propertyType[type][i] === "number"
+        input = document.createElement(isNumber ? "input" : "textarea");
+		  if (isNumber) input.type = "number";
         let text;
         if (propertyLimit[type][i] !== "none") {
           text = "From ";
@@ -2299,13 +2301,13 @@ function init() {
         if (input.button == 0 && control.e) {
           openPropertyMenu(0, 0, blockSelect[i], true);
         } else if (input.button == 0) {
-          if (player.selectedBlock[1] == player.selectedBlock[0]) {
+          if (player.selectedBlock[1] == player.selectedBlock[0] && !isMobile) {
             id("blockSelect" + player.selectedBlock[0]).style.boxShadow =
               "0 0 0 5px #0000FF";
           } else {
             id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
           }
-          if (player.selectedBlock[1] == blockSelect[i]) {
+          if (player.selectedBlock[1] == blockSelect[i] && !isMobile) {
             button.style.boxShadow = "0 0 0 5px #FF00FF";
           } else {
             button.style.boxShadow = "0 0 0 5px #FF0000";
@@ -2318,9 +2320,9 @@ function init() {
           } else {
             id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
           }
-          if (player.selectedBlock[0] == blockSelect[i]) {
+          if (player.selectedBlock[0] == blockSelect[i] && !isMobile) {
             button.style.boxShadow = "0 0 0 5px #FF00FF";
-          } else {
+          } else if (!isMobile) {
             button.style.boxShadow = "0 0 0 5px #0000FF";
           }
           player.selectedBlock[1] = blockSelect[i];
@@ -2339,7 +2341,7 @@ function init() {
       currentSect.style.minWidth = (blockSize + 5) * blockAmt + "px";
     }
   }
-  id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";
+  if (!isMobile) id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";
   id("blockSelect1").style.boxShadow = "0 0 0 5px #FF0000";
   if (!localStorage.getItem("just-an-editor-save")) {
     localStorage.setItem("just-an-editor-save", "{}");
@@ -2347,7 +2349,5 @@ function init() {
   }
   addTooltip(id("autoSaveButton"), "Saves once every 5 seconds");
   adjustScreen(true);
+  window.requestAnimationFrame(nextFrame);
 }
-
-init();
-window.requestAnimationFrame(nextFrame);
