@@ -2,6 +2,9 @@ var currentVersion = 0.3;
 var gameSpeed = 1;
 var player = {
   spawnPoint: newSave(),
+  isDead: false,
+  spawnDelay: 333,
+  spawnTimer: 333,
   levelCoord: [0, 0],
   get currentLevel() {
     return worldMap[player.levelCoord[0]][player.levelCoord[1]];
@@ -12,6 +15,7 @@ var player = {
   yv: 0,
   g: 325,
   canWalljump: false,
+  canJump: true,
   currentJumps: 0,
   maxJumps: 1,
   moveSpeed: 600,
@@ -24,7 +28,7 @@ const control = {
   right: false,
   up: false
 };
-const hasHitbox = [1, 5, 11];
+const hasHitbox = [1, 5, 11, 40];
 
 document.addEventListener("keydown", function (input) {
   let key = input.code;
@@ -32,10 +36,6 @@ document.addEventListener("keydown", function (input) {
     case "ArrowUp":
     case "KeyW":
       control.up = true;
-      if ((player.currentJumps > 0 || player.godMode) && !player.canWalljump) {
-        player.yv = -Math.sign(player.g) * 205;
-        player.currentJumps--;
-      }
       break;
     case "ArrowLeft":
     case "KeyA":
@@ -65,12 +65,10 @@ document.addEventListener("keydown", function (input) {
               true
             ];
             respawn();
-            drawLevel();
           }
         } else alert("You have not reached the hub yet.");
       } else {
         respawn();
-        drawLevel();
       }
       break;
     case "KeyI":
@@ -87,6 +85,7 @@ document.addEventListener("keyup", function (input) {
     case "ArrowUp":
     case "KeyW":
       control.up = false;
+      player.canJump = true;
       break;
     case "ArrowLeft":
     case "KeyA":
@@ -129,6 +128,10 @@ function nextFrame(timeStamp) {
         if (Math.abs(player.yv) < player.g) player.yv = player.g;
       } else {
         player.yv += (player.g * dt) / 500;
+      }
+      if (player.isDead) {
+        player.xv = 0;
+        player.yv = 0;
       }
       // position change based on velocity
       player.x += (player.xv * dt) / 500;
@@ -553,7 +556,11 @@ function nextFrame(timeStamp) {
         player.currentJumps = player.maxJumps;
       } else if (player.currentJumps === player.maxJumps) player.currentJumps--;
       // die
-      if (shouldDie && !player.godMode) respawn();
+      if (!player.godMode && shouldDie && !player.isDead) player.isDead = true;
+      if (player.isDead) {
+        player.spawnTimer -= dt;
+        if (player.spawnTimer <= 0) respawn();
+      }
       // triggers
       if (!player.triggers.includes(-1)) {
         levels[9][5][5] = 0;
@@ -710,27 +717,64 @@ function nextFrame(timeStamp) {
       if (player.triggers.includes(26)) {
         levels[63][25][8] = 0;
       } else levels[63][25][8] = -4;
+      if (player.triggers.includes(27)) {
+        levels[73][13][4] = 0;
+      } else levels[73][13][4] = -4;
+      if (player.triggers.includes(28)) {
+        levels[73][13][3] = 0;
+      } else levels[73][13][3] = -4;
+      if (player.triggers.includes(29)) {
+        levels[74][4][8] = 0;
+        levels[74][4][9] = 0;
+      } else {
+        levels[74][4][8] = -4;
+        levels[74][4][9] = -4;
+      }
+      if (player.triggers.includes(30)) {
+        levels[74][6][4] = 0;
+      } else levels[74][6][4] = -4;
+      if (player.triggers.includes(31)) {
+        levels[74][5][20] = 0;
+      } else levels[74][5][20] = -4;
+      if (player.triggers.includes(32)) {
+        levels[75][5][4] = 0;
+      } else levels[75][5][4] = -4;
+      if (player.triggers.includes(33)) {
+        levels[75][5][2] = 0;
+      } else levels[75][5][2] = -4;
+      if (player.triggers.includes(34)) {
+        levels[75][7][10] = 0;
+      } else levels[75][7][10] = -4;
     }
     dt = dt * simReruns;
     // key input
     if (control.left && player.xv > -player.moveSpeed) {
-      player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-      if (player.xv < -player.moveSpeed / (noFriction ? 5 : 1))
-        player.xv = -player.moveSpeed / (noFriction ? 5 : 1);
+      player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+      if (player.xv < -player.moveSpeed / (noFriction ? 6 : 1))
+        player.xv = -player.moveSpeed / (noFriction ? 6 : 1);
     }
     if (control.right && player.xv < player.moveSpeed) {
-      player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 5 : 1);
-      if (player.xv > player.moveSpeed / (noFriction ? 5 : 1))
-        player.xv = player.moveSpeed / (noFriction ? 5 : 1);
+      player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+      if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
+        player.xv = player.moveSpeed / (noFriction ? 6 : 1);
     }
-    if (player.canWalljump && control.up) {
-      if (player.wallJumpDir === "left" && control.left) {
-        player.xv = -600;
+    if (control.up) {
+      if (player.canWalljump) {
+        if (player.wallJumpDir === "left" && control.left) {
+          player.xv = -600;
+          player.yv = -Math.sign(player.g) * 205;
+        }
+        if (player.wallJumpDir === "right" && control.right) {
+          player.xv = 600;
+          player.yv = -Math.sign(player.g) * 205;
+        }
+      } else if (
+        player.canJump &&
+        (player.currentJumps > 0 || player.godMode)
+      ) {
+        player.canJump = false;
         player.yv = -Math.sign(player.g) * 205;
-      }
-      if (player.wallJumpDir === "right" && control.right) {
-        player.xv = 600;
-        player.yv = -Math.sign(player.g) * 205;
+        player.currentJumps--;
       }
     }
     // draw checks
@@ -794,17 +838,24 @@ function isSpawn(x, y) {
   );
 }
 function respawn() {
+  player.spawnTimer = player.spawnDelay;
+  player.isDead = false;
   player.levelCoord = [player.spawnPoint[2], player.spawnPoint[3]];
-  player.x = player.spawnPoint[0] * blockSize + (blockSize - playerSize) / 2;
-  player.y = player.spawnPoint[1] * blockSize + (blockSize - playerSize) / 2;
   player.xv = 0;
   player.yv = 0;
   player.g = player.spawnPoint[4];
   player.maxJumps = player.spawnPoint[5];
-  player.currentJumps = player.maxJumps - 1;
+  player.currentJumps = player.maxJumps;
   player.moveSpeed = player.spawnPoint[6];
   player.triggers = [...player.spawnPoint[7]];
   player.reachedHub = player.spawnPoint[9];
+  let spawnx = player.spawnPoint[0] * blockSize + (blockSize - playerSize) / 2;
+  let spawny = player.spawnPoint[1] * blockSize;
+  if (player.g > 0) spawny += blockSize - playerSize;
+  player.x = spawnx;
+  player.y = spawny;
+  drawLevel();
+  drawPlayer();
 }
 function getBlockType(x, y) {
   let level = levels[player.currentLevel];
@@ -885,8 +936,6 @@ var id = (x) => document.getElementById(x);
 
 load();
 respawn();
-drawPlayer();
-drawLevel();
 adjustScreen(true);
 window.requestAnimationFrame(nextFrame);
 setTimeout(drawLevel, 100);

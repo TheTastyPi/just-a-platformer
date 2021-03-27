@@ -14,7 +14,7 @@ function drawPlayer() {
   if (player.maxJumps === 0) ratio = 0;
   pL.fillStyle = `rgb(${255 - ratio * 255},0,${ratio * 255})`;
   if (player.godMode) pL.fillStyle = "#FF00FF";
-  if (player.noclip) pL.fillStyle += "88";
+  if (player.noclip || player.isDead) pL.fillStyle += "88";
   pL.fillRect(
     Math.floor(player.x) + Math.floor(camx),
     Math.floor(player.y) + Math.floor(camy),
