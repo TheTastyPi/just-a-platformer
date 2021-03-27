@@ -486,3 +486,13 @@ Editor
 
 - Fixed inconsistency with movement speed between the main game and editor
   - Might break some levels but, eh, it had to be fixed
+
+## 27 Mar. 2021
+
+Main Game
+
+- Finished the speed branch
+
+Editor
+
+- Fixed a bug where game speed affects the spawn delay

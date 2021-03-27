@@ -15,7 +15,7 @@ var player = {
   yv: 0,
   g: 325,
   canWalljump: false,
-  canJump: false,
+  canJump: true,
   currentJumps: 0,
   maxJumps: 1,
   moveSpeed: 600,
@@ -28,7 +28,7 @@ const control = {
   right: false,
   up: false
 };
-const hasHitbox = [1, 5, 11];
+const hasHitbox = [1, 5, 11, 40];
 
 document.addEventListener("keydown", function (input) {
   let key = input.code;
@@ -717,18 +717,46 @@ function nextFrame(timeStamp) {
       if (player.triggers.includes(26)) {
         levels[63][25][8] = 0;
       } else levels[63][25][8] = -4;
+      if (player.triggers.includes(27)) {
+        levels[73][13][4] = 0;
+      } else levels[73][13][4] = -4;
+      if (player.triggers.includes(28)) {
+        levels[73][13][3] = 0;
+      } else levels[73][13][3] = -4;
+      if (player.triggers.includes(29)) {
+        levels[74][4][8] = 0;
+        levels[74][4][9] = 0;
+      } else {
+        levels[74][4][8] = -4;
+        levels[74][4][9] = -4;
+      }
+      if (player.triggers.includes(30)) {
+        levels[74][6][4] = 0;
+      } else levels[74][6][4] = -4;
+      if (player.triggers.includes(31)) {
+        levels[74][5][20] = 0;
+      } else levels[74][5][20] = -4;
+      if (player.triggers.includes(32)) {
+        levels[75][5][4] = 0;
+      } else levels[75][5][4] = -4;
+      if (player.triggers.includes(33)) {
+        levels[75][5][2] = 0;
+      } else levels[75][5][2] = -4;
+      if (player.triggers.includes(34)) {
+        levels[75][7][10] = 0;
+      } else levels[75][7][10] = -4;
     }
     dt = dt * simReruns;
     // key input
     if (control.left && player.xv > -player.moveSpeed) {
-      player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-      if (player.xv < -player.moveSpeed / (noFriction ? 2 : 1))
-        player.xv = -player.moveSpeed / (noFriction ? 2 : 1);
+      player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+      if (player.xv < -player.moveSpeed / (noFriction ? 6 : 1))
+        player.xv = -player.moveSpeed / (noFriction ? 6 : 1);
     }
     if (control.right && player.xv < player.moveSpeed) {
-      player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-      if (player.xv > player.moveSpeed / (noFriction ? 2 : 1))
-        player.xv = player.moveSpeed / (noFriction ? 2 : 1);
+      player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+      if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
+        player.xv = player.moveSpeed / (noFriction ? 6 : 1);
     }
     if (control.up) {
       if (player.canWalljump) {

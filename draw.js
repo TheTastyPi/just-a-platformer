@@ -98,6 +98,9 @@ function drawLevel() {
         case 23:
           lL.fillStyle = "#00FF0088";
           break;
+        case 40:
+          lL.fillStyle = "#8888FF";
+          break;
         default:
           lL.fillStyle = "#00000000";
       }
@@ -622,6 +625,25 @@ function drawLevel() {
             );
             lL.stroke();
           }
+          break;
+        case 40:
+          lL.strokeStyle = "#444488";
+          lL.beginPath();
+          lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+          lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+          lL.moveTo(
+            xb + blockSize - (blockSize / 25) * 3,
+            yb + (blockSize / 25) * 3
+          );
+          lL.lineTo(
+            xb + (blockSize / 25) * 3,
+            yb + blockSize - (blockSize / 25) * 3
+          );
+          lL.moveTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
+          lL.lineTo(xb + blockSize - (blockSize / 25) * 3, yb + blockSize / 2);
+          lL.stroke();
+          break;
+        default:
           break;
       }
     }

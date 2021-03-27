@@ -1307,7 +1307,7 @@ function nextFrame(timeStamp) {
       // death
       if (!player.godMode && shouldDie && !player.isDead) player.isDead = true;
       if (player.isDead) {
-        player.spawnTimer -= dt;
+        player.spawnTimer -= dt / player.gameSpeed;
         if (player.spawnTimer <= 0) respawn();
       }
       // OoB check
@@ -1327,14 +1327,14 @@ function nextFrame(timeStamp) {
       if (control.down) player.y += dt / 4;
     } else if (player.xg) {
       if (control.left && player.yv > -player.moveSpeed) {
-        player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.yv < -player.moveSpeed / (noFriction ? 2 : 1))
-          player.yv = -player.moveSpeed / (noFriction ? 2 : 1);
+        player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+        if (player.yv < -player.moveSpeed / (noFriction ? 6 : 1))
+          player.yv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (control.right && player.yv < player.moveSpeed) {
-        player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.yv > player.moveSpeed / (noFriction ? 2 : 1))
-          player.yv = player.moveSpeed / (noFriction ? 2 : 1);
+        player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+        if (player.yv > player.moveSpeed / (noFriction ? 6 : 1))
+          player.yv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
         control.up &&
@@ -1350,14 +1350,14 @@ function nextFrame(timeStamp) {
       }
     } else {
       if (control.left && player.xv > -player.moveSpeed) {
-        player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.xv < -player.moveSpeed / (noFriction ? 2 : 1))
-          player.xv = -player.moveSpeed / (noFriction ? 2 : 1);
+        player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+        if (player.xv < -player.moveSpeed / (noFriction ? 6 : 1))
+          player.xv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (control.right && player.xv < player.moveSpeed) {
-        player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 2 : 1);
-        if (player.xv > player.moveSpeed / (noFriction ? 2 : 1))
-          player.xv = player.moveSpeed / (noFriction ? 2 : 1);
+        player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
+        if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
+          player.xv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
         control.up &&
