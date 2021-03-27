@@ -3,38 +3,23 @@
   <head>
     <title>just a platformer</title>
     <link rel="icon" type="image/png" href="pics/just-a-platformer.png" />
+	<link rel="stylesheet" href="shared/game.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   </head>
-  <body
-    onresize="adjustScreen()"
-    style="height: 100%; margin: 0; overflow: hidden;"
-  >
+  <bodyonresize="adjustScreen()">
     <canvas id="playerLayer" style="position: absolute;"></canvas>
     <canvas id="levelLayer" style="position: absolute;"></canvas>
 	<div id="mobileControlsLeft" style="position: absolute; bottom: 0; left: 0;"></div>
 	<div id="mobileControls" style="position: absolute; bottom: 0; right: 0;"></div>
-    <div
-      id="info"
-      style="
-        position: absolute;
-        text-align: center;
-        width: 100%;
-        height: 100%;
-        bottom: 100%;
-        background: #ffffff88;
-        transition: 1s;
-        font-family: monospace;
-        font-size: 30px;
-      "
-    >
-      <div
-        style="
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        "
-      >
+	<div id="mobileControlsTop" style="position: absolute; top: 0; right: 0; display: none;">
+		<button
+			id="moreBtn"
+			onclick="openMoreMenu()"
+		>...</button>
+	</div>
+    <div id="mainInfo">
+      <div>
         "just a platformer"<br />
         Made by TheTastyPi<br />
         <br />
@@ -48,18 +33,6 @@
     <button
       id="infoOpen"
       onclick="openInfo();"
-      style="
-        position: absolute;
-        width: 100px;
-        height: 50px;
-        border-color: #00000088;
-        border-bottom-left-radius: 10px;
-        outline: none;
-        top: 0;
-        right: 0;
-        background: #ffffff88;
-        font-family: monospace;
-      "
     >
       Info[I]
     </button>
@@ -68,4 +41,5 @@
   <script src="draw.js"></script>
   <script src="main.js"></script>
   <script src="mobile.js"></script>
+  <script src="shared/mobileCore.js"></script>
 </html>

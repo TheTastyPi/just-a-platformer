@@ -3,6 +3,10 @@
   <head>
     <title>just a level editor</title>
     <link rel="icon" type="image/png" href="../pics/just-a-level-editor.png" />
+	<link rel="stylesheet" href="../shared/game.css">
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="HandheldFriendly" content="true" />
     <style>
       @font-face {
         font-family: 'DSEG7-7SEGG';
@@ -16,6 +20,7 @@
   </head>
   <body
     onresize="adjustScreen()"
+	onload="init()";
     style="
       height: 100%;
       margin: 0;
@@ -28,6 +33,14 @@
     <canvas id="playerLayer" style="position: absolute;"></canvas>
     <canvas id="grid" style="position: absolute; display: none;"></canvas>
     <canvas id="levelLayer" style="position: absolute;"></canvas>
+	<div id="mobileControlsLeft" style="position: absolute; bottom: max(20%, 125px); left: 0;"></div>
+	<div id="mobileControls" style="position: absolute; bottom: max(20%, 125px); right: 0;"></div>
+	<div id="mobileControlsTop" style="position: absolute; top: 0; right: 0; display: none;">
+		<button
+			id="moreBtn"
+			onclick="openMoreMenu()"
+		>...</button>
+	</div>
     <div style="position: absolute; background: #ffffff88; max-width: 350px;">
       <span id="info">
         [INFO]<br />
@@ -69,7 +82,7 @@
         position: absolute;
         bottom: 0;
         width: 100%;
-        height: 20%;
+        height: max(20%, 125px);
         display: flex;
         overflow-x: scroll;
         text-align: center;
@@ -135,6 +148,44 @@
         <button id="closeButton" onclick="toggleSaveMenu()">Close</button>
       </div>
     </div>
+	<div
+		id="mobileSizeMenu"
+		style="
+			position: absolute;
+        	background: #00000088;
+        	color: #ffffff;
+        	display: none;
+        	left: 50%;
+        	top: 50%;
+        	transform: translate(-50%, -50%);
+			padding: 5px;
+		"
+	>
+		<form id="mobileSizeForm">
+			<p>This expands/shrinks the level. Select a direction and operation, then click "Confirm"</p>
+			<div>
+				<input type="radio" id="up" name="dir" value="Up"
+					checked>
+	  			<label for="up">Up</label>
+				<input type="radio" id="down" name="dir" value="Down">
+	  			<label for="down">Down</label>
+				<input type="radio" id="left" name="dir" value="Left">
+	  			<label for="left">Left</label>
+				<input type="radio" id="right" name="dir" value="Right">
+	  			<label for="right">Right</label>
+			</div>
+			<div>
+				<input type="radio" id="more" name="type" value="more"
+					checked>
+	  			<label for="more">Expand</label>
+				<input type="radio" id="less" name="type" value="less">
+	  			<label for="less">Shrink</label>
+			</div>
+			<div>
+				<button type="submit">Confirm</button>
+			</div>
+		</form>
+	</div>
     <div
       id="tooltip"
       style="
@@ -161,4 +212,6 @@ export text</textarea
   <script src="draw.js"></script>
   <script src="main.js"></script>
   <script src="control.js"></script>
+  <script src="mobile.js"></script>
+  <script src="../shared/mobileCore.js"></script>
 </html>
