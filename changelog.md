@@ -496,3 +496,9 @@ Main Game
 Editor
 
 - Fixed a bug where game speed affects the spawn delay
+
+#### 27 Mar. 2021 #2
+
+Main Game
+
+- Added discord server link
