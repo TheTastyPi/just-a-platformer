@@ -507,4 +507,4 @@ Main Game
 
 Both
 
-- Add mobile support
+- Added mobile support
