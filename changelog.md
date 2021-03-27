@@ -502,3 +502,9 @@ Editor
 Main Game
 
 - Added discord server link
+
+## 27 Mar. 2021 #3
+
+Both
+
+- Add mobile support
