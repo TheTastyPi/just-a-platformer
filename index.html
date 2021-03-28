@@ -3,21 +3,30 @@
   <head>
     <title>just a platformer</title>
     <link rel="icon" type="image/png" href="pics/just-a-platformer.png" />
-	<link rel="stylesheet" href="shared/game.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="shared/game.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
   </head>
-  <bodyonresize="adjustScreen()">
+  <body onresize="adjustScreen()">
     <canvas id="playerLayer" style="position: absolute;"></canvas>
     <canvas id="levelLayer" style="position: absolute;"></canvas>
-	<div id="mobileControlsLeft" style="position: absolute; bottom: 0; left: 0;"></div>
-	<div id="mobileControls" style="position: absolute; bottom: 0; right: 0;"></div>
-	<div id="mobileControlsTop" style="position: absolute; top: 0; right: 0; display: none;">
-		<button
-			id="moreBtn"
-			onclick="openMoreMenu()"
-		>...</button>
-	</div>
+    <div
+      id="mobileControlsLeft"
+      style="position: absolute; bottom: 0; left: 0;"
+    ></div>
+    <div
+      id="mobileControls"
+      style="position: absolute; bottom: 0; right: 0;"
+    ></div>
+    <div
+      id="mobileControlsTop"
+      style="position: absolute; top: 0; right: 0; display: none;"
+    >
+      <button id="moreBtn" onclick="openMoreMenu()">...</button>
+    </div>
     <div id="mainInfo">
       <div>
         "just a platformer"<br />
@@ -27,14 +36,11 @@
         [shift] + [R] to go to hub<br />
         [delete] to wipe save<br />
         <br />
-        <a href="levelEditor/index.html">Level Editor</a>
+        <a href="levelEditor/index.html">Level Editor</a> <br />
         <a href="https://discord.gg/zVpdcuaXYF">Discord Server</a>
       </div>
     </div>
-    <button
-      id="infoOpen"
-      onclick="openInfo();"
-    >
+    <button id="infoOpen" onclick="openInfo();">
       Info[I]
     </button>
   </body>
