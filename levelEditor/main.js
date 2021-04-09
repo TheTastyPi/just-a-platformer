@@ -1337,7 +1337,7 @@ function nextFrame(timeStamp) {
           player.yv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
-        control.up &&
+        (control.up || control.down) &&
         player.canJump &&
         (player.currentJumps > 0 || player.godMode) &&
         !player.canWalljump
@@ -1360,7 +1360,7 @@ function nextFrame(timeStamp) {
           player.xv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
-        control.up &&
+        (control.up || control.down) &&
         player.canJump &&
         (player.currentJumps > 0 || player.godMode) &&
         !player.canWalljump
@@ -1372,23 +1372,27 @@ function nextFrame(timeStamp) {
         player.currentJumps--;
       }
     }
-    if (player.canWalljump && control.up) {
+    if (player.canWalljump && (control.up || control.down)) {
       if (player.wallJumpDir === "left" && control.left) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.xv = -600;
         player.yv = -Math.sign(player.g) * player.jumpHeight;
       }
       if (player.wallJumpDir === "right" && control.right) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.xv = 600;
         player.yv = -Math.sign(player.g) * player.jumpHeight;
       }
       if (player.wallJumpDir === "up" && control.left) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.yv = -600;
         player.xv = -Math.sign(player.g) * player.jumpHeight;
       }
       if (player.wallJumpDir === "down" && control.right) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.yv = 600;
         player.xv = -Math.sign(player.g) * player.jumpHeight;
@@ -2219,6 +2223,11 @@ function blockIncludes(block, type) {
     }
     return false;
   }
+}
+function openInfo() {
+  if (id("mainInfo").style.bottom == "0%") {
+    id("mainInfo").style.bottom = "100%";
+  } else id("mainInfo").style.bottom = "0%";
 }
 function deepCopy(inObject) {
   //definitely not copied from somewhere else

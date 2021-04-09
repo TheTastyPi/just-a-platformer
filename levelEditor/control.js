@@ -474,10 +474,8 @@ document.addEventListener("keydown", function (input) {
           control.right = true;
         break;
       case "KeyE":
-			if (isMobile)
-				control.e = !control.e;
-			else
-				control.e = true;
+        if (isMobile) control.e = !control.e;
+        else control.e = true;
         break;
       case "KeyR":
         if (input.shiftKey) {
@@ -505,21 +503,27 @@ document.addEventListener("keydown", function (input) {
           id("control").style.display = "inline";
         break;
       case "Digit3":
-		if (id("blockSelect").style.display !== "none") {
-			id("blockSelect").style.display = "none";
-			id("mobileControls").style.bottom = 0;
-			id("mobileControlsLeft").style.bottom = 0;
-		} else if (id("blockSelect").style.display !== "flex") {
-			id("blockSelect").style.display = "flex";
-			id("mobileControls").style.bottom = "max(20%, 125px)";
-			id("mobileControlsLeft").style.bottom = "max(20%, 125px)";
-		}
+        if (id("blockSelect").style.display !== "none") {
+          id("blockSelect").style.display = "none";
+          id("mobileControls").style.bottom = 0;
+          id("mobileControlsLeft").style.bottom = 0;
+        } else if (id("blockSelect").style.display !== "flex") {
+          id("blockSelect").style.display = "flex";
+          id("mobileControls").style.bottom = "max(20%, 125px)";
+          id("mobileControlsLeft").style.bottom = "max(20%, 125px)";
+        }
         break;
       case "Digit4":
         if (id("grid").style.display !== "none") {
           id("grid").style.display = "none";
         } else if (id("grid").style.display !== "block")
           id("grid").style.display = "block";
+        break;
+      case "Digit5":
+        if (id("infoOpen").style.display !== "none") {
+          id("infoOpen").style.display = "none";
+        } else if (id("infoOpen").style.display !== "block")
+          id("infoOpen").style.display = "block";
         break;
       case "KeyF":
         if (input.shiftKey) {
@@ -542,21 +546,44 @@ document.addEventListener("keydown", function (input) {
             if (currentVersion < prevVersions.length - 1) {
               currentVersion++;
               level = deepCopy(prevVersions[currentVersion]);
+              if (
+                prevVersions[currentVersion - 1].length !== level.length ||
+                prevVersions[currentVersion - 1][0].length !== level[0].length
+              ) {
+                id("lvlWidth").innerHTML = level.length;
+                id("levelLayer").width = level.length * blockSize;
+                id("lvlHeight").innerHTML = level[0].length;
+                id("levelLayer").height = level[0].length * blockSize;
+                prevLevel = [];
+              }
               drawLevel();
             }
           } else if (currentVersion > 0) {
             currentVersion--;
             level = deepCopy(prevVersions[currentVersion]);
+            if (
+              prevVersions[currentVersion + 1].length !== level.length ||
+              prevVersions[currentVersion + 1][0].length !== level[0].length
+            ) {
+              id("lvlWidth").innerHTML = level.length;
+              id("levelLayer").width = level.length * blockSize;
+              id("lvlHeight").innerHTML = level[0].length;
+              id("levelLayer").height = level[0].length * blockSize;
+              prevLevel = [];
+            }
             drawLevel();
           }
         }
-			break;
-		case "MobileSize":
-			if (id("mobileSizeMenu").style.display !== "none") {
-				id("mobileSizeMenu").style.display = "none";
-			} else if (id("mobileSizeMenu").style.display !== "inline")
-				id("mobileSizeMenu").style.display = "inline";
-			break;
+        break;
+      case "KeyC":
+        openInfo();
+        break;
+      case "MobileSize":
+        if (id("mobileSizeMenu").style.display !== "none") {
+          id("mobileSizeMenu").style.display = "none";
+        } else if (id("mobileSizeMenu").style.display !== "inline")
+          id("mobileSizeMenu").style.display = "inline";
+        break;
       default:
     }
   }
@@ -576,11 +603,12 @@ document.addEventListener("keyup", function (input) {
       case "ArrowUp":
       case "KeyW":
         control.up = false;
-        player.canJump = true;
+        if (!control.down) player.canJump = true;
         break;
       case "ArrowDown":
       case "KeyS":
         control.down = false;
+        if (!control.up) player.canJump = true;
         break;
       case "KeyE":
         control.e = false;

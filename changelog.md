@@ -508,3 +508,28 @@ Main Game
 Both
 
 - Added mobile support
+
+## 9 Apr. 2021
+
+Main Game
+
+- Added the final branch
+  - Game complete!
+- Added a time played stat
+- Added a death counter
+- Renamed "Info" to "Credits"
+- Added a "Wipe Save" option to mobile because yhvr forgot to do that
+
+Editor
+
+- Added a credits screen
+  - Also added the option to hide the button that opens said screen
+- Fixed a bug where undo/redoing a level size change doesn't update stuff properly
+- Fixed a bug where the save menu won't scroll
+
+Both
+
+- Credited Yhvr for mobile support
+- Moved the credits button back to the top right to avoid conflict with the info display in the level editor
+- Added a fade in transition when opening the page
+- You can now jump by pressing down

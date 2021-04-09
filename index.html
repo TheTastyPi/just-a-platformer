@@ -31,7 +31,16 @@
       <div>
         "just a platformer"<br />
         Made by TheTastyPi<br />
+        Mobile support by Yhvr<br />
         <br />
+        Time Played: <span id="timePlayed">0 second</span><br />
+        Deaths: <span id="deathCount">0</span><br />
+        <br />
+        <span id="endStat" style="display: none;">
+          Completion Time: <span id="timePlayedEnd">0 second</span><br />
+          Final Deaths: <span id="deathCountEnd">0</span><br />
+          <br />
+        </span>
         [R] to force-respawn<br />
         [shift] + [R] to go to hub<br />
         [delete] to wipe save<br />
@@ -41,7 +50,7 @@
       </div>
     </div>
     <button id="infoOpen" onclick="openInfo();">
-      Info[I]
+      Credits
     </button>
   </body>
   <script src="levels.js"></script>

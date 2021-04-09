@@ -34,6 +34,11 @@ function drawLevel() {
       let props = type;
       if (typeof type === "object") type = type[0];
       switch (type) {
+        case -5:
+          if (isSpawn(x, y)) {
+            lL.fillStyle = "#FFFF0088";
+          } else lL.fillStyle = "#88880088";
+          break;
         case -4:
           lL.fillStyle = "#00FF0088";
           break;
@@ -106,6 +111,19 @@ function drawLevel() {
       }
       lL.fillRect(xb, yb, blockSize, blockSize);
       switch (type) {
+        case -5:
+          if (isSpawn(x, y)) {
+            lL.strokeStyle = "#88880088";
+          } else lL.strokeStyle = "#44440088";
+          lL.beginPath();
+          lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+          lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);
+          lL.lineTo(
+            xb + blockSize - (blockSize / 25) * 3,
+            yb + (blockSize / 25) * 3
+          );
+          lL.stroke();
+          break;
         case -4:
           lL.strokeStyle = "#00880088";
           lL.beginPath();
