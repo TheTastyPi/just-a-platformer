@@ -526,6 +526,7 @@ Editor
   - Also added the option to hide the button that opens said screen
 - Fixed a bug where undo/redoing a level size change doesn't update stuff properly
 - Fixed a bug where the save menu won't scroll
+- When spawning, you now start at the default size before transitioning to your saved size
 
 Both
 

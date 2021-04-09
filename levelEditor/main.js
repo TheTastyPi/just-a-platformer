@@ -1441,6 +1441,7 @@ function toStart() {
   player.xg = player.startPoint[8];
   player.timerInterval = player.startPoint[9];
   player.targetSize = player.startPoint[10];
+  player.size = 20;
   player.gameSpeed = player.startPoint[11];
   let spawnx = player.startPoint[0] * blockSize;
   let spawny = player.startPoint[1] * blockSize;
@@ -1491,6 +1492,7 @@ function respawn() {
   player.xg = player.spawnPoint[8];
   player.timerInterval = player.spawnPoint[9];
   player.targetSize = player.spawnPoint[10];
+  player.size = 20;
   player.gameSpeed = player.spawnPoint[11];
   let spawnx = player.spawnPoint[0] * blockSize;
   let spawny = player.spawnPoint[1] * blockSize;
@@ -1895,10 +1897,10 @@ function openPropertyMenu(
       } else if (propertyType[type][i] === "boolean") {
         input = document.createElement("input");
         input.type = "checkbox";
-	  } else {
-		const isNumber = propertyType[type][i] === "number"
+      } else {
+        const isNumber = propertyType[type][i] === "number";
         input = document.createElement(isNumber ? "input" : "textarea");
-		  if (isNumber) input.type = "number";
+        if (isNumber) input.type = "number";
         let text;
         if (propertyLimit[type][i] !== "none") {
           text = "From ";
