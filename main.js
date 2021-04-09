@@ -922,12 +922,12 @@ function load() {
       saveData[3] += 3;
     }
     player.spawnPoint = saveData;
-    player.timePlayed = player.spawnPoint[10];
-    player.deaths = player.spawnPoint[11];
-    player.gameComplete = player.spawnPoint[12];
-    player.finalTimePlayed = player.spawnPoint[13];
-    player.finalDeaths = player.spawnPoint[14];
-    id("timePlayed").innerHTML = player.timePlayed;
+    player.timePlayed = player.spawnPoint[10] ?? 0;
+    player.deaths = player.spawnPoint[11] ?? 0;
+    player.gameComplete = player.spawnPoint[12] ?? false;
+    player.finalTimePlayed = player.spawnPoint[13] ?? 0;
+    player.finalDeaths = player.spawnPoint[14] ?? 0;
+    id("timePlayed").innerHTML = formatTime(player.timePlayed);
     id("deathCount").innerHTML = player.deaths;
     if (player.gameComplete) {
       id("endStat").style.display = "inline";
