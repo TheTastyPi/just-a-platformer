@@ -534,3 +534,9 @@ Both
 - Moved the credits button back to the top right to avoid conflict with the info display in the level editor
 - Added a fade in transition when opening the page
 - You can now jump by pressing down
+
+#### 11 Apr. 2021
+
+Editor
+
+- \[shift] + \[R] now also resets checkpoint

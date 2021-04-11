@@ -479,7 +479,7 @@ document.addEventListener("keydown", function (input) {
         break;
       case "KeyR":
         if (input.shiftKey) {
-          toStart();
+          respawn(true);
         } else respawn();
         break;
       case "KeyG":

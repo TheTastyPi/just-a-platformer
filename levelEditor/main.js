@@ -1419,58 +1419,8 @@ function addVersion() {
 function getDefaultSpawn() {
   return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1];
 }
-function toStart() {
-  player.spawnTimer = player.spawnDelay;
-  player.isDead = false;
-  player.xv = 0;
-  player.yv = 0;
-  player.g = player.startPoint[2];
-  player.maxJumps = player.startPoint[3];
-  player.currentJumps = player.maxJumps;
-  player.moveSpeed = player.startPoint[4];
-  let shouldDraw =
-    !arraysEqual(player.switchsOn, player.startPoint[5]) ||
-    player.jumpOn !== player.startPoint[6] ||
-    player.timerOn !== player.startPoint[7] ||
-    timerStage !== 0;
-  player.switchsOn = [...player.startPoint[5]];
-  player.jumpOn = player.startPoint[6];
-  player.timerOn = player.startPoint[7];
-  timerStage = 0;
-  sinceLastTimerStage = 0;
-  player.xg = player.startPoint[8];
-  player.timerInterval = player.startPoint[9];
-  player.targetSize = player.startPoint[10];
-  player.size = 20;
-  player.gameSpeed = player.startPoint[11];
-  let spawnx = player.startPoint[0] * blockSize;
-  let spawny = player.startPoint[1] * blockSize;
-  if (player.xg) {
-    spawny += (blockSize - player.size) / 2;
-    if (player.g > 0) spawnx += blockSize - player.size;
-  } else {
-    spawnx += (blockSize - player.size) / 2;
-    if (player.g > 0) spawny += blockSize - player.size;
-  }
-  player.x = spawnx;
-  player.y = spawny;
-  timerList = [];
-  for (let x in level) {
-    for (let y in level[x]) {
-      if (blockIncludes(level[x][y], 31)) {
-        editProp(x, y, 31, 3, false, "unused", true);
-        shouldDraw = true;
-      }
-      if (blockIncludes(level[x][y], 72)) {
-        editProp(x, y, 72, 2, false, false, true, 1);
-        editProp(x, y, 72, 4, false, false, true, 3);
-        shouldDraw = true;
-      }
-    }
-  }
-  if (shouldDraw) drawLevel();
-}
-function respawn() {
+function respawn(start = false) {
+  if (start) player.spawnPoint = deepCopy(player.startPoint);
   player.spawnTimer = player.spawnDelay;
   player.isDead = false;
   player.xv = 0;
@@ -1626,7 +1576,7 @@ function load(name) {
   id("levelLayer").height = level[0].length * blockSize;
   id("levelLayer").width = level.length * blockSize;
   prevLevel = [];
-  toStart();
+  respawn(true);
   drawLevel();
   drawGrid();
   adjustScreen(true);
@@ -2277,9 +2227,9 @@ function infinify(obj) {
   return obj;
 }
 function init() {
-  toStart();
   id("levelLayer").height = level[0].length * blockSize;
   id("levelLayer").width = level.length * blockSize;
+  respawn();
   drawLevel();
   drawGrid();
   let blockAmt = 0;
