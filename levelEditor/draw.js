@@ -2224,6 +2224,8 @@ var camy = 0;
 var camDelay = 10;
 var camCenterx = 0;
 var camCentery = 0;
+var prevCenterx = 0;
+var prevCentery = 0;
 var camOffsetLimit = blockSize * 10;
 function adjustScreen(instant = false) {
   let lvlx = level.length * blockSize;
@@ -2258,18 +2260,26 @@ function adjustScreen(instant = false) {
   } else camy = Math.ceil(camy);
   if (Math.abs(camx - lvlxOffset) < 1 || instant) camx = lvlxOffset;
   if (Math.abs(camy - lvlyOffset) < 1 || instant) camy = lvlyOffset;
-  
+
   let camOffsetx = camx - camCenterx;
   let camOffsety = camy - camCentery;
-  if ((camOffsetx > 0 || camOffsetx < -2 * camOffsetLimit) && camx <= 0 && camx >= id("levelLayer").width) {
+  if (camOffsetx > 0 || camOffsetx < -2 * camOffsetLimit) {
     camCenterx = camx + camOffsetLimit;
-    camOffsetx = camx - camCenterx
-    drawLevel(true);
+    if (camCenterx > 0) camCenterx = 0;
+    if (camCenterx < id("levelLayer").width - lvlx)
+      camCenterx = id("levelLayer").width - lvlx;
+    camOffsetx = camx - camCenterx;
+    if (prevCenterx !== camCenterx) drawLevel(true);
+    prevCenterx = camCenterx;
   }
-  if ((camOffsety > 0 || camOffsety < -2 * camOffsetLimit) && camy <= 0 && camy >= id("levelLayer").height) {
+  if (camOffsety > 0 || camOffsety < -2 * camOffsetLimit) {
     camCentery = camy + camOffsetLimit;
+    if (camCentery > 0) camCentery = 0;
+    if (camCentery < id("levelLayer").height - lvly)
+      camCentery = id("levelLayer").height - lvly;
     camOffsety = camy - camCentery;
-    drawLevel(true);
+    if (prevCentery !== camCentery) drawLevel(true);
+    prevCentery = camCentery;
   }
   id("levelLayer").style.left = camOffsetx + "px";
   id("levelLayer").style.top = camOffsety + "px";
@@ -2280,8 +2290,14 @@ function adjustScreen(instant = false) {
   drawPlayer();
 }
 function adjustLevelSize() {
-  id("levelLayer").width = Math.min(level.length * blockSize, window.innerWidth + 2 * camOffsetLimit);
-  id("levelLayer").height = Math.min(level[0].length * blockSize, window.innerHeight + 2 * camOffsetLimit);
+  id("levelLayer").width = Math.min(
+    level.length * blockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("levelLayer").height = Math.min(
+    level[0].length * blockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
   drawLevel(true);
   adjustScreen(true);
 }
