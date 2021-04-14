@@ -549,3 +549,9 @@ Editor
 - Refactored the level size change code
 - Fixed bug where switch state doesn't reset on start
 - Removed some frames from unstable block's animation
+
+#### 14 Apr. 2021 #2
+
+Editor
+
+- Fixed a bug where moving the level with \[ctrl] drag causes weird stuff to happen

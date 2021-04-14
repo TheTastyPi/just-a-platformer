@@ -2258,15 +2258,15 @@ function adjustScreen(instant = false) {
   } else camy = Math.ceil(camy);
   if (Math.abs(camx - lvlxOffset) < 1 || instant) camx = lvlxOffset;
   if (Math.abs(camy - lvlyOffset) < 1 || instant) camy = lvlyOffset;
-  // i have no idea what i'm doing
+  
   let camOffsetx = camx - camCenterx;
   let camOffsety = camy - camCentery;
-  if ((camOffsetx > 0 || camOffsetx < -2 * camOffsetLimit) && camx <= 0) {
+  if ((camOffsetx > 0 || camOffsetx < -2 * camOffsetLimit) && camx <= 0 && camx >= id("levelLayer").width) {
     camCenterx = camx + camOffsetLimit;
     camOffsetx = camx - camCenterx
     drawLevel(true);
   }
-  if ((camOffsety > 0 || camOffsety < -2 * camOffsetLimit) && camy <= 0) {
+  if ((camOffsety > 0 || camOffsety < -2 * camOffsetLimit) && camy <= 0 && camy >= id("levelLayer").height) {
     camCentery = camy + camOffsetLimit;
     camOffsety = camy - camCentery;
     drawLevel(true);
