@@ -397,6 +397,8 @@ var prevVersions = [
   ]
 ];
 var timerList = [];
+var timerRunThrough = 0;
+var timerDrawDelay = 15 * simReruns;
 var sinceLastSave = 0;
 var currentVersion = 0;
 var editDisabled = false;
@@ -1266,8 +1268,8 @@ function nextFrame(timeStamp) {
         player.timerOn = !player.timerOn;
         timerStage = 0;
       }
-      for (let i in timerList) {
-        let info = timerList[i];
+      for (let j in timerList) {
+        let info = timerList[j];
         let x = info[0];
         let y = info[1];
         let index = info[2];
@@ -1275,13 +1277,13 @@ function nextFrame(timeStamp) {
         let block = level[x][y];
         if (block[0] !== type) block = block[getSubBlockPos(x, y)];
         if (block === undefined || block[0] !== type) {
-          timerList.splice(i, 1);
+          timerList.splice(j, 1);
           continue;
         }
         block[index] -= dt;
         if (block[index] <= 0) {
           block[index] = 0;
-          timerList.splice(i, 1);
+          timerList.splice(j, 1);
           // preform action
           switch (type) {
             case 72:
@@ -1302,7 +1304,11 @@ function nextFrame(timeStamp) {
               break;
           }
         }
-        shouldDrawLevel = true;
+        timerRunThrough++;
+        if (timerRunThrough >= timerDrawDelay) {
+          shouldDrawLevel = true;
+          timerRunThrough = 0;
+        }
       }
       // death
       if (!player.godMode && shouldDie && !player.isDead) player.isDead = true;
@@ -1459,7 +1465,9 @@ function respawn(start = false) {
   for (let x in level) {
     for (let y in level[x]) {
       if (blockIncludes(level[x][y], 31)) {
-        editProp(x, y, 31, 3, "used/unsaved", "unused", true);
+        if (start) {
+          editProp(x, y, 31, 3, false, "unused", true);
+        } else editProp(x, y, 31, 3, "used/unsaved", "unused", true);
         shouldDraw = true;
       }
       if (blockIncludes(level[x][y], 72)) {
@@ -1470,6 +1478,7 @@ function respawn(start = false) {
     }
   }
   if (shouldDraw) drawLevel();
+  adjustScreen();
 }
 function setSpawn(x, y, start = false) {
   player.spawnPoint = [
@@ -1573,13 +1582,18 @@ function load(name) {
   player.currentSave = name;
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
-  id("levelLayer").height = level[0].length * blockSize;
-  id("levelLayer").width = level.length * blockSize;
-  prevLevel = [];
+  id("levelLayer").width = Math.min(
+    level.length * blockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("levelLayer").height = Math.min(
+    level[0].length * blockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  adjustLevelSize(true);
   respawn(true);
-  drawLevel();
+  drawLevel(true);
   drawGrid();
-  adjustScreen(true);
   updateSaveMenu();
 }
 function exportSave(name) {
@@ -2180,6 +2194,87 @@ function openInfo() {
   if (id("mainInfo").style.bottom == "0%") {
     id("mainInfo").style.bottom = "100%";
   } else id("mainInfo").style.bottom = "0%";
+}
+function changeLevelSize(dir, num) {
+  switch (dir) {
+    case "left":
+      if (num > 0) {
+        for (let j = 0; j < num; j++) {
+          level.unshift([]);
+          level[0].length = level[1].length;
+          level[0].fill(0);
+        }
+      }
+      if (num < 0) {
+        for (let j = 0; j > num; j--) {
+          if (level.length > 1) level.shift();
+        }
+      }
+      player.spawnPoint[0] += num;
+      player.startPoint[0] += num;
+      player.x += blockSize * num;
+      timerList.map(function (x) {
+        x[0] += num;
+        return x;
+      });
+      break;
+    case "right":
+      if (num > 0) {
+        for (let j = 0; j < num; j++) {
+          level.push([]);
+          level[level.length - 1].length = level[0].length;
+          level[level.length - 1].fill(0);
+        }
+      }
+      if (num < 0) {
+        for (let j = 0; j > num; j--) {
+          if (level.length > 1) level.pop();
+        }
+      }
+      break;
+    case "up":
+      for (let i in level) {
+        if (num > 0) for (let j = 0; j < num; j++) level[i].unshift(0);
+        if (num < 0) {
+          for (let j = 0; j > num; j--) {
+            if (level[0].length > 1) level[i].shift();
+          }
+        }
+      }
+      player.spawnPoint[1] += num;
+      player.startPoint[1] += num;
+      player.y += blockSize * num;
+      timerList.map(function (x) {
+        x[1] += num;
+        return x;
+      });
+      break;
+    case "down":
+      for (let i in level) {
+        if (num > 0) for (let j = 0; j < num; j++) level[i].push(0);
+        if (num < 0) {
+          for (let j = 0; j > num; j--) {
+            if (level[0].length > 1) level[i].pop();
+          }
+        }
+      }
+      break;
+    default:
+  }
+  id("lvlWidth").innerHTML = level.length;
+  id("levelLayer").width = Math.min(
+    level.length * blockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("lvlHeight").innerHTML = level[0].length;
+  id("levelLayer").height = Math.min(
+    level[0].length * blockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  prevLevel = [];
+  drawLevel();
+  drawGrid();
+  addVersion();
 }
 function deepCopy(inObject) {
   //definitely not copied from somewhere else

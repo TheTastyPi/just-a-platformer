@@ -540,3 +540,12 @@ Both
 Editor
 
 - \[shift] + \[R] now also resets checkpoint
+
+### 14 Apr. 2021
+
+Editor
+
+- Optimization for extremely large levels
+- Refactored the level size change code
+- Fixed bug where switch state doesn't reset on start
+- Removed some frames from unstable block's animation
