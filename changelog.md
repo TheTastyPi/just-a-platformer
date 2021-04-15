@@ -555,3 +555,13 @@ Editor
 Editor
 
 - Fixed a bug where moving the level with \[ctrl] drag causes weird stuff to happen
+
+#### 15 Apr. 2021
+
+Editor
+
+- Made unstable blocks have slightly more frames, since they literally only have like 2 because I went too far
+
+Both
+
+- Made th credit text smaller on mobile because the text were overflowing in landscape mode

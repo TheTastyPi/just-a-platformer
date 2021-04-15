@@ -396,15 +396,15 @@ var prevVersions = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1]
   ]
 ];
+var editDisabled = false;
+var lastFrame = 0;
+var haltThreshold = 100;
+var simReruns = 20;
 var timerList = [];
 var timerRunThrough = 0;
 var timerDrawDelay = 15 * simReruns;
 var sinceLastSave = 0;
 var currentVersion = 0;
-var editDisabled = false;
-var lastFrame = 0;
-var haltThreshold = 100;
-var simReruns = 20;
 var canSwitch = true;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
