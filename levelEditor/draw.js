@@ -1,4 +1,4 @@
-var blockSize = 50;
+var baseBlockSize = 50;
 var lvlxOffset = 0;
 var lvlyOffset = 0;
 var prevPlayerx = 0;
@@ -28,14 +28,34 @@ var prevTimer = false;
 var prevTimerStage = 0;
 var prevJumpState = false;
 var prevSpawnPos = [];
-function drawLevel() {
+function drawLevel(clear = false) {
   let canvas = id("levelLayer");
-  id("background").style.width = level.length * blockSize + "px";
-  id("background").style.height = level[0].length * blockSize + "px";
-  for (let x in level) {
-    for (let y in level[x]) {
+  id("background").style.width = canvas.width + "px";
+  id("background").style.height = canvas.height + "px";
+  if (clear) {
+    prevLevel = [];
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+  }
+  for (
+    let x = Math.max(Math.floor(-camCenterx / baseBlockSize), 0);
+    x <=
+    Math.min(
+      Math.floor((canvas.width - camCenterx) / baseBlockSize),
+      level.length
+    );
+    x++
+  ) {
+    for (
+      let y = Math.max(Math.floor(-camCentery / baseBlockSize), 0);
+      y <=
+      Math.max(
+        Math.floor((canvas.height - camCentery) / baseBlockSize),
+        level[0].length
+      );
+      y++
+    ) {
       if (prevLevel[x] == undefined) {
-        drawBlock(canvas, parseInt(x), parseInt(y));
+        drawBlock(canvas, x, y);
       } else {
         let prevBlock = prevLevel[x][y];
         if (prevBlock == undefined) prevBlock = 0;
@@ -54,9 +74,9 @@ function drawLevel() {
             player.spawnPoint[0],
             player.spawnPoint[1]
           ]) &&
-            (arraysEqual(prevSpawnPos, [parseInt(x), parseInt(y)]) ||
+            (arraysEqual([Math.floor(prevSpawnPos[0]),Math.floor(prevSpawnPos[1])], [parseInt(x), parseInt(y)]) ||
               arraysEqual(
-                [player.spawnPoint[0], player.spawnPoint[1]],
+                [Math.floor(player.spawnPoint[0]), Math.floor(player.spawnPoint[1])],
                 [parseInt(x), parseInt(y)]
               )))
         )
@@ -64,7 +84,6 @@ function drawLevel() {
       }
     }
   }
-  adjustScreen();
   drawPlayer();
   prevLevel = deepCopy(level);
   prevSwitch = deepCopy(player.switchsOn);
@@ -83,11 +102,11 @@ function drawBlock(
   size = 1,
   useDefault = false
 ) {
-  blockSize *= size;
+  let blockSize = baseBlockSize * size;
   let lL = canvas.getContext("2d");
   lL.lineWidth = (blockSize * 3) / 25;
-  let xb = ((x + xOffset) / size) * blockSize;
-  let yb = ((y + yOffset) / size) * blockSize;
+  let xb = (x + xOffset) * baseBlockSize + camCenterx;
+  let yb = (y + yOffset) * baseBlockSize + camCentery;
   let clear = false;
   let data;
   if (typeof type === "object") {
@@ -124,7 +143,7 @@ function drawBlock(
       lL.fillStyle = "#FF0000";
       break;
     case 3:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.fillStyle = "#00FFFF88";
       } else lL.fillStyle = "#00888888";
       break;
@@ -165,12 +184,12 @@ function drawBlock(
       lL.fillStyle = "#FF880088";
       break;
     case 17:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.fillStyle = "#FFFF0088";
       } else lL.fillStyle = "#88880088";
       break;
     case 18:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.fillStyle = "#FFFF0088";
       } else lL.fillStyle = "#88880088";
       break;
@@ -339,7 +358,7 @@ function drawBlock(
       lL.fillStyle = `hsla(${(data[1] / 5) * 360},100%,50%,0.5)`;
       break;
     case 72:
-      lL.fillStyle = `rgb(${(1-Math.min(data[2]/data[1],1))*255},0,0)`;
+      lL.fillStyle = `rgb(${(1 - Math.min(data[2] / data[1], 1)) * 255},0,0)`;
       if (data[2] === 0) lL.fillStyle = `rgba(255,0,0,0.5)`;
       break;
     default:
@@ -369,7 +388,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 3:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.strokeStyle = "#00888888";
       } else lL.strokeStyle = "#00444488";
       lL.beginPath();
@@ -766,7 +785,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 17:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.strokeStyle = "#88880088";
       } else lL.strokeStyle = "#44440088";
       lL.beginPath();
@@ -780,7 +799,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 18:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.strokeStyle = "#88880088";
       } else lL.strokeStyle = "#44440088";
       lL.beginPath();
@@ -1470,11 +1489,11 @@ function drawBlock(
       break;
     case 52:
       if (!sOn[data[4]] !== !data[3]) {
-        drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       } else {
-        drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       }
 
       lL.fillStyle = "#00880044";
@@ -1501,11 +1520,11 @@ function drawBlock(
       break;
     case 53:
       if (tOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       } else {
-        drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       }
 
       lL.fillStyle = "#88888844";
@@ -1536,11 +1555,11 @@ function drawBlock(
       break;
     case 54:
       if (jOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       } else {
-        drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       }
 
       lL.fillStyle = "#88440044";
@@ -2154,87 +2173,151 @@ function drawBlock(
       }
       break;
     case 72:
-      lL.strokeStyle = `rgb(${(1-Math.min(data[2]/data[1],1))*128 + 127},127,127)`;
+      lL.strokeStyle = `rgb(${
+        (1 - Math.min(data[2] / data[1], 1)) * 128 + 127
+      },127,127)`;
       if (data[2] === 0) lL.strokeStyle = `rgba(127,0,0,0.5)`;
       lL.fillStyle = lL.strokeStyle;
       lL.beginPath();
-      lL.moveTo(xb+blockSize/2,yb+blockSize/25*3);
-      lL.lineTo(xb+blockSize/2,yb+blockSize/4*3);
+      lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + blockSize / 2, yb + (blockSize / 4) * 3);
       lL.stroke();
 
       lL.beginPath();
-      lL.arc(xb+blockSize/2,yb+blockSize/8*7,blockSize/25*2,0,2*Math.PI);
+      lL.arc(
+        xb + blockSize / 2,
+        yb + (blockSize / 8) * 7,
+        (blockSize / 25) * 2,
+        0,
+        2 * Math.PI
+      );
       lL.fill();
+      break;
+    case 73:
+      drawBlock(canvas, x, y, data[1], 0, 0, 1 / 2, useDefault);
+      drawBlock(canvas, x, y, data[2], 0, 1 / 2, 1 / 2, useDefault);
+      drawBlock(canvas, x, y, data[3], 1 / 2, 0, 1 / 2, useDefault);
+      drawBlock(canvas, x, y, data[4], 1 / 2, 1 / 2, 1 / 2, useDefault);
       break;
     default:
   }
-  blockSize /= size;
 }
 function drawGrid() {
   let canvas = id("grid");
   let g = canvas.getContext("2d");
-  g.strokeStyle = "#888888";
-  g.lineWidth = blockSize / 25;
-  canvas.width = level.length * blockSize;
-  canvas.height = level[0].length * blockSize;
-  for (let x in level) {
-    x = parseInt(x);
-    if (x === 0) continue;
+  g.lineWidth = baseBlockSize / 25;
+  canvas.width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  canvas.height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  for (let x = 0.5; x < canvas.width / baseBlockSize + 0.5; x += 0.5) {
+    if (x % 1 === 0.5) {
+      g.strokeStyle = "#BBBBBB";
+    } else g.strokeStyle = "#444444";
     g.beginPath();
-    g.moveTo(blockSize * x, 0);
-    g.lineTo(blockSize * x, canvas.height);
+    g.moveTo(baseBlockSize * x + (camCenterx % baseBlockSize), 0);
+    g.lineTo(baseBlockSize * x + (camCenterx % baseBlockSize), canvas.height);
     g.stroke();
   }
-  for (let y in level[0]) {
-    y = parseInt(y);
-    if (y === 0) continue;
+  for (let y = 0.5; y < canvas.height / baseBlockSize + 0.5; y += 0.5) {
+    if (y % 1 === 0.5) {
+      g.strokeStyle = "#BBBBBB";
+    } else g.strokeStyle = "#444444";
     g.beginPath();
-    g.moveTo(0, blockSize * y);
-    g.lineTo(canvas.width, blockSize * y);
+    g.moveTo(0, baseBlockSize * y + (camCentery % baseBlockSize));
+    g.lineTo(canvas.width, baseBlockSize * y + (camCentery % baseBlockSize));
     g.stroke();
   }
-  adjustScreen();
 }
 var camx = 0;
 var camy = 0;
 var camDelay = 10;
+var camCenterx = 0;
+var camCentery = 0;
+var prevCenterx = 0;
+var prevCentery = 0;
+var camOffsetLimit = baseBlockSize * 10;
 function adjustScreen(instant = false) {
+  let lvlx = level.length * baseBlockSize;
+  let lvly = level[0].length * baseBlockSize;
   if (player.playerFocus) {
-    lvlxOffset = Math.floor((window.innerWidth - level.length * blockSize) / 2);
-    lvlyOffset = Math.floor(
-      (window.innerHeight - level.length[0] * blockSize) / 2
-    );
+    lvlxOffset = Math.floor((window.innerWidth - lvlx) / 2);
     if (lvlxOffset < 0) {
       lvlxOffset =
         Math.floor(window.innerWidth / 2) -
         Math.floor(player.x + player.size / 2);
       if (lvlxOffset > 0) lvlxOffset = 0;
-      if (lvlxOffset < window.innerWidth - level.length * blockSize)
-        lvlxOffset = Math.floor(window.innerWidth - level.length * blockSize);
+      if (lvlxOffset < window.innerWidth - lvlx)
+        lvlxOffset = Math.floor(window.innerWidth - lvlx);
     }
-    lvlyOffset = Math.floor(
-      (window.innerHeight - level[0].length * blockSize) / 2
-    );
+    lvlyOffset = Math.floor((window.innerHeight - lvly) / 2);
     if (lvlyOffset < 0) {
       lvlyOffset =
         Math.floor(window.innerHeight / 2) -
         Math.floor(player.y + player.size / 2);
       if (lvlyOffset > 0) lvlyOffset = 0;
-      if (lvlyOffset < window.innerHeight - level[0].length * blockSize)
-        lvlyOffset = Math.floor(
-          window.innerHeight - level[0].length * blockSize
-        );
+      if (lvlyOffset < window.innerHeight - lvly)
+        lvlyOffset = Math.floor(window.innerHeight - lvly);
     }
   }
-  camx = Math.floor((camx * (camDelay - 1) + lvlxOffset) / camDelay);
-  camy = Math.floor((camy * (camDelay - 1) + lvlyOffset) / camDelay);
+  camx = (camx * (camDelay - 1) + lvlxOffset) / camDelay;
+  camy = (camy * (camDelay - 1) + lvlyOffset) / camDelay;
+  if (camx > lvlxOffset) {
+    camx = Math.floor(camx);
+  } else camx = Math.ceil(camx);
+  if (camy > lvlyOffset) {
+    camy = Math.floor(camy);
+  } else camy = Math.ceil(camy);
   if (Math.abs(camx - lvlxOffset) < 1 || instant) camx = lvlxOffset;
   if (Math.abs(camy - lvlyOffset) < 1 || instant) camy = lvlyOffset;
-  id("levelLayer").style.left = camx + "px";
-  id("levelLayer").style.top = camy + "px";
-  id("background").style.left = camx + "px";
-  id("background").style.top = camy + "px";
-  id("grid").style.left = camx + "px";
-  id("grid").style.top = camy + "px";
+
+  let camOffsetx = camx - camCenterx;
+  let camOffsety = camy - camCentery;
+  if (camOffsetx > 0 || camOffsetx < -2 * camOffsetLimit) {
+    camCenterx = camx + camOffsetLimit;
+    if (camCenterx > 0) camCenterx = 0;
+    if (camCenterx < id("levelLayer").width - lvlx)
+      camCenterx = id("levelLayer").width - lvlx;
+    camOffsetx = camx - camCenterx;
+    if (prevCenterx !== camCenterx) {
+      drawLevel(true);
+      drawGrid();
+    }
+    prevCenterx = camCenterx;
+  }
+  if (camOffsety > 0 || camOffsety < -2 * camOffsetLimit) {
+    camCentery = camy + camOffsetLimit;
+    if (camCentery > 0) camCentery = 0;
+    if (camCentery < id("levelLayer").height - lvly)
+      camCentery = id("levelLayer").height - lvly;
+    camOffsety = camy - camCentery;
+    if (prevCentery !== camCentery) {
+      drawLevel(true);
+      drawGrid();
+    }
+    prevCentery = camCentery;
+  }
+  id("levelLayer").style.left = camOffsetx + "px";
+  id("levelLayer").style.top = camOffsety + "px";
+  id("background").style.left = camOffsetx + "px";
+  id("background").style.top = camOffsety + "px";
+  id("grid").style.left = camOffsetx + "px";
+  id("grid").style.top = camOffsety + "px";
   drawPlayer();
+}
+function adjustLevelSize() {
+  id("levelLayer").width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("levelLayer").height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  drawLevel(true);
+  adjustScreen(true);
 }

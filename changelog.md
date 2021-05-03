@@ -508,3 +508,74 @@ Main Game
 Both
 
 - Added mobile support
+
+## 9 Apr. 2021
+
+Main Game
+
+- Added the final branch
+  - Game complete!
+- Added a time played stat
+- Added a death counter
+- Renamed "Info" to "Credits"
+- Added a "Wipe Save" option to mobile because yhvr forgot to do that
+
+Editor
+
+- Added a credits screen
+  - Also added the option to hide the button that opens said screen
+- Fixed a bug where undo/redoing a level size change doesn't update stuff properly
+- Fixed a bug where the save menu won't scroll
+- When spawning, you now start at the default size before transitioning to your saved size
+
+Both
+
+- Credited Yhvr for mobile support
+- Moved the credits button back to the top right to avoid conflict with the info display in the level editor
+- Added a fade in transition when opening the page
+- You can now jump by pressing down
+
+#### 11 Apr. 2021
+
+Editor
+
+- \[shift] + \[R] now also resets checkpoint
+
+### 14 Apr. 2021
+
+Editor
+
+- Optimization for extremely large levels
+- Refactored the level size change code
+- Fixed bug where switch state doesn't reset on start
+- Removed some frames from unstable block's animation
+
+#### 14 Apr. 2021 #2
+
+Editor
+
+- Fixed a bug where moving the level with \[ctrl] drag causes weird stuff to happen
+
+#### 15 Apr. 2021
+
+Editor
+
+- Made unstable blocks have slightly more frames, since they literally only have like 2 because I went too far
+
+Both
+
+- Made the credit text smaller on mobile because the text were overflowing in landscape mode
+
+## 3 May 2021
+
+Editor
+
+- Added mini blocks! Press \[M] to toggle their placement
+- Changed control when in sideways gravity
+- Fixed bug where the grid desyncs with the level
+- Fixed bug where changing level size can cause the viewing range to be out-of-bound
+- Fixed a bug where unstable sub-blocks just doesn't work
+
+Both
+
+- Using the power of basic kinematics, lower frame rates now no longer causes inaccurate physics

@@ -29,7 +29,8 @@ const player = {
   playerFocus: true,
   size: 20,
   targetSize: 20,
-  gameSpeed: 1
+  gameSpeed: 1,
+  miniBlock: false
 };
 const control = {
   lmb: false,
@@ -125,7 +126,8 @@ const blockName = [
   "Time Normal Field",
   "Time Fast Field",
   "Custom Time Field", // time (68,69,70,71)
-  "Unstable Block" // unstable (72)
+  "Unstable Block", // unstable (72)
+  "Mini Blocks" // mini (73)
 ];
 const blockSelect = [
   "Special",
@@ -256,7 +258,8 @@ const blockProperty = {
   63: ["Interval"],
   67: ["Size"],
   71: ["Time Speed"],
-  72: ["Breaking Period", "!Timer", "Reconstruction Period", "!Timer2"]
+  72: ["Breaking Period", "!Timer", "Reconstruction Period", "!Timer2"],
+  73: ["!Q1", "!Q2", "!Q3", "!Q4"]
 };
 const defaultProperty = {
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
@@ -283,7 +286,8 @@ const defaultProperty = {
   63: [4000],
   67: [20],
   71: [1],
-  72: [1000, 1000, 1000, 1000]
+  72: [1000, 1000, 1000, 1000],
+  73: [0, 0, 0, 0]
 };
 const propertyType = {
   17: [
@@ -330,7 +334,8 @@ const propertyType = {
   63: ["number"],
   67: ["number"],
   71: ["number"],
-  72: ["number", "number", "number", "number"]
+  72: ["number", "number", "number", "number"],
+  73: ["block", "block", "block", "block"]
 };
 const propertyLimit = {
   17: [
@@ -381,7 +386,8 @@ const propertyLimit = {
   63: [[500, 60 * 60 * 1000]],
   67: [[1, 500]],
   71: [[0, 5]],
-  72: [[1, 60 * 60 * 1000], "none", [1, Infinity], "none"]
+  72: [[1, 60 * 60 * 1000], "none", [1, Infinity], "none"],
+  73: ["none", "none", "none", "none"]
 };
 var prevVersions = [
   [
@@ -396,13 +402,15 @@ var prevVersions = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1]
   ]
 ];
-var timerList = [];
-var sinceLastSave = 0;
-var currentVersion = 0;
 var editDisabled = false;
 var lastFrame = 0;
 var haltThreshold = 100;
 var simReruns = 20;
+var timerList = [];
+var timerRunThrough = 0;
+var timerDrawDelay = 15 * simReruns;
+var sinceLastSave = 0;
+var currentVersion = 0;
 var canSwitch = true;
 var sinceLastTimerStage = 0;
 var timerStage = 0;
@@ -436,43 +444,50 @@ function nextFrame(timeStamp) {
         player.size = player.targetSize;
       player.x -= (player.size - prevSize) / 2;
       player.y -= (player.size - prevSize) / 2;
-      // velocity change
-      if (player.xg) {
-        if (!noFriction) {
-          player.yv *= Math.pow(0.5, dt / 6);
-          if (Math.abs(player.yv) < 1) player.yv = 0;
-        }
-        if (
-          (player.xv > player.g && player.g > 0) ||
-          (player.xv < player.g && player.g < 0)
-        ) {
-          player.xv -= (player.g * dt) / 500;
-          if (Math.abs(player.xv) < player.g) player.xv = player.g;
+      let prevx = player.x;
+      let prevy = player.y;
+      let prevxv = player.xv;
+      let prevyv = player.yv;
+      // no movement if dead
+      if (!player.noclip && !player.isDead) {
+        // position change
+        player.x +=
+          (player.xv * dt) / 500 +
+          (((player.g / 2) * dt * dt) / 500 / 500) * player.xg;
+        player.y +=
+          (player.yv * dt) / 500 +
+          (((player.g / 2) * dt * dt) / 500 / 500) * !player.xg;
+        // velocity change
+        if (player.xg) {
+          if (!noFriction) {
+            player.yv *= Math.pow(0.5, dt / 6);
+            if (Math.abs(player.yv) < 1) player.yv = 0;
+          }
+          if (
+            (player.xv > player.g && player.g > 0) ||
+            (player.xv < player.g && player.g < 0)
+          ) {
+            player.xv -= (player.g * dt) / 500;
+            if (Math.abs(player.xv) < player.g) player.xv = player.g;
+          } else {
+            player.xv += (player.g * dt) / 500;
+          }
         } else {
-          player.xv += (player.g * dt) / 500;
-        }
-      } else {
-        if (!noFriction) {
-          player.xv *= Math.pow(0.5, dt / 6);
-          if (Math.abs(player.xv) < 1) player.xv = 0;
-        }
-        if (
-          (player.yv > player.g && player.g > 0) ||
-          (player.yv < player.g && player.g < 0)
-        ) {
-          player.yv -= (player.g * dt) / 500;
-          if (Math.abs(player.yv) < player.g) player.yv = player.g;
-        } else {
-          player.yv += (player.g * dt) / 500;
+          if (!noFriction) {
+            player.xv *= Math.pow(0.5, dt / 6);
+            if (Math.abs(player.xv) < 1) player.xv = 0;
+          }
+          if (
+            (player.yv > player.g && player.g > 0) ||
+            (player.yv < player.g && player.g < 0)
+          ) {
+            player.yv -= (player.g * dt) / 500;
+            if (Math.abs(player.yv) < player.g) player.yv = player.g;
+          } else {
+            player.yv += (player.g * dt) / 500;
+          }
         }
       }
-      if (player.noclip || player.isDead) {
-        player.xv = 0;
-        player.yv = 0;
-      }
-      // position change
-      player.x += (player.xv * dt) / 500;
-      player.y += (player.yv * dt) / 500;
       // collision
       let hasSwitched = false;
       let hasTexted = false;
@@ -480,93 +495,114 @@ function nextFrame(timeStamp) {
       if (i === 0) {
         player.canWalljump = false;
       }
-      let bx1 = Math.floor((player.x - 0.01) / blockSize);
-      let bx2 = Math.floor((player.x + player.size) / blockSize);
-      let by1 = Math.floor((player.y - 0.01) / blockSize);
-      let by2 = Math.floor((player.y + player.size + 0.01) / blockSize);
+      let x1 = (player.x - 0.01) / baseBlockSize;
+      let x2 = (player.x + player.size) / baseBlockSize;
+      let y1 = (player.y - 0.01) / baseBlockSize;
+      let y2 = (player.y + player.size + 0.01) / baseBlockSize;
+      let bx1 = Math.floor(x1 * 2);
+      let bx2 = Math.floor(x2 * 2);
+      let by1 = Math.floor(y1 * 2);
+      let by2 = Math.floor(y2 * 2);
       let wallLeft = false;
       let wallRight = false;
       let wallTop = false;
       let wallBottom = false;
       // solid blocks
       if (!player.noclip) {
-        for (let x = bx1; x <= bx2; x++) {
-          for (let y = by1; y <= by2; y++) {
+        for (let tx = bx1; tx <= bx2; tx++) {
+          for (let ty = by1; ty <= by2; ty++) {
+            let blockSize = baseBlockSize;
+            let sizeMult = 0.5;
+            let x = tx / 2;
+            let y = ty / 2;
+            let bx = Math.floor(x);
+            let by = Math.floor(y);
+            let props = getBlock(x, y,true,true);
             let type = getBlockType(x, y);
-            let props = [];
-            if (hasProperty(getBlockType(x, y, false))) {
-              if (getSubBlockPos(x, y)) {
-                props = level[x][y][getSubBlockPos(x, y)];
-              } else props = level[x][y];
+            if (getBlock(x, y, false)[0] !== 73) {
+              x = bx;
+              y = by;
+              sizeMult = 1;
             }
             let onLeft = false;
             let onRight = false;
             let onTop = false;
             let onBottom = false;
             if (hasHitbox.includes(type) || [55, 56, 57, 58].includes(type)) {
-              let dx1 = Math.abs(
-                (player.x - (x + 1) * blockSize) / Math.min(-1, player.xv)
-              );
-              let dx2 = Math.abs(
-                (player.x + player.size - x * blockSize) /
-                  Math.max(1, player.xv)
-              );
-              let dy1 = Math.abs(
-                (player.y - (y + 1) * blockSize) / Math.min(-1, player.yv)
-              );
-              let dy2 = Math.abs(
-                (player.y + player.size - y * blockSize) /
-                  Math.max(1, player.yv)
-              );
+              let dx1 = ((x + sizeMult) * blockSize - prevx) / prevxv;
+              let dx2 = (x * blockSize - (prevx + player.size)) / prevxv;
+              let dy1 = ((y + sizeMult) * blockSize - prevy) / player.yv;
+              let dy2 = (y * blockSize - (prevy + player.size)) / prevyv;
+              if (dx1 < 0) dx1 = Infinity;
+              if (dx2 < 0) dx2 = Infinity;
+              if (dy1 < 0) dy1 = Infinity;
+              if (dy2 < 0) dy2 = Infinity;
+              if (isNaN(dx1)) dx1 = 0;
+              if (isNaN(dx2)) dx2 = 0;
+              if (isNaN(dy1)) dy1 = 0;
+              if (isNaN(dy2)) dy2 = 0;
               // top left corner
-              if (x === bx1 && y === by1) {
-                if (dx1 < dy1 && !hasHitbox.includes(getBlockType(x + 1, y))) {
+              if (tx === bx1 && ty === by1) {
+                if (
+                  dx1 < dy1 &&
+                  !hasHitbox.includes(getBlockType(tx / 2 + 0.5, ty / 2))
+                ) {
                   onLeft = true;
-                } else if (!hasHitbox.includes(getBlockType(x, y + 1))) {
+                } else if (
+                  !hasHitbox.includes(getBlockType(tx / 2, ty / 2 + 0.5))
+                ) {
                   onTop = true;
                 }
               }
               // bottom left corner
-              else if (x === bx1 && y === by2) {
-                if (dx1 < dy2 && !hasHitbox.includes(getBlockType(x + 1, y))) {
+              else if (tx === bx1 && ty === by2) {
+                if (
+                  dx1 < dy2 &&
+                  !hasHitbox.includes(getBlockType(tx / 2 + 0.5, ty / 2))
+                ) {
                   onLeft = true;
-                } else if (!hasHitbox.includes(getBlockType(x, y - 1))) {
+                } else if (
+                  !hasHitbox.includes(getBlockType(tx / 2, ty / 2 - 0.5))
+                ) {
                   onBottom = true;
                 }
               }
               // top right corner
-              else if (x === bx2 && y === by1) {
-                if (dx2 < dy1 && !hasHitbox.includes(getBlockType(x - 1, y))) {
+              else if (tx === bx2 && ty === by1) {
+                if (
+                  dx2 < dy1 &&
+                  !hasHitbox.includes(getBlockType(tx / 2 - 0.5, ty / 2))
+                ) {
                   onRight = true;
-                } else if (!hasHitbox.includes(getBlockType(x, y + 1))) {
+                } else if (
+                  !hasHitbox.includes(getBlockType(tx / 2, ty / 2 + 0.5))
+                ) {
                   onTop = true;
                 }
               }
               // bottom right corner
-              else if (x === bx2 && y === by2) {
-                if (dx2 < dy2 && !hasHitbox.includes(getBlockType(x - 1, y))) {
+              else if (tx === bx2 && ty === by2) {
+                if (
+                  dx2 < dy2 &&
+                  !hasHitbox.includes(getBlockType(tx / 2 - 0.5, ty / 2))
+                ) {
                   onRight = true;
-                } else if (!hasHitbox.includes(getBlockType(x, y - 1))) {
+                } else if (
+                  !hasHitbox.includes(getBlockType(tx / 2, ty / 2 - 0.5))
+                ) {
                   onBottom = true;
                 }
               }
               // left bound
-              else if (x === bx1) onLeft = true;
+              else if (tx === bx1) onLeft = true;
               // right bound
-              else if (x === bx2) onRight = true;
+              else if (tx === bx2) onRight = true;
               // top bound
-              else if (y === by1) onTop = true;
+              else if (ty === by1) onTop = true;
               // bottom bound
-              else if (y === by2) onBottom = true;
+              else if (ty === by2) onBottom = true;
               // inside
               else if (hasHitbox.includes(type)) shouldDie = true;
-              // velocity check
-              if (player.xv < 0) {
-                onRight = false;
-              } else if (player.xv > 0) onLeft = false;
-              if (player.yv < 0) {
-                onBottom = false;
-              } else if (player.yv > 0) onTop = false;
               // one-way block special zone
               if ([55, 57, 58].includes(type)) onLeft = false;
               if ([56, 57, 58].includes(type)) onRight = false;
@@ -583,7 +619,7 @@ function nextFrame(timeStamp) {
                 case 56:
                   if (
                     player.x - (player.xv * dt) / 1000 + 1 <
-                    (x + 1) * blockSize
+                    (x + sizeMult) * blockSize
                   )
                     onLeft = false;
                   break;
@@ -597,7 +633,7 @@ function nextFrame(timeStamp) {
                 case 58:
                   if (
                     player.y - (player.yv * dt) / 1000 + 1 <
-                    (y + 1) * blockSize
+                    (y + sizeMult) * blockSize
                   )
                     onTop = false;
                   break;
@@ -620,11 +656,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 5:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 62].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(x + 1, j))
+                        !hasHitbox.includes(getBlockType(x + sizeMult, j / 2))
                       )
                         break;
                       if (j === by2) {
@@ -635,11 +671,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 24:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 62].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(x + 1, j))
+                        !hasHitbox.includes(getBlockType(x + sizeMult, j / 2))
                       )
                         break;
                       if (j === by2) {
@@ -650,11 +686,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 47:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 62].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(x + 1, j))
+                        !hasHitbox.includes(getBlockType(x + sizeMult, j / 2))
                       )
                         break;
                       if (j === by2) {
@@ -665,13 +701,13 @@ function nextFrame(timeStamp) {
                     break;
                   case 62:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x2, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 62 &&
                         (![5, 24, 47].includes(jtype) ||
                           (player.g < 0 && player.xg)) &&
-                        !hasHitbox.includes(getBlockType(x + 1, j))
+                        !hasHitbox.includes(getBlockType(x + sizeMult, j / 2))
                       )
                         break;
                       if (j === by2 && player.xv < 0) {
@@ -683,11 +719,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 40:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 40 &&
-                        !hasHitbox.includes(getBlockType(x + 1, j))
+                        !hasHitbox.includes(getBlockType(x + sizeMult, j / 2))
                       )
                         break;
                       if (j === by2) onIce = true;
@@ -712,11 +748,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 5:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 61].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(x - 1, j))
+                        !hasHitbox.includes(getBlockType(x - 0.5, j / 2))
                       )
                         break;
                       if (j === by2) {
@@ -727,11 +763,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 24:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 61].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(x - 1, j))
+                        !hasHitbox.includes(getBlockType(x - 0.5, j / 2))
                       )
                         break;
                       if (j === by2) {
@@ -742,11 +778,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 47:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 61].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(x - 1, j))
+                        !hasHitbox.includes(getBlockType(x - 0.5, j / 2))
                       )
                         break;
                       if (j === by2) {
@@ -757,13 +793,13 @@ function nextFrame(timeStamp) {
                     break;
                   case 61:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 61 &&
                         (![5, 24, 47].includes(jtype) ||
                           (player.g > 0 && player.xg)) &&
-                        !hasHitbox.includes(getBlockType(x - 1, j))
+                        !hasHitbox.includes(getBlockType(x - 0.5, j / 2))
                       )
                         break;
                       if (j === by2 && player.xv > 0) {
@@ -775,11 +811,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 40:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x, j);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 40 &&
-                        !hasHitbox.includes(getBlockType(x - 1, j))
+                        !hasHitbox.includes(getBlockType(x - 0.5, j / 2))
                       )
                         break;
                       if (j === by2) onIce = true;
@@ -804,11 +840,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 5:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 26].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(j, y + 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y + sizeMult))
                       )
                         break;
                       if (j === bx2) {
@@ -819,11 +855,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 24:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 26].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(j, y + 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y + sizeMult))
                       )
                         break;
                       if (j === bx2) {
@@ -834,11 +870,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 47:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 26].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(j, y + 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y + sizeMult))
                       )
                         break;
                       if (j === bx2) {
@@ -849,13 +885,13 @@ function nextFrame(timeStamp) {
                     break;
                   case 26:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 26 &&
                         (![5, 24, 47].includes(jtype) ||
                           (player.g < 0 && !player.xg)) &&
-                        !hasHitbox.includes(getBlockType(j, y + 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y + sizeMult))
                       )
                         break;
                       if (j === bx2 && player.yv < 0) {
@@ -867,11 +903,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 40:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 40 &&
-                        !hasHitbox.includes(getBlockType(j, y + 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y + sizeMult))
                       )
                         break;
                       if (j === bx2) onIce = true;
@@ -896,11 +932,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 5:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 25].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(j, y - 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y - 0.5))
                       )
                         break;
                       if (j === bx2) {
@@ -911,11 +947,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 24:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 25].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(j, y - 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y - 0.5))
                       )
                         break;
                       if (j === bx2) {
@@ -926,11 +962,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 47:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 25].includes(jtype) &&
-                        !hasHitbox.includes(getBlockType(j, y - 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y - 0.5))
                       )
                         break;
                       if (j === bx2) {
@@ -941,13 +977,13 @@ function nextFrame(timeStamp) {
                     break;
                   case 25:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 25 &&
                         (![5, 24, 47].includes(jtype) ||
                           (player.g > 0 && !player.xg)) &&
-                        !hasHitbox.includes(getBlockType(j, y - 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y - 0.5))
                       )
                         break;
                       if (j === bx2 && player.yv > 0) {
@@ -959,11 +995,11 @@ function nextFrame(timeStamp) {
                     break;
                   case 40:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j, y);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 40 &&
-                        !hasHitbox.includes(getBlockType(j, y - 1))
+                        !hasHitbox.includes(getBlockType(j / 2, y - 0.5))
                       )
                         break;
                       if (j === bx2) onIce = true;
@@ -973,9 +1009,10 @@ function nextFrame(timeStamp) {
                     break;
                 }
               }
-              if (getBlockType(x, y, false) === 72 && props[1] <= props[2]) {
+              if (props[0] === 72 && props[1] <= props[2]) {
                 editProp(x, y, 72, 2, false, props[1]);
-                addTimer(x, y, 2, 72);
+                let subBlockPos = getSubBlockPos(x, y);
+                addTimer(x, y, 2, 72, subBlockPos);
                 shouldDrawLevel = true;
               }
             }
@@ -984,30 +1021,32 @@ function nextFrame(timeStamp) {
         // collision action
         let onFloor = false;
         if (wallLeft) {
-          player.x = (bx1 + 1) * blockSize;
+          player.x = ((bx1 + 1) * baseBlockSize) / 2;
           player.xv = Math.max(0, player.xv);
           if (player.g < 0 && player.xg && player.xv <= 0) onFloor = true;
         }
         if (wallRight) {
-          player.x = bx2 * blockSize - player.size;
+          player.x = (bx2 * baseBlockSize) / 2 - player.size;
           player.xv = Math.min(0, player.xv);
           if (player.g > 0 && player.xg && player.xv >= 0) onFloor = true;
         }
         if (wallTop) {
-          player.y = (by1 + 1) * blockSize;
+          player.y = ((by1 + 1) * baseBlockSize) / 2;
           player.yv = Math.max(0, player.yv);
           if (player.g < 0 && !player.xg && player.yv <= 0) onFloor = true;
         }
         if (wallBottom) {
-          player.y = by2 * blockSize - player.size;
+          player.y = (by2 * baseBlockSize) / 2 - player.size;
           player.yv = Math.min(0, player.yv);
           if (player.g > 0 && !player.xg && player.yv >= 0) onFloor = true;
         }
         // fully in block
-        let rx1 = Math.floor(player.x / blockSize);
-        let rx2 = Math.floor((player.x + player.size) / blockSize);
-        let ry1 = Math.floor(player.y / blockSize);
-        let ry2 = Math.floor((player.y + player.size) / blockSize);
+        let rx1 = Math.floor((player.x / baseBlockSize) * 2) / 2;
+        let rx2 =
+          Math.floor(((player.x + player.size) / baseBlockSize) * 2) / 2;
+        let ry1 = Math.floor((player.y / baseBlockSize) * 2) / 2;
+        let ry2 =
+          Math.floor(((player.y + player.size) / baseBlockSize) * 2) / 2;
         if (
           hasHitbox.includes(getBlockType(rx1, ry1)) &&
           hasHitbox.includes(getBlockType(rx1, ry2)) &&
@@ -1017,19 +1056,25 @@ function nextFrame(timeStamp) {
           shouldDie = true;
         // everything else
         if (!shouldDie) {
-          for (let x = bx1; x <= bx2; x++) {
-            for (let y = by1; y <= by2; y++) {
+          for (let tx = bx1; tx <= bx2; tx++) {
+            for (let ty = by1; ty <= by2; ty++) {
+              let blockSize = baseBlockSize;
+              let sizeMult = 0.5;
+              let x = tx / 2;
+              let y = ty / 2;
+              let bx = Math.floor(x);
+              let by = Math.floor(y);
+              let props = getBlock(x, y,true,true);
               let type = getBlockType(x, y);
-              let props = [];
-              if (hasProperty(type)) {
-                if (getSubBlockPos(x, y)) {
-                  props = level[x][y][getSubBlockPos(x, y)];
-                } else props = level[x][y];
+              if (getBlockType(x, y, false) !== 73) {
+                x = bx;
+                y = by;
+                sizeMult = 1;
               }
               if (
-                player.x < (x + 1) * blockSize - 0.1 &&
+                player.x < (x + sizeMult) * blockSize - 0.1 &&
                 player.x + player.size > x * blockSize + 0.1 &&
-                player.y < (y + 1) * blockSize - 0.1 &&
+                player.y < (y + sizeMult) * blockSize - 0.1 &&
                 player.y + player.size > y * blockSize + 0.1
               ) {
                 switch (type) {
@@ -1194,7 +1239,7 @@ function nextFrame(timeStamp) {
                       let text = props[1];
                       id("textBlockText").innerHTML = text;
                       id("textBlockText").style.display = "block";
-                      let tx = x * blockSize + blockSize / 2 + lvlxOffset;
+                      let tx = blockSize * (x + sizeMult / 2) + lvlxOffset;
                       if (tx < id("textBlockText").clientWidth / 2)
                         tx = id("textBlockText").clientWidth / 2;
                       if (
@@ -1204,7 +1249,7 @@ function nextFrame(timeStamp) {
                         tx =
                           window.innerWidth -
                           id("textBlockText").clientWidth / 2;
-                      let ty = y * blockSize + blockSize / 2 + lvlyOffset;
+                      let ty = blockSize * (y + sizeMult / 2) + lvlyOffset;
                       if (ty < id("textBlockText").clientHeight / 2)
                         ty = id("textBlockText").clientHeight / 2;
                       if (
@@ -1227,12 +1272,21 @@ function nextFrame(timeStamp) {
                     break;
                   // portal
                   case 41:
-                    player.x =
-                      (x + props[1]) * blockSize +
-                      (blockSize - player.size) / 2;
-                    player.y =
-                      (y + props[2]) * blockSize +
-                      (blockSize - player.size) / 2;
+                    if (getBlockType(x, y, false) === 73) {
+                      player.x =
+                        (x + props[1]) * blockSize +
+                        (blockSize / 2 - player.size) / 2;
+                      player.y =
+                        (y + props[2]) * blockSize +
+                        (blockSize / 2 - player.size) / 2;
+                    } else {
+                      player.x =
+                        (x + props[1]) * blockSize +
+                        (blockSize - player.size) / 2;
+                      player.y =
+                        (y + props[2]) * blockSize +
+                        (blockSize - player.size) / 2;
+                    }
                     break;
                   default:
                     break;
@@ -1266,22 +1320,23 @@ function nextFrame(timeStamp) {
         player.timerOn = !player.timerOn;
         timerStage = 0;
       }
-      for (let i in timerList) {
-        let info = timerList[i];
+      for (let j in timerList) {
+        let info = timerList[j];
         let x = info[0];
         let y = info[1];
         let index = info[2];
         let type = info[3];
-        let block = level[x][y];
-        if (block[0] !== type) block = block[getSubBlockPos(x, y)];
+        let subBlock = info[4];
+        let block = getBlock(x, y);
+        if (subBlock) block = block[subBlock];
         if (block === undefined || block[0] !== type) {
-          timerList.splice(i, 1);
+          timerList.splice(j, 1);
           continue;
         }
         block[index] -= dt;
         if (block[index] <= 0) {
           block[index] = 0;
-          timerList.splice(i, 1);
+          timerList.splice(j, 1);
           // preform action
           switch (type) {
             case 72:
@@ -1289,7 +1344,7 @@ function nextFrame(timeStamp) {
                 case 2:
                   if (block[3] === Infinity) break;
                   block[4] = block[3];
-                  addTimer(x, y, 4, 72);
+                  addTimer(x, y, 4, 72, subBlock);
                   break;
                 case 4:
                   block[2] = block[1];
@@ -1301,8 +1356,13 @@ function nextFrame(timeStamp) {
             default:
               break;
           }
+          shouldDrawLevel = true;
         }
-        shouldDrawLevel = true;
+        timerRunThrough++;
+        if (timerRunThrough >= timerDrawDelay) {
+          shouldDrawLevel = true;
+          timerRunThrough = 0;
+        }
       }
       // death
       if (!player.godMode && shouldDie && !player.isDead) player.isDead = true;
@@ -1312,11 +1372,11 @@ function nextFrame(timeStamp) {
       }
       // OoB check
       if (player.x < 0) player.x = 0;
-      if (player.x > level.length * blockSize - player.size)
-        player.x = level.length * blockSize - player.size;
+      if (player.x > level.length * baseBlockSize - player.size)
+        player.x = level.length * baseBlockSize - player.size;
       if (player.y < 0) player.y = 0;
-      if (player.y > level[0].length * blockSize - player.size)
-        player.y = level[0].length * blockSize - player.size;
+      if (player.y > level[0].length * baseBlockSize - player.size)
+        player.y = level[0].length * baseBlockSize - player.size;
     }
     dt *= simReruns;
     // key input
@@ -1326,18 +1386,18 @@ function nextFrame(timeStamp) {
       if (control.up) player.y -= dt / 4;
       if (control.down) player.y += dt / 4;
     } else if (player.xg) {
-      if (control.left && player.yv > -player.moveSpeed) {
+      if (control.up && player.yv > -player.moveSpeed) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.yv < -player.moveSpeed / (noFriction ? 6 : 1))
           player.yv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
-      if (control.right && player.yv < player.moveSpeed) {
+      if (control.down && player.yv < player.moveSpeed) {
         player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.yv > player.moveSpeed / (noFriction ? 6 : 1))
           player.yv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
-        control.up &&
+        (control.left || control.right) &&
         player.canJump &&
         (player.currentJumps > 0 || player.godMode) &&
         !player.canWalljump
@@ -1360,7 +1420,7 @@ function nextFrame(timeStamp) {
           player.xv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
-        control.up &&
+        (control.up || control.down) &&
         player.canJump &&
         (player.currentJumps > 0 || player.godMode) &&
         !player.canWalljump
@@ -1372,23 +1432,31 @@ function nextFrame(timeStamp) {
         player.currentJumps--;
       }
     }
-    if (player.canWalljump && control.up) {
+    if (
+      player.canWalljump &&
+      (((control.up || control.down) && !player.xg) ||
+        ((control.left || control.right) && player.xg))
+    ) {
       if (player.wallJumpDir === "left" && control.left) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.xv = -600;
         player.yv = -Math.sign(player.g) * player.jumpHeight;
       }
       if (player.wallJumpDir === "right" && control.right) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.xv = 600;
         player.yv = -Math.sign(player.g) * player.jumpHeight;
       }
-      if (player.wallJumpDir === "up" && control.left) {
+      if (player.wallJumpDir === "up" && control.up) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.yv = -600;
         player.xv = -Math.sign(player.g) * player.jumpHeight;
       }
-      if (player.wallJumpDir === "down" && control.right) {
+      if (player.wallJumpDir === "down" && control.down) {
+        player.canJump = false;
         player.jumpOn = !player.jumpOn;
         player.yv = 600;
         player.xv = -Math.sign(player.g) * player.jumpHeight;
@@ -1413,59 +1481,10 @@ function addVersion() {
   }
 }
 function getDefaultSpawn() {
-  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1];
+  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1, false];
 }
-function toStart() {
-  player.spawnTimer = player.spawnDelay;
-  player.isDead = false;
-  player.xv = 0;
-  player.yv = 0;
-  player.g = player.startPoint[2];
-  player.maxJumps = player.startPoint[3];
-  player.currentJumps = player.maxJumps;
-  player.moveSpeed = player.startPoint[4];
-  let shouldDraw =
-    !arraysEqual(player.switchsOn, player.startPoint[5]) ||
-    player.jumpOn !== player.startPoint[6] ||
-    player.timerOn !== player.startPoint[7] ||
-    timerStage !== 0;
-  player.switchsOn = [...player.startPoint[5]];
-  player.jumpOn = player.startPoint[6];
-  player.timerOn = player.startPoint[7];
-  timerStage = 0;
-  sinceLastTimerStage = 0;
-  player.xg = player.startPoint[8];
-  player.timerInterval = player.startPoint[9];
-  player.targetSize = player.startPoint[10];
-  player.gameSpeed = player.startPoint[11];
-  let spawnx = player.startPoint[0] * blockSize;
-  let spawny = player.startPoint[1] * blockSize;
-  if (player.xg) {
-    spawny += (blockSize - player.size) / 2;
-    if (player.g > 0) spawnx += blockSize - player.size;
-  } else {
-    spawnx += (blockSize - player.size) / 2;
-    if (player.g > 0) spawny += blockSize - player.size;
-  }
-  player.x = spawnx;
-  player.y = spawny;
-  timerList = [];
-  for (let x in level) {
-    for (let y in level[x]) {
-      if (blockIncludes(level[x][y], 31)) {
-        editProp(x, y, 31, 3, false, "unused", true);
-        shouldDraw = true;
-      }
-      if (blockIncludes(level[x][y], 72)) {
-        editProp(x, y, 72, 2, false, false, true, 1);
-        editProp(x, y, 72, 4, false, false, true, 3);
-        shouldDraw = true;
-      }
-    }
-  }
-  if (shouldDraw) drawLevel();
-}
-function respawn() {
+function respawn(start = false) {
+  if (start) player.spawnPoint = deepCopy(player.startPoint);
   player.spawnTimer = player.spawnDelay;
   player.isDead = false;
   player.xv = 0;
@@ -1487,9 +1506,13 @@ function respawn() {
   player.xg = player.spawnPoint[8];
   player.timerInterval = player.spawnPoint[9];
   player.targetSize = player.spawnPoint[10];
+  player.size = 20;
   player.gameSpeed = player.spawnPoint[11];
-  let spawnx = player.spawnPoint[0] * blockSize;
-  let spawny = player.spawnPoint[1] * blockSize;
+  let blockSize = baseBlockSize;
+  if (player.spawnPoint[12])
+    blockSize /= 2;
+  let spawnx = player.spawnPoint[0] * baseBlockSize;
+  let spawny = player.spawnPoint[1] * baseBlockSize;
   if (player.xg) {
     spawny += (blockSize - player.size) / 2;
     if (player.g > 0) spawnx += blockSize - player.size;
@@ -1500,13 +1523,16 @@ function respawn() {
   player.x = spawnx;
   player.y = spawny;
   timerList = [];
-  for (let x in level) {
-    for (let y in level[x]) {
-      if (blockIncludes(level[x][y], 31)) {
-        editProp(x, y, 31, 3, "used/unsaved", "unused", true);
+  for (let x = 0; x <= level.length - 1; x += 0.5) {
+    for (let y = 0; y <= level[0].length - 1; y += 0.5) {
+      let block = getBlock(x, y);
+      if (blockIncludes(block, 31)) {
+        if (start) {
+          editProp(x, y, 31, 3, false, "unused", true);
+        } else editProp(x, y, 31, 3, "used/unsaved", "unused", true);
         shouldDraw = true;
       }
-      if (blockIncludes(level[x][y], 72)) {
+      if (blockIncludes(block, 72)) {
         editProp(x, y, 72, 2, false, false, true, 1);
         editProp(x, y, 72, 4, false, false, true, 3);
         shouldDraw = true;
@@ -1514,8 +1540,18 @@ function respawn() {
     }
   }
   if (shouldDraw) drawLevel();
+  adjustScreen();
 }
 function setSpawn(x, y, start = false) {
+  let mini = true;
+  let bx = Math.floor(x);
+  let by = Math.floor(y);
+  let block = level[bx][by];
+  if (block[0] !== 73) {
+    mini = false;
+    x = bx;
+    y = by;
+  }
   player.spawnPoint = [
     x,
     y,
@@ -1528,12 +1564,14 @@ function setSpawn(x, y, start = false) {
     player.xg,
     player.timerInterval,
     player.targetSize,
-    player.gameSpeed
+    player.gameSpeed,
+    mini
   ];
   if (start) player.startPoint = deepCopy(player.spawnPoint);
-  for (let x in level) {
-    for (let y in level[x]) {
-      if (blockIncludes(level[x][y], 31)) {
+  for (let x; x <= level.length - 1; x += 0.5) {
+    for (let y; y <= level[0].length - 1; y += 0.5) {
+      let block = getBlock(x, y);
+      if (blockIncludes(block, 31)) {
         editProp(x, y, 31, 3, "used/unsaved", "used", true);
         shouldDraw = true;
       }
@@ -1617,13 +1655,18 @@ function load(name) {
   player.currentSave = name;
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
-  id("levelLayer").height = level[0].length * blockSize;
-  id("levelLayer").width = level.length * blockSize;
-  prevLevel = [];
-  toStart();
-  drawLevel();
+  id("levelLayer").width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("levelLayer").height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  adjustLevelSize(true);
+  respawn(true);
+  drawLevel(true);
   drawGrid();
-  adjustScreen(true);
   updateSaveMenu();
 }
 function exportSave(name) {
@@ -1817,11 +1860,12 @@ function updateSaveMenu() {
 function openPropertyMenu(
   x,
   y,
-  type = getBlockType(x, y, false),
+  type = getBlock(x, y)[0],
   editDefault = false,
   subProp = false,
   subPropName
 ) {
+  let block = getBlock(x, y);
   if (!isMobile) control.e = false;
   if (hasProperty(type)) {
     let props = blockProperty[type];
@@ -1872,11 +1916,11 @@ function openPropertyMenu(
                 }
               } else if (
                 !editDefault &&
-                level[x][y][parseInt(i) + 1][0] === blockSelect[j]
+                block[parseInt(i) + 1][0] === blockSelect[j]
               ) {
-                for (let k in level[x][y][parseInt(i) + 1]) {
+                for (let k in block[parseInt(i) + 1]) {
                   if (k == 0) continue;
-                  newVal.push(level[x][y][parseInt(i) + 1][k]);
+                  newVal.push(block[parseInt(i) + 1][k]);
                 }
               } else {
                 for (let k in defaultProperty[blockSelect[j]]) {
@@ -1891,10 +1935,10 @@ function openPropertyMenu(
       } else if (propertyType[type][i] === "boolean") {
         input = document.createElement("input");
         input.type = "checkbox";
-	  } else {
-		const isNumber = propertyType[type][i] === "number"
+      } else {
+        const isNumber = propertyType[type][i] === "number";
         input = document.createElement(isNumber ? "input" : "textarea");
-		  if (isNumber) input.type = "number";
+        if (isNumber) input.type = "number";
         let text;
         if (propertyLimit[type][i] !== "none") {
           text = "From ";
@@ -1913,7 +1957,7 @@ function openPropertyMenu(
       } else if (subProp) {
         startVal = JSON.parse(id(subPropName).value)[parseInt(i) + 1];
       } else {
-        startVal = level[x][y][parseInt(i) + 1];
+        startVal = block[parseInt(i) + 1];
       }
       if (typeof startVal === "object") startVal = JSON.stringify(startVal);
       if (propertyType[type][i] === "boolean") {
@@ -1998,7 +2042,7 @@ function openPropertyMenu(
             value[parseInt(i) + 1] = newVal;
             id(subPropName).value = JSON.stringify(value);
           } else {
-            level[x][y][parseInt(i) + 1] = newVal;
+            editProp(x, y, false, parseInt(i) + 1, false, newVal);
           }
         }
         if (type === 17) {
@@ -2056,122 +2100,149 @@ function addTooltip(elem, text) {
 function hasProperty(blockId) {
   return blockProperty[blockId] !== undefined;
 }
-function addTimer(x, y, index, type) {
-  if (!includesArray(timerList, [x, y, index, type])) {
-    timerList.push([x, y, index, type]);
+function addTimer(x, y, index, type, subBlock) {
+  if (!includesArray(timerList, [x, y, index, type, subBlock])) {
+    timerList.push([x, y, index, type, subBlock]);
   }
+}
+function getBlock(x, y, miniBlock = true, subBlock = false) {
+  if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
+    return 1;
+  }
+  let bx = Math.floor(x);
+  let by = Math.floor(y);
+  let block = level[bx][by];
+  if (block[0] === 73 && miniBlock)
+    block = block[1 + 2 * (bx !== x) + (by !== y)];
+  if (subBlock && getSubBlockPos(x, y)) block = block[getSubBlockPos(x, y)];
+  return block;
 }
 function getBlockType(x, y, subtype = true, block) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
     return 1;
   }
-  let type;
-  let props;
-  if (block === undefined) {
-    type = level[x][y];
-    if (typeof type === "object") {
-      props = type;
-      type = type[0];
-    }
-  } else type = block;
+  block ??= getBlock(x, y, subtype);
+  let type = block;
+  if (typeof type === "object") type = type[0];
   if (subtype) {
-    switch (type) {
-      case 32:
-        if (player.switchsOn[props[1]]) {
-          type = 1;
-        } else type = 0;
-        break;
-      case 33:
-        if (player.switchsOn[props[1]]) {
-          type = 0;
-        } else type = 1;
-        break;
-      case 34:
-        if (player.switchsOn[props[1]]) {
-          type = 2;
-        } else type = 0;
-        break;
-      case 35:
-        if (player.switchsOn[props[1]]) {
-          type = 0;
-        } else type = 2;
-        break;
-      case 36:
-        if (player.timerOn) {
-          type = 1;
-        } else type = 0;
-        break;
-      case 37:
-        if (player.timerOn) {
-          type = 0;
-        } else type = 1;
-        break;
-      case 38:
-        if (player.timerOn) {
-          type = 2;
-        } else type = 0;
-        break;
-      case 39:
-        if (player.timerOn) {
-          type = 0;
-        } else type = 2;
-        break;
-      case 42:
-        if (player.jumpOn) {
-          type = 1;
-        } else type = 0;
-        break;
-      case 43:
-        if (player.jumpOn) {
-          type = 0;
-        } else type = 1;
-        break;
-      case 44:
-        if (player.jumpOn) {
-          type = 2;
-        } else type = 0;
-        break;
-      case 45:
-        if (player.jumpOn) {
-          type = 0;
-        } else type = 2;
-        break;
-      case 72:
-        if (props[2] === 0) {
-          type = 0;
-        } else type = 1;
-        break;
-      default:
-        break;
-    }
-    if (hasProperty(type) && propertyType[type].includes("block")) {
-      type = props[getSubBlockPos(x, y)];
+    let prevType = -1;
+    while (prevType !== type) {
+      prevType = type;
+      switch (type) {
+        case 32:
+          if (player.switchsOn[block[1]]) {
+            type = 1;
+          } else type = 0;
+          break;
+        case 33:
+          if (player.switchsOn[block[1]]) {
+            type = 0;
+          } else type = 1;
+          break;
+        case 34:
+          if (player.switchsOn[block[1]]) {
+            type = 2;
+          } else type = 0;
+          break;
+        case 35:
+          if (player.switchsOn[block[1]]) {
+            type = 0;
+          } else type = 2;
+          break;
+        case 36:
+          if (player.timerOn) {
+            type = 1;
+          } else type = 0;
+          break;
+        case 37:
+          if (player.timerOn) {
+            type = 0;
+          } else type = 1;
+          break;
+        case 38:
+          if (player.timerOn) {
+            type = 2;
+          } else type = 0;
+          break;
+        case 39:
+          if (player.timerOn) {
+            type = 0;
+          } else type = 2;
+          break;
+        case 42:
+          if (player.jumpOn) {
+            type = 1;
+          } else type = 0;
+          break;
+        case 43:
+          if (player.jumpOn) {
+            type = 0;
+          } else type = 1;
+          break;
+        case 44:
+          if (player.jumpOn) {
+            type = 2;
+          } else type = 0;
+          break;
+        case 45:
+          if (player.jumpOn) {
+            type = 0;
+          } else type = 2;
+          break;
+        case 72:
+          if (block[2] === 0) {
+            type = 0;
+          } else type = 1;
+          break;
+        default:
+          break;
+      }
+      if (getSubBlockPos(x, y, type)) {
+        block = block[getSubBlockPos(x, y)];
+        type = deepCopy(block);
+        if (typeof type === "object") type = type[0];
+      }
     }
   }
   if (typeof type === "object") return type[0];
   return type;
 }
-function getSubBlockPos(x, y) {
-  let type = level[x][y];
-  if (type[0] === 52) {
-    if (!player.switchsOn[type[4]] !== !type[3]) {
+function getSubBlockPos(x, y, type) {
+  let block = getBlock(x, y);
+  type ??= block[0];
+  if (type === 52) {
+    if (!player.switchsOn[block[4]] !== !block[3]) {
       return 1;
     } else return 2;
   }
-  if (type[0] === 53) {
-    if (player.timerOn !== type[3]) {
+  if (type === 53) {
+    if (player.timerOn !== block[3]) {
       return 1;
     } else return 2;
   }
-  if (type[0] === 54) {
-    if (player.jumpOn !== type[3]) {
+  if (type === 54) {
+    if (player.jumpOn !== block[3]) {
       return 1;
     } else return 2;
   }
 }
+function editBlock(x, y, block, miniBlock = true) {
+  block = deepCopy(block);
+  let bx = Math.floor(x);
+  let by = Math.floor(y);
+  let miniBlockPos = 1 + 2 * (bx !== x) + (by !== y);
+  if (miniBlock) {
+    level[bx][by][miniBlockPos] = block;
+  } else level[bx][by] = block;
+}
 function editProp(x, y, type, index, from, to, all = false, toIndex = false) {
-  let block = level[x][y];
-  if (block[0] !== type) {
+  to = deepCopy(to);
+  let bx = Math.floor(x);
+  let by = Math.floor(y);
+  let miniBlockPos = 1 + 2 * (bx !== x) + (by !== y);
+  let block = level[bx][by];
+  if (block[0] === 73) block = block[miniBlockPos];
+  if (block[0] !== type && type !== false) {
     if (all) {
       for (let i in block) {
         if (i == 0) continue;
@@ -2220,6 +2291,93 @@ function blockIncludes(block, type) {
     return false;
   }
 }
+function openInfo() {
+  if (id("mainInfo").style.bottom == "0%") {
+    id("mainInfo").style.bottom = "100%";
+  } else id("mainInfo").style.bottom = "0%";
+}
+function changeLevelSize(dir, num) {
+  switch (dir) {
+    case "left":
+      if (num > 0) {
+        for (let j = 0; j < num; j++) {
+          level.unshift([]);
+          level[0].length = level[1].length;
+          level[0].fill(0);
+        }
+      }
+      if (num < 0) {
+        for (let j = 0; j > num; j--) {
+          if (level.length > 1) level.shift();
+        }
+      }
+      player.spawnPoint[0] += num;
+      player.startPoint[0] += num;
+      player.x += baseBlockSize * num;
+      timerList.map(function (x) {
+        x[0] += num;
+        return x;
+      });
+      break;
+    case "right":
+      if (num > 0) {
+        for (let j = 0; j < num; j++) {
+          level.push([]);
+          level[level.length - 1].length = level[0].length;
+          level[level.length - 1].fill(0);
+        }
+      }
+      if (num < 0) {
+        for (let j = 0; j > num; j--) {
+          if (level.length > 1) level.pop();
+        }
+      }
+      break;
+    case "up":
+      for (let i in level) {
+        if (num > 0) for (let j = 0; j < num; j++) level[i].unshift(0);
+        if (num < 0) {
+          for (let j = 0; j > num; j--) {
+            if (level[0].length > 1) level[i].shift();
+          }
+        }
+      }
+      player.spawnPoint[1] += num;
+      player.startPoint[1] += num;
+      player.y += baseBlockSize * num;
+      timerList.map(function (x) {
+        x[1] += num;
+        return x;
+      });
+      break;
+    case "down":
+      for (let i in level) {
+        if (num > 0) for (let j = 0; j < num; j++) level[i].push(0);
+        if (num < 0) {
+          for (let j = 0; j > num; j--) {
+            if (level[0].length > 1) level[i].pop();
+          }
+        }
+      }
+      break;
+    default:
+  }
+  id("lvlWidth").innerHTML = level.length;
+  id("levelLayer").width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("lvlHeight").innerHTML = level[0].length;
+  id("levelLayer").height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  prevLevel = [];
+  drawLevel();
+  drawGrid();
+  adjustScreen();
+  addVersion();
+}
 function deepCopy(inObject) {
   //definitely not copied from somewhere else
   let outObject, value, key;
@@ -2266,9 +2424,9 @@ function infinify(obj) {
   return obj;
 }
 function init() {
-  toStart();
-  id("levelLayer").height = level[0].length * blockSize;
-  id("levelLayer").width = level.length * blockSize;
+  id("levelLayer").height = level[0].length * baseBlockSize;
+  id("levelLayer").width = level.length * baseBlockSize;
+  respawn();
   drawLevel();
   drawGrid();
   let blockAmt = 0;
@@ -2291,8 +2449,8 @@ function init() {
       let blockDisp = document.createElement("div");
       let button = document.createElement("canvas");
       button.id = "blockSelect" + blockSelect[i];
-      button.height = blockSize;
-      button.width = blockSize;
+      button.height = baseBlockSize;
+      button.width = baseBlockSize;
       drawBlock(button, 0, 0, blockSelect[i], 0, 0, 1, true);
       setTimeout(function () {
         drawBlock(button, 0, 0, blockSelect[i], 0, 0, 1, true);
@@ -2331,14 +2489,14 @@ function init() {
       if (hasProperty(blockSelect[i])) {
         addTooltip(button, "[E] + LMB to edit default properties");
       }
-      blockDisp.style.width = blockSize + "px";
+      blockDisp.style.width = baseBlockSize + "px";
       blockDisp.style.marginRight = "5px";
       blockDisp.appendChild(button);
       blockDisp.appendChild(document.createElement("br"));
       blockDisp.appendChild(document.createTextNode(blockName[blockSelect[i]]));
       currentSect.appendChild(blockDisp);
       blockAmt++;
-      currentSect.style.minWidth = (blockSize + 5) * blockAmt + "px";
+      currentSect.style.minWidth = (baseBlockSize + 5) * blockAmt + "px";
     }
   }
   if (!isMobile) id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";

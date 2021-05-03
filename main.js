@@ -21,12 +21,18 @@ var player = {
   moveSpeed: 600,
   triggers: [],
   godMode: false,
-  reachedHub: false
+  reachedHub: false,
+  deaths: 0,
+  timePlayed: 0,
+  finalDeaths: 0,
+  finalTimePlayed: 0,
+  gameComplete: false
 };
 const control = {
   left: false,
   right: false,
-  up: false
+  up: false,
+  down: false
 };
 const hasHitbox = [1, 5, 11, 40];
 
@@ -36,6 +42,10 @@ document.addEventListener("keydown", function (input) {
     case "ArrowUp":
     case "KeyW":
       control.up = true;
+      break;
+    case "ArrowDown":
+    case "KeyS":
+      control.down = true;
       break;
     case "ArrowLeft":
     case "KeyA":
@@ -62,7 +72,12 @@ document.addEventListener("keydown", function (input) {
               600,
               [...player.triggers],
               currentVersion,
-              true
+              true,
+              player.timePlayed,
+              player.deaths,
+              player.gameComplete,
+              player.finalTimePlayed,
+              player.finalDeaths
             ];
             respawn();
           }
@@ -71,7 +86,7 @@ document.addEventListener("keydown", function (input) {
         respawn();
       }
       break;
-    case "KeyI":
+    case "KeyC":
       openInfo();
       break;
     default:
@@ -85,7 +100,12 @@ document.addEventListener("keyup", function (input) {
     case "ArrowUp":
     case "KeyW":
       control.up = false;
-      player.canJump = true;
+      if (!control.down) player.canJump = true;
+      break;
+    case "ArrowDown":
+    case "KeyS":
+      control.down = false;
+      if (!control.up) player.canJump = true;
       break;
     case "ArrowLeft":
     case "KeyA":
@@ -95,15 +115,26 @@ document.addEventListener("keyup", function (input) {
     case "KeyD":
       control.right = false;
       break;
+    default:
+      break;
   }
 });
 
 var lastFrame = 0;
 var simReruns = 20;
+var sinceLastSave = 0;
 var noFriction = false;
 function nextFrame(timeStamp) {
   // setup stuff
   let dt = timeStamp - lastFrame;
+  player.timePlayed += dt;
+  player.spawnPoint[10] = player.timePlayed;
+  id("timePlayed").innerHTML = formatTime(player.timePlayed);
+  sinceLastSave += dt;
+  if (sinceLastSave >= 5000) {
+    save();
+    sinceLastSave -= 5000;
+  }
   dt *= gameSpeed;
   lastFrame = timeStamp;
   if (dt < 100 * gameSpeed) {
@@ -115,27 +146,25 @@ function nextFrame(timeStamp) {
     let triggersPrev = [...player.triggers];
     let shouldDrawLevel = false;
     for (let i = 0; i < simReruns; i++) {
-      // velocity change
-      if (!noFriction) {
-        player.xv *= Math.pow(0.5, dt / 6);
-        if (Math.abs(player.xv) < 5) player.xv = 0;
+      // some weird fricker to do stuff
+      if (!player.isDead) {
+        player.y += (player.yv * dt) / 500 + player.g/2*dt*dt/500/500;
+        // velocity change
+        if (!noFriction) {
+          player.xv *= Math.pow(0.5, dt / 6);
+          if (Math.abs(player.xv) < 5) player.xv = 0;
+        }
+        if (
+          (player.yv > player.g && player.g > 0) ||
+          (player.yv < player.g && player.g < 0)
+        ) {
+          player.yv -= (player.g * dt) / 500;
+          if (Math.abs(player.yv) < player.g) player.yv = player.g;
+        } else {
+          player.yv += (player.g * dt) / 500;
+        }
+        player.x += (player.xv * dt) / 500;
       }
-      if (
-        (player.yv > player.g && player.g > 0) ||
-        (player.yv < player.g && player.g < 0)
-      ) {
-        player.yv -= (player.g * dt) / 500;
-        if (Math.abs(player.yv) < player.g) player.yv = player.g;
-      } else {
-        player.yv += (player.g * dt) / 500;
-      }
-      if (player.isDead) {
-        player.xv = 0;
-        player.yv = 0;
-      }
-      // position change based on velocity
-      player.x += (player.xv * dt) / 500;
-      player.y += (player.yv * dt) / 500;
       // collision detection
       if (i === 0) {
         player.canWalljump = false;
@@ -444,6 +473,18 @@ function nextFrame(timeStamp) {
                   player.currentJumps = player.maxJumps;
                   break;
                 // checkpoint
+                case -5:
+                  if (!player.gameComplete) {
+                    player.gameComplete = true;
+                    player.finalTimePlayed = player.timePlayed;
+                    player.finalDeaths = player.deaths;
+                    id("endStat").style.display = "inline";
+                    id("timePlayedEnd").innerHTML = formatTime(
+                      player.finalTimePlayed
+                    );
+                    id("deathCountEnd").innerHTML = player.finalDeaths;
+                    if (id("mainInfo").style.bottom != "0%") openInfo();
+                  }
                 case 3:
                   if (!isSpawn(x, y)) {
                     if (player.currentLevel === 8) player.reachedHub = true;
@@ -457,7 +498,12 @@ function nextFrame(timeStamp) {
                       player.moveSpeed,
                       [...player.triggers],
                       currentVersion,
-                      player.reachedHub
+                      player.reachedHub,
+                      player.timePlayed,
+                      player.deaths,
+                      player.gameComplete,
+                      player.finalTimePlayed,
+                      player.finalDeaths
                     ];
                     shouldDrawLevel = true;
                     save();
@@ -745,6 +791,46 @@ function nextFrame(timeStamp) {
       if (player.triggers.includes(34)) {
         levels[75][7][10] = 0;
       } else levels[75][7][10] = -4;
+      if (player.triggers.includes(35)) {
+        levels[85][16][11] = 0;
+      } else levels[85][16][11] = -4;
+      if (player.triggers.includes(36)) {
+        levels[85][18][11] = 0;
+      } else levels[85][18][11] = -4;
+      if (player.triggers.includes(37)) {
+        levels[85][19][3] = 0;
+      } else levels[85][19][3] = -4;
+      if (player.triggers.includes(38)) {
+        levels[85][19][1] = 0;
+      } else levels[85][19][1] = -4;
+      if (player.triggers.includes(39)) {
+        levels[87][16][11] = 0;
+        levels[87][16][12] = 0;
+      } else {
+        levels[87][16][11] = -4;
+        levels[87][16][12] = -4;
+      }
+      if (player.triggers.includes(40)) {
+        levels[87][18][11] = 0;
+        levels[87][18][12] = 0;
+      } else {
+        levels[87][18][11] = -4;
+        levels[87][18][12] = -4;
+      }
+      if (player.triggers.includes(41)) {
+        levels[87][20][11] = 0;
+        levels[87][20][12] = 0;
+      } else {
+        levels[87][20][11] = -4;
+        levels[87][20][12] = -4;
+      }
+      if (player.triggers.includes(42)) {
+        levels[87][22][11] = 0;
+        levels[87][22][12] = 0;
+      } else {
+        levels[87][22][11] = -4;
+        levels[87][22][12] = -4;
+      }
     }
     dt = dt * simReruns;
     // key input
@@ -758,13 +844,15 @@ function nextFrame(timeStamp) {
       if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
         player.xv = player.moveSpeed / (noFriction ? 6 : 1);
     }
-    if (control.up) {
+    if (control.up || control.down) {
       if (player.canWalljump) {
         if (player.wallJumpDir === "left" && control.left) {
+          player.canJump = false;
           player.xv = -600;
           player.yv = -Math.sign(player.g) * 205;
         }
         if (player.wallJumpDir === "right" && control.right) {
+          player.canJump = false;
           player.xv = 600;
           player.yv = -Math.sign(player.g) * 205;
         }
@@ -800,7 +888,23 @@ function openInfo() {
   } else id("mainInfo").style.bottom = "0%";
 }
 function newSave() {
-  return [1, 6, 0, 8, 325, 1, 600, [], currentVersion, false];
+  return [
+    1,
+    6,
+    0,
+    8,
+    325,
+    1,
+    600,
+    [],
+    currentVersion,
+    false,
+    0,
+    0,
+    false,
+    0,
+    0
+  ];
 }
 function save() {
   let saveData = deepCopy(player.spawnPoint);
@@ -816,6 +920,18 @@ function load() {
       saveData[3] += 3;
     }
     player.spawnPoint = saveData;
+    player.timePlayed = player.spawnPoint[10] ?? 0;
+    player.deaths = player.spawnPoint[11] ?? 0;
+    player.gameComplete = player.spawnPoint[12] ?? false;
+    player.finalTimePlayed = player.spawnPoint[13] ?? 0;
+    player.finalDeaths = player.spawnPoint[14] ?? 0;
+    id("timePlayed").innerHTML = formatTime(player.timePlayed);
+    id("deathCount").innerHTML = player.deaths;
+    if (player.gameComplete) {
+      id("endStat").style.display = "inline";
+      id("timePlayedEnd").innerHTML = formatTime(player.finalTimePlayed);
+      id("deathCountEnd").innerHTML = player.finalDeaths;
+    }
     save();
   }
 }
@@ -823,7 +939,8 @@ function wipeSave() {
   if (confirm("Are you sure you want to delete your save?")) {
     player.spawnPoint = newSave();
     save();
-    respawn();
+    load();
+    respawn(false);
     drawLevel();
     drawPlayer();
     adjustScreen(true);
@@ -837,7 +954,13 @@ function isSpawn(x, y) {
     player.spawnPoint[1] == y
   );
 }
-function respawn() {
+function respawn(death = true) {
+  if (death) {
+    player.deaths++;
+    player.spawnPoint[11] = player.deaths;
+    id("deathCount").innerHTML = player.deaths;
+    save();
+  }
   player.spawnTimer = player.spawnDelay;
   player.isDead = false;
   player.levelCoord = [player.spawnPoint[2], player.spawnPoint[3]];
@@ -932,10 +1055,39 @@ function arraysEqual(a, b) {
   }
   return true;
 }
+function formatTime(ms) {
+  let s = ms / 1000;
+  let ds = s % 60;
+  let m = Math.floor(s / 60);
+  let dm = m % 60;
+  let h = Math.floor(m / 60);
+  let dh = h % 24;
+  let d = Math.floor(h / 24);
+  let dd = d % 30.43685;
+  let mo = Math.floor(d / 30.43685);
+  let dmo = mo % 12;
+  let dy = Math.floor(mo / 12);
+  let time = "";
+  if (s < 60) {
+    time = ds.toFixed(2) + " second" + pluralCheck(ds);
+  } else {
+    time = "and " + ds.toFixed(0) + " second" + pluralCheck(ds);
+  }
+  if (dm >= 1) time = dm + " minute" + pluralCheck(dm) + ", " + time;
+  if (dh >= 1) time = dh + " hour" + pluralCheck(dh) + ", " + time;
+  if (dd >= 1) time = dd + " day" + pluralCheck(dd) + ", " + time;
+  if (dmo >= 1) time = dmo + " month" + pluralCheck(dmo) + ", " + time;
+  if (dy >= 1) time = dy + " year" + pluralCheck(dy) + ", " + time;
+  if (m < 60) time = time.replace(",", "");
+  return time;
+}
+function pluralCheck(n) {
+  return n === 1 ? "" : "s";
+}
 var id = (x) => document.getElementById(x);
 
 load();
-respawn();
+respawn(false);
 adjustScreen(true);
 window.requestAnimationFrame(nextFrame);
 setTimeout(drawLevel, 100);

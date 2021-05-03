@@ -1,6 +1,6 @@
-const mobileDiv = document.getElementById("mobileControls");
-const leftDiv = document.getElementById("mobileControlsLeft");
-const topDiv = document.getElementById("mobileControlsTop");
+const mobileDiv = id("mobileControls");
+const leftDiv = id("mobileControlsLeft");
+const topDiv = id("mobileControlsTop");
 
 // stolen from https://stackoverflow.com/a/11381730
 function detectMobile() {
@@ -86,9 +86,10 @@ if (isMobile) {
 	leftDiv.appendChild(leftEl);
 
 	topDiv.style.display = "block";
-	if (document.getElementById("infoOpen")) {
-		document.getElementById("infoOpen").style.display = "none";
+	if (id("infoOpen")) {
+		id("infoOpen").style.display = "none";
 	}
+	id("mainInfo").style.fontSize = "20px";
 
 	simulateKeypress("Digit1", "down");
 	simulateKeypress("Digit2", "down");

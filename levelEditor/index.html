@@ -3,24 +3,23 @@
   <head>
     <title>just a level editor</title>
     <link rel="icon" type="image/png" href="../pics/just-a-level-editor.png" />
-	<link rel="stylesheet" href="../shared/game.css">
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<meta name="HandheldFriendly" content="true" />
-    <style>
-      @font-face {
-        font-family: 'DSEG7-7SEGG';
-        src: url('../fonts/DSEG7Modern-Regular.woff2') format('woff2'),
-        url('../fonts/DSEG7Modern-Regular.woff') format('woff'),
-        url('../fonts/DSEG7Modern-Regular.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-    </style>
+    <link rel="stylesheet" href="../shared/game.css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="HandheldFriendly" content="true" />
+    <meta
+      name="description"
+      content="'just a level editor', a versatile level editor for the minimalistic platformer, 'just a platformer', created by TheTastyPi."
+    />
+    <meta name="author" content="TheTastyPi" />
   </head>
   <body
-    onresize="adjustScreen()"
-	onload="init()";
+    onresize="adjustLevelSize()"
+    onload="init()"
+    ;
     style="
       height: 100%;
       margin: 0;
@@ -33,20 +32,27 @@
     <canvas id="playerLayer" style="position: absolute;"></canvas>
     <canvas id="grid" style="position: absolute; display: none;"></canvas>
     <canvas id="levelLayer" style="position: absolute;"></canvas>
-	<div id="mobileControlsLeft" style="position: absolute; bottom: max(20%, 125px); left: 0;"></div>
-	<div id="mobileControls" style="position: absolute; bottom: max(20%, 125px); right: 0;"></div>
-	<div id="mobileControlsTop" style="position: absolute; top: 0; right: 0; display: none;">
-		<button
-			id="moreBtn"
-			onclick="openMoreMenu()"
-		>...</button>
-	</div>
+    <div
+      id="mobileControlsLeft"
+      style="position: absolute; bottom: max(20%, 125px); left: 0;"
+    ></div>
+    <div
+      id="mobileControls"
+      style="position: absolute; bottom: max(20%, 125px); right: 0;"
+    ></div>
+    <div
+      id="mobileControlsTop"
+      style="position: absolute; top: 0; right: 0; display: none;"
+    >
+      <button id="moreBtn" onclick="openMoreMenu()">...</button>
+    </div>
     <div style="position: absolute; background: #ffffff88; max-width: 350px;">
       <span id="info">
         [INFO]<br />
         Width: <span id="lvlWidth">9</span><br />
         Height: <span id="lvlHeight">9</span><br />
-        Mouse Position: <span id="mousePos"></span><br /><br />
+        Mouse Position: <span id="mousePos"></span><br />
+        Mini Block: <span id="miniBlock">OFF</span><br /><br />
       </span>
       <span id="control">
         [CONTROL]<br />
@@ -68,10 +74,12 @@
         [shift] + [R]: Restart from startpoint<br />
         [G]: Toggle god mode (no-death + inf jump)<br />
         [N]: Toggle noclip<br />
+        [M]: Toggle mini block placement<br />
         [1]: Toggle info display<br />
         [2]: Toggle control display<br />
         [3]: Toggle block selection<br />
         [4]: Toggle grid<br />
+        [5]: Toggle credits button<br />
         [shift] + [F]: Save level to selected save<br />
         [ctrl] + [F]: Open save menu
       </span>
@@ -134,6 +142,8 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
+        max-height: 100%;
+        overflow: scroll;
       "
     >
       <div id="saveList" style="height: 90%;"></div>
@@ -148,44 +158,61 @@
         <button id="closeButton" onclick="toggleSaveMenu()">Close</button>
       </div>
     </div>
-	<div
-		id="mobileSizeMenu"
-		style="
-			position: absolute;
-        	background: #00000088;
-        	color: #ffffff;
-        	display: none;
-        	left: 50%;
-        	top: 50%;
-        	transform: translate(-50%, -50%);
-			padding: 5px;
-		"
-	>
-		<form id="mobileSizeForm">
-			<p>This expands/shrinks the level. Select a direction and operation, then click "Confirm"</p>
-			<div>
-				<input type="radio" id="up" name="dir" value="Up"
-					checked>
-	  			<label for="up">Up</label>
-				<input type="radio" id="down" name="dir" value="Down">
-	  			<label for="down">Down</label>
-				<input type="radio" id="left" name="dir" value="Left">
-	  			<label for="left">Left</label>
-				<input type="radio" id="right" name="dir" value="Right">
-	  			<label for="right">Right</label>
-			</div>
-			<div>
-				<input type="radio" id="more" name="type" value="more"
-					checked>
-	  			<label for="more">Expand</label>
-				<input type="radio" id="less" name="type" value="less">
-	  			<label for="less">Shrink</label>
-			</div>
-			<div>
-				<button type="submit">Confirm</button>
-			</div>
-		</form>
-	</div>
+    <div
+      id="mobileSizeMenu"
+      style="
+        position: absolute;
+        background: #00000088;
+        color: #ffffff;
+        display: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 5px;
+      "
+    >
+      <form id="mobileSizeForm">
+        <p>
+          This expands/shrinks the level. Select a direction and operation, then
+          click "Confirm"
+        </p>
+        <div>
+          <input type="radio" id="up" name="dir" value="Up" checked />
+          <label for="up">Up</label>
+          <input type="radio" id="down" name="dir" value="Down" />
+          <label for="down">Down</label>
+          <input type="radio" id="left" name="dir" value="Left" />
+          <label for="left">Left</label>
+          <input type="radio" id="right" name="dir" value="Right" />
+          <label for="right">Right</label>
+        </div>
+        <div>
+          <input type="radio" id="more" name="type" value="more" checked />
+          <label for="more">Expand</label>
+          <input type="radio" id="less" name="type" value="less" />
+          <label for="less">Shrink</label>
+        </div>
+        <div>
+          <button type="submit">Confirm</button>
+        </div>
+      </form>
+    </div>
+    <div id="mainInfo">
+      <div>
+        "just a level editor"<br />
+        Made by TheTastyPi<br />
+        Mobile support by Yhvr<br />
+        <br />
+        A level editor for<br />
+        "just a platformer"<br />
+        <br />
+        <a href="../index.html">Main Game</a> <br />
+        <a href="https://discord.gg/zVpdcuaXYF">Discord Server</a>
+      </div>
+    </div>
+    <button id="infoOpen" onclick="openInfo();">
+      Credits
+    </button>
     <div
       id="tooltip"
       style="
