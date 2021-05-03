@@ -146,27 +146,25 @@ function nextFrame(timeStamp) {
     let triggersPrev = [...player.triggers];
     let shouldDrawLevel = false;
     for (let i = 0; i < simReruns; i++) {
-      // velocity change
-      if (!noFriction) {
-        player.xv *= Math.pow(0.5, dt / 6);
-        if (Math.abs(player.xv) < 5) player.xv = 0;
+      // some weird fricker to do stuff
+      if (!player.isDead) {
+        player.y += (player.yv * dt) / 500 + player.g/2*dt*dt/500/500;
+        // velocity change
+        if (!noFriction) {
+          player.xv *= Math.pow(0.5, dt / 6);
+          if (Math.abs(player.xv) < 5) player.xv = 0;
+        }
+        if (
+          (player.yv > player.g && player.g > 0) ||
+          (player.yv < player.g && player.g < 0)
+        ) {
+          player.yv -= (player.g * dt) / 500;
+          if (Math.abs(player.yv) < player.g) player.yv = player.g;
+        } else {
+          player.yv += (player.g * dt) / 500;
+        }
+        player.x += (player.xv * dt) / 500;
       }
-      if (
-        (player.yv > player.g && player.g > 0) ||
-        (player.yv < player.g && player.g < 0)
-      ) {
-        player.yv -= (player.g * dt) / 500;
-        if (Math.abs(player.yv) < player.g) player.yv = player.g;
-      } else {
-        player.yv += (player.g * dt) / 500;
-      }
-      if (player.isDead) {
-        player.xv = 0;
-        player.yv = 0;
-      }
-      // position change based on velocity
-      player.x += (player.xv * dt) / 500;
-      player.y += (player.yv * dt) / 500;
       // collision detection
       if (i === 0) {
         player.canWalljump = false;

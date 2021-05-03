@@ -21,6 +21,7 @@ const mobileConfig = {
     ["Redo", "⇧ + Ctrl + Z", "KeyZ", true, true],
     ["Toggle Godmode", "g", "KeyG"],
     ["Toggle Noclip", "n", "KeyN"],
+    ["Toggle Mini Block", "m", "KeyM"],
     ["Toggle Block Menu", "3", "Digit3", true],
     ["Toggle Grid", "4", "Digit4"],
     ["Toggle Save Menu", "Ctrl + f", "KeyF", false, true],

@@ -10,8 +10,11 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="HandheldFriendly" content="true" />
-    <meta name="description" content="'just a level editor', a versatile level editor for the minimalistic platformer, 'just a platformer', created by TheTastyPi."/>
-    <meta name="author" content="TheTastyPi">
+    <meta
+      name="description"
+      content="'just a level editor', a versatile level editor for the minimalistic platformer, 'just a platformer', created by TheTastyPi."
+    />
+    <meta name="author" content="TheTastyPi" />
   </head>
   <body
     onresize="adjustLevelSize()"
@@ -48,7 +51,8 @@
         [INFO]<br />
         Width: <span id="lvlWidth">9</span><br />
         Height: <span id="lvlHeight">9</span><br />
-        Mouse Position: <span id="mousePos"></span><br /><br />
+        Mouse Position: <span id="mousePos"></span><br />
+        Mini Block: <span id="miniBlock">OFF</span><br /><br />
       </span>
       <span id="control">
         [CONTROL]<br />
@@ -70,6 +74,7 @@
         [shift] + [R]: Restart from startpoint<br />
         [G]: Toggle god mode (no-death + inf jump)<br />
         [N]: Toggle noclip<br />
+        [M]: Toggle mini block placement<br />
         [1]: Toggle info display<br />
         [2]: Toggle control display<br />
         [3]: Toggle block selection<br />

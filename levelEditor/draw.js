@@ -1,4 +1,4 @@
-var blockSize = 50;
+var baseBlockSize = 50;
 var lvlxOffset = 0;
 var lvlyOffset = 0;
 var prevPlayerx = 0;
@@ -37,16 +37,19 @@ function drawLevel(clear = false) {
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
   }
   for (
-    let x = Math.max(Math.floor(-camCenterx / blockSize), 0);
+    let x = Math.max(Math.floor(-camCenterx / baseBlockSize), 0);
     x <=
-    Math.min(Math.floor((canvas.width - camCenterx) / blockSize), level.length);
+    Math.min(
+      Math.floor((canvas.width - camCenterx) / baseBlockSize),
+      level.length
+    );
     x++
   ) {
     for (
-      let y = Math.max(Math.floor(-camCentery / blockSize), 0);
+      let y = Math.max(Math.floor(-camCentery / baseBlockSize), 0);
       y <=
       Math.max(
-        Math.floor((canvas.height - camCentery) / blockSize),
+        Math.floor((canvas.height - camCentery) / baseBlockSize),
         level[0].length
       );
       y++
@@ -71,9 +74,9 @@ function drawLevel(clear = false) {
             player.spawnPoint[0],
             player.spawnPoint[1]
           ]) &&
-            (arraysEqual(prevSpawnPos, [parseInt(x), parseInt(y)]) ||
+            (arraysEqual([Math.floor(prevSpawnPos[0]),Math.floor(prevSpawnPos[1])], [parseInt(x), parseInt(y)]) ||
               arraysEqual(
-                [player.spawnPoint[0], player.spawnPoint[1]],
+                [Math.floor(player.spawnPoint[0]), Math.floor(player.spawnPoint[1])],
                 [parseInt(x), parseInt(y)]
               )))
         )
@@ -99,11 +102,11 @@ function drawBlock(
   size = 1,
   useDefault = false
 ) {
-  blockSize *= size;
+  let blockSize = baseBlockSize * size;
   let lL = canvas.getContext("2d");
   lL.lineWidth = (blockSize * 3) / 25;
-  let xb = ((x + xOffset) / size) * blockSize + camCenterx;
-  let yb = ((y + yOffset) / size) * blockSize + camCentery;
+  let xb = (x + xOffset) * baseBlockSize + camCenterx;
+  let yb = (y + yOffset) * baseBlockSize + camCentery;
   let clear = false;
   let data;
   if (typeof type === "object") {
@@ -140,7 +143,7 @@ function drawBlock(
       lL.fillStyle = "#FF0000";
       break;
     case 3:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.fillStyle = "#00FFFF88";
       } else lL.fillStyle = "#00888888";
       break;
@@ -181,12 +184,12 @@ function drawBlock(
       lL.fillStyle = "#FF880088";
       break;
     case 17:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.fillStyle = "#FFFF0088";
       } else lL.fillStyle = "#88880088";
       break;
     case 18:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.fillStyle = "#FFFF0088";
       } else lL.fillStyle = "#88880088";
       break;
@@ -385,7 +388,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 3:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.strokeStyle = "#00888888";
       } else lL.strokeStyle = "#00444488";
       lL.beginPath();
@@ -782,7 +785,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 17:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.strokeStyle = "#88880088";
       } else lL.strokeStyle = "#44440088";
       lL.beginPath();
@@ -796,7 +799,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 18:
-      if (isSpawn(x, y)) {
+      if (isSpawn(x+xOffset, y+yOffset)) {
         lL.strokeStyle = "#88880088";
       } else lL.strokeStyle = "#44440088";
       lL.beginPath();
@@ -1486,11 +1489,11 @@ function drawBlock(
       break;
     case 52:
       if (!sOn[data[4]] !== !data[3]) {
-        drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       } else {
-        drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       }
 
       lL.fillStyle = "#00880044";
@@ -1517,11 +1520,11 @@ function drawBlock(
       break;
     case 53:
       if (tOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       } else {
-        drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       }
 
       lL.fillStyle = "#88888844";
@@ -1552,11 +1555,11 @@ function drawBlock(
       break;
     case 54:
       if (jOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1]);
-        drawBlock(canvas, x, y, data[2], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       } else {
-        drawBlock(canvas, x, y, data[2]);
-        drawBlock(canvas, x, y, data[1], 1 / 4, 1 / 4, 1 / 2, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
       }
 
       lL.fillStyle = "#88440044";
@@ -2190,34 +2193,45 @@ function drawBlock(
       );
       lL.fill();
       break;
+    case 73:
+      drawBlock(canvas, x, y, data[1], 0, 0, 1 / 2, useDefault);
+      drawBlock(canvas, x, y, data[2], 0, 1 / 2, 1 / 2, useDefault);
+      drawBlock(canvas, x, y, data[3], 1 / 2, 0, 1 / 2, useDefault);
+      drawBlock(canvas, x, y, data[4], 1 / 2, 1 / 2, 1 / 2, useDefault);
+      break;
     default:
   }
-  blockSize /= size;
 }
 function drawGrid() {
   let canvas = id("grid");
   let g = canvas.getContext("2d");
-  g.strokeStyle = "#888888";
-  g.lineWidth = blockSize / 25;
-  canvas.width = level.length * blockSize;
-  canvas.height = level[0].length * blockSize;
-  for (let x in level) {
-    x = parseInt(x);
-    if (x === 0) continue;
+  g.lineWidth = baseBlockSize / 25;
+  canvas.width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  canvas.height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  for (let x = 0.5; x < canvas.width / baseBlockSize + 0.5; x += 0.5) {
+    if (x % 1 === 0.5) {
+      g.strokeStyle = "#BBBBBB";
+    } else g.strokeStyle = "#444444";
     g.beginPath();
-    g.moveTo(blockSize * x, 0);
-    g.lineTo(blockSize * x, canvas.height);
+    g.moveTo(baseBlockSize * x + (camCenterx % baseBlockSize), 0);
+    g.lineTo(baseBlockSize * x + (camCenterx % baseBlockSize), canvas.height);
     g.stroke();
   }
-  for (let y in level[0]) {
-    y = parseInt(y);
-    if (y === 0) continue;
+  for (let y = 0.5; y < canvas.height / baseBlockSize + 0.5; y += 0.5) {
+    if (y % 1 === 0.5) {
+      g.strokeStyle = "#BBBBBB";
+    } else g.strokeStyle = "#444444";
     g.beginPath();
-    g.moveTo(0, blockSize * y);
-    g.lineTo(canvas.width, blockSize * y);
+    g.moveTo(0, baseBlockSize * y + (camCentery % baseBlockSize));
+    g.lineTo(canvas.width, baseBlockSize * y + (camCentery % baseBlockSize));
     g.stroke();
   }
-  adjustScreen();
 }
 var camx = 0;
 var camy = 0;
@@ -2226,10 +2240,10 @@ var camCenterx = 0;
 var camCentery = 0;
 var prevCenterx = 0;
 var prevCentery = 0;
-var camOffsetLimit = blockSize * 10;
+var camOffsetLimit = baseBlockSize * 10;
 function adjustScreen(instant = false) {
-  let lvlx = level.length * blockSize;
-  let lvly = level[0].length * blockSize;
+  let lvlx = level.length * baseBlockSize;
+  let lvly = level[0].length * baseBlockSize;
   if (player.playerFocus) {
     lvlxOffset = Math.floor((window.innerWidth - lvlx) / 2);
     if (lvlxOffset < 0) {
@@ -2269,7 +2283,10 @@ function adjustScreen(instant = false) {
     if (camCenterx < id("levelLayer").width - lvlx)
       camCenterx = id("levelLayer").width - lvlx;
     camOffsetx = camx - camCenterx;
-    if (prevCenterx !== camCenterx) drawLevel(true);
+    if (prevCenterx !== camCenterx) {
+      drawLevel(true);
+      drawGrid();
+    }
     prevCenterx = camCenterx;
   }
   if (camOffsety > 0 || camOffsety < -2 * camOffsetLimit) {
@@ -2278,7 +2295,10 @@ function adjustScreen(instant = false) {
     if (camCentery < id("levelLayer").height - lvly)
       camCentery = id("levelLayer").height - lvly;
     camOffsety = camy - camCentery;
-    if (prevCentery !== camCentery) drawLevel(true);
+    if (prevCentery !== camCentery) {
+      drawLevel(true);
+      drawGrid();
+    }
     prevCentery = camCentery;
   }
   id("levelLayer").style.left = camOffsetx + "px";
@@ -2291,11 +2311,11 @@ function adjustScreen(instant = false) {
 }
 function adjustLevelSize() {
   id("levelLayer").width = Math.min(
-    level.length * blockSize,
+    level.length * baseBlockSize,
     window.innerWidth + 2 * camOffsetLimit
   );
   id("levelLayer").height = Math.min(
-    level[0].length * blockSize,
+    level[0].length * baseBlockSize,
     window.innerHeight + 2 * camOffsetLimit
   );
   drawLevel(true);

@@ -11,11 +11,17 @@ id("levelLayer").addEventListener("mousedown", function (input) {
   if (!editDisabled) {
     input.preventDefault();
     window.focus();
-    let xb = Math.floor((input.offsetX - camCenterx) / blockSize);
-    let yb = Math.floor((input.offsetY - camCentery) / blockSize);
+    let x = Math.floor(((input.offsetX - camCenterx) / baseBlockSize) * 2) / 2;
+    let y = Math.floor(((input.offsetY - camCentery) / baseBlockSize) * 2) / 2;
+    let xb = Math.floor((input.offsetX - camCenterx) / baseBlockSize);
+    let yb = Math.floor((input.offsetY - camCentery) / baseBlockSize);
+    let trueBlock = getBlock(x, y, false);
+    let block = getBlock(x, y);
+    let trueType = getBlockType(x, y, false);
+    let type = block[0];
     if (control.e) {
       if (input.button === 0) {
-        openPropertyMenu(xb, yb);
+        openPropertyMenu(x, y);
       }
     } else if (input.ctrlKey) {
       if (input.button === 0) control.lmb = true;
@@ -31,11 +37,13 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         } else {
           id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
         }
-        player.selectedBlock[1] = getBlockType(xb, yb, false);
+        player.selectedBlock[1] = trueType;
+        if (player.selectedBlock[1] === 73) player.selectedBlock[1] = type;
         if (hasProperty(player.selectedBlock[1])) {
           for (let i in defaultProperty[player.selectedBlock[1]]) {
-            defaultProperty[player.selectedBlock[1]][i] =
-              level[xb][yb][parseInt(i) + 1];
+            defaultProperty[player.selectedBlock[1]][i] = deepCopy(
+              block[parseInt(i) + 1]
+            );
           }
           drawBlock(
             id("blockSelect" + player.selectedBlock[1]),
@@ -65,17 +73,38 @@ id("levelLayer").addEventListener("mousedown", function (input) {
     } else {
       if (input.button === 0) {
         control.lmb = true;
+        if (player.miniBlock && trueType !== 73)
+          level[xb][yb] = [
+            73,
+            deepCopy(trueBlock),
+            deepCopy(trueBlock),
+            deepCopy(trueBlock),
+            deepCopy(trueBlock)
+          ];
         if (hasProperty(player.selectedBlock[0])) {
-          level[xb][yb] = [player.selectedBlock[0]];
+          editBlock(x, y, [player.selectedBlock[0]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[0]]) {
-            level[xb][yb][parseInt(i) + 1] =
-              defaultProperty[player.selectedBlock[0]][i];
+            editProp(
+              x,
+              y,
+              false,
+              parseInt(i) + 1,
+              false,
+              defaultProperty[player.selectedBlock[0]][i]
+            );
           }
-        } else level[xb][yb] = player.selectedBlock[0];
+        } else editBlock(x, y, player.selectedBlock[0], player.miniBlock);
         if (player.selectedBlock[0] === 17) {
-          setSpawn(xb, yb, true);
-          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+          setSpawn(x, y, true);
+          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
         }
+        if (
+          player.miniBlock &&
+          arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
+          arraysEqual(level[xb][yb][2], level[xb][yb][3]) &&
+          arraysEqual(level[xb][yb][3], level[xb][yb][4])
+        )
+          level[xb][yb] = level[xb][yb][1];
         drawLevel();
       } else if (input.button === 1) {
         if (player.selectedBlock[1] == player.selectedBlock[0]) {
@@ -84,11 +113,12 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         } else {
           id("blockSelect" + player.selectedBlock[0]).style.boxShadow = "";
         }
-        player.selectedBlock[0] = getBlockType(xb, yb, false);
+        player.selectedBlock[0] = trueType === 73 ? type : trueType;
         if (hasProperty(player.selectedBlock[0])) {
           for (let i in defaultProperty[player.selectedBlock[0]]) {
-            defaultProperty[player.selectedBlock[0]][i] =
-              level[xb][yb][parseInt(i) + 1];
+            defaultProperty[player.selectedBlock[0]][i] = deepCopy(
+              block[parseInt(i) + 1]
+            );
           }
           drawBlock(
             id("blockSelect" + player.selectedBlock[0]),
@@ -110,17 +140,38 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         }
       } else if (input.button === 2) {
         control.rmb = true;
+        if (player.miniBlock && trueType !== 73)
+          level[xb][yb] = [
+            73,
+            deepCopy(trueBlock),
+            deepCopy(trueBlock),
+            deepCopy(trueBlock),
+            deepCopy(trueBlock)
+          ];
         if (hasProperty(player.selectedBlock[1])) {
-          level[xb][yb] = [player.selectedBlock[1]];
+          editBlock(x, y, [player.selectedBlock[1]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[1]]) {
-            level[xb][yb][parseInt(i) + 1] =
-              defaultProperty[player.selectedBlock[1]][i];
+            editProp(
+              x,
+              y,
+              false,
+              parseInt(i) + 1,
+              false,
+              defaultProperty[player.selectedBlock[1]][i]
+            );
           }
-        } else level[xb][yb] = player.selectedBlock[1];
+        } else editBlock(x, y, player.selectedBlock[1], player.miniBlock);
         if (player.selectedBlock[1] === 17) {
-          setSpawn(xb, yb, true);
-          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+          setSpawn(x, y, true);
+          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
         }
+        if (
+          player.miniBlock &&
+          arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
+          arraysEqual(level[xb][yb][2], level[xb][yb][3]) &&
+          arraysEqual(level[xb][yb][3], level[xb][yb][4])
+        )
+          level[xb][yb] = level[xb][yb][1];
         drawLevel();
       }
     }
@@ -129,8 +180,13 @@ id("levelLayer").addEventListener("mousedown", function (input) {
 id("levelLayer").addEventListener("mousemove", function (input) {
   if (!editDisabled) {
     input.preventDefault();
-    let xb = Math.floor((input.offsetX - camCenterx) / blockSize);
-    let yb = Math.floor((input.offsetY - camCentery) / blockSize);
+    let x = Math.floor(((input.offsetX - camCenterx) / baseBlockSize) * 2) / 2;
+    let y = Math.floor(((input.offsetY - camCentery) / baseBlockSize) * 2) / 2;
+    let xb = Math.floor((input.offsetX - camCenterx) / baseBlockSize);
+    let yb = Math.floor((input.offsetY - camCentery) / baseBlockSize);
+    let trueBlock = getBlock(x, y, false);
+    let block = getBlock(x, y);
+    let trueType = getBlockType(x, y, false);
     if (input.ctrlKey) {
       if (control.lmb) {
         player.playerFocus = false;
@@ -142,58 +198,85 @@ id("levelLayer").addEventListener("mousemove", function (input) {
       }
     } else if (!input.shiftKey) {
       if (control.lmb) {
+        if (player.miniBlock && trueType !== 73)
+          level[xb][yb] = [73, trueBlock, trueBlock, trueBlock, trueBlock];
         if (hasProperty(player.selectedBlock[0])) {
-          level[xb][yb] = [player.selectedBlock[0]];
+          editBlock(x, y, [player.selectedBlock[0]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[0]]) {
-            level[xb][yb][parseInt(i) + 1] =
-              defaultProperty[player.selectedBlock[0]][i];
+            editProp(
+              x,
+              y,
+              false,
+              parseInt(i) + 1,
+              false,
+              defaultProperty[player.selectedBlock[0]][i]
+            );
           }
-        } else level[xb][yb] = player.selectedBlock[0];
+        } else editBlock(x, y, player.selectedBlock[0], player.miniBlock);
         if (player.selectedBlock[0] === 17) {
-          setSpawn(xb, yb, true);
-          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+          setSpawn(x, y, true);
+          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
         }
+        if (
+          player.miniBlock &&
+          arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
+          arraysEqual(level[xb][yb][2], level[xb][yb][3]) &&
+          arraysEqual(level[xb][yb][3], level[xb][yb][4])
+        )
+          level[xb][yb] = level[xb][yb][1];
         drawLevel();
       } else if (control.rmb) {
+        if (player.miniBlock && trueType !== 73)
+          level[xb][yb] = [73, trueBlock, trueBlock, trueBlock, trueBlock];
         if (hasProperty(player.selectedBlock[1])) {
-          level[xb][yb] = [player.selectedBlock[1]];
+          editBlock(x, y, [player.selectedBlock[1]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[1]]) {
-            level[xb][yb][parseInt(i) + 1] =
-              defaultProperty[player.selectedBlock[1]][i];
+            editProp(
+              x,
+              y,
+              false,
+              parseInt(i) + 1,
+              false,
+              defaultProperty[player.selectedBlock[1]][i]
+            );
           }
-        } else level[xb][yb] = player.selectedBlock[1];
+        } else editBlock(x, y, player.selectedBlock[1], player.miniBlock);
         if (player.selectedBlock[1] === 17) {
-          setSpawn(xb, yb, true);
-          level[xb][yb] = [17].concat(player.spawnPoint.slice(2));
+          setSpawn(x, y, true);
+          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
         }
+        if (
+          player.miniBlock &&
+          arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
+          arraysEqual(level[xb][yb][2], level[xb][yb][3]) &&
+          arraysEqual(level[xb][yb][3], level[xb][yb][4])
+        )
+          level[xb][yb] = level[xb][yb][1];
         drawLevel();
       }
     }
     id("mousePos").innerHTML = "[" + xb + "," + yb + "]";
-    if (hasProperty(getBlockType(xb, yb, false))) {
+    if (hasProperty(block[0])) {
       let text = "";
-      for (let i in blockProperty[getBlockType(xb, yb, false)]) {
-        if (blockProperty[getBlockType(xb, yb, false)][i][0] === "!") continue;
-        text += blockProperty[getBlockType(xb, yb, false)][i];
+      for (let i in blockProperty[block[0]]) {
+        if (blockProperty[block[0]][i][0] === "!") continue;
+        text += blockProperty[block[0]][i];
         text += ": ";
-        if (propertyType[getBlockType(xb, yb, false)][i] === "block") {
-          if (typeof level[xb][yb][parseInt(i) + 1] === "object") {
-            text += blockName[level[xb][yb][parseInt(i) + 1][0]];
-            for (let j in level[xb][yb][parseInt(i) + 1]) {
+        if (propertyType[block[0]][i] === "block") {
+          if (typeof block[parseInt(i) + 1] === "object") {
+            text += blockName[block[parseInt(i) + 1][0]];
+            for (let j in block[parseInt(i) + 1]) {
               if (j == 0) continue;
-              if (
-                blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1][0] ===
-                "!"
-              )
+              if (blockProperty[block[parseInt(i) + 1][0]][j - 1][0] === "!")
                 continue;
               text += "<br>";
               text += "  ";
-              text += blockProperty[level[xb][yb][parseInt(i) + 1][0]][j - 1];
+              text += blockProperty[block[parseInt(i) + 1][0]][j - 1];
               text += ": ";
-              text += level[xb][yb][parseInt(i) + 1][j];
+              text += block[parseInt(i) + 1][j];
             }
-          } else text += blockName[level[xb][yb][parseInt(i) + 1]];
-        } else text += level[xb][yb][parseInt(i) + 1];
+          } else text += blockName[block[parseInt(i) + 1]];
+        } else text += block[parseInt(i) + 1];
         text += "<br>";
       }
       id("tooltip").innerHTML = text;
@@ -333,6 +416,10 @@ document.addEventListener("keydown", function (input) {
         player.noclip = !player.noclip;
         drawPlayer();
         break;
+      case "KeyM":
+        player.miniBlock = !player.miniBlock;
+        id("miniBlock").innerHTML = player.miniBlock ? "ON" : "OFF";
+        break;
       case "Digit1":
         if (id("info").style.display !== "none") {
           id("info").style.display = "none";
@@ -394,9 +481,15 @@ document.addEventListener("keydown", function (input) {
                 prevVersions[currentVersion - 1][0].length !== level[0].length
               ) {
                 id("lvlWidth").innerHTML = level.length;
-                id("levelLayer").width = Math.min(level.length * blockSize, window.innerWidth + 2 * camOffsetLimit);
+                id("levelLayer").width = Math.min(
+                  level.length * baseBlockSize,
+                  window.innerWidth + 2 * camOffsetLimit
+                );
                 id("lvlHeight").innerHTML = level[0].length;
-                id("levelLayer").height = Math.min(level[0].length * blockSize, window.innerHeight + 2 * camOffsetLimit);
+                id("levelLayer").height = Math.min(
+                  level[0].length * baseBlockSize,
+                  window.innerHeight + 2 * camOffsetLimit
+                );
                 prevLevel = [];
               }
               drawLevel();
@@ -409,9 +502,15 @@ document.addEventListener("keydown", function (input) {
               prevVersions[currentVersion + 1][0].length !== level[0].length
             ) {
               id("lvlWidth").innerHTML = level.length;
-              id("levelLayer").width = Math.min(level.length * blockSize, window.innerWidth + 2 * camOffsetLimit);
+              id("levelLayer").width = Math.min(
+                level.length * baseBlockSize,
+                window.innerWidth + 2 * camOffsetLimit
+              );
               id("lvlHeight").innerHTML = level[0].length;
-              id("levelLayer").height = Math.min(level[0].length * blockSize, window.innerHeight + 2 * camOffsetLimit);
+              id("levelLayer").height = Math.min(
+                level[0].length * baseBlockSize,
+                window.innerHeight + 2 * camOffsetLimit
+              );
               prevLevel = [];
             }
             drawLevel();
@@ -438,20 +537,22 @@ document.addEventListener("keyup", function (input) {
       case "ArrowLeft":
       case "KeyA":
         control.left = false;
+        if (!control.right && player.xg) player.canJump = true;
         break;
       case "ArrowRight":
       case "KeyD":
         control.right = false;
+        if (!control.left && player.xg) player.canJump = true;
         break;
       case "ArrowUp":
       case "KeyW":
         control.up = false;
-        if (!control.down) player.canJump = true;
+        if (!control.down && !player.xg) player.canJump = true;
         break;
       case "ArrowDown":
       case "KeyS":
         control.down = false;
-        if (!control.up) player.canJump = true;
+        if (!control.up && !player.xg) player.canJump = true;
         break;
       case "KeyE":
         control.e = false;

@@ -564,4 +564,18 @@ Editor
 
 Both
 
-- Made th credit text smaller on mobile because the text were overflowing in landscape mode
+- Made the credit text smaller on mobile because the text were overflowing in landscape mode
+
+## 3 May 2021
+
+Editor
+
+- Added mini blocks! Press \[M] to toggle their placement
+- Changed control when in sideways gravity
+- Fixed bug where the grid desyncs with the level
+- Fixed bug where changing level size can cause the viewing range to be out-of-bound
+- Fixed a bug where unstable sub-blocks just doesn't work
+
+Both
+
+- Using the power of basic kinematics, lower frame rates now no longer causes inaccurate physics
