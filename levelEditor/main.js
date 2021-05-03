@@ -517,7 +517,7 @@ function nextFrame(timeStamp) {
             let y = ty / 2;
             let bx = Math.floor(x);
             let by = Math.floor(y);
-            let props = getBlock(x, y);
+            let props = getBlock(x, y,true,true);
             let type = getBlockType(x, y);
             if (getBlock(x, y, false)[0] !== 73) {
               x = bx;
@@ -1009,9 +1009,8 @@ function nextFrame(timeStamp) {
                     break;
                 }
               }
-              let subBlock = getBlock(x, y, true, true);
-              if (subBlock[0] === 72 && subBlock[1] <= subBlock[2]) {
-                editProp(x, y, 72, 2, false, subBlock[1]);
+              if (props[0] === 72 && props[1] <= props[2]) {
+                editProp(x, y, 72, 2, false, props[1]);
                 let subBlockPos = getSubBlockPos(x, y);
                 addTimer(x, y, 2, 72, subBlockPos);
                 shouldDrawLevel = true;
@@ -1065,7 +1064,7 @@ function nextFrame(timeStamp) {
               let y = ty / 2;
               let bx = Math.floor(x);
               let by = Math.floor(y);
-              let props = getBlock(x, y);
+              let props = getBlock(x, y,true,true);
               let type = getBlockType(x, y);
               if (getBlockType(x, y, false) !== 73) {
                 x = bx;
