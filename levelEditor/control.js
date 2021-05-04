@@ -18,7 +18,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
     let trueBlock = getBlock(x, y, false);
     let block = getBlock(x, y);
     let trueType = getBlockType(x, y, false);
-    let type = block[0];
+    let type = getBlockType(x, y);
     if (control.e) {
       if (input.button === 0) {
         openPropertyMenu(x, y);
