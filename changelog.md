@@ -579,3 +579,10 @@ Editor
 Both
 
 - Using the power of basic kinematics, lower frame rates now no longer causes inaccurate physics
+
+
+## 3 May 2021 #2
+
+Editor
+
+- Added colored background blocks
