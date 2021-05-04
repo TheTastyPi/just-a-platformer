@@ -127,7 +127,8 @@ const blockName = [
   "Time Fast Field",
   "Custom Time Field", // time (68,69,70,71)
   "Unstable Block", // unstable (72)
-  "Mini Blocks" // mini (73)
+  "Mini Blocks", // mini (73)
+  "Colored BG Block", // colored bg (74)
 ];
 const blockSelect = [
   "Special",
@@ -140,6 +141,7 @@ const blockSelect = [
   0,
   1,
   51,
+  74,
   72,
   2,
   "Gravity",
@@ -259,7 +261,8 @@ const blockProperty = {
   67: ["Size"],
   71: ["Time Speed"],
   72: ["Breaking Period", "!Timer", "Reconstruction Period", "!Timer2"],
-  73: ["!Q1", "!Q2", "!Q3", "!Q4"]
+  73: ["!Q1", "!Q2", "!Q3", "!Q4"],
+  74: ["ColorR", "ColorG", "ColorB"],
 };
 const defaultProperty = {
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
@@ -287,7 +290,8 @@ const defaultProperty = {
   67: [20],
   71: [1],
   72: [1000, 1000, 1000, 1000],
-  73: [0, 0, 0, 0]
+  73: [0, 0, 0, 0],
+  74: [255, 127, 127],
 };
 const propertyType = {
   17: [
@@ -335,7 +339,8 @@ const propertyType = {
   67: ["number"],
   71: ["number"],
   72: ["number", "number", "number", "number"],
-  73: ["block", "block", "block", "block"]
+  73: ["block", "block", "block", "block"],
+  74: ["number", "number", "number"],
 };
 const propertyLimit = {
   17: [
@@ -378,7 +383,7 @@ const propertyLimit = {
   51: [
     [0, 255],
     [0, 255],
-    [0, 255]
+    [0, 255],
   ],
   52: ["none", "none", "none", [0, 99]],
   53: ["none", "none", "none"],
@@ -387,7 +392,12 @@ const propertyLimit = {
   67: [[1, 500]],
   71: [[0, 5]],
   72: [[1, 60 * 60 * 1000], "none", [1, Infinity], "none"],
-  73: ["none", "none", "none", "none"]
+  73: ["none", "none", "none", "none"],
+  74: [
+    [0, 255],
+    [0, 255],
+    [0, 255]
+  ],
 };
 var prevVersions = [
   [
@@ -1663,6 +1673,14 @@ function load(name) {
     level[0].length * baseBlockSize,
     window.innerHeight + 2 * camOffsetLimit
   );
+  id("bgLayer").width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("bgLayer").height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
   adjustLevelSize(true);
   respawn(true);
   drawLevel(true);
@@ -2367,8 +2385,16 @@ function changeLevelSize(dir, num) {
     level.length * baseBlockSize,
     window.innerWidth + 2 * camOffsetLimit
   );
+  id("bgLayer").width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
   id("lvlHeight").innerHTML = level[0].length;
   id("levelLayer").height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  id("bgLayer").height = Math.min(
     level[0].length * baseBlockSize,
     window.innerHeight + 2 * camOffsetLimit
   );
@@ -2426,6 +2452,8 @@ function infinify(obj) {
 function init() {
   id("levelLayer").height = level[0].length * baseBlockSize;
   id("levelLayer").width = level.length * baseBlockSize;
+  id("bgLayer").height = level[0].length * baseBlockSize;
+  id("bgLayer").width = level.length * baseBlockSize;
   respawn();
   drawLevel();
   drawGrid();

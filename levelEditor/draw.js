@@ -72,11 +72,17 @@ function drawLevel(clear = false) {
               blockIncludes(level[x][y], [42, 43, 44, 45, 54]))) ||
           (!arraysEqual(prevSpawnPos, [
             player.spawnPoint[0],
-            player.spawnPoint[1]
+            player.spawnPoint[1],
           ]) &&
-            (arraysEqual([Math.floor(prevSpawnPos[0]),Math.floor(prevSpawnPos[1])], [parseInt(x), parseInt(y)]) ||
+            (arraysEqual(
+              [Math.floor(prevSpawnPos[0]), Math.floor(prevSpawnPos[1])],
+              [parseInt(x), parseInt(y)]
+            ) ||
               arraysEqual(
-                [Math.floor(player.spawnPoint[0]), Math.floor(player.spawnPoint[1])],
+                [
+                  Math.floor(player.spawnPoint[0]),
+                  Math.floor(player.spawnPoint[1]),
+                ],
                 [parseInt(x), parseInt(y)]
               )))
         )
@@ -104,6 +110,7 @@ function drawBlock(
 ) {
   let blockSize = baseBlockSize * size;
   let lL = canvas.getContext("2d");
+  let bL = id("bgLayer").getContext("2d");
   lL.lineWidth = (blockSize * 3) / 25;
   let xb = (x + xOffset) * baseBlockSize + camCenterx;
   let yb = (y + yOffset) * baseBlockSize + camCentery;
@@ -135,6 +142,7 @@ function drawBlock(
     jOn = false;
   }
   lL.clearRect(xb, yb, blockSize, blockSize);
+  bL.clearRect(xb, yb, blockSize, blockSize);
   switch (type) {
     case 1:
       lL.fillStyle = "#000000";
@@ -143,7 +151,7 @@ function drawBlock(
       lL.fillStyle = "#FF0000";
       break;
     case 3:
-      if (isSpawn(x+xOffset, y+yOffset)) {
+      if (isSpawn(x + xOffset, y + yOffset)) {
         lL.fillStyle = "#00FFFF88";
       } else lL.fillStyle = "#00888888";
       break;
@@ -184,12 +192,12 @@ function drawBlock(
       lL.fillStyle = "#FF880088";
       break;
     case 17:
-      if (isSpawn(x+xOffset, y+yOffset)) {
+      if (isSpawn(x + xOffset, y + yOffset)) {
         lL.fillStyle = "#FFFF0088";
       } else lL.fillStyle = "#88880088";
       break;
     case 18:
-      if (isSpawn(x+xOffset, y+yOffset)) {
+      if (isSpawn(x + xOffset, y + yOffset)) {
         lL.fillStyle = "#FFFF0088";
       } else lL.fillStyle = "#88880088";
       break;
@@ -361,10 +369,17 @@ function drawBlock(
       lL.fillStyle = `rgb(${(1 - Math.min(data[2] / data[1], 1)) * 255},0,0)`;
       if (data[2] === 0) lL.fillStyle = `rgba(255,0,0,0.5)`;
       break;
+    case 74:
+      lL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
+      bL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
+      break;
     default:
       clear = true;
   }
-  if (!clear) lL.fillRect(xb, yb, blockSize, blockSize);
+  if (!clear && (type !== 74 || canvas.id !== "levelLayer"))
+    lL.fillRect(xb, yb, blockSize, blockSize);
+  if (type === 74 && canvas.id === "levelLayer")
+    bL.fillRect(xb, yb, blockSize, blockSize);
   switch (type) {
     case 2:
       lL.strokeStyle = "#880000";
@@ -388,7 +403,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 3:
-      if (isSpawn(x+xOffset, y+yOffset)) {
+      if (isSpawn(x + xOffset, y + yOffset)) {
         lL.strokeStyle = "#00888888";
       } else lL.strokeStyle = "#00444488";
       lL.beginPath();
@@ -785,7 +800,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 17:
-      if (isSpawn(x+xOffset, y+yOffset)) {
+      if (isSpawn(x + xOffset, y + yOffset)) {
         lL.strokeStyle = "#88880088";
       } else lL.strokeStyle = "#44440088";
       lL.beginPath();
@@ -799,7 +814,7 @@ function drawBlock(
       lL.stroke();
       break;
     case 18:
-      if (isSpawn(x+xOffset, y+yOffset)) {
+      if (isSpawn(x + xOffset, y + yOffset)) {
         lL.strokeStyle = "#88880088";
       } else lL.strokeStyle = "#44440088";
       lL.beginPath();
@@ -1490,10 +1505,28 @@ function drawBlock(
     case 52:
       if (!sOn[data[4]] !== !data[3]) {
         drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
-        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[2],
+          xOffset + size / 4,
+          yOffset + size / 4,
+          size / 2,
+          useDefault
+        );
       } else {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
-        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[1],
+          xOffset + size / 4,
+          yOffset + size / 4,
+          size / 2,
+          useDefault
+        );
       }
 
       lL.fillStyle = "#00880044";
@@ -1521,10 +1554,28 @@ function drawBlock(
     case 53:
       if (tOn !== data[3]) {
         drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
-        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[2],
+          xOffset + size / 4,
+          yOffset + size / 4,
+          size / 2,
+          useDefault
+        );
       } else {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
-        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[1],
+          xOffset + size / 4,
+          yOffset + size / 4,
+          size / 2,
+          useDefault
+        );
       }
 
       lL.fillStyle = "#88888844";
@@ -1556,10 +1607,28 @@ function drawBlock(
     case 54:
       if (jOn !== data[3]) {
         drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
-        drawBlock(canvas, x, y, data[2], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[2],
+          xOffset + size / 4,
+          yOffset + size / 4,
+          size / 2,
+          useDefault
+        );
       } else {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
-        drawBlock(canvas, x, y, data[1], xOffset + size / 4, yOffset + size / 4, size / 2, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[1],
+          xOffset + size / 4,
+          yOffset + size / 4,
+          size / 2,
+          useDefault
+        );
       }
 
       lL.fillStyle = "#88440044";
@@ -2301,6 +2370,8 @@ function adjustScreen(instant = false) {
     }
     prevCentery = camCentery;
   }
+  id("bgLayer").style.left = camOffsetx + "px";
+  id("bgLayer").style.top = camOffsety + "px";
   id("levelLayer").style.left = camOffsetx + "px";
   id("levelLayer").style.top = camOffsety + "px";
   id("background").style.left = camOffsetx + "px";
@@ -2315,6 +2386,14 @@ function adjustLevelSize() {
     window.innerWidth + 2 * camOffsetLimit
   );
   id("levelLayer").height = Math.min(
+    level[0].length * baseBlockSize,
+    window.innerHeight + 2 * camOffsetLimit
+  );
+  id("bgLayer").width = Math.min(
+    level.length * baseBlockSize,
+    window.innerWidth + 2 * camOffsetLimit
+  );
+  id("bgLayer").height = Math.min(
     level[0].length * baseBlockSize,
     window.innerHeight + 2 * camOffsetLimit
   );

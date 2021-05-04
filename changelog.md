@@ -585,3 +585,9 @@ Both
 Editor
 
 - Fixed bug where middle clicking causes weird stuff
+
+### 4 May 2021 #2
+
+Editor
+
+- Added colored background blocks
