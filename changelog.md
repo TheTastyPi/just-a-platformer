@@ -591,3 +591,21 @@ Editor
 Editor
 
 - Added colored background blocks
+
+#### 4 May 2021
+
+Editor
+
+- Fixed bug where middle clicking causes weird stuff
+
+### 4 May 2021 #2
+
+Editor
+
+- Added colored background blocks
+
+#### 4 May 2021 #3
+
+Editor
+
+- Fixed bug where middle clicking a mini-unstable block doesn't select it
