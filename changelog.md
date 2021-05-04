@@ -579,3 +579,9 @@ Editor
 Both
 
 - Using the power of basic kinematics, lower frame rates now no longer causes inaccurate physics
+
+#### 4 May 2021
+
+Editor
+
+- Fixed bug where middle clicking causes weird stuff
