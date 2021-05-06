@@ -1578,8 +1578,8 @@ function setSpawn(x, y, start = false) {
     mini
   ];
   if (start) player.startPoint = deepCopy(player.spawnPoint);
-  for (let x; x <= level.length - 1; x += 0.5) {
-    for (let y; y <= level[0].length - 1; y += 0.5) {
+  for (let x = 0; x <= level.length - 1; x += 0.5) {
+    for (let y = 0; y <= level[0].length - 1; y += 0.5) {
       let block = getBlock(x, y);
       if (blockIncludes(block, 31)) {
         editProp(x, y, 31, 3, "used/unsaved", "used", true);

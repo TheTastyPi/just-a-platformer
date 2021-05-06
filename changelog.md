@@ -609,3 +609,9 @@ Editor
 Editor
 
 - Fixed bug where middle clicking a mini-unstable block doesn't select it
+
+#### 6 May 2021
+
+Editor
+
+- Fixed bug where one-time switch used status doesn't save on checkpoint
