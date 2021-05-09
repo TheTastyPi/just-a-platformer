@@ -615,3 +615,11 @@ Editor
 Editor
 
 - Fixed bug where one-time switch used status doesn't save on checkpoint
+
+## 9 May 2021
+
+Editor
+
+- Added two new blocks: Chain Start and Chain Block
+- Fixed bug where middle clicking a block on a timer causes weird stuff
+- Fixed bug where shift middle clicking can cause weird stuff to happen with the selection display
