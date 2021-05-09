@@ -1399,11 +1399,12 @@ function nextFrame(timeStamp) {
               if (getBlock(x + block[1], y + block[2])[0] === 76) {
                 let xx = x + block[1];
                 let yy = y + block[2];
+                editProp(x, y, 75, 4, false, block[3]);
+                addTimer(x, y, 4, 75, subBlock);
+                if (getBlock(xx,yy)[5] < getBlock(xx,yy)[3]) break;
                 editProp(xx, yy, 76, 4, false, true);
                 editProp(xx, yy, 76, 5, false, getBlock(xx, yy)[3]);
                 addTimer(xx, yy, 5, 76, subBlock);
-                editProp(x, y, 75, 4, false, block[3]);
-                addTimer(x, y, 4, 75, subBlock);
               }
               break;
             case 76:

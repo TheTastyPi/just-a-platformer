@@ -2288,6 +2288,7 @@ function drawBlock(
         yb + blockSize - blockSize / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
       lL.stroke();
       lL.strokeRect(
         xb + blockSize / 4,
@@ -2312,6 +2313,7 @@ function drawBlock(
         yb + blockSize - blockSize / 2
       );
       lL.lineTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
       lL.stroke();
       break;
     default:

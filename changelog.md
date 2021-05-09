@@ -623,3 +623,10 @@ Editor
 - Added two new blocks: Chain Start and Chain Block
 - Fixed bug where middle clicking a block on a timer causes weird stuff
 - Fixed bug where shift middle clicking can cause weird stuff to happen with the selection display
+
+#### 9 May 2021 #2
+
+Editor
+
+- Fixed bug where Chain Start can activate chain blocks while they're already activated
+- Fixed a visual issue with Chain Start and Chain Block
