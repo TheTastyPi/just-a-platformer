@@ -591,3 +591,42 @@ Editor
 Editor
 
 - Added colored background blocks
+
+#### 4 May 2021
+
+Editor
+
+- Fixed bug where middle clicking causes weird stuff
+
+### 4 May 2021 #2
+
+Editor
+
+- Added colored background blocks
+
+#### 4 May 2021 #3
+
+Editor
+
+- Fixed bug where middle clicking a mini-unstable block doesn't select it
+
+#### 6 May 2021
+
+Editor
+
+- Fixed bug where one-time switch used status doesn't save on checkpoint
+
+## 9 May 2021
+
+Editor
+
+- Added two new blocks: Chain Start and Chain Block
+- Fixed bug where middle clicking a block on a timer causes weird stuff
+- Fixed bug where shift middle clicking can cause weird stuff to happen with the selection display
+
+#### 9 May 2021 #2
+
+Editor
+
+- Fixed bug where Chain Start can activate chain blocks while they're already activated
+- Fixed a visual issue with Chain Start and Chain Block

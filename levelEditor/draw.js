@@ -72,7 +72,7 @@ function drawLevel(clear = false) {
               blockIncludes(level[x][y], [42, 43, 44, 45, 54]))) ||
           (!arraysEqual(prevSpawnPos, [
             player.spawnPoint[0],
-            player.spawnPoint[1],
+            player.spawnPoint[1]
           ]) &&
             (arraysEqual(
               [Math.floor(prevSpawnPos[0]), Math.floor(prevSpawnPos[1])],
@@ -81,7 +81,7 @@ function drawLevel(clear = false) {
               arraysEqual(
                 [
                   Math.floor(player.spawnPoint[0]),
-                  Math.floor(player.spawnPoint[1]),
+                  Math.floor(player.spawnPoint[1])
                 ],
                 [parseInt(x), parseInt(y)]
               )))
@@ -372,6 +372,12 @@ function drawBlock(
     case 74:
       lL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
       bL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
+      break;
+    case 75:
+      lL.fillStyle = "#222288";
+      break;
+    case 76:
+      lL.fillStyle = `hsla(240,50%,50%,${data[4] * 0.5 + 0.5})`;
       break;
     default:
       clear = true;
@@ -2267,6 +2273,48 @@ function drawBlock(
       drawBlock(canvas, x, y, data[2], 0, 1 / 2, 1 / 2, useDefault);
       drawBlock(canvas, x, y, data[3], 1 / 2, 0, 1 / 2, useDefault);
       drawBlock(canvas, x, y, data[4], 1 / 2, 1 / 2, 1 / 2, useDefault);
+      break;
+    case 75:
+      lL.strokeStyle = `hsl(240,50%,${(60 * data[4]) / data[3]}%)`;
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.lineTo(
+        xb + blockSize - blockSize / 2,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2
+      );
+      lL.lineTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.stroke();
+      lL.strokeRect(
+        xb + blockSize / 4,
+        yb + blockSize / 4,
+        blockSize / 2,
+        blockSize / 2
+      );
+      break;
+    case 76:
+      lL.strokeStyle = `hsla(240,50%,${(80 * data[5]) / data[3]}%,${
+        data[4] * 0.75 + 0.25
+      })`;
+      lL.beginPath();
+      lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.lineTo(
+        xb + blockSize - blockSize / 2,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - blockSize / 2
+      );
+      lL.lineTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
+      lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
+      lL.stroke();
       break;
     default:
   }

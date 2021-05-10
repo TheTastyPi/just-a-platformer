@@ -18,7 +18,8 @@ id("levelLayer").addEventListener("mousedown", function (input) {
     let trueBlock = getBlock(x, y, false);
     let block = getBlock(x, y);
     let trueType = getBlockType(x, y, false);
-    let type = getBlockType(x, y);
+    let type = block;
+    if (typeof type === "object") type = type[0];
     if (control.e) {
       if (input.button === 0) {
         openPropertyMenu(x, y);
@@ -33,14 +34,14 @@ id("levelLayer").addEventListener("mousedown", function (input) {
       if (input.button === 1) {
         if (player.selectedBlock[0] == player.selectedBlock[1]) {
           id("blockSelect" + player.selectedBlock[1]).style.boxShadow =
-            "#0 0 0 5px FF0000";
+            "0 0 0 5px #FF0000";
         } else {
           id("blockSelect" + player.selectedBlock[1]).style.boxShadow = "";
         }
-        player.selectedBlock[1] = trueType;
-        if (player.selectedBlock[1] === 73) player.selectedBlock[1] = type;
+        player.selectedBlock[1] = trueType === 73 ? type : trueType;
         if (hasProperty(player.selectedBlock[1])) {
           for (let i in defaultProperty[player.selectedBlock[1]]) {
+            if (blockProperty[player.selectedBlock[1]][i][0] === "!") continue;
             defaultProperty[player.selectedBlock[1]][i] = deepCopy(
               block[parseInt(i) + 1]
             );
@@ -116,6 +117,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         player.selectedBlock[0] = trueType === 73 ? type : trueType;
         if (hasProperty(player.selectedBlock[0])) {
           for (let i in defaultProperty[player.selectedBlock[0]]) {
+            if (blockProperty[player.selectedBlock[0]][i][0] === "!") continue;
             defaultProperty[player.selectedBlock[0]][i] = deepCopy(
               block[parseInt(i) + 1]
             );

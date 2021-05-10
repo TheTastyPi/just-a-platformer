@@ -52,7 +52,7 @@ var level = [
   [1, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
-const hasHitbox = [1, 5, 11, 24, 25, 26, 40, 47, 51, 61, 62];
+const hasHitbox = [1, 5, 11, 24, 25, 26, 40, 47, 51, 61, 62, 75];
 const blockName = [
   "Empty Space",
   "Solid Block",
@@ -129,6 +129,8 @@ const blockName = [
   "Unstable Block", // unstable (72)
   "Mini Blocks", // mini (73)
   "Colored BG Block", // colored bg (74)
+  "Chain Start",
+  "Chain Block" // chain (75,76)
 ];
 const blockSelect = [
   "Special",
@@ -213,7 +215,10 @@ const blockSelect = [
   43,
   44,
   45,
-  54
+  54,
+  "Chain",
+  75,
+  76
 ];
 const blockProperty = {
   17: [
@@ -263,6 +268,8 @@ const blockProperty = {
   72: ["Breaking Period", "!Timer", "Reconstruction Period", "!Timer2"],
   73: ["!Q1", "!Q2", "!Q3", "!Q4"],
   74: ["ColorR", "ColorG", "ColorB"],
+  75: ["Next X Offset", "Next Y Offset", "Interval", "!Timer"],
+  76: ["Next X Offset", "Next Y Offset", "Active Duration", "!State", "!Timer"]
 };
 const defaultProperty = {
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
@@ -292,6 +299,8 @@ const defaultProperty = {
   72: [1000, 1000, 1000, 1000],
   73: [0, 0, 0, 0],
   74: [255, 127, 127],
+  75: [1, 0, 1000, 1000],
+  76: [1, 0, 500, false, 500]
 };
 const propertyType = {
   17: [
@@ -341,6 +350,8 @@ const propertyType = {
   72: ["number", "number", "number", "number"],
   73: ["block", "block", "block", "block"],
   74: ["number", "number", "number"],
+  75: ["number", "number", "number", "number"],
+  76: ["number", "number", "number", "boolean", "number"]
 };
 const propertyLimit = {
   17: [
@@ -383,7 +394,7 @@ const propertyLimit = {
   51: [
     [0, 255],
     [0, 255],
-    [0, 255],
+    [0, 255]
   ],
   52: ["none", "none", "none", [0, 99]],
   53: ["none", "none", "none"],
@@ -398,6 +409,8 @@ const propertyLimit = {
     [0, 255],
     [0, 255]
   ],
+  75: ["none", "none", [0, 1000 * 60 * 60], "none"],
+  76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"]
 };
 var prevVersions = [
   [
@@ -527,7 +540,7 @@ function nextFrame(timeStamp) {
             let y = ty / 2;
             let bx = Math.floor(x);
             let by = Math.floor(y);
-            let props = getBlock(x, y,true,true);
+            let props = getBlock(x, y, true, true);
             let type = getBlockType(x, y);
             if (getBlock(x, y, false)[0] !== 73) {
               x = bx;
@@ -1025,6 +1038,12 @@ function nextFrame(timeStamp) {
                 addTimer(x, y, 2, 72, subBlockPos);
                 shouldDrawLevel = true;
               }
+              if (props[0] === 75 && props[3] <= props[4]) {
+                editProp(x, y, 75, 4, false, props[3]);
+                let subBlockPos = getSubBlockPos(x, y);
+                addTimer(x, y, 4, 75, subBlockPos);
+                shouldDrawLevel = true;
+              }
             }
           }
         }
@@ -1074,7 +1093,7 @@ function nextFrame(timeStamp) {
               let y = ty / 2;
               let bx = Math.floor(x);
               let by = Math.floor(y);
-              let props = getBlock(x, y,true,true);
+              let props = getBlock(x, y, true, true);
               let type = getBlockType(x, y);
               if (getBlockType(x, y, false) !== 73) {
                 x = bx;
@@ -1344,6 +1363,18 @@ function nextFrame(timeStamp) {
           continue;
         }
         block[index] -= dt;
+        if (
+          type === 76 &&
+          block[5] / block[3] < 0.5 &&
+          getBlock(x + block[1], y + block[2])[0] === 76 &&
+          !getBlock(x + block[1], y + block[2])[4]
+        ) {
+          let xx = x + block[1];
+          let yy = y + block[2];
+          editProp(xx, yy, 76, 4, false, true);
+          editProp(xx, yy, 76, 5, false, getBlock(xx, yy)[3]);
+          addTimer(xx, yy, 5, 76, subBlock);
+        }
         if (block[index] <= 0) {
           block[index] = 0;
           timerList.splice(j, 1);
@@ -1362,6 +1393,23 @@ function nextFrame(timeStamp) {
                 default:
                   break;
               }
+              break;
+            case 75:
+              block[4] = block[3];
+              if (getBlock(x + block[1], y + block[2])[0] === 76) {
+                let xx = x + block[1];
+                let yy = y + block[2];
+                editProp(x, y, 75, 4, false, block[3]);
+                addTimer(x, y, 4, 75, subBlock);
+                if (getBlock(xx,yy)[5] < getBlock(xx,yy)[3]) break;
+                editProp(xx, yy, 76, 4, false, true);
+                editProp(xx, yy, 76, 5, false, getBlock(xx, yy)[3]);
+                addTimer(xx, yy, 5, 76, subBlock);
+              }
+              break;
+            case 76:
+              block[5] = block[3];
+              block[4] = false;
               break;
             default:
               break;
@@ -1519,8 +1567,7 @@ function respawn(start = false) {
   player.size = 20;
   player.gameSpeed = player.spawnPoint[11];
   let blockSize = baseBlockSize;
-  if (player.spawnPoint[12])
-    blockSize /= 2;
+  if (player.spawnPoint[12]) blockSize /= 2;
   let spawnx = player.spawnPoint[0] * baseBlockSize;
   let spawny = player.spawnPoint[1] * baseBlockSize;
   if (player.xg) {
@@ -1545,6 +1592,15 @@ function respawn(start = false) {
       if (blockIncludes(block, 72)) {
         editProp(x, y, 72, 2, false, false, true, 1);
         editProp(x, y, 72, 4, false, false, true, 3);
+        shouldDraw = true;
+      }
+      if (blockIncludes(block, 75)) {
+        editProp(x, y, 75, 4, false, false, true, 3);
+        shouldDraw = true;
+      }
+      if (blockIncludes(block, 76)) {
+        editProp(x, y, 76, 5, false, false, true, 3);
+        editProp(x, y, 76, 4, false, false, true);
         shouldDraw = true;
       }
     }
@@ -1578,8 +1634,8 @@ function setSpawn(x, y, start = false) {
     mini
   ];
   if (start) player.startPoint = deepCopy(player.spawnPoint);
-  for (let x; x <= level.length - 1; x += 0.5) {
-    for (let y; y <= level[0].length - 1; y += 0.5) {
+  for (let x = 0; x <= level.length - 1; x += 0.5) {
+    for (let y = 0; y <= level[0].length - 1; y += 0.5) {
       let block = getBlock(x, y);
       if (blockIncludes(block, 31)) {
         editProp(x, y, 31, 3, "used/unsaved", "used", true);
@@ -2211,6 +2267,11 @@ function getBlockType(x, y, subtype = true, block) {
           if (block[2] === 0) {
             type = 0;
           } else type = 1;
+          break;
+        case 76:
+          if (block[4]) {
+            type = 1;
+          } else type = 0;
           break;
         default:
           break;
