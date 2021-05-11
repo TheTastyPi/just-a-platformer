@@ -630,3 +630,9 @@ Editor
 
 - Fixed bug where Chain Start can activate chain blocks while they're already activated
 - Fixed a visual issue with Chain Start and Chain Block
+
+#### 11 May 2021
+
+Editor
+
+- Fixed bug where touching a Bounce Block++ while upside down will crash the game
