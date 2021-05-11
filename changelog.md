@@ -631,3 +631,8 @@ Editor
 Both
 
 - Added `[Space]` as a substitute key for jumping
+#### 11 May 2021
+
+Editor
+
+- Fixed bug where touching a Bounce Block++ while upside down will crash the game
