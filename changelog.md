@@ -592,18 +592,6 @@ Editor
 
 - Added colored background blocks
 
-#### 4 May 2021
-
-Editor
-
-- Fixed bug where middle clicking causes weird stuff
-
-### 4 May 2021 #2
-
-Editor
-
-- Added colored background blocks
-
 #### 4 May 2021 #3
 
 Editor
@@ -630,3 +618,16 @@ Editor
 
 - Fixed bug where Chain Start can activate chain blocks while they're already activated
 - Fixed a visual issue with Chain Start and Chain Block
+
+## 10 May 2021
+
+Editor
+
+- Added Coins
+  - Can have a worth between 1-100
+  - No use besides cosmetic, for now
+  - Not saved on export/start block placement
+
+Both
+
+- Added `[Space]` as a substitute key for jumping

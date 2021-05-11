@@ -538,6 +538,9 @@ document.addEventListener("keydown", function (input) {
       case "KeyC":
         openInfo();
         break;
+      case "Space":
+        control.space = true;
+        break;
       case "MobileSize":
         if (id("mobileSizeMenu").style.display !== "none") {
           id("mobileSizeMenu").style.display = "none";
@@ -574,6 +577,9 @@ document.addEventListener("keyup", function (input) {
         break;
       case "KeyE":
         control.e = false;
+        break;
+      case "Space":
+        control.space = false;
         break;
       default:
     }
