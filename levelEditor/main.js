@@ -733,7 +733,7 @@ function nextFrame(timeStamp) {
                     break;
                   case 62:
                     for (let j = by1; j <= by2; j++) {
-                      let jtype = getBlockType(x2, j / 2);
+                      let jtype = getBlockType(x, j / 2);
                       if (
                         hasHitbox.includes(jtype) &&
                         jtype !== 62 &&
@@ -887,7 +887,7 @@ function nextFrame(timeStamp) {
                     break;
                   case 24:
                     for (let j = bx1; j <= bx2; j++) {
-                      let jtype = getBlockType(j / 2);
+                      let jtype = getBlockType(j / 2, y);
                       if (
                         hasHitbox.includes(jtype) &&
                         ![5, 24, 47, 26].includes(jtype) &&
