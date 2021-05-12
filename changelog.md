@@ -638,3 +638,9 @@ Editor
 Both
 
 - Added `[Space]` as a substitute key for jumping
+
+#### 12 May 2021
+
+Editor
+
+- Fixed bug where Chain Start and Chain Block doesn't work as a sub-block
