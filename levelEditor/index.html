@@ -15,6 +15,8 @@
       content="'just a level editor', a versatile level editor for the minimalistic platformer, 'just a platformer', created by TheTastyPi."
     />
     <meta name="author" content="TheTastyPi" />
+
+    <link rel="stylesheet" href="style.css">
   </head>
   <body
     onresize="adjustLevelSize()"
@@ -54,36 +56,10 @@
         Height: <span id="lvlHeight">9</span><br />
         Mouse Position: <span id="mousePos"></span><br />
         Mini Block: <span id="miniBlock">OFF</span><br />
-        Coins: <span id="coins">0</span><br /><br />
+        Coins: <span id="coins">0</span><br />
       </span>
-      <span id="control">
-        [CONTROL]<br />
-        LMB & RMB: Place block<br />
-        [shift] + LMB or RMB: Move player to cursor<br />
-        [ctrl] + LMB & Drag: Move the level (defocuses player)<br />
-        [ctrl] + RMB: Refocus on player<br />
-        MMB: Copy block clicked for LMB<br />
-        [shift] + MMB: Copy block clicked for RMB<br />
-        [E] + LMB: Edit block property (if any)<br />
-        [shift] + [arrow]: Increase level size<br />
-        [ctrl] + [arrow]: Decrease level size<br />
-        [shift] + [ctrl] + [arrow]: Change the level size by a specified
-        amount<br />
-        [shift] + [delete]: Clear level<br />
-        [ctrl] + [Z]: Undo last action<br />
-        [ctrl] + [shift] + [Z]: Redo undoed action<br />
-        [R]: Respawn from last checkpoint<br />
-        [shift] + [R]: Restart from startpoint<br />
-        [G]: Toggle god mode (no-death + inf jump)<br />
-        [N]: Toggle noclip<br />
-        [M]: Toggle mini block placement<br />
-        [1]: Toggle info display<br />
-        [2]: Toggle control display<br />
-        [3]: Toggle block selection<br />
-        [4]: Toggle grid<br />
-        [5]: Toggle credits button<br />
-        [shift] + [F]: Save level to selected save<br />
-        [ctrl] + [F]: Open save menu
+      <span id="controlNotice">
+        Press <span class="key">2</span> to view keybind info
       </span>
     </div>
     <div
@@ -198,6 +174,92 @@
           <button type="submit">Confirm</button>
         </div>
       </form>
+    </div>
+    <div id="control">
+      <h3>Controls</h3>
+      <p>Why are there so many???</p>
+      <div class="grid-wrapper">
+        <div class="keybind">
+          <span class="key">WASD</span>
+          /<span class="key">←→↑↓</span>:
+          Move
+        </div>
+        <div class="keybind">
+          Left/Right Click: Place Block
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + Left/Right Click: Teleport Player to Cursor
+        </div>
+        <div class="keybind">
+          <span class="key">Ctrl</span> + Left Drag: Move Level
+        </div>
+        <div class="keybind">
+          <span class="key">Ctrl</span> + Right Click: Refocus Player
+        </div>
+        <div class="keybind">
+          Middle Click: Bind Block Clicked to Left Click
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + Middle Click: Bind Block Clicked to Right Click
+        </div>
+        <div class="keybind">
+          <span class="key">E</span> + Left Click: Edit Block Properties (if any)
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + <span class="key">←→↑↓</span>: Increase Level Size
+        </div>
+        <div class="keybind">
+          <span class="key">Ctrl</span> + <span class="key">←→↑↓</span>: Decrease Level Size
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + <span class="key">Ctrl</span> + <span class="key">←→↑↓</span>: Change Level Size by Specified Amount
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + <span class="key">Delete</span>: Clear Level
+        </div>
+        <div class="keybind">
+          <span class="key">Ctrl</span> + <span class="key">Z</span>: Undo
+        </div>
+        <div class="keybind">
+          <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">Z</span>: Redo
+        </div>
+        <div class="keybind">
+          <span class="key">R</span>: Return to Checkpoint
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + <span class="key">R</span>: Return to Start
+        </div>
+        <div class="keybind">
+          <span class="key">G</span>: Toggle Godmode
+        </div>
+        <div class="keybind">
+          <span class="key">N</span>: Toggle Noclip
+        </div>
+        <div class="keybind">
+          <span class="key">M</span>: Toggle Mini Block Placement
+        </div>
+        <div class="keybind">
+          <span class="key">1</span>: Toggle Info Display
+        </div>
+        <div class="keybind">
+          <span class="key">2</span>: Toggle Control Display
+        </div>
+        <div class="keybind">
+          <span class="key">3</span>: Toggle Block Selection
+        </div>
+        <div class="keybind">
+          <span class="key">4</span>: Toggle Grid
+        </div>
+        <div class="keybind">
+          <span class="key">5</span>: Toggle Credits Button
+        </div>
+        <div class="keybind">
+          <span class="key">Shift</span> + <span class="key">F</span>: Save Level to Current Slot
+        </div>
+        <div class="keybind">
+          <span class="key">Ctrl</span> + <span class="key">F</span>: Open Save Menu
+        </div>
+      </div>
     </div>
     <div id="mainInfo">
       <div>

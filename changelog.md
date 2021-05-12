@@ -619,7 +619,13 @@ Editor
 - Fixed bug where Chain Start can activate chain blocks while they're already activated
 - Fixed a visual issue with Chain Start and Chain Block
 
-## 10 May 2021
+#### 11 May 2021
+
+Editor
+
+- Fixed bug where touching a Bounce Block++ while upside down will crash the game
+
+## 11 May 2021 #2
 
 Editor
 
@@ -627,12 +633,8 @@ Editor
   - Can have a worth between 1-100
   - No use besides cosmetic, for now
   - Not saved on export/start block placement
+- Changed how keybinds are viewed
 
 Both
 
 - Added `[Space]` as a substitute key for jumping
-#### 11 May 2021
-
-Editor
-
-- Fixed bug where touching a Bounce Block++ while upside down will crash the game
