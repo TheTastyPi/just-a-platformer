@@ -636,3 +636,9 @@ Editor
 Editor
 
 - Fixed bug where touching a Bounce Block++ while upside down will crash the game
+
+#### 12 May 2021
+
+Editor
+
+- Fixed bug where Chain Start and Chain Block doesn't work as a sub-block
