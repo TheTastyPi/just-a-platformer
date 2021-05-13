@@ -59,7 +59,6 @@ function drawLevel(clear = false) {
       } else {
         let prevBlock = prevLevel[x][y];
         if (prevBlock == undefined) prevBlock = 0;
-        // debugger;
         if (
           !arraysEqual(level[x][y], prevBlock) ||
           (!arraysEqual(player.switchsOn, prevSwitch) &&
@@ -2327,7 +2326,7 @@ function drawBlock(
       lL.clearRect(xb + padding, yb + padding, blockSize / 2, blockSize / 2);
 
       lL.fillStyle = `#FFFF66`;
-      if (player.coinPos.some(([x2, y2]) => x == x2 && y == y2)) lL.fillStyle += "88";
+      if (player.coinPos.some(([x2, y2]) => x + xOffset == x2 && y + yOffset == y2)) lL.fillStyle += "88";
       lL.fillRect(xb + padding, yb + padding, blockSize / 2, blockSize / 2);
       break;
     }

@@ -1333,7 +1333,7 @@ function nextFrame(timeStamp) {
                       id("coins").textContent = player.coins;
                       player.coinPos.push([x, y]);
 
-                      drawBlock(id("levelLayer"), x, y)
+                      drawBlock(id("levelLayer"), Math.round(x - 0.01), Math.round(y - 0.01))
                     }
                     break;
                   default:
@@ -2447,6 +2447,10 @@ function changeLevelSize(dir, num) {
         x[0] += num;
         return x;
       });
+      player.coinPos = player.coinPos.map(function (x) {
+        x[0] += num;
+        return x;
+      });
       break;
     case "right":
       if (num > 0) {
@@ -2475,6 +2479,10 @@ function changeLevelSize(dir, num) {
       player.startPoint[1] += num;
       player.y += baseBlockSize * num;
       timerList.map(function (x) {
+        x[1] += num;
+        return x;
+      });
+      player.coinPos = player.coinPos.map(function (x) {
         x[1] += num;
         return x;
       });

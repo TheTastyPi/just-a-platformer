@@ -625,7 +625,15 @@ Editor
 
 - Fixed bug where touching a Bounce Block++ while upside down will crash the game
 
-## 11 May 2021 #2
+- Added `[Space]` as a substitute key for jumping
+
+#### 12 May 2021
+
+Editor
+
+- Fixed bug where Chain Start and Chain Block doesn't work as a sub-block
+
+## 12 May 2021 #2
 
 Editor
 
@@ -636,11 +644,3 @@ Editor
 - Changed how keybinds are viewed
 
 Both
-
-- Added `[Space]` as a substitute key for jumping
-
-#### 12 May 2021
-
-Editor
-
-- Fixed bug where Chain Start and Chain Block doesn't work as a sub-block

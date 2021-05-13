@@ -41,23 +41,3 @@ h3 {
 .key:last-child {
 	margin-right: 2px;
 }
-
-.lmb,
-.rmb,
-.mmb {
-	min-width: 17px;
-	min-height: 17px;
-	border-radius: 50%;
-	display: inline-block;
-}
-
-.lmb {
-	background-image: conic-gradient(white 270deg, grey 0);
-}
-
-.rmb {
-	background-image: conic-gradient(grey 90deg, white 0);
-}
-
-.mmb {
-}

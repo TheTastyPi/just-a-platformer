@@ -92,5 +92,5 @@ if (isMobile) {
 	id("mainInfo").style.fontSize = "20px";
 
 	simulateKeypress("Digit1", "down");
-	simulateKeypress("Digit2", "down");
+	id("controlNotice").style.display = "none";
 }
