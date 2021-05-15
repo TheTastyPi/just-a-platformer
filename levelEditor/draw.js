@@ -2322,12 +2322,53 @@ function drawBlock(
       lL.stroke();
       break;
     case 77: {
-      const padding = blockSize / 4;
-      lL.clearRect(xb + padding, yb + padding, blockSize / 2, blockSize / 2);
+      if (data[1] < 0) {
+        lL.fillStyle = `#CC5555`;
+      } else lL.fillStyle = `#CCCC55`;
+      if (
+        player.coinPos.some(
+          ([x2, y2]) => x + xOffset == x2 && y + yOffset == y2
+        )
+      )
+        lL.fillStyle += "88";
+      lL.fillRect(
+        xb + blockSize / 4,
+        yb + blockSize / 4,
+        blockSize / 2,
+        blockSize / 2
+      );
 
-      lL.fillStyle = `#FFFF66`;
-      if (player.coinPos.some(([x2, y2]) => x + xOffset == x2 && y + yOffset == y2)) lL.fillStyle += "88";
-      lL.fillRect(xb + padding, yb + padding, blockSize / 2, blockSize / 2);
+      if (data[1] < 0) {
+        lL.fillStyle = `#FF6666`;
+      } else lL.fillStyle = `#FFFF66`;
+      if (
+        player.coinPos.some(
+          ([x2, y2]) => x + xOffset == x2 && y + yOffset == y2
+        )
+      )
+        lL.fillStyle += "88";
+      lL.fillRect(
+        xb + (3 * blockSize) / 8,
+        yb + (3 * blockSize) / 8,
+        blockSize / 4,
+        blockSize / 4
+      );
+
+      lL.fillStyle = "#000000";
+      if (
+        player.coinPos.some(
+          ([x2, y2]) => x + xOffset == x2 && y + yOffset == y2
+        )
+      )
+        lL.fillStyle += "88";
+      lL.font = blockSize / 4 + "px DSEG7-7SEGG";
+      lL.textAlign = "center";
+      lL.textBaseline = "middle";
+      lL.fillText(
+        Math.abs(data[1]),
+        xb + (7 * blockSize) / 16,
+        yb + blockSize / 2
+      );
       break;
     }
     default:

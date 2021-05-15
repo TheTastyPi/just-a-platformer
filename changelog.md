@@ -644,3 +644,10 @@ Editor
 Both
 
 - Added `[Space]` as a substitute key for jumping
+
+### 15 May 2021 #2
+
+Editor
+
+- Redesigned the appearance of coins
+- Coins can now have a negative value

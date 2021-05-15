@@ -419,7 +419,7 @@ const propertyLimit = {
   ],
   75: ["none", "none", [0, 1000 * 60 * 60], "none"],
   76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"],
-  77: [[1, 100]]
+  77: [[-100, 100]]
 };
 var prevVersions = [
   [
