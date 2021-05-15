@@ -30,7 +30,9 @@ const player = {
   size: 20,
   targetSize: 20,
   gameSpeed: 1,
-  miniBlock: false
+  miniBlock: false,
+  coins: 0,
+  coinPos: [],
 };
 const control = {
   lmb: false,
@@ -39,7 +41,8 @@ const control = {
   right: false,
   up: false,
   down: false,
-  e: false
+  e: false,
+  space: false
 };
 var level = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -130,7 +133,8 @@ const blockName = [
   "Mini Blocks", // mini (73)
   "Colored BG Block", // colored bg (74)
   "Chain Start",
-  "Chain Block" // chain (75,76)
+  "Chain Block", // chain (75,76)
+  "Coin" // coin (77)
 ];
 const blockSelect = [
   "Special",
@@ -139,6 +143,7 @@ const blockSelect = [
   18,
   41,
   46,
+  77,
   "Basic",
   0,
   1,
@@ -269,7 +274,8 @@ const blockProperty = {
   73: ["!Q1", "!Q2", "!Q3", "!Q4"],
   74: ["ColorR", "ColorG", "ColorB"],
   75: ["Next X Offset", "Next Y Offset", "Interval", "!Timer"],
-  76: ["Next X Offset", "Next Y Offset", "Active Duration", "!State", "!Timer"]
+  76: ["Next X Offset", "Next Y Offset", "Active Duration", "!State", "!Timer"],
+  77: ["Coin Value"]
 };
 const defaultProperty = {
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
@@ -300,7 +306,8 @@ const defaultProperty = {
   73: [0, 0, 0, 0],
   74: [255, 127, 127],
   75: [1, 0, 1000, 1000],
-  76: [1, 0, 500, false, 500]
+  76: [1, 0, 500, false, 500],
+  77: [1]
 };
 const propertyType = {
   17: [
@@ -351,7 +358,8 @@ const propertyType = {
   73: ["block", "block", "block", "block"],
   74: ["number", "number", "number"],
   75: ["number", "number", "number", "number"],
-  76: ["number", "number", "number", "boolean", "number"]
+  76: ["number", "number", "number", "boolean", "number"],
+  77: ["number"]
 };
 const propertyLimit = {
   17: [
@@ -410,7 +418,8 @@ const propertyLimit = {
     [0, 255]
   ],
   75: ["none", "none", [0, 1000 * 60 * 60], "none"],
-  76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"]
+  76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"],
+  77: [[1, 100]]
 };
 var prevVersions = [
   [
@@ -1317,6 +1326,16 @@ function nextFrame(timeStamp) {
                         (blockSize - player.size) / 2;
                     }
                     break;
+                  // coin
+                  case 77:
+                    if (!player.coinPos.some(([x2, y2]) => x == x2 && y == y2)) {
+                      player.coins += props[1];
+                      id("coins").textContent = player.coins;
+                      player.coinPos.push([x, y]);
+
+                      drawBlock(id("levelLayer"), Math.round(x - 0.01), Math.round(y - 0.01))
+                    }
+                    break;
                   default:
                     break;
                 }
@@ -1455,7 +1474,7 @@ function nextFrame(timeStamp) {
           player.yv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
-        (control.left || control.right) &&
+        (control.left || control.right || control.space) &&
         player.canJump &&
         (player.currentJumps > 0 || player.godMode) &&
         !player.canWalljump
@@ -1478,7 +1497,7 @@ function nextFrame(timeStamp) {
           player.xv = player.moveSpeed / (noFriction ? 6 : 1);
       }
       if (
-        (control.up || control.down) &&
+        (control.up || control.down || control.space) &&
         player.canJump &&
         (player.currentJumps > 0 || player.godMode) &&
         !player.canWalljump
@@ -1493,7 +1512,7 @@ function nextFrame(timeStamp) {
     if (
       player.canWalljump &&
       (((control.up || control.down) && !player.xg) ||
-        ((control.left || control.right) && player.xg))
+        ((control.left || control.right) && player.xg) || control.space)
     ) {
       if (player.wallJumpDir === "left" && control.left) {
         player.canJump = false;
@@ -1539,7 +1558,7 @@ function addVersion() {
   }
 }
 function getDefaultSpawn() {
-  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1, false];
+  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1, false, 0, []];
 }
 function respawn(start = false) {
   if (start) player.spawnPoint = deepCopy(player.startPoint);
@@ -1555,7 +1574,8 @@ function respawn(start = false) {
     arraysEqual(player.switchsOn, player.spawnPoint[5]) ||
     player.jumpOn !== player.spawnPoint[6] ||
     player.timerOn !== player.spawnPoint[7] ||
-    timerStage !== 0;
+    timerStage !== 0 ||
+    (player.coinPos.length !== 0 && start);
   player.switchsOn = [...player.spawnPoint[5]];
   player.jumpOn = player.spawnPoint[6];
   player.timerOn = player.spawnPoint[7];
@@ -1566,6 +1586,16 @@ function respawn(start = false) {
   player.targetSize = player.spawnPoint[10];
   player.size = 20;
   player.gameSpeed = player.spawnPoint[11];
+  player.coins = player.spawnPoint[13];
+  player.coinPos = deepCopy(player.spawnPoint[14]);
+  if (start) {
+    player.coins = 0;
+    player.coinPos = [];
+    player.spawnPoint[13] = 0;
+    player.spawnPoint[14] = [];
+    player.startPoint[13] = 0;
+    player.startPoint[14] = [];
+  }
   let blockSize = baseBlockSize;
   if (player.spawnPoint[12]) blockSize /= 2;
   let spawnx = player.spawnPoint[0] * baseBlockSize;
@@ -1631,9 +1661,15 @@ function setSpawn(x, y, start = false) {
     player.timerInterval,
     player.targetSize,
     player.gameSpeed,
-    mini
+    mini,
+    player.coins,
+    player.coinPos
   ];
-  if (start) player.startPoint = deepCopy(player.spawnPoint);
+  if (start) {
+    player.spawnPoint[13] = 0;
+    player.spawnPoint[14] = [];
+    player.startPoint = deepCopy(player.spawnPoint);
+  }
   for (let x = 0; x <= level.length - 1; x += 0.5) {
     for (let y = 0; y <= level[0].length - 1; y += 0.5) {
       let block = getBlock(x, y);
@@ -1668,9 +1704,12 @@ function addSave() {
 function save(auto = false) {
   if (player.currentSave !== undefined) {
     let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+    const startPoint = deinfinify(player.startPoint);
+    startPoint[13] = 0;
+    startPoint[14] = [];
     saves[player.currentSave] = [
       level,
-      deinfinify(player.startPoint),
+      startPoint,
       player.currentSave
     ];
     localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
@@ -2105,6 +2144,10 @@ function openPropertyMenu(
           if (propertyType[type][i] == "block" && newVal[0] == 17) {
             player.spawnPoint = [x, y].concat(newVal.slice(1));
             player.startPoint = deepCopy(player.spawnPoint);
+            player.spawnPoint[13] = 0;
+            player.spawnPoint[14] = [];
+            player.startPoint[13] = 0;
+            player.startPoint[14] = [];
           }
           if (type === 17) {
             player.spawnPoint[parseInt(i) + 2] = newVal;
@@ -2121,6 +2164,10 @@ function openPropertyMenu(
         }
         if (type === 17) {
           player.startPoint = deepCopy(player.spawnPoint);
+          player.spawnPoint[13] = 0;
+          player.spawnPoint[14] = [];
+          player.startPoint[13] = 0;
+          player.startPoint[14] = [];
         }
         drawLevel();
         menu.style.display = "none";
@@ -2195,7 +2242,10 @@ function getBlockType(x, y, subtype = true, block) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
     return 1;
   }
-  block ??= getBlock(x, y, subtype);
+  // im sorry for removing the `??=` but
+  // it broke on one of my off-brand browsers
+  // so im gonna have to remove it
+  block = block ?? getBlock(x, y, subtype);
   let type = block;
   if (typeof type === "object") type = type[0];
   if (subtype) {
@@ -2288,7 +2338,7 @@ function getBlockType(x, y, subtype = true, block) {
 }
 function getSubBlockPos(x, y, type) {
   let block = getBlock(x, y);
-  type ??= block[0];
+  type = type ?? block[0];
   if (type === 52) {
     if (!player.switchsOn[block[4]] !== !block[3]) {
       return 1;
@@ -2397,6 +2447,10 @@ function changeLevelSize(dir, num) {
         x[0] += num;
         return x;
       });
+      player.coinPos = player.coinPos.map(function (x) {
+        x[0] += num;
+        return x;
+      });
       break;
     case "right":
       if (num > 0) {
@@ -2425,6 +2479,10 @@ function changeLevelSize(dir, num) {
       player.startPoint[1] += num;
       player.y += baseBlockSize * num;
       timerList.map(function (x) {
+        x[1] += num;
+        return x;
+      });
+      player.coinPos = player.coinPos.map(function (x) {
         x[1] += num;
         return x;
       });

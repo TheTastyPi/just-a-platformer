@@ -592,18 +592,6 @@ Editor
 
 - Added colored background blocks
 
-#### 4 May 2021
-
-Editor
-
-- Fixed bug where middle clicking causes weird stuff
-
-### 4 May 2021 #2
-
-Editor
-
-- Added colored background blocks
-
 #### 4 May 2021 #3
 
 Editor
@@ -637,8 +625,22 @@ Editor
 
 - Fixed bug where touching a Bounce Block++ while upside down will crash the game
 
+- Added `[Space]` as a substitute key for jumping
+
 #### 12 May 2021
 
 Editor
 
 - Fixed bug where Chain Start and Chain Block doesn't work as a sub-block
+
+## 12 May 2021 #2
+
+Editor
+
+- Added Coins
+  - Can have a worth between 1-100
+  - No use besides cosmetic, for now
+  - Not saved on export/start block placement
+- Changed how keybinds are viewed
+
+Both

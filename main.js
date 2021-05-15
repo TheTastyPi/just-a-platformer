@@ -32,7 +32,8 @@ const control = {
   left: false,
   right: false,
   up: false,
-  down: false
+  down: false,
+  space: false,
 };
 const hasHitbox = [1, 5, 11, 40];
 
@@ -54,6 +55,9 @@ document.addEventListener("keydown", function (input) {
     case "ArrowRight":
     case "KeyD":
       control.right = true;
+      break;
+    case "Space":
+      control.space = true;
       break;
     case "Delete":
       wipeSave();
@@ -100,12 +104,12 @@ document.addEventListener("keyup", function (input) {
     case "ArrowUp":
     case "KeyW":
       control.up = false;
-      if (!control.down) player.canJump = true;
+      if (!control.down && !control.space) player.canJump = true;
       break;
     case "ArrowDown":
     case "KeyS":
       control.down = false;
-      if (!control.up) player.canJump = true;
+      if (!control.up && !control.space) player.canJump = true;
       break;
     case "ArrowLeft":
     case "KeyA":
@@ -114,6 +118,10 @@ document.addEventListener("keyup", function (input) {
     case "ArrowRight":
     case "KeyD":
       control.right = false;
+      break;
+    case "Space":
+      control.space = false;
+      if (!control.up && !control.down) player.canJump = true;
       break;
     default:
       break;
@@ -844,7 +852,7 @@ function nextFrame(timeStamp) {
       if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
         player.xv = player.moveSpeed / (noFriction ? 6 : 1);
     }
-    if (control.up || control.down) {
+    if (control.up || control.down || control.space) {
       if (player.canWalljump) {
         if (player.wallJumpDir === "left" && control.left) {
           player.canJump = false;

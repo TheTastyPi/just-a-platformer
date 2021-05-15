@@ -433,6 +433,10 @@ document.addEventListener("keydown", function (input) {
           id("control").style.display = "none";
         } else if (id("control").style.display !== "inline")
           id("control").style.display = "inline";
+        if (id("controlNotice").style.display === "") {
+          id("control").style.display = "inline";
+          id("controlNotice").style.display = "none";
+        }
         break;
       case "Digit3":
         if (id("blockSelect").style.display !== "none") {
@@ -538,6 +542,9 @@ document.addEventListener("keydown", function (input) {
       case "KeyC":
         openInfo();
         break;
+      case "Space":
+        control.space = true;
+        break;
       case "MobileSize":
         if (id("mobileSizeMenu").style.display !== "none") {
           id("mobileSizeMenu").style.display = "none";
@@ -560,20 +567,24 @@ document.addEventListener("keyup", function (input) {
       case "ArrowRight":
       case "KeyD":
         control.right = false;
-        if (!control.left && player.xg) player.canJump = true;
+        if (!control.left && !control.space && player.xg) player.canJump = true;
         break;
       case "ArrowUp":
       case "KeyW":
         control.up = false;
-        if (!control.down && !player.xg) player.canJump = true;
+        if (!control.down && !control.space && !player.xg) player.canJump = true;
         break;
       case "ArrowDown":
       case "KeyS":
         control.down = false;
-        if (!control.up && !player.xg) player.canJump = true;
+        if (!control.up && !control.space && !player.xg) player.canJump = true;
         break;
       case "KeyE":
         control.e = false;
+        break;
+      case "Space":
+        control.space = false;
+        if ((!control.up && !control.down && !player.xg) || (!control.left && !control.right && player.xg)) player.canJump = true;
         break;
       default:
     }

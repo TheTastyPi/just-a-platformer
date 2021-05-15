@@ -90,7 +90,4 @@ if (isMobile) {
 		id("infoOpen").style.display = "none";
 	}
 	id("mainInfo").style.fontSize = "20px";
-
-	simulateKeypress("Digit1", "down");
-	simulateKeypress("Digit2", "down");
 }

@@ -1,0 +1,43 @@
+#control {
+	position: absolute;
+	background: #eeeeeeee;
+	color: black;
+	display: none;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	padding: 25px;
+	border-radius: 15px;
+	touch-action: none;
+}
+
+.grid-wrapper {
+	display: grid;
+	gap: 10px;
+	grid-template-columns: 250px 250px;
+}
+
+h3 {
+	margin-top: 0;
+}
+
+.keybind {
+	line-height: 100%;
+}
+
+.key {
+	border: 1px solid #aaa;
+	background-color: #fff;
+	border-radius: 2px;
+	display: inline-block;
+	text-align: center;
+	line-height: 17px;
+	min-width: 17px;
+	height: 17px;
+	box-shadow: 0 3px #aaa;
+	margin-right: -6px;
+}
+
+.key:last-child {
+	margin-right: 2px;
+}

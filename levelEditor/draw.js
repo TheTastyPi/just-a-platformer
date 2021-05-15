@@ -84,7 +84,8 @@ function drawLevel(clear = false) {
                   Math.floor(player.spawnPoint[1])
                 ],
                 [parseInt(x), parseInt(y)]
-              )))
+              ))) ||
+          blockIncludes(level[x][y], 77)
         )
           drawBlock(canvas, parseInt(x), parseInt(y));
       }
@@ -97,7 +98,10 @@ function drawLevel(clear = false) {
   prevTimerStage = timerStage;
   prevJumpState = player.jumpOn;
   prevSpawnPos = [player.spawnPoint[0], player.spawnPoint[1]];
+
+  id("coins").textContent = player.coins;
 }
+
 function drawBlock(
   canvas,
   x,
@@ -382,6 +386,7 @@ function drawBlock(
     default:
       clear = true;
   }
+
   if (!clear && (type !== 74 || canvas.id !== "levelLayer"))
     lL.fillRect(xb, yb, blockSize, blockSize);
   if (type === 74 && canvas.id === "levelLayer")
@@ -2316,6 +2321,15 @@ function drawBlock(
       lL.lineTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
       lL.stroke();
       break;
+    case 77: {
+      const padding = blockSize / 4;
+      lL.clearRect(xb + padding, yb + padding, blockSize / 2, blockSize / 2);
+
+      lL.fillStyle = `#FFFF66`;
+      if (player.coinPos.some(([x2, y2]) => x + xOffset == x2 && y + yOffset == y2)) lL.fillStyle += "88";
+      lL.fillRect(xb + padding, yb + padding, blockSize / 2, blockSize / 2);
+      break;
+    }
     default:
   }
 }
