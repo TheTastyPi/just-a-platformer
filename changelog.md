@@ -651,3 +651,9 @@ Editor
 
 - Redesigned the appearance of coins
 - Coins can now have a negative value
+
+#### 15 May 2021 #3
+
+Editor
+
+- Fixed coin hitboxes
