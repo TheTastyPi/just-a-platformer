@@ -54,7 +54,7 @@
         [INFO]<br />
         Width: <span id="lvlWidth">9</span><br />
         Height: <span id="lvlHeight">9</span><br />
-        Mouse Position: <span id="mousePos"></span><br />
+        <span id="posText">Mouse</span> Position: <span id="mousePos"></span><br />
         Mini Block: <span id="miniBlock">OFF</span><br />
         Coins: <span id="coins">0</span><br />
       </span>
@@ -305,4 +305,10 @@ export text</textarea
   <script src="control.js"></script>
   <script src="mobile.js"></script>
   <script src="../shared/mobileCore.js"></script>
+  <script>
+    if (isMobile) {
+      id("posText").textContent = "Last Finger"
+      id("controlNotice").style.display = "none";
+    }
+  </script>
 </html>
