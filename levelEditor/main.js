@@ -1329,6 +1329,13 @@ function nextFrame(timeStamp) {
                   // coin
                   case 77:
                     if (!player.coinPos.some(([x2, y2]) => x == x2 && y == y2)) {
+                      if (
+                        player.x + player.size < x * blockSize + blockSize * sizeMult / 4 ||
+                        player.x > x * blockSize + blockSize * (sizeMult / 4) * 3 ||
+                        player.y + player.size < y * blockSize + blockSize * sizeMult / 4 ||
+                        player.y > y * blockSize + blockSize * (sizeMult / 4) * 3
+                      )
+                        break;
                       player.coins += props[1];
                       id("coins").textContent = player.coins;
                       player.coinPos.push([x, y]);
