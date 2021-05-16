@@ -2663,4 +2663,3 @@ function init() {
   adjustScreen(true);
   window.requestAnimationFrame(nextFrame);
 }
-// actual bruh
