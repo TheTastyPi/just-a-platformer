@@ -27,6 +27,7 @@ var prevSwitch = [];
 var prevTimer = false;
 var prevTimerStage = 0;
 var prevJumpState = false;
+var prevCoinAmt = 0;
 var prevSpawnPos = [];
 function drawLevel(clear = false) {
   let canvas = id("levelLayer");
@@ -70,6 +71,9 @@ function drawLevel(clear = false) {
           (player.jumpOn != prevJumpState &&
             ([42, 43, 44, 45, 54].includes(getBlockType(x, y, false)) ||
               blockIncludes(level[x][y], [42, 43, 44, 45, 54]))) ||
+          (player.coins != prevCoinAmt &&
+            ([78, 79, 80, 81, 82].includes(getBlockType(x, y, false)) ||
+              blockIncludes(level[x][y], [78, 79, 80, 81, 82]))) ||
           (!arraysEqual(prevSpawnPos, [
             player.spawnPoint[0],
             player.spawnPoint[1]
@@ -97,6 +101,7 @@ function drawLevel(clear = false) {
   prevTimer = player.timerOn;
   prevTimerStage = timerStage;
   prevJumpState = player.jumpOn;
+  prevCoinAmt = player.coins;
   prevSpawnPos = [player.spawnPoint[0], player.spawnPoint[1]];
 
   id("coins").textContent = player.coins;
@@ -382,6 +387,26 @@ function drawBlock(
       break;
     case 76:
       lL.fillStyle = `hsla(240,50%,50%,${data[4] * 0.5 + 0.5})`;
+      break;
+    case 78:
+      if (!(player.coins >= data[1])) {
+        lL.fillStyle = "#00000000";
+      } else lL.fillStyle = "#FFFF00";
+      break;
+    case 79:
+      if (player.coins >= data[1]) {
+        lL.fillStyle = "#00000000";
+      } else lL.fillStyle = "#888800";
+      break;
+    case 80:
+      if (!(player.coins >= data[1])) {
+        lL.fillStyle = "#00000000";
+      } else lL.fillStyle = "#FFFF00";
+      break;
+    case 81:
+      if (player.coins >= data[1]) {
+        lL.fillStyle = "#00000000";
+      } else lL.fillStyle = "#888800";
       break;
     default:
       clear = true;
@@ -1024,16 +1049,6 @@ function drawBlock(
           blockSize / 3 - (blockSize / 25) * 3,
           blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 50) * 3
         );
-
-        if (!data[2] || data[3] === "unused") {
-          lL.fillStyle = "#004400BB";
-        } else {
-          lL.fillStyle = "#440000BB";
-        }
-        lL.font = blockSize / 3 + "px DSEG7-7SEGG";
-        lL.textAlign = "left";
-        lL.textBaseline = "top";
-        lL.fillText(data[1], xb, yb);
       } else {
         if (!data[2] || data[3] === "unused") {
           lL.fillStyle = "#00880088";
@@ -1053,17 +1068,14 @@ function drawBlock(
           blockSize / 3 - (blockSize / 25) * 3,
           blockSize / 2 - (blockSize / 25) * 3 - (blockSize / 50) * 3
         );
-
-        if (!data[2] || data[3] === "unused") {
-          lL.fillStyle = "#008800BB";
-        } else {
-          lL.fillStyle = "#880000BB";
-        }
-        lL.font = blockSize / 3 + "px DSEG7-7SEGG";
-        lL.textAlign = "left";
-        lL.textBaseline = "top";
-        lL.fillText(data[1], xb, yb);
       }
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[1], xb, yb);
       break;
     case 32:
       lL.strokeStyle = "#008800";
@@ -1077,10 +1089,12 @@ function drawBlock(
       );
       lL.setLineDash([]);
 
-      lL.fillStyle = "#004400BB";
+      lL.fillStyle = "#FFFFFFBB";
       lL.font = blockSize / 3 + "px DSEG7-7SEGG";
       lL.textAlign = "left";
       lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
       lL.fillText(data[1], xb, yb);
       break;
     case 33:
@@ -1095,10 +1109,12 @@ function drawBlock(
       );
       lL.setLineDash([]);
 
-      lL.fillStyle = "#004400BB";
+      lL.fillStyle = "#FFFFFFBB";
       lL.font = blockSize / 3 + "px DSEG7-7SEGG";
       lL.textAlign = "left";
       lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
       lL.fillText(data[1], xb, yb);
       break;
     case 34:
@@ -1134,10 +1150,12 @@ function drawBlock(
       lL.stroke();
       lL.lineWidth = blockSize / 25;
 
-      lL.fillStyle = "#004400BB";
+      lL.fillStyle = "#FFFFFFBB";
       lL.font = blockSize / 3 + "px DSEG7-7SEGG";
       lL.textAlign = "left";
       lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
       lL.fillText(data[1], xb, yb);
       break;
     case 35:
@@ -1172,10 +1190,12 @@ function drawBlock(
       );
       lL.stroke();
 
-      lL.fillStyle = "#004400BB";
+      lL.fillStyle = "#FFFFFFBB";
       lL.font = blockSize / 3 + "px DSEG7-7SEGG";
       lL.textAlign = "left";
       lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
       lL.fillText(data[1], xb, yb);
       break;
     case 36:
@@ -2371,6 +2391,175 @@ function drawBlock(
       );
       break;
     }
+    case 78:
+      lL.strokeStyle = "#888800";
+      lL.lineWidth = blockSize / 25;
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
+
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[1], xb, yb);
+      break;
+    case 79:
+      lL.strokeStyle = "#444400";
+      lL.lineWidth = blockSize / 25;
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
+
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[1], xb, yb);
+      break;
+    case 80:
+      lL.lineWidth = blockSize / 25;
+      lL.strokeStyle = "#888800";
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
+
+      lL.lineWidth = (blockSize / 25) * 3;
+      lL.beginPath();
+      lL.moveTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 3);
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.stroke();
+
+      lL.beginPath();
+      lL.moveTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 3
+      );
+      lL.stroke();
+      lL.lineWidth = blockSize / 25;
+
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[1], xb, yb);
+      break;
+    case 81:
+      lL.lineWidth = blockSize / 25;
+      lL.strokeStyle = "#444400";
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
+
+      lL.lineWidth = (blockSize / 25) * 3;
+      lL.beginPath();
+      lL.moveTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 3);
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.stroke();
+
+      lL.beginPath();
+      lL.moveTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 3
+      );
+      lL.stroke();
+
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[1], xb, yb);
+      break;
+    case 82:
+      if (!(player.coins >= data[1]) !== !data[4]) {
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[3],
+          xOffset + size / 2,
+          yOffset + size / 2,
+          size / 2,
+          useDefault
+        );
+      } else {
+        drawBlock(canvas, x, y, data[3], xOffset, yOffset, size, useDefault);
+        drawBlock(
+          canvas,
+          x,
+          y,
+          data[2],
+          xOffset + size / 2,
+          yOffset + size / 2,
+          size / 2,
+          useDefault
+        );
+      }
+
+      lL.fillStyle = "#88880044";
+      lL.fillRect(xb, yb, blockSize, blockSize);
+
+      lL.lineWidth = blockSize / 25;
+      lL.strokeStyle = "#888800";
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
+
+      lL.fillStyle = "#FFFFFFBB";
+      lL.font = blockSize / 3 + "px DSEG7-7SEGG";
+      lL.textAlign = "left";
+      lL.textBaseline = "top";
+      lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
+      lL.fillStyle = "#000000BB";
+      lL.fillText(data[1], xb, yb);
     default:
   }
 }

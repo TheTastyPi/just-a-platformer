@@ -32,7 +32,7 @@ const player = {
   gameSpeed: 1,
   miniBlock: false,
   coins: 0,
-  coinPos: [],
+  coinPos: []
 };
 const control = {
   lmb: false,
@@ -134,7 +134,12 @@ const blockName = [
   "Colored BG Block", // colored bg (74)
   "Chain Start",
   "Chain Block", // chain (75,76)
-  "Coin" // coin (77)
+  "Coin",
+  "Coin Block A",
+  "Coin Block B",
+  "Coin Death Block A",
+  "Coin Death Block B",
+  "Custom Coin Block" // coin (77,78,79,80)
 ];
 const blockSelect = [
   "Special",
@@ -143,7 +148,6 @@ const blockSelect = [
   18,
   41,
   46,
-  77,
   "Basic",
   0,
   1,
@@ -223,7 +227,14 @@ const blockSelect = [
   54,
   "Chain",
   75,
-  76
+  76,
+  "Coin",
+  77,
+  78,
+  79,
+  80,
+  81,
+  82
 ];
 const blockProperty = {
   17: [
@@ -275,7 +286,12 @@ const blockProperty = {
   74: ["ColorR", "ColorG", "ColorB"],
   75: ["Next X Offset", "Next Y Offset", "Interval", "!Timer"],
   76: ["Next X Offset", "Next Y Offset", "Active Duration", "!State", "!Timer"],
-  77: ["Coin Value"]
+  77: ["Coin Value"],
+  78: ["Required Value"],
+  79: ["Required Value"],
+  80: ["Required Value"],
+  81: ["Required Value"],
+  82: ["Required Value", "BlockA", "BlockB", "Invert"]
 };
 const defaultProperty = {
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
@@ -307,7 +323,12 @@ const defaultProperty = {
   74: [255, 127, 127],
   75: [1, 0, 1000, 1000],
   76: [1, 0, 500, false, 500],
-  77: [1]
+  77: [1],
+  78: [1],
+  79: [1],
+  80: [1],
+  81: [1],
+  82: [1, 0, 1, false]
 };
 const propertyType = {
   17: [
@@ -359,7 +380,12 @@ const propertyType = {
   74: ["number", "number", "number"],
   75: ["number", "number", "number", "number"],
   76: ["number", "number", "number", "boolean", "number"],
-  77: ["number"]
+  77: ["integer"],
+  78: ["integer"],
+  79: ["integer"],
+  80: ["integer"],
+  81: ["integer"],
+  82: ["integer", "block", "block", "boolean"]
 };
 const propertyLimit = {
   17: [
@@ -419,7 +445,12 @@ const propertyLimit = {
   ],
   75: ["none", "none", [0, 1000 * 60 * 60], "none"],
   76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"],
-  77: [[-100, 100]]
+  77: [[-100, 100]],
+  78: [[-999, 999]],
+  79: [[-999, 999]],
+  80: [[-999, 999]],
+  81: [[-999, 999]],
+  82: [[-999, 999], "none", "none", "none"]
 };
 var prevVersions = [
   [
@@ -1328,19 +1359,30 @@ function nextFrame(timeStamp) {
                     break;
                   // coin
                   case 77:
-                    if (!player.coinPos.some(([x2, y2]) => x == x2 && y == y2)) {
+                    if (
+                      !player.coinPos.some(([x2, y2]) => x == x2 && y == y2)
+                    ) {
                       if (
-                        player.x + player.size < x * blockSize + blockSize * sizeMult / 4 ||
-                        player.x > x * blockSize + blockSize * (sizeMult / 4) * 3 ||
-                        player.y + player.size < y * blockSize + blockSize * sizeMult / 4 ||
-                        player.y > y * blockSize + blockSize * (sizeMult / 4) * 3
+                        player.x + player.size <
+                          x * blockSize + (blockSize * sizeMult) / 4 ||
+                        player.x >
+                          x * blockSize + blockSize * (sizeMult / 4) * 3 ||
+                        player.y + player.size <
+                          y * blockSize + (blockSize * sizeMult) / 4 ||
+                        player.y >
+                          y * blockSize + blockSize * (sizeMult / 4) * 3
                       )
                         break;
                       player.coins += props[1];
                       id("coins").textContent = player.coins;
                       player.coinPos.push([x, y]);
 
-                      drawBlock(id("levelLayer"), Math.round(x - 0.01), Math.round(y - 0.01))
+                      drawBlock(
+                        id("levelLayer"),
+                        Math.round(x - 0.01),
+                        Math.round(y - 0.01)
+                      );
+                      if (props[1] !== 0) shouldDrawLevel = true;
                     }
                     break;
                   default:
@@ -1399,7 +1441,7 @@ function nextFrame(timeStamp) {
           let yy = y + block[2];
           editProp(xx, yy, 76, 4, false, true);
           editProp(xx, yy, 76, 5, false, getBlock(xx, yy, true, true)[3]);
-          addTimer(xx, yy, 5, 76, getSubBlockPos(xx,yy));
+          addTimer(xx, yy, 5, 76, getSubBlockPos(xx, yy));
         }
         if (block[index] <= 0) {
           block[index] = 0;
@@ -1427,10 +1469,14 @@ function nextFrame(timeStamp) {
                 let yy = y + block[2];
                 editProp(x, y, 75, 4, false, block[3]);
                 addTimer(x, y, 4, 75, subBlock);
-                if (getBlock(xx,yy)[5] < getBlock(xx,yy, true, true)[3] || getSubBlockPos(x,y) !== subBlock) break;
+                if (
+                  getBlock(xx, yy)[5] < getBlock(xx, yy, true, true)[3] ||
+                  getSubBlockPos(x, y) !== subBlock
+                )
+                  break;
                 editProp(xx, yy, 76, 4, false, true);
                 editProp(xx, yy, 76, 5, false, getBlock(xx, yy)[3]);
-                addTimer(xx, yy, 5, 76, getSubBlockPos(xx,yy));
+                addTimer(xx, yy, 5, 76, getSubBlockPos(xx, yy));
               }
               break;
             case 76:
@@ -1519,7 +1565,8 @@ function nextFrame(timeStamp) {
     if (
       player.canWalljump &&
       (((control.up || control.down) && !player.xg) ||
-        ((control.left || control.right) && player.xg) || control.space)
+        ((control.left || control.right) && player.xg) ||
+        control.space)
     ) {
       if (player.wallJumpDir === "left" && control.left) {
         player.canJump = false;
@@ -1565,7 +1612,23 @@ function addVersion() {
   }
 }
 function getDefaultSpawn() {
-  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1, false, 0, []];
+  return [
+    4,
+    5,
+    325,
+    1,
+    600,
+    [],
+    false,
+    false,
+    false,
+    4000,
+    20,
+    1,
+    false,
+    0,
+    []
+  ];
 }
 function respawn(start = false) {
   if (start) player.spawnPoint = deepCopy(player.startPoint);
@@ -1714,11 +1777,7 @@ function save(auto = false) {
     const startPoint = deinfinify(player.startPoint);
     startPoint[13] = 0;
     startPoint[14] = [];
-    saves[player.currentSave] = [
-      level,
-      startPoint,
-      player.currentSave
-    ];
+    saves[player.currentSave] = [level, startPoint, player.currentSave];
     localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
     if (!auto) alert("Saved.");
   } else if (!auto) alert("No save is currently selected.");
@@ -2330,6 +2389,26 @@ function getBlockType(x, y, subtype = true, block) {
             type = 1;
           } else type = 0;
           break;
+        case 78:
+          if (player.coins >= block[1]) {
+            type = 1;
+          } else type = 0;
+          break;
+        case 79:
+          if (player.coins >= block[1]) {
+            type = 0;
+          } else type = 1;
+          break;
+        case 80:
+          if (player.coins >= block[1]) {
+            type = 2;
+          } else type = 0;
+          break;
+        case 81:
+          if (player.coins >= block[1]) {
+            type = 0;
+          } else type = 2;
+          break;
         default:
           break;
       }
@@ -2360,6 +2439,11 @@ function getSubBlockPos(x, y, type) {
     if (player.jumpOn !== block[3]) {
       return 1;
     } else return 2;
+  }
+  if (type === 82) {
+    if ((player.coins >= block[1]) ^ block[4]) {
+      return 2;
+    } else return 3;
   }
 }
 function editBlock(x, y, block, miniBlock = true) {

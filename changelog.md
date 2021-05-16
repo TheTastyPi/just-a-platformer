@@ -663,3 +663,11 @@ Editor
 Editor
 
 - Changed the appearance of custom switch/timer/jump blocks
+
+## 16 May 2021 #3
+
+Editor
+
+- Added 5 new blocks
+  - Coin Block A/B, Coin Death Block A/B, Custom Coin Block
+- Changed the appearance of switch IDs for visibility
