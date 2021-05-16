@@ -1521,8 +1521,8 @@ function drawBlock(
           x,
           y,
           data[2],
-          xOffset + size / 4,
-          yOffset + size / 4,
+          xOffset + size / 2,
+          yOffset + size / 2,
           size / 2,
           useDefault
         );
@@ -1533,8 +1533,8 @@ function drawBlock(
           x,
           y,
           data[1],
-          xOffset + size / 4,
-          yOffset + size / 4,
+          xOffset + size / 2,
+          yOffset + size / 2,
           size / 2,
           useDefault
         );
@@ -1570,8 +1570,8 @@ function drawBlock(
           x,
           y,
           data[2],
-          xOffset + size / 4,
-          yOffset + size / 4,
+          xOffset + size / 2,
+          yOffset + size / 3,
           size / 2,
           useDefault
         );
@@ -1582,8 +1582,8 @@ function drawBlock(
           x,
           y,
           data[1],
-          xOffset + size / 4,
-          yOffset + size / 4,
+          xOffset + size / 2,
+          yOffset + size / 2,
           size / 2,
           useDefault
         );
@@ -1623,8 +1623,8 @@ function drawBlock(
           x,
           y,
           data[2],
-          xOffset + size / 4,
-          yOffset + size / 4,
+          xOffset + size / 2,
+          yOffset + size / 2,
           size / 2,
           useDefault
         );
@@ -1635,8 +1635,8 @@ function drawBlock(
           x,
           y,
           data[1],
-          xOffset + size / 4,
-          yOffset + size / 4,
+          xOffset + size / 2,
+          yOffset + size / 2,
           size / 2,
           useDefault
         );
