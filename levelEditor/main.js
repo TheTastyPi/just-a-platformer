@@ -31,8 +31,7 @@ const player = {
   targetSize: 20,
   gameSpeed: 1,
   miniBlock: false,
-  coins: 0,
-  coinPos: []
+  coins: 0
 };
 const control = {
   lmb: false,
@@ -286,7 +285,7 @@ const blockProperty = {
   74: ["ColorR", "ColorG", "ColorB"],
   75: ["Next X Offset", "Next Y Offset", "Interval", "!Timer"],
   76: ["Next X Offset", "Next Y Offset", "Active Duration", "!State", "!Timer"],
-  77: ["Coin Value"],
+  77: ["Coin Value", "!Status"],
   78: ["Required Value"],
   79: ["Required Value"],
   80: ["Required Value"],
@@ -323,7 +322,7 @@ const defaultProperty = {
   74: [255, 127, 127],
   75: [1, 0, 1000, 1000],
   76: [1, 0, 500, false, 500],
-  77: [1],
+  77: [1, "uncollected"],
   78: [1],
   79: [1],
   80: [1],
@@ -380,7 +379,7 @@ const propertyType = {
   74: ["number", "number", "number"],
   75: ["number", "number", "number", "number"],
   76: ["number", "number", "number", "boolean", "number"],
-  77: ["integer"],
+  77: ["integer", "any"],
   78: ["integer"],
   79: ["integer"],
   80: ["integer"],
@@ -445,7 +444,7 @@ const propertyLimit = {
   ],
   75: ["none", "none", [0, 1000 * 60 * 60], "none"],
   76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"],
-  77: [[-100, 100]],
+  77: [[-100, 100], "none"],
   78: [[-999, 999]],
   79: [[-999, 999]],
   80: [[-999, 999]],
@@ -1359,9 +1358,7 @@ function nextFrame(timeStamp) {
                     break;
                   // coin
                   case 77:
-                    if (
-                      !player.coinPos.some(([x2, y2]) => x == x2 && y == y2)
-                    ) {
+                    if (props[2] === "uncollected") {
                       if (
                         player.x + player.size <
                           x * blockSize + (blockSize * sizeMult) / 4 ||
@@ -1373,16 +1370,10 @@ function nextFrame(timeStamp) {
                           y * blockSize + blockSize * (sizeMult / 4) * 3
                       )
                         break;
+                      editProp(x, y, 77, 2, false, "collected/unsaved");
                       player.coins += props[1];
                       id("coins").textContent = player.coins;
-                      player.coinPos.push([x, y]);
-
-                      drawBlock(
-                        id("levelLayer"),
-                        Math.round(x - 0.01),
-                        Math.round(y - 0.01)
-                      );
-                      if (props[1] !== 0) shouldDrawLevel = true;
+                      shouldDrawLevel = true;
                     }
                     break;
                   default:
@@ -1644,8 +1635,7 @@ function respawn(start = false) {
     arraysEqual(player.switchsOn, player.spawnPoint[5]) ||
     player.jumpOn !== player.spawnPoint[6] ||
     player.timerOn !== player.spawnPoint[7] ||
-    timerStage !== 0 ||
-    (player.coinPos.length !== 0 && start);
+    timerStage !== 0;
   player.switchsOn = [...player.spawnPoint[5]];
   player.jumpOn = player.spawnPoint[6];
   player.timerOn = player.spawnPoint[7];
@@ -1657,10 +1647,8 @@ function respawn(start = false) {
   player.size = 20;
   player.gameSpeed = player.spawnPoint[11];
   player.coins = player.spawnPoint[13];
-  player.coinPos = deepCopy(player.spawnPoint[14]);
   if (start) {
     player.coins = 0;
-    player.coinPos = [];
     player.spawnPoint[13] = 0;
     player.spawnPoint[14] = [];
     player.startPoint[13] = 0;
@@ -1689,6 +1677,12 @@ function respawn(start = false) {
         } else editProp(x, y, 31, 3, "used/unsaved", "unused", true);
         shouldDraw = true;
       }
+      if (blockIncludes(block, 77)) {
+        if (start) {
+          editProp(x, y, 77, 2, false, "uncollected", true);
+        } else editProp(x, y, 77, 2, "collected/unsaved", "uncollected", true);
+        shouldDraw = true;
+      }
       if (blockIncludes(block, 72)) {
         editProp(x, y, 72, 2, false, false, true, 1);
         editProp(x, y, 72, 4, false, false, true, 3);
@@ -1705,6 +1699,7 @@ function respawn(start = false) {
       }
     }
   }
+  id("coins").textContent = player.coins;
   if (shouldDraw) drawLevel();
   adjustScreen();
 }
@@ -1732,8 +1727,7 @@ function setSpawn(x, y, start = false) {
     player.targetSize,
     player.gameSpeed,
     mini,
-    player.coins,
-    player.coinPos
+    player.coins
   ];
   if (start) {
     player.spawnPoint[13] = 0;
@@ -1745,6 +1739,10 @@ function setSpawn(x, y, start = false) {
       let block = getBlock(x, y);
       if (blockIncludes(block, 31)) {
         editProp(x, y, 31, 3, "used/unsaved", "used", true);
+        shouldDraw = true;
+      }
+      if (blockIncludes(block, 77)) {
+        editProp(x, y, 77, 2, "collected/unsaved", "collected", true);
         shouldDraw = true;
       }
     }
@@ -2538,10 +2536,6 @@ function changeLevelSize(dir, num) {
         x[0] += num;
         return x;
       });
-      player.coinPos = player.coinPos.map(function (x) {
-        x[0] += num;
-        return x;
-      });
       break;
     case "right":
       if (num > 0) {
@@ -2570,10 +2564,6 @@ function changeLevelSize(dir, num) {
       player.startPoint[1] += num;
       player.y += baseBlockSize * num;
       timerList.map(function (x) {
-        x[1] += num;
-        return x;
-      });
-      player.coinPos = player.coinPos.map(function (x) {
         x[1] += num;
         return x;
       });

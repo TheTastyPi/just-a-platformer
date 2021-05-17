@@ -27,7 +27,7 @@ var prevSwitch = [];
 var prevTimer = false;
 var prevTimerStage = 0;
 var prevJumpState = false;
-var prevCoinAmt = 0;
+var prevCoin = 0;
 var prevSpawnPos = [];
 function drawLevel(clear = false) {
   let canvas = id("levelLayer");
@@ -71,7 +71,7 @@ function drawLevel(clear = false) {
           (player.jumpOn != prevJumpState &&
             ([42, 43, 44, 45, 54].includes(getBlockType(x, y, false)) ||
               blockIncludes(level[x][y], [42, 43, 44, 45, 54]))) ||
-          (player.coins != prevCoinAmt &&
+          (player.coins != prevCoin &&
             ([78, 79, 80, 81, 82].includes(getBlockType(x, y, false)) ||
               blockIncludes(level[x][y], [78, 79, 80, 81, 82]))) ||
           (!arraysEqual(prevSpawnPos, [
@@ -88,8 +88,7 @@ function drawLevel(clear = false) {
                   Math.floor(player.spawnPoint[1])
                 ],
                 [parseInt(x), parseInt(y)]
-              ))) ||
-          blockIncludes(level[x][y], 77)
+              )))
         )
           drawBlock(canvas, parseInt(x), parseInt(y));
       }
@@ -101,10 +100,8 @@ function drawLevel(clear = false) {
   prevTimer = player.timerOn;
   prevTimerStage = timerStage;
   prevJumpState = player.jumpOn;
-  prevCoinAmt = player.coins;
+  prevCoin = player.coins;
   prevSpawnPos = [player.spawnPoint[0], player.spawnPoint[1]];
-
-  id("coins").textContent = player.coins;
 }
 
 function drawBlock(
@@ -115,7 +112,8 @@ function drawBlock(
   xOffset = 0,
   yOffset = 0,
   size = 1,
-  useDefault = false
+  useDefault = false,
+  subBlock = getSubBlockPos(x, y)
 ) {
   let blockSize = baseBlockSize * size;
   let lL = canvas.getContext("2d");
@@ -1535,7 +1533,7 @@ function drawBlock(
       break;
     case 52:
       if (!sOn[data[4]] !== !data[3]) {
-        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
         drawBlock(
           canvas,
           x,
@@ -1544,10 +1542,11 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          2
         );
       } else {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
         drawBlock(
           canvas,
           x,
@@ -1556,7 +1555,8 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          1
         );
       }
 
@@ -1584,7 +1584,7 @@ function drawBlock(
       break;
     case 53:
       if (tOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
         drawBlock(
           canvas,
           x,
@@ -1593,10 +1593,11 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 3,
           size / 2,
-          useDefault
+          useDefault,
+          2
         );
       } else {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
         drawBlock(
           canvas,
           x,
@@ -1605,7 +1606,8 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          1
         );
       }
 
@@ -1637,7 +1639,7 @@ function drawBlock(
       break;
     case 54:
       if (jOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
         drawBlock(
           canvas,
           x,
@@ -1646,10 +1648,11 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          2
         );
       } else {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
         drawBlock(
           canvas,
           x,
@@ -1658,7 +1661,8 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          1
         );
       }
 
@@ -2342,15 +2346,11 @@ function drawBlock(
       lL.stroke();
       break;
     case 77: {
+      let collected = data[2] !== "uncollected";
       if (data[1] < 0) {
         lL.fillStyle = `#CC5555`;
       } else lL.fillStyle = `#CCCC55`;
-      if (
-        player.coinPos.some(
-          ([x2, y2]) => x + xOffset == x2 && y + yOffset == y2
-        )
-      )
-        lL.fillStyle += "88";
+      if (collected) lL.fillStyle += "88";
       lL.fillRect(
         xb + blockSize / 4,
         yb + blockSize / 4,
@@ -2361,12 +2361,7 @@ function drawBlock(
       if (data[1] < 0) {
         lL.fillStyle = `#FF6666`;
       } else lL.fillStyle = `#FFFF66`;
-      if (
-        player.coinPos.some(
-          ([x2, y2]) => x + xOffset == x2 && y + yOffset == y2
-        )
-      )
-        lL.fillStyle += "88";
+      if (collected) lL.fillStyle += "88";
       lL.fillRect(
         xb + (3 * blockSize) / 8,
         yb + (3 * blockSize) / 8,
@@ -2375,12 +2370,7 @@ function drawBlock(
       );
 
       lL.fillStyle = "#000000";
-      if (
-        player.coinPos.some(
-          ([x2, y2]) => x + xOffset == x2 && y + yOffset == y2
-        )
-      )
-        lL.fillStyle += "88";
+      if (collected) lL.fillStyle += "88";
       lL.font = blockSize / 4 + "px DSEG7-7SEGG";
       lL.textAlign = "center";
       lL.textBaseline = "middle";
@@ -2514,7 +2504,7 @@ function drawBlock(
       break;
     case 82:
       if (!(player.coins >= data[1]) !== !data[4]) {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
         drawBlock(
           canvas,
           x,
@@ -2523,10 +2513,11 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          3
         );
       } else {
-        drawBlock(canvas, x, y, data[3], xOffset, yOffset, size, useDefault);
+        drawBlock(canvas, x, y, data[3], xOffset, yOffset, size, useDefault,3);
         drawBlock(
           canvas,
           x,
@@ -2535,7 +2526,8 @@ function drawBlock(
           xOffset + size / 2,
           yOffset + size / 2,
           size / 2,
-          useDefault
+          useDefault,
+          2
         );
       }
 

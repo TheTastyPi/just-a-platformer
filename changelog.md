@@ -671,3 +671,10 @@ Editor
 - Added 5 new blocks
   - Coin Block A/B, Coin Death Block A/B, Custom Coin Block
 - Changed the appearance of switch IDs for visibility
+
+#### 17 May 2021 #2
+
+Editor
+
+- Fixed a bug where coins as sub-blocks did not function property
+  - ...by completely redoing the coin system. Thanks yhvr.
