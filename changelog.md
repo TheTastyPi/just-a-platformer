@@ -678,3 +678,10 @@ Editor
 
 - Fixed a bug where coins as sub-blocks did not function property
   - ...by completely redoing the coin system. Thanks yhvr.
+
+#### 18 May 2021
+
+Editor
+
+- Fixed a performance issue when touching multiple checkpoints at once
+- Fixed a performance issue where drawLevel() draws blocks that are out-of-bound

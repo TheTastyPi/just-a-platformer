@@ -496,6 +496,7 @@ function nextFrame(timeStamp) {
     xprev = player.x;
     yprev = player.y;
     let shouldDrawLevel = false;
+    let canSetSpawn = true;
     for (let i = 0; i < simReruns; i++) {
       let shouldDie = false;
       // size change
@@ -1204,16 +1205,12 @@ function nextFrame(timeStamp) {
                     break;
                   // checkpoint
                   case 3:
-                    if (!isSpawn(x, y)) {
-                      setSpawn(x, y);
-                      shouldDrawLevel = true;
-                    }
-                    break;
                   case 17:
-                    if (!isSpawn(x, y)) {
+                    if (!isSpawn(x, y) && canSetSpawn) {
                       setSpawn(x, y);
                       shouldDrawLevel = true;
                     }
+                    canSetSpawn = false;
                     break;
                   case 18:
                     if (
