@@ -1949,9 +1949,11 @@ function toggleAutoSave() {
 function toggleSaveMenu() {
   if (id("saveMenu").style.display === "none") {
     id("saveMenu").style.display = "block";
+    editDisabled = true;
     updateSaveMenu();
   } else {
     id("saveMenu").style.display = "none";
+    editDisabled = false;
   }
 }
 function updateSaveMenu() {
@@ -2027,6 +2029,19 @@ function updateSaveMenu() {
     saveSect.appendChild(moveDownButton);
 
     id("saveList").appendChild(saveSect);
+  }
+}
+function toggleControl() {
+  if (id("control").style.display !== "none") {
+    id("control").style.display = "none";
+    editDisabled = false;
+  } else if (id("control").style.display !== "inline") {
+    id("control").style.display = "inline";
+    editDisabled = true;
+  }
+  if (id("controlNotice").style.display === "") {
+    id("control").style.display = "inline";
+    id("controlNotice").style.display = "none";
   }
 }
 function openPropertyMenu(
@@ -2301,9 +2316,6 @@ function getBlockType(x, y, subtype = true, block) {
   if (x < 0 || x >= level.length || y < 0 || y >= level[0].length) {
     return 1;
   }
-  // im sorry for removing the `??=` but
-  // it broke on one of my off-brand browsers
-  // so im gonna have to remove it
   block = block ?? getBlock(x, y, subtype);
   let type = block;
   if (typeof type === "object") type = type[0];

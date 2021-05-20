@@ -310,11 +310,11 @@ document.addEventListener("contextmenu", function (input) {
 });
 
 document.addEventListener("keydown", function (input) {
+  let key = input.code;
+  if (!(key === "F12" || (key === "KeyC" && input.altKey && input.metaKey))) {
+    input.preventDefault();
+  }
   if (!editDisabled) {
-    let key = input.code;
-    if (!(key === "F12" || (key === "KeyC" && input.altKey && input.metaKey))) {
-      input.preventDefault();
-    }
     switch (key) {
       case "ArrowUp":
         if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
@@ -429,14 +429,7 @@ document.addEventListener("keydown", function (input) {
           id("info").style.display = "inline";
         break;
       case "Digit2":
-        if (id("control").style.display !== "none") {
-          id("control").style.display = "none";
-        } else if (id("control").style.display !== "inline")
-          id("control").style.display = "inline";
-        if (id("controlNotice").style.display === "") {
-          id("control").style.display = "inline";
-          id("controlNotice").style.display = "none";
-        }
+        toggleControl();
         break;
       case "Digit3":
         if (id("blockSelect").style.display !== "none") {
@@ -572,7 +565,8 @@ document.addEventListener("keyup", function (input) {
       case "ArrowUp":
       case "KeyW":
         control.up = false;
-        if (!control.down && !control.space && !player.xg) player.canJump = true;
+        if (!control.down && !control.space && !player.xg)
+          player.canJump = true;
         break;
       case "ArrowDown":
       case "KeyS":
@@ -584,7 +578,11 @@ document.addEventListener("keyup", function (input) {
         break;
       case "Space":
         control.space = false;
-        if ((!control.up && !control.down && !player.xg) || (!control.left && !control.right && player.xg)) player.canJump = true;
+        if (
+          (!control.up && !control.down && !player.xg) ||
+          (!control.left && !control.right && player.xg)
+        )
+          player.canJump = true;
         break;
       default:
     }
