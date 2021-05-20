@@ -310,11 +310,11 @@ document.addEventListener("contextmenu", function (input) {
 });
 
 document.addEventListener("keydown", function (input) {
-  let key = input.code;
-  if (!(key === "F12" || (key === "KeyC" && input.altKey && input.metaKey))) {
-    input.preventDefault();
-  }
   if (!editDisabled) {
+    let key = input.code;
+    if (!(key === "F12" || (key === "KeyC" && input.altKey && input.metaKey))) {
+      input.preventDefault();
+    }
     switch (key) {
       case "ArrowUp":
         if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
