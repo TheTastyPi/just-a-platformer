@@ -690,4 +690,4 @@ Editor
 
 Editor
 
-- Fixed a bug where if you open the control list, then open the save menu, you will become unable to preform any action.
+- Fixed a bug where if you open the control list, then open the save menu, you will become unable to perform any action.
