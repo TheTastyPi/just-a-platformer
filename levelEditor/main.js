@@ -1949,11 +1949,9 @@ function toggleAutoSave() {
 function toggleSaveMenu() {
   if (id("saveMenu").style.display === "none") {
     id("saveMenu").style.display = "block";
-    editDisabled = true;
     updateSaveMenu();
   } else {
     id("saveMenu").style.display = "none";
-    editDisabled = false;
   }
 }
 function updateSaveMenu() {

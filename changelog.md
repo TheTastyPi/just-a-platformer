@@ -685,3 +685,9 @@ Editor
 
 - Fixed a performance issue when touching multiple checkpoints at once
 - Fixed a performance issue where drawLevel() draws blocks that are out-of-bound
+
+#### 20 May 2021
+
+Editor
+
+- Fixed a bug where if you open the control list, then open the save menu, you will become unable to preform any action.

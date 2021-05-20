@@ -16,7 +16,7 @@
     />
     <meta name="author" content="TheTastyPi" />
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body
     onresize="adjustLevelSize()"
@@ -54,7 +54,8 @@
         [INFO]<br />
         Width: <span id="lvlWidth">9</span><br />
         Height: <span id="lvlHeight">9</span><br />
-        <span id="posText">Mouse</span> Position: <span id="mousePos"></span><br />
+        <span id="posText">Mouse</span> Position: <span id="mousePos"></span
+        ><br />
         Mini Block: <span id="miniBlock">OFF</span><br />
         Coins: <span id="coins">0</span><br />
       </span>
@@ -177,18 +178,17 @@
     </div>
     <div id="control">
       <h3>Controls</h3>
-      <p>Why are there so many???</p>
       <div class="grid-wrapper">
         <div class="keybind">
           <span class="key">WASD</span>
-          /<span class="key">←→↑↓</span>:
-          Move
+          /<span class="key">←→↑↓</span>: Move
         </div>
         <div class="keybind">
           Left/Right Click: Place Block
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + Left/Right Click: Teleport Player to Cursor
+          <span class="key">Shift</span> + Left/Right Click: Teleport Player to
+          Cursor
         </div>
         <div class="keybind">
           <span class="key">Ctrl</span> + Left Drag: Move Level
@@ -200,41 +200,45 @@
           Middle Click: Bind Block Clicked to Left Click
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + Middle Click: Bind Block Clicked to Right Click
+          <span class="key">Shift</span> + Middle Click: Bind Block Clicked to
+          Right Click
         </div>
         <div class="keybind">
-          <span class="key">E</span> + Left Click: Edit Block Properties (if any)
+          <span class="key">E</span> + Left Click: Edit Block Properties (if
+          any)
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + <span class="key">←→↑↓</span>: Increase Level Size
+          <span class="key">Shift</span> + <span class="key">←→↑↓</span>:
+          Increase Level Size
         </div>
         <div class="keybind">
-          <span class="key">Ctrl</span> + <span class="key">←→↑↓</span>: Decrease Level Size
+          <span class="key">Ctrl</span> + <span class="key">←→↑↓</span>:
+          Decrease Level Size
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + <span class="key">Ctrl</span> + <span class="key">←→↑↓</span>: Change Level Size by Specified Amount
+          <span class="key">Shift</span> + <span class="key">Ctrl</span> +
+          <span class="key">←→↑↓</span>: Change Level Size by Specified Amount
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + <span class="key">Delete</span>: Clear Level
+          <span class="key">Shift</span> + <span class="key">Delete</span>:
+          Clear Level
         </div>
         <div class="keybind">
           <span class="key">Ctrl</span> + <span class="key">Z</span>: Undo
         </div>
         <div class="keybind">
-          <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">Z</span>: Redo
+          <span class="key">Ctrl</span> + <span class="key">Shift</span> +
+          <span class="key">Z</span>: Redo
         </div>
         <div class="keybind">
           <span class="key">R</span>: Return to Checkpoint
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + <span class="key">R</span>: Return to Start
+          <span class="key">Shift</span> + <span class="key">R</span>: Return to
+          Start
         </div>
-        <div class="keybind">
-          <span class="key">G</span>: Toggle Godmode
-        </div>
-        <div class="keybind">
-          <span class="key">N</span>: Toggle Noclip
-        </div>
+        <div class="keybind"><span class="key">G</span>: Toggle Godmode</div>
+        <div class="keybind"><span class="key">N</span>: Toggle Noclip</div>
         <div class="keybind">
           <span class="key">M</span>: Toggle Mini Block Placement
         </div>
@@ -247,17 +251,17 @@
         <div class="keybind">
           <span class="key">3</span>: Toggle Block Selection
         </div>
-        <div class="keybind">
-          <span class="key">4</span>: Toggle Grid
-        </div>
+        <div class="keybind"><span class="key">4</span>: Toggle Grid</div>
         <div class="keybind">
           <span class="key">5</span>: Toggle Credits Button
         </div>
         <div class="keybind">
-          <span class="key">Shift</span> + <span class="key">F</span>: Save Level to Current Slot
+          <span class="key">Shift</span> + <span class="key">F</span>: Save
+          Level to Current Slot
         </div>
         <div class="keybind">
-          <span class="key">Ctrl</span> + <span class="key">F</span>: Open Save Menu
+          <span class="key">Ctrl</span> + <span class="key">F</span>: Open Save
+          Menu
         </div>
       </div>
     </div>
@@ -307,7 +311,7 @@ export text</textarea
   <script src="../shared/mobileCore.js"></script>
   <script>
     if (isMobile) {
-      id("posText").textContent = "Last Finger"
+      id("posText").textContent = "Last Finger";
       id("controlNotice").style.display = "none";
     }
   </script>
