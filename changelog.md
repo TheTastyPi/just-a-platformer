@@ -697,3 +697,9 @@ Editor
 Editor
 
 - Fixed a bug where a Start's default value were being strange
+
+#### 21 May 2021 #2
+
+Editor
+
+- Fixed a visual issue with custom timer blocks

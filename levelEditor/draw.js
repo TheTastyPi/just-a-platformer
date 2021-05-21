@@ -1591,7 +1591,7 @@ function drawBlock(
           y,
           data[2],
           xOffset + size / 2,
-          yOffset + size / 3,
+          yOffset + size / 2,
           size / 2,
           useDefault,
           2
