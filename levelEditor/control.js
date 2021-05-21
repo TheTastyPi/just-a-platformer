@@ -82,6 +82,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             deepCopy(trueBlock),
             deepCopy(trueBlock)
           ];
+        if (player.selectedBlock[0] === 17) setSpawn(x, y, true);
         if (hasProperty(player.selectedBlock[0])) {
           editBlock(x, y, [player.selectedBlock[0]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[0]]) {
@@ -95,10 +96,6 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             );
           }
         } else editBlock(x, y, player.selectedBlock[0], player.miniBlock);
-        if (player.selectedBlock[0] === 17) {
-          setSpawn(x, y, true);
-          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
-        }
         if (
           player.miniBlock &&
           arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
@@ -150,6 +147,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             deepCopy(trueBlock),
             deepCopy(trueBlock)
           ];
+        if (player.selectedBlock[1] === 17) setSpawn(x, y, true);
         if (hasProperty(player.selectedBlock[1])) {
           editBlock(x, y, [player.selectedBlock[1]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[1]]) {
@@ -163,10 +161,6 @@ id("levelLayer").addEventListener("mousedown", function (input) {
             );
           }
         } else editBlock(x, y, player.selectedBlock[1], player.miniBlock);
-        if (player.selectedBlock[1] === 17) {
-          setSpawn(x, y, true);
-          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
-        }
         if (
           player.miniBlock &&
           arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
@@ -202,6 +196,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
       if (control.lmb) {
         if (player.miniBlock && trueType !== 73)
           level[xb][yb] = [73, trueBlock, trueBlock, trueBlock, trueBlock];
+        if (player.selectedBlock[0] === 17) setSpawn(x, y, true);
         if (hasProperty(player.selectedBlock[0])) {
           editBlock(x, y, [player.selectedBlock[0]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[0]]) {
@@ -215,10 +210,6 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             );
           }
         } else editBlock(x, y, player.selectedBlock[0], player.miniBlock);
-        if (player.selectedBlock[0] === 17) {
-          setSpawn(x, y, true);
-          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
-        }
         if (
           player.miniBlock &&
           arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&
@@ -230,6 +221,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
       } else if (control.rmb) {
         if (player.miniBlock && trueType !== 73)
           level[xb][yb] = [73, trueBlock, trueBlock, trueBlock, trueBlock];
+        if (player.selectedBlock[1] === 17) setSpawn(x, y, true);
         if (hasProperty(player.selectedBlock[1])) {
           editBlock(x, y, [player.selectedBlock[1]], player.miniBlock);
           for (let i in defaultProperty[player.selectedBlock[1]]) {
@@ -243,10 +235,6 @@ id("levelLayer").addEventListener("mousemove", function (input) {
             );
           }
         } else editBlock(x, y, player.selectedBlock[1], player.miniBlock);
-        if (player.selectedBlock[1] === 17) {
-          setSpawn(x, y, true);
-          editBlock(x, y, [17].concat(player.spawnPoint.slice(2)));
-        }
         if (
           player.miniBlock &&
           arraysEqual(level[xb][yb][1], level[xb][yb][2]) &&

@@ -293,7 +293,9 @@ const blockProperty = {
   82: ["Required Value", "BlockA", "BlockB", "Invert"]
 };
 const defaultProperty = {
-  17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
+  get 17() {
+    return player.startPoint.slice(2);
+  },
   18: [false, 325, false, 1, 600, 4000, 20, 1],
   27: [100],
   28: [100],

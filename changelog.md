@@ -691,3 +691,9 @@ Editor
 Editor
 
 - Fixed a bug where if you open the control list, then open the save menu, you will become unable to perform any action.
+
+#### 21 May 2021
+
+Editor
+
+- Fixed a bug where a Start's default value were being strange
