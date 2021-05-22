@@ -703,3 +703,9 @@ Editor
 Editor
 
 - Fixed a visual issue with custom timer blocks
+
+#### 22 May 2021
+
+Both
+
+- Added a link to my homepage
