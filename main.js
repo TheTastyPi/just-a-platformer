@@ -3,8 +3,8 @@ var gameSpeed = 1;
 var player = {
   spawnPoint: newSave(),
   isDead: false,
-  spawnDelay: 333,
-  spawnTimer: 333,
+  spawnDelay: options.spawnDelay * 100,
+  spawnTimer: options.spawnDelay * 100,
   levelCoord: [0, 0],
   get currentLevel() {
     return worldMap[player.levelCoord[0]][player.levelCoord[1]];

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>just an options menu</title>
+
+  <link rel="icon" type="image/png" href="pics/just-a-platformer.png" />
+  <link rel="stylesheet" href="shared/game.css" />
+
+  <!-- i felt like using vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+  <style>
+    * {
+      font-family: monospace;
+      font-size: 25px;
+    }
+
+    body {
+      margin: 2em;
+    }
+
+    button {
+      width: 250px;
+      height: 50px;
+    }
+
+    input[type=range] {
+      transform: scale(2);
+      margin-left: 50px;
+    }
+  </style>
+  <style id="theme"></style>
+</head>
+<body>
+  <div id="app">
+    <button
+      @click="updateOption('darkMode', !options.darkMode)"
+    >
+      Dark Mode: {{ options.darkMode ? "On" : "Off" }}
+    </button><br><br>
+    Respawn Delay: <input id="spawnDelay" type="range" min="0" max="10" list="ticks">
+    <datalist id="ticks">
+      <option>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+    </datalist>
+    <br><br>
+    Back to... <a href="index.html">Main Game</a> | <a href="levelEditor/index.html">Level Editor</a>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>
