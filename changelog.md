@@ -709,3 +709,11 @@ Editor
 Both
 
 - Added a link to my homepage
+
+## 28 May 2021
+
+Both
+
+- Added an options menu
+  - Dark mode
+  - Respawn delay editing
