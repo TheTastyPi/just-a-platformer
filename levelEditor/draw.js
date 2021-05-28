@@ -153,8 +153,12 @@ function drawBlock(
   }
   lL.clearRect(xb, yb, blockSize, blockSize);
   bL.clearRect(xb, yb, blockSize, blockSize);
-  bL.fillStyle = "#888888"
+  bL.fillStyle = "#FFFFFF"
   if (transparentBlocks.includes(type)) bL.fillRect(xb, yb, blockSize, blockSize)
+  if (transparentBlocks.includes(type) && canvas.id.startsWith("blockSelect")) {
+    lL.fillStyle = "#FFFFFF";
+    lL.fillRect(xb, yb, blockSize, blockSize);
+  }
   switch (type) {
     case 1:
       lL.fillStyle = "#000000";

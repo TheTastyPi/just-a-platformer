@@ -41,7 +41,7 @@
     >
       Dark Mode: {{ options.darkMode ? "On" : "Off" }}
     </button><br><br>
-    Respawn Delay: <input id="spawnDelay" type="range" min="0" max="10" list="ticks">
+    Respawn Delay: <input id="spawnDelay" type="range" min="0" max="10" list="ticks"><span style="margin-left: 60px;">({{ options.spawnDelay * 100 }}ms)</span>
     <datalist id="ticks">
       <option>0</option>
       <option>1</option>

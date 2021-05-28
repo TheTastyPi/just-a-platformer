@@ -32,7 +32,7 @@ function drawLevel() {
   bcanv.height = levels[player.currentLevel][0].length * blockSize;
   lL.clearRect(0, 0, canvas.width, canvas.height);
   bL.clearRect(0, 0, canvas.width, canvas.height);
-  bL.fillStyle = "#888888";
+  bL.fillStyle = "#FFFFFF";
   for (let x in levels[player.currentLevel]) {
     for (let y in levels[player.currentLevel][x]) {
       lL.lineWidth = (blockSize * 3) / 25;
