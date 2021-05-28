@@ -104,6 +104,9 @@ function drawLevel(clear = false) {
   prevSpawnPos = [player.spawnPoint[0], player.spawnPoint[1]];
 }
 
+// TODO make this an obj. with [prop]: true, etc.
+const transparentBlocks = [3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 27, 28, 29, 30, 31, 41, 46, 48, 49, 50, 59, 60, 63, 64, 65, 66, 67, 68, 69, 70, 71, 76]
+
 function drawBlock(
   canvas,
   x,
@@ -150,6 +153,12 @@ function drawBlock(
   }
   lL.clearRect(xb, yb, blockSize, blockSize);
   bL.clearRect(xb, yb, blockSize, blockSize);
+  bL.fillStyle = "#FFFFFF"
+  if (transparentBlocks.includes(type)) bL.fillRect(xb, yb, blockSize, blockSize)
+  if (transparentBlocks.includes(type) && canvas.id.startsWith("blockSelect")) {
+    lL.fillStyle = "#FFFFFF";
+    lL.fillRect(xb, yb, blockSize, blockSize);
+  }
   switch (type) {
     case 1:
       lL.fillStyle = "#000000";
@@ -2569,8 +2578,8 @@ function drawGrid() {
   );
   for (let x = 0.5; x < canvas.width / baseBlockSize + 0.5; x += 0.5) {
     if (x % 1 === 0.5) {
-      g.strokeStyle = "#BBBBBB";
-    } else g.strokeStyle = "#444444";
+      g.strokeStyle = options.darkMode ? "#666666" : "#BBBBBB";
+    } else g.strokeStyle = options.darkMode ? "#BBBBBB" : "#444444";
     g.beginPath();
     g.moveTo(baseBlockSize * x + (camCenterx % baseBlockSize), 0);
     g.lineTo(baseBlockSize * x + (camCenterx % baseBlockSize), canvas.height);
@@ -2578,8 +2587,8 @@ function drawGrid() {
   }
   for (let y = 0.5; y < canvas.height / baseBlockSize + 0.5; y += 0.5) {
     if (y % 1 === 0.5) {
-      g.strokeStyle = "#BBBBBB";
-    } else g.strokeStyle = "#444444";
+      g.strokeStyle = options.darkMode ? "#666666" : "#BBBBBB";
+    } else g.strokeStyle = options.darkMode ? "#BBBBBB" : "#444444";
     g.beginPath();
     g.moveTo(0, baseBlockSize * y + (camCentery % baseBlockSize));
     g.lineTo(canvas.width, baseBlockSize * y + (camCentery % baseBlockSize));

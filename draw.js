@@ -19,12 +19,20 @@ function drawPlayer() {
   );
   adjustScreen();
 }
+
+const transparentBlocks = [-5, -4, -3, 3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 21, 22, 23]
 function drawLevel() {
   let canvas = id("levelLayer");
   let lL = canvas.getContext("2d");
+  let bcanv = id("bgLayer")
+  let bL = id("bgLayer").getContext("2d");
   canvas.width = levels[player.currentLevel].length * blockSize;
   canvas.height = levels[player.currentLevel][0].length * blockSize;
+  bcanv.width = levels[player.currentLevel].length * blockSize;
+  bcanv.height = levels[player.currentLevel][0].length * blockSize;
   lL.clearRect(0, 0, canvas.width, canvas.height);
+  bL.clearRect(0, 0, canvas.width, canvas.height);
+  bL.fillStyle = "#FFFFFF";
   for (let x in levels[player.currentLevel]) {
     for (let y in levels[player.currentLevel][x]) {
       lL.lineWidth = (blockSize * 3) / 25;
@@ -110,6 +118,7 @@ function drawLevel() {
           lL.fillStyle = "#00000000";
       }
       lL.fillRect(xb, yb, blockSize, blockSize);
+      if (transparentBlocks.includes(type)) bL.fillRect(xb, yb, blockSize, blockSize)    
       switch (type) {
         case -5:
           if (isSpawn(x, y)) {
@@ -710,6 +719,8 @@ function adjustScreen(instant = false) {
   camy = (camy * (camDelay - 1) + lvly) / camDelay;
   if (Math.abs(camx - lvlx) < 1 || instant) camx = lvlx;
   if (Math.abs(camy - lvly) < 1 || instant) camy = lvly;
+  id("bgLayer").style.left = camx + "px";
+  id("bgLayer").style.top = camy + "px";
   id("playerLayer").style.left = camx + "px";
   id("levelLayer").style.left = camx + "px";
   id("playerLayer").style.top = camy + "px";
