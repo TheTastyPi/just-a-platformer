@@ -1,5 +1,5 @@
 const options = JSON.parse(
-  localStorage.getItem("just-some-options") ?? '{"spawnDelay": 3}'
+  localStorage.getItem("just-some-options") ?? '{"spawnDelay": 10}'
 );
 
 if (options.darkMode) {

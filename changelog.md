@@ -717,3 +717,9 @@ Both
 - Added an options menu
   - Dark mode
   - Respawn delay editing
+
+#### 5 Jun. 2021
+
+Both
+
+- Changed respawn delay selection and default respawn delay to be consistant with the CMG version

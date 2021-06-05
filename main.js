@@ -3,8 +3,8 @@ var gameSpeed = 1;
 var player = {
   spawnPoint: newSave(),
   isDead: false,
-  spawnDelay: options.spawnDelay * 100,
-  spawnTimer: options.spawnDelay * 100,
+  spawnDelay: Math.floor((options.spawnDelay * 100) / 3),
+  spawnTimer: Math.floor((options.spawnDelay * 100) / 3),
   levelCoord: [0, 0],
   get currentLevel() {
     return worldMap[player.levelCoord[0]][player.levelCoord[1]];
@@ -33,7 +33,7 @@ const control = {
   right: false,
   up: false,
   down: false,
-  space: false,
+  space: false
 };
 const hasHitbox = [1, 5, 11, 40];
 
@@ -156,7 +156,8 @@ function nextFrame(timeStamp) {
     for (let i = 0; i < simReruns; i++) {
       // some weird fricker to do stuff
       if (!player.isDead) {
-        player.y += (player.yv * dt) / 500 + player.g/2*dt*dt/500/500;
+        player.y +=
+          (player.yv * dt) / 500 + ((player.g / 2) * dt * dt) / 500 / 500;
         // velocity change
         if (!noFriction) {
           player.xv *= Math.pow(0.5, dt / 6);
