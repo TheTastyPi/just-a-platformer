@@ -724,7 +724,7 @@ Both
 
 - Changed respawn delay selection and default respawn delay to be consistant with the CMG version
 
-### 5 Jun. 2021
+### 5 Jun. 2021 #2
 
 Editor
 
