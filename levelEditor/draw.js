@@ -383,7 +383,7 @@ function drawBlock(
       break;
     case 72:
       lL.fillStyle = `rgb(${(1 - Math.min(data[2] / data[1], 1)) * 255},0,0)`;
-      if (data[2] === 0) lL.fillStyle = `rgba(255,0,0,0.5)`;
+      if (data[2] === 0) lL.fillStyle = `rgba(${(Math.min(data[4] / data[3], 1)) * 255},0,0,0.5)`;
       break;
     case 74:
       lL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
@@ -1543,7 +1543,7 @@ function drawBlock(
     case 52:
       if (!sOn[data[4]] !== !data[3]) {
         drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -1556,7 +1556,7 @@ function drawBlock(
         );
       } else {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -1594,7 +1594,7 @@ function drawBlock(
     case 53:
       if (tOn !== data[3]) {
         drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -1607,7 +1607,7 @@ function drawBlock(
         );
       } else {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -1649,7 +1649,7 @@ function drawBlock(
     case 54:
       if (jOn !== data[3]) {
         drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -1662,7 +1662,7 @@ function drawBlock(
         );
       } else {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -2289,7 +2289,7 @@ function drawBlock(
       lL.strokeStyle = `rgb(${
         (1 - Math.min(data[2] / data[1], 1)) * 128 + 127
       },127,127)`;
-      if (data[2] === 0) lL.strokeStyle = `rgba(127,0,0,0.5)`;
+      if (data[2] === 0) lL.strokeStyle = `rgba(${(Math.min(data[4] / data[3], 1)) * 127},0,0,0.5)`;
       lL.fillStyle = lL.strokeStyle;
       lL.beginPath();
       lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
@@ -2514,7 +2514,7 @@ function drawBlock(
     case 82:
       if (!(player.coins >= data[1]) !== !data[4]) {
         drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,
@@ -2527,7 +2527,7 @@ function drawBlock(
         );
       } else {
         drawBlock(canvas, x, y, data[3], xOffset, yOffset, size, useDefault,3);
-        drawBlock(
+        if (player.showSubblock) drawBlock(
           canvas,
           x,
           y,

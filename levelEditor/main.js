@@ -31,7 +31,9 @@ const player = {
   targetSize: 20,
   gameSpeed: 1,
   miniBlock: false,
-  coins: 0
+  coins: 0,
+  showTooltips: true,
+  showSubblock: true
 };
 const control = {
   lmb: false,
@@ -2284,11 +2286,13 @@ function openPropertyMenu(
 }
 function addTooltip(elem, text) {
   elem.addEventListener("mousemove", function (event) {
-    id("tooltip").innerHTML = text;
-    id("tooltip").style.display = "block";
-    id("tooltip").style.left = event.clientX + 5 + "px";
-    id("tooltip").style.top =
-      event.clientY - id("tooltip").clientHeight - 5 + "px";
+    if (player.showTooltips) {
+      id("tooltip").innerHTML = text;
+      id("tooltip").style.display = "block";
+      id("tooltip").style.left = event.clientX + 5 + "px";
+      id("tooltip").style.top =
+        event.clientY - id("tooltip").clientHeight - 5 + "px";
+    }
   });
   elem.addEventListener("mouseleave", function () {
     id("tooltip").style.display = "none";

@@ -49,13 +49,18 @@
     >
       <button id="moreBtn" onclick="openMoreMenu()">...</button>
     </div>
-    <div id="infoParent" style="position: absolute; background: #ffffff88; max-width: 350px;">
+    <div
+      id="infoParent"
+      style="position: absolute; background: #ffffff88; max-width: 350px;"
+    >
       <span id="info">
         [INFO]<br />
         Width: <span id="lvlWidth">9</span><br />
         Height: <span id="lvlHeight">9</span><br />
         <span id="posText">Mouse</span> Position: <span id="mousePos"></span
         ><br />
+        Tooltips: <span id="showTooltips">ON</span><br />
+        Show Subblocks: <span id="showSubblock">ON</span><br />
         Mini Block: <span id="miniBlock">OFF</span><br />
         Coins: <span id="coins">0</span><br />
       </span>
@@ -255,6 +260,10 @@
         <div class="keybind"><span class="key">4</span>: Toggle Grid</div>
         <div class="keybind">
           <span class="key">5</span>: Toggle Credits Button
+        </div>
+        <div class="keybind"><span class="key">6</span>: Toggle Tooltips</div>
+        <div class="keybind">
+          <span class="key">7</span>: Toggle Custom Sublock Display
         </div>
         <div class="keybind">
           <span class="key">Shift</span> + <span class="key">F</span>: Save

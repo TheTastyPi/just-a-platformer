@@ -246,7 +246,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
       }
     }
     id("mousePos").innerHTML = "[" + xb + "," + yb + "]";
-    if (hasProperty(block[0])) {
+    if (hasProperty(block[0]) && player.showTooltips) {
       let text = "";
       for (let i in blockProperty[block[0]]) {
         if (blockProperty[block[0]][i][0] === "!") continue;
@@ -441,6 +441,15 @@ document.addEventListener("keydown", function (input) {
           id("infoOpen").style.display = "none";
         } else if (id("infoOpen").style.display !== "block")
           id("infoOpen").style.display = "block";
+        break;
+      case "Digit6":
+        player.showTooltips = !player.showTooltips;
+        id("showTooltips").innerHTML = player.showTooltips ? "ON" : "OFF";
+        break;
+      case "Digit7":
+        player.showSubblock = !player.showSubblock;
+        id("showSubblock").innerHTML = player.showSubblock ? "ON" : "OFF";
+        drawLevel(true);
         break;
       case "KeyF":
         if (input.shiftKey) {

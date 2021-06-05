@@ -723,3 +723,11 @@ Both
 Both
 
 - Changed respawn delay selection and default respawn delay to be consistant with the CMG version
+
+### 5 Jun. 2021
+
+Editor
+
+- Added animation for Unstable Block when reconstructing
+- Added the ability to hide tooltips using \[6]
+- Added the ability to hide subblock display in custom toggleable block using \[7]
