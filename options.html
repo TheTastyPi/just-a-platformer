@@ -39,6 +39,9 @@
       <button @click="updateOption('darkMode', !options.darkMode)">
         Dark Mode: {{ options.darkMode ? "On" : "Off" }}</button
       ><br /><br />
+      <button @click="updateOption('timer', !options.timer)">
+        Timer: {{ options.timer ? "On" : "Off" }}</button
+      ><br /><br />
       Respawn Delay:
       <input id="spawnDelay" type="range" min="0" max="30" list="ticks" /><span
         style="margin-left: 60px;"

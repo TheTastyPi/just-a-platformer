@@ -4,7 +4,7 @@ body {
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
-  animation: fadein 2s
+  animation: fadein 2s;
 }
 
 #levelLayer,
@@ -123,9 +123,23 @@ html {
   overflow: auto;
 }
 
+#timer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-family: monospace;
+  font-size: 20px;
+  display: none;
+}
+
 @keyframes fadein {
-  from {opacity: 0}
-  to {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @font-face {

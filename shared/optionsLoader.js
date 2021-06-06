@@ -1,7 +1,7 @@
 const options = JSON.parse(
   localStorage.getItem("just-some-options") ?? '{"spawnDelay": 10}'
 );
-
+if (options.timer) document.getElementById("timer").style.display = "block";
 if (options.darkMode) {
   let darkCSS = `
     body, #background {

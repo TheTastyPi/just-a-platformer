@@ -541,6 +541,9 @@ document.addEventListener("keydown", function (input) {
         } else if (id("mobileSizeMenu").style.display !== "inline")
           id("mobileSizeMenu").style.display = "inline";
         break;
+      case "KeyT":
+        player.timer = 0;
+        break;
       default:
     }
   }

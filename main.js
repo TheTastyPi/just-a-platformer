@@ -138,6 +138,7 @@ function nextFrame(timeStamp) {
   player.timePlayed += dt;
   player.spawnPoint[10] = player.timePlayed;
   id("timePlayed").innerHTML = formatTime(player.timePlayed);
+  id("timer").innerHTML = formatTime(player.timePlayed, false);
   sinceLastSave += dt;
   if (sinceLastSave >= 5000) {
     save();
@@ -1064,31 +1065,41 @@ function arraysEqual(a, b) {
   }
   return true;
 }
-function formatTime(ms) {
-  let s = ms / 1000;
-  let ds = s % 60;
-  let m = Math.floor(s / 60);
-  let dm = m % 60;
-  let h = Math.floor(m / 60);
-  let dh = h % 24;
-  let d = Math.floor(h / 24);
-  let dd = d % 30.43685;
-  let mo = Math.floor(d / 30.43685);
-  let dmo = mo % 12;
-  let dy = Math.floor(mo / 12);
-  let time = "";
-  if (s < 60) {
-    time = ds.toFixed(2) + " second" + pluralCheck(ds);
-  } else {
-    time = "and " + ds.toFixed(0) + " second" + pluralCheck(ds);
-  }
-  if (dm >= 1) time = dm + " minute" + pluralCheck(dm) + ", " + time;
-  if (dh >= 1) time = dh + " hour" + pluralCheck(dh) + ", " + time;
-  if (dd >= 1) time = dd + " day" + pluralCheck(dd) + ", " + time;
-  if (dmo >= 1) time = dmo + " month" + pluralCheck(dmo) + ", " + time;
-  if (dy >= 1) time = dy + " year" + pluralCheck(dy) + ", " + time;
-  if (m < 60) time = time.replace(",", "");
-  return time;
+function formatTime(ms, word=true) {
+	let s = ms/1000;
+	let ds = s % 60;
+	let m = Math.floor(s/60);
+	let dm = m % 60;
+	let h = Math.floor(m/60);
+	let dh = h % 24;
+	let d = Math.floor(h/24);
+	let dd = d % 30.43685;
+	let mo = Math.floor(d/30.43685);
+	let dmo = mo % 12;
+	let dy = Math.floor(mo/365.2422);
+	let time = "";
+	if (word) {
+		if (s < 60) {
+			time = ds.toFixed(2) + " second" + pluralCheck(ds);
+		} else {
+			time = "and " + ds.toFixed(0) + " second" + pluralCheck(ds);
+		}
+		if (dm >= 1) time = dm + " minute" + pluralCheck(dm) + ", " + time;
+		if (dh >= 1) time = dh + " hour" + pluralCheck(dh) + ", " + time;
+		if (dd >= 1) time = dd + " day" + pluralCheck(dd) + ", " + time;
+		if (dmo >= 1) time = dmo + " month" + pluralCheck(dmo) + ", " + time;
+		if (dy >= 1) time = dy + " year" + pluralCheck(dy) + ", " + time;
+		if (m < 60) time = time.replace(",", "");
+		return time;
+	} else {
+		time = (ds<10?"0":"")+ds.toFixed(2);
+		time = (dm<10?"0":"")+dm + ":" + time;
+		if (dh >= 1) time = (dh<10?"0":"")+dh + ":" + time;
+		if (dd >= 1) time = dd + ":" + time;
+		if (dmo >= 1) time = dmo + ":" + time;
+		if (dy >= 1) time = dy + ":" + time;
+		return time;
+	}
 }
 function pluralCheck(n) {
   return n === 1 ? "" : "s";

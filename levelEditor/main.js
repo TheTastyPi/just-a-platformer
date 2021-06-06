@@ -33,7 +33,8 @@ const player = {
   miniBlock: false,
   coins: 0,
   showTooltips: true,
-  showSubblock: true
+  showSubblock: true,
+  timer: 0
 };
 const control = {
   lmb: false,
@@ -490,6 +491,8 @@ function nextFrame(timeStamp) {
   dt *= player.gameSpeed;
   lastFrame = timeStamp;
   sinceLastSave += dt;
+  player.timer += dt;
+  id("timer").innerHTML = formatTime(player.timer);
   if (sinceLastSave > 5000) {
     save(true);
     sinceLastSave = 0;
@@ -2661,6 +2664,27 @@ function infinify(obj) {
     if (obj[i] == "Infinity") obj[i] = Infinity;
   }
   return obj;
+}
+function formatTime(ms) {
+	let s = ms/1000;
+	let ds = s % 60;
+	let m = Math.floor(s/60);
+	let dm = m % 60;
+	let h = Math.floor(m/60);
+	let dh = h % 24;
+	let d = Math.floor(h/24);
+	let dd = d % 30.43685;
+	let mo = Math.floor(d/30.43685);
+	let dmo = mo % 12;
+	let dy = Math.floor(mo/365.2422);
+	let time = "";
+  time = (ds<10?"0":"")+ds.toFixed(2);
+  time = (dm<10?"0":"")+dm + ":" + time;
+  if (dh >= 1) time = (dh<10?"0":"")+dh + ":" + time;
+  if (dd >= 1) time = dd + ":" + time;
+  if (dmo >= 1) time = dmo + ":" + time;
+  if (dy >= 1) time = dy + ":" + time;
+  return time;
 }
 function init() {
   id("levelLayer").height = level[0].length * baseBlockSize;

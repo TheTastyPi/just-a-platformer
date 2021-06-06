@@ -731,3 +731,9 @@ Editor
 - Added animation for Unstable Block when reconstructing
 - Added the ability to hide tooltips using \[6]
 - Added the ability to hide subblock display in custom toggleable block using \[7]
+
+### 6 Jun. 2021
+
+Both
+
+- Added an on-screen timer (toggleable from options, also resettable in editor)
