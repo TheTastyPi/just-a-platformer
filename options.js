@@ -1,7 +1,8 @@
 const defaultOptions = {
   darkMode: false,
   spawnDelay: 10,
-  timer: false
+  timer: false,
+  wipeConfirm: true
 };
 
 let options = {

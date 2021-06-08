@@ -1,6 +1,11 @@
-const options = JSON.parse(
-  localStorage.getItem("just-some-options") ?? '{"spawnDelay": 10}'
-);
+const defaultOptions = {
+  darkMode: false,
+  spawnDelay: 10,
+  timer: false,
+  wipeConfirm: true
+};
+const options =
+  JSON.parse(localStorage.getItem("just-some-options")) ?? defaultOptions;
 if (options.timer) document.getElementById("timer").style.display = "block";
 if (options.darkMode) {
   let darkCSS = `

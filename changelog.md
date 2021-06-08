@@ -749,3 +749,10 @@ Main Game
 Both
 
 - Slightly adjusted the credits
+
+### 8 Jun. 2021 #3
+
+Main Game
+
+- Added the options to not have a confirmation when resetting your save
+- Also made it so that the default option is actually applied when you first open the game, damn you yhvr

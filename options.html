@@ -23,7 +23,7 @@
       }
 
       button {
-        width: 250px;
+        width: 300px;
         height: 50px;
       }
 
@@ -41,6 +41,9 @@
       ><br /><br />
       <button @click="updateOption('timer', !options.timer)">
         Timer: {{ options.timer ? "On" : "Off" }}</button
+      ><br /><br />
+      <button @click="updateOption('wipeConfirm', !options.wipeConfirm)">
+        Reset Confirm: {{ options.wipeConfirm ? "On" : "Off" }}</button
       ><br /><br />
       Respawn Delay:
       <input id="spawnDelay" type="range" min="0" max="30" list="ticks" /><span
