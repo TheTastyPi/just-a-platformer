@@ -743,3 +743,9 @@ Both
 Main Game
 
 - Adjusted the horizontal velocity code to be consistant with the level editor and the CMG version
+
+#### 8 Jun. 2021 #2
+
+Both
+
+- Slightly adjusted the credits
