@@ -737,3 +737,9 @@ Editor
 Both
 
 - Added an on-screen timer (toggleable from options, also resettable in editor)
+
+#### 8 Jun. 2021
+
+Main Game
+
+- Adjusted the horizontal velocity code to be consistant with the level editor and the CMG version

@@ -157,6 +157,7 @@ function nextFrame(timeStamp) {
     for (let i = 0; i < simReruns; i++) {
       // some weird fricker to do stuff
       if (!player.isDead) {
+        player.x += (player.xv * dt) / 500;
         player.y +=
           (player.yv * dt) / 500 + ((player.g / 2) * dt * dt) / 500 / 500;
         // velocity change
@@ -173,7 +174,6 @@ function nextFrame(timeStamp) {
         } else {
           player.yv += (player.g * dt) / 500;
         }
-        player.x += (player.xv * dt) / 500;
       }
       // collision detection
       if (i === 0) {
