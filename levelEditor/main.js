@@ -4,8 +4,8 @@ const player = {
   startPoint: getDefaultSpawn(),
   spawnPoint: getDefaultSpawn(),
   isDead: false,
-  spawnDelay: options.spawnDelay * 100 / 3,
-  spawnTimer: options.spawnDelay * 100 / 3,
+  spawnDelay: (options.spawnDelay * 100) / 3,
+  spawnTimer: (options.spawnDelay * 100) / 3,
   x: 0,
   y: 0,
   xv: 0,
@@ -141,7 +141,8 @@ const blockName = [
   "Coin Block B",
   "Coin Death Block A",
   "Coin Death Block B",
-  "Custom Coin Block" // coin (77,78,79,80)
+  "Custom Coin Block", // coin (77,78,79,80,81,82)
+  "Vacuum" // air friction (83)
 ];
 const blockSelect = [
   "Special",
@@ -187,6 +188,7 @@ const blockSelect = [
   23,
   50,
   40,
+  83,
   "Size",
   64,
   65,
@@ -562,6 +564,7 @@ function nextFrame(timeStamp) {
       let hasSwitched = false;
       let hasTexted = false;
       let onIce = false;
+      let shouldNoFriction = false;
       if (i === 0) {
         player.canWalljump = false;
       }
@@ -1380,6 +1383,9 @@ function nextFrame(timeStamp) {
                       shouldDrawLevel = true;
                     }
                     break;
+                  case 83:
+                    shouldNoFriction = true;
+                    break;
                   default:
                     break;
                 }
@@ -1389,18 +1395,17 @@ function nextFrame(timeStamp) {
         }
         if (onFloor) {
           player.currentJumps = player.maxJumps;
+          shouldNoFriction = false;
         } else if (player.currentJumps === player.maxJumps)
           player.currentJumps--;
+        if (onIce) shouldNoFriction = true;
+        noFriction = shouldNoFriction;
       }
-      // checking for absence
       if (!hasSwitched) canSwitch = true;
       if (!hasTexted) {
         id("textBlockText").style.display = "none";
         prevTextCoord = [];
       }
-      if (onIce) {
-        noFriction = true;
-      } else noFriction = false;
       // timer
       if (sinceLastTimerStage > Math.min(1000, player.timerInterval / 4)) {
         timerStage++;
@@ -2666,21 +2671,21 @@ function infinify(obj) {
   return obj;
 }
 function formatTime(ms) {
-	let s = ms/1000;
-	let ds = s % 60;
-	let m = Math.floor(s/60);
-	let dm = m % 60;
-	let h = Math.floor(m/60);
-	let dh = h % 24;
-	let d = Math.floor(h/24);
-	let dd = d % 30.43685;
-	let mo = Math.floor(d/30.43685);
-	let dmo = mo % 12;
-	let dy = Math.floor(mo/365.2422);
-	let time = "";
-  time = (ds<10?"0":"")+ds.toFixed(2);
-  time = (dm<10?"0":"")+dm + ":" + time;
-  if (dh >= 1) time = (dh<10?"0":"")+dh + ":" + time;
+  let s = ms / 1000;
+  let ds = s % 60;
+  let m = Math.floor(s / 60);
+  let dm = m % 60;
+  let h = Math.floor(m / 60);
+  let dh = h % 24;
+  let d = Math.floor(h / 24);
+  let dd = d % 30.43685;
+  let mo = Math.floor(d / 30.43685);
+  let dmo = mo % 12;
+  let dy = Math.floor(mo / 365.2422);
+  let time = "";
+  time = (ds < 10 ? "0" : "") + ds.toFixed(2);
+  time = (dm < 10 ? "0" : "") + dm + ":" + time;
+  if (dh >= 1) time = (dh < 10 ? "0" : "") + dh + ":" + time;
   if (dd >= 1) time = dd + ":" + time;
   if (dmo >= 1) time = dmo + ":" + time;
   if (dy >= 1) time = dy + ":" + time;

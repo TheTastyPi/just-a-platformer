@@ -756,3 +756,9 @@ Main Game
 
 - Added the options to not have a confirmation when resetting your save
 - Also made it so that the default option is actually applied when you first open the game, damn you yhvr
+
+## 14 Jun. 2021
+
+Editor
+
+- Added Vacuum, which is like ice, but for the air

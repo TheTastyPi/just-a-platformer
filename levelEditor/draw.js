@@ -2561,6 +2561,11 @@ function drawBlock(
       lL.fillText(data[1], xb + blockSize / 25, yb + blockSize / 25);
       lL.fillStyle = "#000000BB";
       lL.fillText(data[1], xb, yb);
+      break;
+    case 83:
+      lL.fillStyle = "#00000088";
+      lL.fillRect(xb,yb,blockSize,blockSize);
+      break;
     default:
   }
 }
