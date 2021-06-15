@@ -139,7 +139,6 @@ function nextFrame(timeStamp) {
   // setup stuff
   let dt = timeStamp - lastFrame;
   player.timePlayed += dt;
-  if (player.currentLevel === 8) branchInProgress = false;
   if (branchInProgress) player.branchTime += dt;
   player.spawnPoint[10] = player.timePlayed;
   id("timePlayed").innerHTML = formatTime(player.timePlayed);
@@ -505,6 +504,7 @@ function nextFrame(timeStamp) {
                     if (id("mainInfo").style.bottom != "0%") openInfo();
                   }
                 case 3:
+                  if (player.currentLevel === 8) branchInProgress = false;
                   if (!isSpawn(x, y)) {
                     if (player.currentLevel === 8) player.reachedHub = true;
                     player.spawnPoint = [
