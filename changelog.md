@@ -762,3 +762,9 @@ Main Game
 Editor
 
 - Added Vacuum, which is like ice, but for the air
+
+#### 15 Jun. 2021
+
+Main Game
+
+- The time played stat now also shows the miliseconds

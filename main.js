@@ -1082,7 +1082,7 @@ function formatTime(ms, word=true) {
 		if (s < 60) {
 			time = ds.toFixed(2) + " second" + pluralCheck(ds);
 		} else {
-			time = "and " + ds.toFixed(0) + " second" + pluralCheck(ds);
+			time = "and " + ds.toFixed(2) + " second" + pluralCheck(ds);
 		}
 		if (dm >= 1) time = dm + " minute" + pluralCheck(dm) + ", " + time;
 		if (dh >= 1) time = dh + " hour" + pluralCheck(dh) + ", " + time;
