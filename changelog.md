@@ -767,4 +767,4 @@ Editor
 
 Main Game
 
-- The time played stat now also shows the miliseconds
+- The time played stat now also shows the milliseconds
