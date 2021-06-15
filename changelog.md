@@ -768,3 +768,10 @@ Editor
 Main Game
 
 - The time played stat now also shows the milliseconds
+
+### 15 Jun. 2021 #2
+
+Main Game
+
+- Added a timer that keeps track of your time played in your current branch
+  - On both the credit and the on-screen timer

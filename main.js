@@ -24,6 +24,7 @@ var player = {
   reachedHub: false,
   deaths: 0,
   timePlayed: 0,
+  branchTime: 0,
   finalDeaths: 0,
   finalTimePlayed: 0,
   gameComplete: false
@@ -81,7 +82,8 @@ document.addEventListener("keydown", function (input) {
               player.deaths,
               player.gameComplete,
               player.finalTimePlayed,
-              player.finalDeaths
+              player.finalDeaths,
+              0
             ];
             respawn();
           }
@@ -132,13 +134,20 @@ var lastFrame = 0;
 var simReruns = 20;
 var sinceLastSave = 0;
 var noFriction = false;
+var branchInProgress = true;
 function nextFrame(timeStamp) {
   // setup stuff
   let dt = timeStamp - lastFrame;
   player.timePlayed += dt;
+  if (player.currentLevel === 8) branchInProgress = false;
+  if (branchInProgress) player.branchTime += dt;
   player.spawnPoint[10] = player.timePlayed;
   id("timePlayed").innerHTML = formatTime(player.timePlayed);
-  id("timer").innerHTML = formatTime(player.timePlayed, false);
+  id("branchTime").innerHTML = formatTime(player.branchTime);
+  id("timer").innerHTML =
+    formatTime(player.timePlayed, false) +
+    "<br>" +
+    formatTime(player.branchTime, false);
   sinceLastSave += dt;
   if (sinceLastSave >= 5000) {
     save();
@@ -513,7 +522,8 @@ function nextFrame(timeStamp) {
                       player.deaths,
                       player.gameComplete,
                       player.finalTimePlayed,
-                      player.finalDeaths
+                      player.finalDeaths,
+                      player.branchTime
                     ];
                     shouldDrawLevel = true;
                     save();
@@ -538,8 +548,13 @@ function nextFrame(timeStamp) {
                 case -3:
                   if (!player.triggers.includes(props[1]))
                     player.triggers.push(props[1]);
+                  if (props[1] < 0) branchInProgress = false;
                   break;
                 case -2:
+                  if (player.currentLevel === 8) {
+                    branchInProgress = true;
+                    player.branchTime = 0;
+                  }
                   let warpId = props[1];
                   if (bx1 < 0) {
                     // left
@@ -913,6 +928,7 @@ function newSave() {
     0,
     false,
     0,
+    0,
     0
   ];
 }
@@ -935,6 +951,7 @@ function load() {
     player.gameComplete = player.spawnPoint[12] ?? false;
     player.finalTimePlayed = player.spawnPoint[13] ?? 0;
     player.finalDeaths = player.spawnPoint[14] ?? 0;
+    player.branchTime = player.spawnPoint[15] ?? 0;
     id("timePlayed").innerHTML = formatTime(player.timePlayed);
     id("deathCount").innerHTML = player.deaths;
     if (player.gameComplete) {
@@ -954,6 +971,7 @@ function wipeSave() {
     save();
     load();
     respawn(false);
+    branchInProgress = true;
     drawLevel();
     drawPlayer();
     adjustScreen(true);
