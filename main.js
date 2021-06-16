@@ -141,6 +141,7 @@ function nextFrame(timeStamp) {
   player.timePlayed += dt;
   if (branchInProgress) player.branchTime += dt;
   player.spawnPoint[10] = player.timePlayed;
+  player.spawnPoint[15] = player.timePlayed;
   id("timePlayed").innerHTML = formatTime(player.timePlayed);
   id("branchTime").innerHTML = formatTime(player.branchTime);
   id("timer").innerHTML =
