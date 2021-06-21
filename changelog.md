@@ -781,3 +781,9 @@ Main Game
 Main Game
 
 - Fixed bug where the branch timer only save upon hitting a checkpoint, causing desync
+
+#### 21 Jun. 2021
+
+Main Game
+
+- Fixed bug where the branch timer syncs with total time after a refresh
