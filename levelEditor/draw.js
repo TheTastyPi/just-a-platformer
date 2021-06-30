@@ -13,6 +13,7 @@ function drawPlayer() {
   if (player.maxJumps === Infinity) ratio = 1;
   if (player.maxJumps === 0) ratio = 0;
   pL.fillStyle = `rgb(${255 - ratio * 255},0,${ratio * 255})`;
+  if (options.darkMode) pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255*0.25},${ratio * 255 * 0.75 + 255*0.25})`;
   if (player.godMode) pL.fillStyle = "#FF00FF";
   if (player.noclip || player.isDead) pL.fillStyle += "88";
   pL.fillRect(

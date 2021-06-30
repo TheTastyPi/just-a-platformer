@@ -787,3 +787,9 @@ Main Game
 Main Game
 
 - Fixed bug where the branch timer syncs with total time after a refresh
+
+#### 30 Jun. 2021
+
+Both
+
+- Made player color brighter when in dark mode
