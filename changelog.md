@@ -793,3 +793,9 @@ Main Game
 Both
 
 - Made player color brighter when in dark mode
+
+#### 6 Jul. 2021
+
+Main Game
+
+- Fixed a skip in speed branch
