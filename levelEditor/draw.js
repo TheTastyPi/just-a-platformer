@@ -125,6 +125,10 @@ function drawBlock(
   lL.lineWidth = (blockSize * 3) / 25;
   let xb = (x + xOffset) * baseBlockSize + camCenterx;
   let yb = (y + yOffset) * baseBlockSize + camCentery;
+  if (useDefault) {
+    xb = 0;
+    yb = 0;
+  }
   let clear = false;
   let data;
   if (typeof type === "object") {

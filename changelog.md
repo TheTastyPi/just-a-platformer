@@ -799,3 +799,9 @@ Both
 Main Game
 
 - Fixed a skip in speed branch
+
+#### 12 Jul. 2021
+
+Editor
+
+- Fixed a bug where block selection display would not update if the camera was not positioned at the origin
