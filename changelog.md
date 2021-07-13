@@ -813,7 +813,7 @@ Main Game
 - Added "EZ Mode"
   - Currently only the gravity branch is EZ-fied
 
-### 13 Jul. 2021
+### 13 Jul. 2021 #2
 
 Main Game
 
