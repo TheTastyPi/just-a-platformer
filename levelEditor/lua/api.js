@@ -12,6 +12,9 @@ const propBindings = {
 	timerInterval: "timerInterval",
 	x: "x",
 	y: "y",
+	xv: "xv",
+	yv: "yv",
+	coins: "coins"
 };
 
 const APIGlobals = {

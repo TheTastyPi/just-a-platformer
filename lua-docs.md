@@ -245,3 +245,6 @@ If the name isn't self-explanatory, There will be a comment on what purpose it s
 - `timerInterval:number`
 - `x:number`: The player's x coordinate.
 - `y:number`: The player's y coordinate.
+- `xv:number`: The current x velocity of the player.
+- `yv:number`: The current y velocity of the player.
+- `coins:number`: How many coins the player currently has.

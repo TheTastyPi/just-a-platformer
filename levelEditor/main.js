@@ -1814,7 +1814,7 @@ function save(auto = false) {
     const startPoint = deinfinify(player.startPoint);
     startPoint[13] = 0;
     startPoint[14] = [];
-    saves[player.currentSave] = [level, startPoint, player.currentSave, LZString.compressToUTF16(code)];
+    saves[player.currentSave] = [level, startPoint, player.currentSave, LZString.compressToEncodedURIComponent(code)];
     localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
     if (!auto) alert("Saved.");
   } else if (!auto) alert("No save is currently selected.");
@@ -1886,7 +1886,7 @@ function load(name) {
   drawLevel(true);
   drawGrid();
   updateSaveMenu();
-  id("editor").editor.setValue(saves[name][3] ? LZString.decompressFromUTF16(saves[name][3]) : "");
+  id("editor").editor.setValue(saves[name][3] ? LZString.decompressFromEncodedURIComponent(saves[name][3]) : "");
   updateCode();
 }
 function exportSave(name) {
