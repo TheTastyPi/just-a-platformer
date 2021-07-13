@@ -1,3 +1,4 @@
+const isEasy = false;
 var baseBlockSize = 50;
 var lvlxOffset = 0;
 var lvlyOffset = 0;
