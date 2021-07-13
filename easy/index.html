@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+  <head>
+    <title>just a platformer EZ</title>
+    <link rel="icon" type="image/png" href="../pics/just-a-platformer-EZ.png" />
+    <link rel="stylesheet" href="../shared/game.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta
+      name="description"
+      content="'just a platformer EZ', a not very difficult, minimalistic platformer created by TheTastyPi with a level editor."
+    />
+    <meta name="author" content="TheTastyPi" />
+  </head>
+  <body onresize="adjustScreen()" style="background: #bbffbb;">
+    <canvas id="bgLayer" style="position: absolute;"></canvas>
+    <canvas id="playerLayer" style="position: absolute;"></canvas>
+    <canvas id="levelLayer" style="position: absolute;"></canvas>
+    <div id="timer">
+      00:00:00<br />
+      00:00:00
+    </div>
+    <div
+      id="mobileControlsLeft"
+      style="position: absolute; bottom: 0; left: 0;"
+    ></div>
+    <div
+      id="mobileControls"
+      style="position: absolute; bottom: 0; right: 0;"
+    ></div>
+    <div
+      id="mobileControlsTop"
+      style="position: absolute; top: 0; right: 0; display: none;"
+    >
+      <button id="moreBtn" onclick="openMoreMenu()">...</button>
+    </div>
+    <div id="mainInfo">
+      <div>
+        "just a platformer EZ"<br />
+        Made by <a href="https://thetastypi.github.io/">TheTastyPi</a> and
+        Yhvr<br />
+        <br />
+        Time Played: <span id="timePlayed">0 second</span><br />
+        Time in Branch: <span id="branchTime">0 second</span><br />
+        Deaths: <span id="deathCount">0</span><br />
+        <br />
+        <span id="endStat" style="display: none;">
+          Completion Time: <span id="timePlayedEnd">0 second</span><br />
+          Final Deaths: <span id="deathCountEnd">0</span><br />
+          <br />
+        </span>
+        [R] to force-respawn<br />
+        [shift] + [R] to go to hub<br />
+        [delete] to wipe save<br />
+        <br />
+        <a href="../index.html">Normal Mode</a> <br />
+        <a href="../levelEditor/index.html">Level Editor</a> <br />
+        <a href="../options.html">Options</a> <br />
+        <a href="https://discord.gg/zVpdcuaXYF">Discord Server</a>
+      </div>
+    </div>
+    <button id="infoOpen" onclick="openInfo();">
+      Credits
+    </button>
+  </body>
+  <script src="levels.js"></script>
+  <script src="../shared/optionsLoader.js"></script>
+  <script src="../draw.js"></script>
+  <script src="../main.js"></script>
+  <script src="../mobile.js"></script>
+  <script src="../shared/mobileCore.js"></script>
+</html>

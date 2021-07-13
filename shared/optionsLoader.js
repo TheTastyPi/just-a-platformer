@@ -10,7 +10,7 @@ if (options.timer) document.getElementById("timer").style.display = "block";
 if (options.darkMode) {
   let darkCSS = `
     body, #background {
-      background-color: #333336 !important;
+      background-color: #${isEasy ? 334433 : 333336} !important;
     }
   
     * {
