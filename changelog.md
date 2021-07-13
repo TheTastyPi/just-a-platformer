@@ -808,6 +808,19 @@ Editor
 
 ## 13 Jul. 2021
 
+Main Game
+
+- Added "EZ Mode"
+  - Currently only the gravity branch is EZ-fied
+
+### 13 Jul. 2021 #2
+
+Main Game
+
+- In EZ Mode, the background is now tinted green
+
+## 13 Jul. 2021 #3
+
 Editor
 
 - Added support for advanced level creation by making an API
