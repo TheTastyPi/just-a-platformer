@@ -936,11 +936,16 @@ function newSave() {
 function save() {
   let saveData = deepCopy(player.spawnPoint);
   if (saveData[5] == Infinity) saveData[5] = "Infinity";
-  localStorage.setItem("just-a-save", JSON.stringify(saveData));
+  localStorage.setItem(
+    isEasy ? "just-a-save-EZ" : "just-a-save",
+    JSON.stringify(saveData)
+  );
 }
 function load() {
-  if (localStorage.getItem("just-a-save")) {
-    let saveData = JSON.parse(localStorage.getItem("just-a-save"));
+  if (localStorage.getItem(isEasy ? "just-a-save-EZ" : "just-a-save")) {
+    let saveData = JSON.parse(
+      localStorage.getItem(isEasy ? "just-a-save-EZ" : "just-a-save")
+    );
     if (saveData[5] == "Infinity") saveData[5] = Infinity;
     if (saveData[8] == undefined) {
       saveData[8] = newSave()[8];

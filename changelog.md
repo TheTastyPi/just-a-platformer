@@ -805,3 +805,10 @@ Main Game
 Editor
 
 - Fixed a bug where block selection display would not update if the camera was not positioned at the origin
+
+## 13 Jul. 2021
+
+Main Game
+
+- Added "EZ Mode"
+  - Currently only the gravity branch is EZ-fied
