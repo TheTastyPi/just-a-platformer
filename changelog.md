@@ -812,3 +812,9 @@ Main Game
 
 - Added "EZ Mode"
   - Currently only the gravity branch is EZ-fied
+
+### 13 Jul. 2021
+
+Main Game
+
+- In EZ Mode, the background is now tinted blue
