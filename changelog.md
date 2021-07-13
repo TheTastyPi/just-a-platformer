@@ -817,4 +817,4 @@ Main Game
 
 Main Game
 
-- In EZ Mode, the background is now tinted blue
+- In EZ Mode, the background is now tinted green
