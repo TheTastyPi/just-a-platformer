@@ -64,7 +64,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
           id("blockSelect" + player.selectedBlock[1]).style.boxShadow =
             "0 0 0 5px #0000FF";
         }
-      } else {
+      } else if (!locks.teleporting) {
         player.x = input.offsetX - camCenterx - player.size / 2;
         player.y = input.offsetY - camCentery - player.size / 2;
         player.xv = 0;
@@ -72,7 +72,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         drawPlayer();
       }
     } else {
-      if (input.button === 0) {
+      if (input.button === 0 && !locks.building) {
         control.lmb = true;
         if (player.miniBlock && trueType !== 73)
           level[xb][yb] = [
@@ -104,7 +104,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
         )
           level[xb][yb] = level[xb][yb][1];
         drawLevel();
-      } else if (input.button === 1) {
+      } else if (input.button === 1 && !locks.building) {
         if (player.selectedBlock[1] == player.selectedBlock[0]) {
           id("blockSelect" + player.selectedBlock[0]).style.boxShadow =
             "0 0 0 5px #0000FF";
@@ -137,7 +137,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
           id("blockSelect" + player.selectedBlock[0]).style.boxShadow =
             "0 0 0 5px #FF0000";
         }
-      } else if (input.button === 2) {
+      } else if (input.button === 2 && !locks.building) {
         control.rmb = true;
         if (player.miniBlock && trueType !== 73)
           level[xb][yb] = [
@@ -174,7 +174,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
   }
 });
 id("levelLayer").addEventListener("mousemove", function (input) {
-  if (!editDisabled) {
+  if (!editDisabled && !locks.building) {
     input.preventDefault();
     let x = Math.floor(((input.offsetX - camCenterx) / baseBlockSize) * 2) / 2;
     let y = Math.floor(((input.offsetY - camCentery) / baseBlockSize) * 2) / 2;
@@ -399,11 +399,11 @@ document.addEventListener("keydown", function (input) {
         } else respawn();
         break;
       case "KeyG":
-        player.godMode = !player.godMode;
+        if (!locks.godMode) player.godMode = !player.godMode;
         drawPlayer();
         break;
       case "KeyN":
-        player.noclip = !player.noclip;
+       if (!locks.noclip) player.noclip = !player.noclip;
         drawPlayer();
         break;
       case "KeyM":
@@ -450,6 +450,15 @@ document.addEventListener("keydown", function (input) {
         player.showSubblock = !player.showSubblock;
         id("showSubblock").innerHTML = player.showSubblock ? "ON" : "OFF";
         drawLevel(true);
+        break;
+      case "Digit8":
+        toggleCodeMenu();
+        break;
+      case "Digit9":
+        if (id("luaConsoleParent").style.display !== "none") {
+          id("luaConsoleParent").style.display = "none";
+        } else if (id("luaConsoleParent").style.display !== "block")
+          id("luaConsoleParent").style.display = "block";
         break;
       case "KeyF":
         if (input.shiftKey) {

@@ -8,6 +8,7 @@ body {
 }
 
 #levelLayer,
+#luaLayer,
 body,
 html {
   touch-action: none;

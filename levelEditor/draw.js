@@ -17,6 +17,8 @@ function drawPlayer() {
   if (options.darkMode) pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255*0.25},${ratio * 255 * 0.75 + 255*0.25})`;
   if (player.godMode) pL.fillStyle = "#FF00FF";
   if (player.noclip || player.isDead) pL.fillStyle += "88";
+
+  if (player.customColor) pL.fillStyle = `rgb(${player.customColor.join(", ")})`
   pL.fillRect(
     Math.floor(player.x) + Math.floor(camx),
     Math.floor(player.y) + Math.floor(camy),

@@ -818,3 +818,19 @@ Main Game
 Main Game
 
 - In EZ Mode, the background is now tinted green
+
+## 13 Jul. 2021 #3
+
+Editor
+
+- Added support for advanced level creation by making an API
+  - Embedded the Monaco editor
+  - Added documentation for all the API
+
+Both
+
+- Changed "Yhvr" in the credits to a hyperlink
+
+Misc.
+
+- Severely overhauled README.md

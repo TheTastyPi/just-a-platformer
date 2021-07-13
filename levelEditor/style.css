@@ -41,3 +41,28 @@ h3 {
 .key:last-child {
 	margin-right: 2px;
 }
+
+#luaConsole > span {
+	display: block;
+}
+
+.lua-info {
+	background-color: blue;
+	color: white;
+}
+
+.lua-warn {
+	background-color: yellow;
+}
+
+.lua-error {
+	background-color: red;
+}
+
+#luaLayer {
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+}
