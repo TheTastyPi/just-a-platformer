@@ -334,7 +334,9 @@ Editor
 - Added Timer Interval Field
 - Refactored the checkpoint system
   - WHY HAVEN'T I DONE THIS SOONER
-    Main Game
+
+Main Game
+
 - Player changes color based on jumps left, like in the editor
 
 #### 13 Feb. 2021
