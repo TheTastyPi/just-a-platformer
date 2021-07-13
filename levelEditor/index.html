@@ -35,6 +35,7 @@
     <canvas id="playerLayer" style="position: absolute;"></canvas>
     <canvas id="grid" style="position: absolute; display: none;"></canvas>
     <canvas id="levelLayer" style="position: absolute;"></canvas>
+    <canvas id="luaLayer" style="position: absolute;"></canvas>
     <div id="timer">
       00:00:00
     </div>
@@ -70,6 +71,10 @@
       <span id="controlNotice">
         Press <span class="key">2</span> to view keybind info
       </span>
+      <div id="luaConsoleParent" style="display: none;">
+        <strong>Lua Console</strong><br>
+        <div id="luaConsole"></div>
+      </div>
     </div>
     <div
       id="blockSelect"
@@ -144,6 +149,25 @@
         </button>
         <button id="closeButton" onclick="toggleSaveMenu()">Close</button>
       </div>
+    </div>
+    <div
+      id="codeMenu"
+      style="
+        position: absolute;
+        background: #00000088;
+        color: #ffffff;
+        display: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        max-height: 100%;
+      "
+    >
+      This is code in the programming language Lua.<br>
+      <a href="https://github.com/TheTastyPi/just-a-platformer/blob/main/lua-docs.md" style="color: aqua;">See the docs!</a>
+      <button onclick="updateCode()">Run Code</button>
+      <button id="closeButton" onclick="toggleCodeMenu()">Close</button><br>
+      <wc-monaco-editor font-size="20px" language="lua" style="width: 800px; height: 600px; border: 1px solid grey"></wc-monaco-editor>
     </div>
     <div
       id="mobileSizeMenu"
@@ -272,6 +296,12 @@
           <span class="key">7</span>: Toggle Custom Sublock Display
         </div>
         <div class="keybind">
+          <span class="key">8</span>: Toggle Code Menu
+        </div>
+        <div class="keybind">
+          <span class="key">9</span>: Toggle Code Console
+        </div>
+        <div class="keybind">
           <span class="key">Shift</span> + <span class="key">F</span>: Save
           Level to Current Slot
         </div>
@@ -284,7 +314,7 @@
     <div id="mainInfo">
       <div>
         "just a level editor"<br />
-        Made by <a href="https://thetastypi.github.io/">TheTastyPi</a> and Yhvr<br />
+        Made by <a href="https://thetastypi.github.io/">TheTastyPi</a> and <a href="https://yhvr.me">Yhvr</a><br />
         <br />
         A level editor for<br />
         "just a platformer"<br />
@@ -321,15 +351,15 @@ export text</textarea
     >
   </body>
   <script src="../shared/optionsLoader.js"></script>
-  <script src="draw.js"></script>
-  <script src="main.js"></script>
-  <script src="control.js"></script>
-  <script src="mobile.js"></script>
-  <script src="../shared/mobileCore.js"></script>
-  <script>
-    if (isMobile) {
-      id("posText").textContent = "Last Finger";
-      id("controlNotice").style.display = "none";
-    }
-  </script>
+
+  <script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-monaco-editor/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fengari-web@0.1.4/dist/fengari-web.js"></script>
+  <script src="lua/flua.js"></script>
+  <script src="lua/lz-string.js"></script>
+  <script defer src="draw.js"></script>
+  <script defer src="main.js"></script>
+  <script defer src="control.js"></script>
+  <script defer src="lua/api.js"></script>
+  <script defer src="mobile.js"></script>
+  <script defer src="../shared/mobileCore.js"></script>
 </html>

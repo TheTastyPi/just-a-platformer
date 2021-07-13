@@ -34,7 +34,9 @@ const player = {
   coins: 0,
   showTooltips: true,
   showSubblock: true,
-  timer: 0
+  timer: 0,
+  // [0-255, 0-255, 0-255]
+  customColor: false,
 };
 const control = {
   lmb: false,
@@ -487,13 +489,37 @@ var noFriction = false;
 var prevTextCoord;
 var xprev;
 var yprev;
+var justDied = false;
 function nextFrame(timeStamp) {
+  // lua lock checks
+  if (locks.godMode) player.godMode = false;
+  if (locks.noclip) player.noclip = false;
+
   // setup stuff
   let dt = timeStamp - lastFrame;
   dt *= player.gameSpeed;
   lastFrame = timeStamp;
   sinceLastSave += dt;
   player.timer += dt;
+
+  try {
+    if (!errored) {
+      runCode({
+        dt,
+        isFirstRun,
+        pressedKeys: keys,
+        isDead: player.isDead,
+        justDied,
+      });
+      isFirstRun = false;
+      justDied = false;
+    }
+  } catch (e) {
+    APIGlobals.error(e, "Check the JS console.");
+    console.error(e);
+    errored = true;
+  }
+
   id("timer").innerHTML = formatTime(player.timer);
   if (sinceLastSave > 5000) {
     save(true);
@@ -1640,6 +1666,7 @@ function respawn(start = false) {
   player.maxJumps = player.spawnPoint[3];
   player.currentJumps = player.maxJumps;
   player.moveSpeed = player.spawnPoint[4];
+  justDied = true;
   let shouldDraw =
     arraysEqual(player.switchsOn, player.spawnPoint[5]) ||
     player.jumpOn !== player.spawnPoint[6] ||
@@ -1674,8 +1701,10 @@ function respawn(start = false) {
     spawnx += (blockSize - player.size) / 2;
     if (player.g > 0) spawny += blockSize - player.size;
   }
+
   player.x = spawnx;
   player.y = spawny;
+
   timerList = [];
   for (let x = 0; x <= level.length - 1; x += 0.5) {
     for (let y = 0; y <= level[0].length - 1; y += 0.5) {
@@ -1708,6 +1737,7 @@ function respawn(start = false) {
       }
     }
   }
+
   id("coins").textContent = player.coins;
   if (shouldDraw) drawLevel();
   adjustScreen();
@@ -1784,11 +1814,12 @@ function save(auto = false) {
     const startPoint = deinfinify(player.startPoint);
     startPoint[13] = 0;
     startPoint[14] = [];
-    saves[player.currentSave] = [level, startPoint, player.currentSave];
+    saves[player.currentSave] = [level, startPoint, player.currentSave, LZString.compressToUTF16(code)];
     localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
     if (!auto) alert("Saved.");
   } else if (!auto) alert("No save is currently selected.");
 }
+
 function load(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
   level = saves[name][0];
@@ -1830,6 +1861,7 @@ function load(name) {
   if (typeof player.startPoint[5] !== "object")
     player.startPoint[5] = [player.startPoint[5]];
   player.spawnPoint = deepCopy(player.startPoint);
+  player.customColor = false;
   player.currentSave = name;
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
@@ -1854,6 +1886,8 @@ function load(name) {
   drawLevel(true);
   drawGrid();
   updateSaveMenu();
+  id("editor").editor.setValue(saves[name][3] ? LZString.decompressFromUTF16(saves[name][3]) : "");
+  updateCode();
 }
 function exportSave(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
@@ -2054,6 +2088,15 @@ function toggleControl() {
   if (id("controlNotice").style.display === "") {
     id("control").style.display = "inline";
     id("controlNotice").style.display = "none";
+  }
+}
+function toggleCodeMenu() {
+  if (id("codeMenu").style.display === "none") {
+    id("codeMenu").style.display = "inline";
+    editDisabled = true;
+  } else {
+    id("codeMenu").style.display = "none";
+    editDisabled = false;
   }
 }
 function openPropertyMenu(
@@ -2777,5 +2820,10 @@ function init() {
   }
   addTooltip(id("autoSaveButton"), "Saves once every 5 seconds");
   adjustScreen(true);
+
+  if (isMobile) {
+    id("posText").textContent = "Last Finger";
+    id("controlNotice").style.display = "none";
+  }
   window.requestAnimationFrame(nextFrame);
 }
