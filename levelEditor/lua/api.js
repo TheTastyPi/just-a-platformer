@@ -70,6 +70,13 @@ const APIGlobals = {
 		if (prop === "x" || prop === "y") drawPlayer();
 	},
 
+	getWidth() {
+		return level.length;
+	},
+	getHeight() {
+		return level[0].length
+	},
+
 	print(...args) {
 		printHandler(args, "info")
 	},

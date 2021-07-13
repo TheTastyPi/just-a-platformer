@@ -106,6 +106,10 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
 
 - `setProp(prop, value):void`: Set a property. See Appendix C for all possible properties, and what you should set them to.
 
+- `getWidth():number`: Get the width of the level.
+
+- `getHeight():number`: Get the height of the level.
+
 - `print(msg):void`: Print a message with a blue background to the console.
 
 - `warn(msg):void`: Print a message with a yellow background to the console.
