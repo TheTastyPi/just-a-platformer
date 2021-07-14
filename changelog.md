@@ -836,3 +836,9 @@ Both
 Misc.
 
 - Severely overhauled README.md
+
+### 14 Jul. 2021
+
+Main Game
+
+- Multi-jump branch is now EZ in EZ mode
