@@ -842,3 +842,13 @@ Misc.
 Main Game
 
 - Multi-jump branch is now EZ in EZ mode
+
+### 15 Jul. 2021
+
+Main Game
+
+- Wall-jump branch is now EZ in EZ mode
+
+Editor
+
+- Fixed bug where dark mode isn't dark
