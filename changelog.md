@@ -852,3 +852,9 @@ Main Game
 Editor
 
 - Fixed bug where dark mode isn't dark
+
+### 15 Jul. 2021 #2
+
+Main Game
+
+- Speed branch is now EZ in EZ mode
