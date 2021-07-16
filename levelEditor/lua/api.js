@@ -24,7 +24,7 @@ const APIGlobals = {
 		drawBlock(id("levelLayer"), x, y)
 	},
 	getBlock(x, y) {
-		return level[x][y];
+		return (typeof level[x][y])==="number"?level[x][y]:Object.fromEntries(level[x][y].map((x,i)=>[i,x]))
 	},
 	// 0 -> 255
 	// set r to `false` to revert to default
