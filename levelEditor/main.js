@@ -492,6 +492,7 @@ var yprev;
 var justDied = false;
 function nextFrame(timeStamp) {
   // lua lock checks
+  if (locks.panning) player.playerFocus = true;
   if (locks.godMode) player.godMode = false;
   if (locks.noclip) player.noclip = false;
 

@@ -26,7 +26,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
       }
     } else if (input.ctrlKey) {
       if (input.button === 0) control.lmb = true;
-      if (input.button === 2) {
+      if (input.button === 2 && !locks.panning) {
         player.playerFocus = true;
         adjustScreen();
       }
@@ -184,7 +184,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
     let block = getBlock(x, y);
     let trueType = getBlockType(x, y, false);
     if (input.ctrlKey) {
-      if (control.lmb) {
+      if (control.lmb && !locks.panning) {
         player.playerFocus = false;
         lvlxOffset += input.movementX;
         lvlyOffset += input.movementY;

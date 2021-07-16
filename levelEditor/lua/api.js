@@ -97,20 +97,22 @@ const APIGlobals = {
 			luactx.fillRect(0, 0, 10000, 10000);
 		},
 	},
-	lock({ teleporting, building, godMode, noclip }) {
+	lock({ teleporting, building, panning, godMode, noclip }) {
 		locks.teleporting = teleporting ?? false;
 		locks.building = building ?? false;
+		locks.panning = panning ?? false;
 		locks.godMode = godMode ?? false;
 		locks.noclip = noclip ?? false;
 	},
-	fill(x, y, w, h, id) {
+	fill(x, y, w, h, bid) {
 		if (x + w > level.length || y + h > level[1].length) this.error("Filling beyond level boundaries!");
 		else if (w < 1 || h < 1) this.error("Negative width or height.");
 		else if (x < 0 || y < 0) this.error("Negative x or y.");
 		else {
 			for (let i = x; i < x + w; i++) {
 				for (let j = y; j < y + h; j++) {
-					level[i][j] = id;
+					level[i][j] = bid;
+					drawBlock(id("levelLayer"), i, j);
 				}
 			}
 		}
@@ -123,6 +125,7 @@ let keep = {};
 let locks = {
 	teleporting: false,
 	building: false,
+	panning: false,
 	godMode: false,
 	noclip: false,
 }
