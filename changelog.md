@@ -334,7 +334,9 @@ Editor
 - Added Timer Interval Field
 - Refactored the checkpoint system
   - WHY HAVEN'T I DONE THIS SOONER
-    Main Game
+
+Main Game
+
 - Player changes color based on jumps left, like in the editor
 
 #### 13 Feb. 2021
@@ -834,3 +836,25 @@ Both
 Misc.
 
 - Severely overhauled README.md
+
+### 14 Jul. 2021
+
+Main Game
+
+- Multi-jump branch is now EZ in EZ mode
+
+### 15 Jul. 2021
+
+Main Game
+
+- Wall-jump branch is now EZ in EZ mode
+
+Editor
+
+- Fixed bug where dark mode isn't dark
+
+### 15 Jul. 2021 #2
+
+Main Game
+
+- Speed branch is now EZ in EZ mode

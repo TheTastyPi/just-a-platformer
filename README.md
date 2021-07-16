@@ -5,6 +5,7 @@ An attempt from me to create a platformer.
 ## Play It
 
 - [Main Game](https://thetastypi.github.io/just-a-platformer/index.html)
+  - [EZ Mode](https://thetastypi.github.io/just-a-platformer/easy/index.html)
 - [On CoolMathGames](https://www.coolmathgames.com/0-just-a-platformer)
 - [Level Editor](https://thetastypi.github.io/just-a-platformer/levelEditor/index.html)
 
