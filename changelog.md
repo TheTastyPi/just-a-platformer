@@ -858,3 +858,9 @@ Editor
 Main Game
 
 - Speed branch is now EZ in EZ mode
+
+## 17 Jul. 2021
+
+Main Game
+
+- EZ Mode finished
