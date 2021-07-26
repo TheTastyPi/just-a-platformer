@@ -89,5 +89,5 @@ if (isMobile) {
 	if (id("infoOpen")) {
 		id("infoOpen").style.display = "none";
 	}
-	id("mainInfo").style.fontSize = "20px";
+	if (id("mainInfo")) id("mainInfo").style.fontSize = "20px";
 }

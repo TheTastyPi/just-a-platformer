@@ -263,10 +263,10 @@ id("levelLayer").addEventListener("mousemove", function (input) {
               text += "  ";
               text += blockProperty[block[parseInt(i) + 1][0]][j - 1];
               text += ": ";
-              text += block[parseInt(i) + 1][j];
+              text += sanitize(block[parseInt(i) + 1][j]);
             }
           } else text += blockName[block[parseInt(i) + 1]];
-        } else text += block[parseInt(i) + 1];
+        } else text += sanitize(block[parseInt(i) + 1]);
         text += "<br>";
       }
       id("tooltip").innerHTML = text;

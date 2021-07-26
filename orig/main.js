@@ -1,3 +1,28 @@
+////////////////////////////
+/// BEGIN MOBILE SUPPORT ///
+////////////////////////////
+
+const mobileConfig = {
+	main: [
+  	  [
+  	    { key: "KeyA", disp: "←" },
+  	    { key: "KeyD", disp: "→" }
+  	  ]
+  	],
+  	left: [
+  	  [
+  	    { key: "KeyW", disp: "↑" },
+  	  ]
+  	],
+	more: []
+};
+
+const id = _ => document.getElementById(_);
+
+///////////////////////////
+/// BEGIN ORIGINAL CODE ///
+///////////////////////////
+
 var gameSpeed = 1;
 var playerSize = 20;
 var blockSize = 50;
