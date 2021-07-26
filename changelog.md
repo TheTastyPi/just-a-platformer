@@ -864,3 +864,18 @@ Main Game
 Main Game
 
 - EZ Mode finished
+
+## 26 Jul. 2021
+
+Original
+
+- Added Mobile Support
+
+Level Editor
+
+- Fixed HTML injection with Text Blocks
+- Added a Lua API for running Javascript code
+- Added a (WIP) Lua API for creating and interacting with HTML elements
+- Added a little missing functionality on mobile
+- Updated Portal tile to indicate what direction it'll take you
+- Polished the API and docs a little more

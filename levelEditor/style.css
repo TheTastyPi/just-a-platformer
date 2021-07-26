@@ -59,10 +59,17 @@ h3 {
 	background-color: red;
 }
 
-#luaLayer {
+#luaLayer, #luahtml {
 	top: 0;
 	left: 0;
 	width: 100vw;
 	height: 100vh;
+}
+
+#luaLayer {
 	pointer-events: none;
+}
+
+textarea {
+	color: black !important;
 }

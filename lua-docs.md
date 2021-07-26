@@ -4,6 +4,23 @@
 
 `just a level editor` now supports writing custom code for levels in the programming language Lua!
 
+# Table of Contents
+
+- [Introduction](#introduction)
+  - [Code Editor](#code-editor)
+  - [Lua Console](#lua-console)
+  - [Thinks You Should Know](#things-you-should-know)
+- [The Actual Docs](#the-actual-docs)
+  - [Global Variables](#global-variables)
+    - [`keep`](#keep)
+  - [Functions](#functions)
+    - [`layer`](#layer)
+    - [`html` \[BETA\]](#html-beta)
+- [Appendix A: The Anatomy of a Block](#appendix-a-the-anatomy-of-a-block)
+- [Appendix B: Block IDs](#appendix-b-block-ids)
+- [Appendix C: Player Properties](#appendix-c-player-properties)
+- [Appendix D: Running Javascript Code](#appendix-d-running-javascript-code)
+
 # Introduction
 
 There are 2 keybinds that you use to tinker with and debug code.
@@ -66,6 +83,8 @@ The console resides on the top-left of the screen, right below the info section.
 
 - `justDied`: If the player has died the frame before. Doesn't work if you kill the player via the code, for now...
 
+- `hasJSPerms`: If the user has accepted a request for the permission to run Javascript code.
+
 ### `keep`
 
 `keep` is the only variable that is saved between runs of the code. It is initialized as a blank table (`{}`). It can be anything besides a function.
@@ -116,7 +135,7 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
 
 - `error(msg):void`: Print a message with a red background to the console.
 
-- `lock(prevent):void`: Prevent the player from doing certain actions. `prevent` is a table with the values `teleporting`, `building`, `godMode`, and `noclip`, prevent you from doing it if the property is `true`, but letting you do it if the property is `false`.
+- `lock(prevent):void`: Prevent the player from doing certain actions. `prevent` is a table with the values `teleporting`, `building`, `godMode`, `noclip`, and `panning`, prevent you from doing it if the property is `true`, but letting you do it if the property is `false`.
 
 - `fill(x, y, w, h, block):void`: Fill a rectangle with one type of block. `x` and `y` determine where the rectange starts, while `w` (width) and `h` (height) determine how large it is, and `block` determines what is filled (see Appendix A).
 
@@ -131,6 +150,49 @@ The layer is a canvas above all the other canvases, but below the U.I. If you wa
 - `layer.clear():void`: Fully clear the layer.
 
 - `layer.filter(r, g, b, intensity):void` Tint the layer. `r`, `g`, and `b` go from 0 to 255, while `intensity` goes from 0 to 1, where 1 is a solid fill and 0 does nothing.
+
+## `html` [BETA]
+
+**This is in beta. It lacks a lot of functionality. Try coming back later?**
+
+Create HTML elements below the regular U.I, but still above `layer`.
+
+Elements persist between frames. You don't need to re-make them.
+
+This is marked as beta because, for now, there is very limited functionality. There will be more later.
+
+The only `type` so far is `"text"`. The only 
+
+- `html.new(type, id, text, style):void`: Create a new HTML element. `type` can be `"text"`, `id` is a unique ID for the element, and `text` is the content of the element (if any).
+  `style` is a table with info on positioning, size, and appearance.
+  ```lua
+  html.new("text", "myText", "Hello World!" {
+	  -- Distance from edge
+	  top = "100px",
+	  left = "100px",
+	  bottom = "100px",
+	  right = "100px",
+	  -- If you use all 4 distances from edge,
+	  -- width/height don't work.
+	  width = "50%",
+	  height = "30vh",
+	  -- Appearance
+	  color = "red",
+    padding = "10px 20px 30px 40px",
+    textAlign = "center",
+    -- lineHeight = "20px",
+    fontSize = "18px"
+  });
+  ```
+
+- `html.id(id):japElement`: Get some utility functions for the element with the ID `id`.
+  
+  `japElement` is a table containing for now, just one function.
+  ```lua
+  {
+    center = "(no args) (no return) centers the element."
+  }
+  ```
 
 # Appendix A: The Anatomy of a Block
 
@@ -252,3 +314,10 @@ If the name isn't self-explanatory, There will be a comment on what purpose it s
 - `xv:number`: The current x velocity of the player.
 - `yv:number`: The current y velocity of the player.
 - `coins:number`: How many coins the player currently has.
+- `timer:boolean`: The current state of the timed blocks.
+
+# Appendix D: Running Javascript Code
+
+- Use the global variable `hasJSPerms` to check if you can run code.
+- Use the function `requestJSAccess` to ask the user if you can run code.
+- Once your request has been accepted, run code with the `evalJS` function. 

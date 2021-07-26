@@ -492,6 +492,7 @@ var yprev;
 var justDied = false;
 function nextFrame(timeStamp) {
   // lua lock checks
+  if (locks.panning) player.playerFocus = true;
   if (locks.godMode) player.godMode = false;
   if (locks.noclip) player.noclip = false;
 
@@ -510,6 +511,7 @@ function nextFrame(timeStamp) {
         pressedKeys: keys,
         isDead: player.isDead,
         justDied,
+        hasJSPerms,
       });
       isFirstRun = false;
       justDied = false;
@@ -1338,7 +1340,7 @@ function nextFrame(timeStamp) {
                   case 46:
                     if (!arraysEqual(prevTextCoord, [x, y])) {
                       let text = props[1];
-                      id("textBlockText").innerHTML = text;
+                      id("textBlockText").textContent = text;
                       id("textBlockText").style.display = "block";
                       let tx = blockSize * (x + sizeMult / 2) + lvlxOffset;
                       if (tx < id("textBlockText").clientWidth / 2)
@@ -2338,7 +2340,7 @@ function openPropertyMenu(
 function addTooltip(elem, text) {
   elem.addEventListener("mousemove", function (event) {
     if (player.showTooltips) {
-      id("tooltip").innerHTML = text;
+      id("tooltip").textContent = text;
       id("tooltip").style.display = "block";
       id("tooltip").style.left = event.clientX + 5 + "px";
       id("tooltip").style.top =
@@ -2733,6 +2735,15 @@ function formatTime(ms) {
   if (dmo >= 1) time = dmo + ":" + time;
   if (dy >= 1) time = dy + ":" + time;
   return time;
+}
+function sanitize(text) {
+  return text
+    .toString()
+    .replace(/&/gimu, "&amp;")
+    .replace(/</gimu, "&lt;")
+    .replace(/>/gimu, "&gt;")
+    .replace(/"/gimu, "&quot;")
+    .replace(/'/gimu, "&#039;")
 }
 function init() {
   id("levelLayer").height = level[0].length * baseBlockSize;

@@ -1377,6 +1377,28 @@ function drawBlock(
         2 * Math.PI
       );
       lL.stroke();
+
+      // little arrow
+      let arrowXOffset = 0, arrowYOffset = 0;
+      if (data[1] > 0) arrowXOffset = 3 * (blockSize / 25);
+      else if (data[1] < 0) arrowXOffset = -3 * (blockSize / 25);
+      if (data[2] > 0) arrowYOffset = 3 * (blockSize / 25);
+      else if (data[2] < 0) arrowYOffset = -3 * (blockSize / 25);
+      lL.beginPath();
+      lL.arc(
+        xb + blockSize / 2 + arrowXOffset,
+        yb + blockSize / 2 + arrowYOffset,
+        blockSize / 20,
+        0,
+        2 * Math.PI
+      );
+      lL.stroke();
+      // lL.strokeRect(
+      //   xb + blockSize / 2 - blockSize / 20 + arrowXOffset,
+      //   yb + blockSize / 2 - blockSize / 20 + arrowYOffset,
+      //   blockSize / 10,
+      //   blockSize / 10,
+      // );
       break;
     case 42:
       lL.strokeStyle = "#880000";

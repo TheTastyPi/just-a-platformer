@@ -24,6 +24,9 @@ const mobileConfig = {
     ["Toggle Mini Block", "m", "KeyM"],
     ["Toggle Block Menu", "3", "Digit3", true],
     ["Toggle Grid", "4", "Digit4"],
+    ["Toggle Custom Sublock Display", "7", "Digit7"],
+    // ["Toggle Code Menu", "8", "Digit8"],
+    ["Toggle Lua Console", "9", "Digit9"],
     ["Toggle Save Menu", "Ctrl + f", "KeyF", false, true],
     ["Save Current Level", "⇧ + f", "KeyF", true],
     ["Credits", "c", "KeyC"]
