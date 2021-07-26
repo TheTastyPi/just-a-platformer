@@ -871,7 +871,7 @@ Original
 
 - Added Mobile Support
 
-Level Editor
+Editor
 
 - Fixed HTML injection with Text Blocks
 - Added a Lua API for running Javascript code
