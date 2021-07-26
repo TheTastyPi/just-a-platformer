@@ -135,13 +135,11 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
 
 - `error(msg):void`: Print a message with a red background to the console.
 
-- `lock(prevent):void`: Prevent the player from doing certain actions. `prevent` is a table with the values `teleporting`, `building`, `godMode`, and `noclip`, prevent you from doing it if the property is `true`, but letting you do it if the property is `false`.
+- `lock(prevent):void`: Prevent the player from doing certain actions. `prevent` is a table with the values `teleporting`, `building`, `godMode`, `noclip`, and `panning`, prevent you from doing it if the property is `true`, but letting you do it if the property is `false`.
 
 - `fill(x, y, w, h, block):void`: Fill a rectangle with one type of block. `x` and `y` determine where the rectange starts, while `w` (width) and `h` (height) determine how large it is, and `block` determines what is filled (see Appendix A).
 
 - `respawn(start):void`: Respawn the player. Doesn't work with the `justDied` global variable. `start` is a boolean which is `true` if you want the player to return to the start, but `false` if it's only to the most recent checkpoint.
-
-- ``
 
 ## `layer`
 
