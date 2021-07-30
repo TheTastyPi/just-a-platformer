@@ -1,75 +1,72 @@
 #control {
-	position: absolute;
-	background: #eeeeeeee;
-	color: black;
-	display: none;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	padding: 25px;
-	border-radius: 15px;
-	touch-action: none;
+  position: absolute;
+  background: #eeeeeeee;
+  color: black;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 25px;
+  border-radius: 15px;
+  touch-action: none;
 }
 
 .grid-wrapper {
-	display: grid;
-	gap: 10px;
-	grid-template-columns: 250px 250px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 250px 250px;
 }
 
 h3 {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .keybind {
-	line-height: 100%;
+  line-height: 100%;
 }
 
 .key {
-	border: 1px solid #aaa;
-	background-color: #fff;
-	border-radius: 2px;
-	display: inline-block;
-	text-align: center;
-	line-height: 17px;
-	min-width: 17px;
-	height: 17px;
-	box-shadow: 0 3px #aaa;
-	margin-right: -6px;
+  border: 1px solid #aaa;
+  background-color: #fff;
+  border-radius: 2px;
+  display: inline-block;
+  text-align: center;
+  line-height: 17px;
+  min-width: 17px;
+  height: 17px;
+  box-shadow: 0 3px #aaa;
+  margin-right: -6px;
 }
 
 .key:last-child {
-	margin-right: 2px;
+  margin-right: 2px;
 }
 
 #luaConsole > span {
-	display: block;
+  display: block;
 }
 
 .lua-info {
-	background-color: blue;
-	color: white;
+  background-color: blue;
+  color: white;
 }
 
 .lua-warn {
-	background-color: yellow;
+  background-color: yellow;
 }
 
 .lua-error {
-	background-color: red;
+  background-color: red;
 }
 
-#luaLayer, #luahtml {
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
+#luaLayer,
+#luahtml {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 #luaLayer {
-	pointer-events: none;
-}
-
-textarea {
-	color: black !important;
+  pointer-events: none;
 }

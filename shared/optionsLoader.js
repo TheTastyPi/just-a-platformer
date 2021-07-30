@@ -29,7 +29,7 @@ if (options.darkMode) {
       background-color: #00000088 !important;
     }
 
-    button, input {
+    button, input, select, textarea {
       background-color: #333336;
     }
 
@@ -41,10 +41,6 @@ if (options.darkMode) {
 
     #control {
       background-color: #111111ee
-    }
-
-    select {
-      background-color: #333336
     }
   `;
   let el = document.createElement("style");
