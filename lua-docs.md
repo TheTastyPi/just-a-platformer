@@ -24,7 +24,6 @@
 # Introduction
 
 There are 2 keybinds that you use to tinker with and debug code.
-
 - `8` - Open the code editor
 - `9` - Open/close the console
 
@@ -71,7 +70,6 @@ The console resides on the top-left of the screen, right below the info section.
 - `isFirstRun`: `true` if it's the first frame since `[ Run Code ]` was pushed or a level was loaded, `false` otherwise. Good for only doing something once.
 
 - `pressedKeys`: A table that starts with nothing, but gradually contains more keys as they are pressed. When the browser tab is first opened, it's blank, but as the level is played, it starts to look like this:
-
   ```lua
   {
   	d = false,
@@ -79,7 +77,6 @@ The console resides on the top-left of the screen, right below the info section.
   	a = true
   }
   ```
-
   pretty much every key is supported. If you want to find out what a key would be listed as, press a key then check the `e.key` value at [jskeycode.info](http://jskeycode.info/).
 
 - `isDead`: If the player is currently in the animation of dying.
@@ -97,7 +94,6 @@ The console resides on the top-left of the screen, right below the info section.
 Functions will be shown as such: `functionName(properties):returnType`. If `returnType` is `void`, no value is returned from the function.
 
 - `setBlock(x, y, block):void`: Sets a block at the specified coordinates with the block `block`. See Appendix A (and B) for more info on blocks.
-
   ```lua
   -- puts a death block at the top left of the level.
   setBlock(0, 0, 2);
@@ -110,7 +106,6 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
 - `getPlayerColor():{r,g,b}`: Returns the current color of the player, wether custom or not. Doesn't account for transparency (if there is not a custom color currently active).
 
 - `getOption(opt):optValue`: Get the value of an option.
-
   ```lua
   getOption("darkMode"); -- boolean
   getOption("spawnDelay"); -- number (NOT actually the spawn delay--it's (optValue*100)/3)
@@ -119,7 +114,6 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
   ```
 
 - `setCoords(x, y):void`: Set the player's coordinates. 1 in-game block translates to 50 x or y.
-
   ```lua
   -- 1 block in
   setCoords(50, 50);
@@ -167,24 +161,23 @@ Elements persist between frames. You don't need to re-make them.
 
 This is marked as beta because, for now, there is very limited functionality. There will be more later.
 
-The only `type` so far is `"text"`. The only
+The only `type` so far is `"text"`. The only 
 
 - `html.new(type, id, text, style):void`: Create a new HTML element. `type` can be `"text"`, `id` is a unique ID for the element, and `text` is the content of the element (if any).
   `style` is a table with info on positioning, size, and appearance.
-
   ```lua
   html.new("text", "myText", "Hello World!" {
-  e
-  ,
-  ,
-  ,
-  ,
-  ,
-  .
-  ,
-  ,
-  e
-  ,
+	  -- Distance from edge
+	  top = "100px",
+	  left = "100px",
+	  bottom = "100px",
+	  right = "100px",
+	  -- If you use all 4 distances from edge,
+	  -- width/height don't work.
+	  width = "50%",
+	  height = "30vh",
+	  -- Appearance
+	  color = "red",
     padding = "10px 20px 30px 40px",
     textAlign = "center",
     -- lineHeight = "20px",
@@ -193,9 +186,8 @@ The only `type` so far is `"text"`. The only
   ```
 
 - `html.id(id):japElement`: Get some utility functions for the element with the ID `id`.
-
+  
   `japElement` is a table containing for now, just one function.
-
   ```lua
   {
     center = "(no args) (no return) centers the element."
@@ -329,4 +321,4 @@ If the name isn't self-explanatory, There will be a comment on what purpose it s
 
 - Use the global variable `hasJSPerms` to check if you can run code.
 - Use the function `requestJSAccess` to ask the user if you can run code.
-- Once your request has been accepted, run code with the `evalJS` function.
+- Once your request has been accepted, run code with the `evalJS` function. 
