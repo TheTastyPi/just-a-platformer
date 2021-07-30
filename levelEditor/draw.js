@@ -2596,6 +2596,19 @@ function drawBlock(
       lL.fillStyle = "#00000088";
       lL.fillRect(xb,yb,blockSize,blockSize);
       break;
+    case 84:
+      drawBlock(
+  canvas,
+  x,
+  y,
+  data[1],
+  xOffset,
+  yOffset,
+  size,
+  useDefault,
+  subBlock
+      )
+      break;
     default:
   }
 }
