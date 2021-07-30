@@ -154,6 +154,7 @@ const blockSelect = [
   18,
   41,
   46,
+  84,
   "Basic",
   0,
   1,
@@ -161,7 +162,6 @@ const blockSelect = [
   74,
   72,
   2,
-  84,
   "Gravity",
   6,
   7,
@@ -2479,9 +2479,6 @@ function getBlockType(x, y, subtype = true, block) {
             type = 0;
           } else type = 2;
           break;
-        case 84:
-          type = block[2]
-          break;
         default:
           break;
       }
@@ -2517,6 +2514,9 @@ function getSubBlockPos(x, y, type) {
     if ((player.coins >= block[1]) ^ block[4]) {
       return 2;
     } else return 3;
+  }
+  if (type === 84) {
+    return 2
   }
 }
 function editBlock(x, y, block, miniBlock = true) {

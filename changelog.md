@@ -886,3 +886,9 @@ Editor
 
 - Added False Block, which are really sus
 - In dark mode, various property edit menus now have a dark background
+
+### 30 Jul. 2021
+
+Editor
+
+- False Block with block with properties as its effect is now working
