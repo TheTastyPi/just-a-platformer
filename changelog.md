@@ -878,4 +878,11 @@ Editor
 - Added a (WIP) Lua API for creating and interacting with HTML elements
 - Added a little missing functionality on mobile
 - Updated Portal tile to indicate what direction it'll take you
-- Polished the API and docs a little more
+- Polished the API and docs a little
+
+## 30 Jul. 2021
+
+Editor
+
+- Added False Block, which are really sus
+- In dark mode, select boxes now have a dark background

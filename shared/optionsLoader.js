@@ -42,6 +42,10 @@ if (options.darkMode) {
     #control {
       background-color: #111111ee
     }
+
+    select {
+      background-color: #333336
+    }
   `;
   let el = document.createElement("style");
   el.innerText = darkCSS;

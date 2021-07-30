@@ -145,7 +145,7 @@ const blockName = [
   "Coin Death Block B",
   "Custom Coin Block", // coin (77,78,79,80,81,82)
   "Vacuum", // air friction (83)
-  "False block"
+  "False Block"
 ];
 const blockSelect = [
   "Special",
