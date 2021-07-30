@@ -144,7 +144,8 @@ const blockName = [
   "Coin Death Block A",
   "Coin Death Block B",
   "Custom Coin Block", // coin (77,78,79,80,81,82)
-  "Vacuum" // air friction (83)
+  "Vacuum", // air friction (83)
+  "False block"
 ];
 const blockSelect = [
   "Special",
@@ -160,6 +161,7 @@ const blockSelect = [
   74,
   72,
   2,
+  84,
   "Gravity",
   6,
   7,
@@ -297,7 +299,8 @@ const blockProperty = {
   79: ["Required Value"],
   80: ["Required Value"],
   81: ["Required Value"],
-  82: ["Required Value", "BlockA", "BlockB", "Invert"]
+  82: ["Required Value", "BlockA", "BlockB", "Invert"],
+  84: ["Texture", "Effect"]
 };
 const defaultProperty = {
   get 17() {
@@ -336,7 +339,8 @@ const defaultProperty = {
   79: [1],
   80: [1],
   81: [1],
-  82: [1, 0, 1, false]
+  82: [1, 0, 1, false],
+  84: [1, 0]
 };
 const propertyType = {
   17: [
@@ -393,7 +397,8 @@ const propertyType = {
   79: ["integer"],
   80: ["integer"],
   81: ["integer"],
-  82: ["integer", "block", "block", "boolean"]
+  82: ["integer", "block", "block", "boolean"],
+  84: ["block", "block"]
 };
 const propertyLimit = {
   17: [
@@ -458,7 +463,8 @@ const propertyLimit = {
   79: [[-999, 999]],
   80: [[-999, 999]],
   81: [[-999, 999]],
-  82: [[-999, 999], "none", "none", "none"]
+  82: [[-999, 999], "none", "none", "none"],
+  84: ["none", "none"]
 };
 var prevVersions = [
   [
@@ -2472,6 +2478,9 @@ function getBlockType(x, y, subtype = true, block) {
           if (player.coins >= block[1]) {
             type = 0;
           } else type = 2;
+          break;
+        case 84:
+          type = block[2]
           break;
         default:
           break;
