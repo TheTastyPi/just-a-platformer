@@ -892,3 +892,10 @@ Editor
 Editor
 
 - False Block with block with properties as its effect is now working
+
+### 5 Aug. 2021
+
+Editor
+
+- Autosave can actually be disabled now
+- Saves no longer gets named 'null' when cancelling rename

@@ -529,7 +529,7 @@ function nextFrame(timeStamp) {
   }
 
   id("timer").innerHTML = formatTime(player.timer);
-  if (sinceLastSave > 5000) {
+  if (player.autoSave && sinceLastSave > 5000) {
     save(true);
     sinceLastSave = 0;
   }
@@ -1918,10 +1918,12 @@ function importSave() {
       name = prompt(
         "The imported level does not have a name. Please enter a name."
       );
-    while (saveList.includes(name)) {
+    while (!name || saveList.includes(name)) {
+      let temp = name;
       name = prompt(
         `There's already a save named '${name}'. Please enter a different name.`
       );
+      if (!name) name = temp;
     }
     saves[name] = data;
     saveList.push(name);
@@ -1971,6 +1973,7 @@ function renameSave(name) {
       `There's already a save named '${newName}'. Please enter a different name.`
     );
   }
+  if (!newName) return;
   saves[newName] = deepCopy(saves[name]);
   delete saves[name];
   saveList[index] = newName;
