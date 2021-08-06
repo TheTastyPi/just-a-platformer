@@ -899,3 +899,9 @@ Editor
 
 - Autosave can actually be disabled now
 - Saves no longer gets named 'null' when cancelling rename
+
+#### 6 Aug. 2021
+
+Editor
+
+- Added the ability to toggle false textures using \[0]

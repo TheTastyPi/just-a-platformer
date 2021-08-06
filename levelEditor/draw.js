@@ -14,11 +14,15 @@ function drawPlayer() {
   if (player.maxJumps === Infinity) ratio = 1;
   if (player.maxJumps === 0) ratio = 0;
   pL.fillStyle = `rgb(${255 - ratio * 255},0,${ratio * 255})`;
-  if (options.darkMode) pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255*0.25},${ratio * 255 * 0.75 + 255*0.25})`;
+  if (options.darkMode)
+    pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255 * 0.25},${
+      ratio * 255 * 0.75 + 255 * 0.25
+    })`;
   if (player.godMode) pL.fillStyle = "#FF00FF";
   if (player.noclip || player.isDead) pL.fillStyle += "88";
 
-  if (player.customColor) pL.fillStyle = `rgb(${player.customColor.join(", ")})`
+  if (player.customColor)
+    pL.fillStyle = `rgb(${player.customColor.join(", ")})`;
   pL.fillRect(
     Math.floor(player.x) + Math.floor(camx),
     Math.floor(player.y) + Math.floor(camy),
@@ -47,7 +51,8 @@ function drawLevel(clear = false) {
     Math.min(
       Math.floor((canvas.width - camCenterx) / baseBlockSize),
       level.length
-    )-1;
+    ) -
+      1;
     x++
   ) {
     for (
@@ -56,7 +61,8 @@ function drawLevel(clear = false) {
       Math.min(
         Math.floor((canvas.height - camCentery) / baseBlockSize),
         level[0].length
-      )-1;
+      ) -
+        1;
       y++
     ) {
       if (prevLevel[x] == undefined) {
@@ -109,7 +115,46 @@ function drawLevel(clear = false) {
 }
 
 // TODO make this an obj. with [prop]: true, etc.
-const transparentBlocks = [3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 27, 28, 29, 30, 31, 41, 46, 48, 49, 50, 59, 60, 63, 64, 65, 66, 67, 68, 69, 70, 71, 76]
+const transparentBlocks = [
+  3,
+  6,
+  7,
+  8,
+  9,
+  10,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  21,
+  22,
+  23,
+  27,
+  28,
+  29,
+  30,
+  31,
+  41,
+  46,
+  48,
+  49,
+  50,
+  59,
+  60,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  69,
+  70,
+  71,
+  76
+];
 
 function drawBlock(
   canvas,
@@ -161,8 +206,9 @@ function drawBlock(
   }
   lL.clearRect(xb, yb, blockSize, blockSize);
   bL.clearRect(xb, yb, blockSize, blockSize);
-  bL.fillStyle = "#FFFFFF"
-  if (transparentBlocks.includes(type)) bL.fillRect(xb, yb, blockSize, blockSize)
+  bL.fillStyle = "#FFFFFF";
+  if (transparentBlocks.includes(type))
+    bL.fillRect(xb, yb, blockSize, blockSize);
   if (transparentBlocks.includes(type) && canvas.id.startsWith("blockSelect")) {
     lL.fillStyle = "#FFFFFF";
     lL.fillRect(xb, yb, blockSize, blockSize);
@@ -391,7 +437,8 @@ function drawBlock(
       break;
     case 72:
       lL.fillStyle = `rgb(${(1 - Math.min(data[2] / data[1], 1)) * 255},0,0)`;
-      if (data[2] === 0) lL.fillStyle = `rgba(${(Math.min(data[4] / data[3], 1)) * 255},0,0,0.5)`;
+      if (data[2] === 0)
+        lL.fillStyle = `rgba(${Math.min(data[4] / data[3], 1) * 255},0,0,0.5)`;
       break;
     case 74:
       lL.fillStyle = `rgb(${data[1]},${data[2]},${data[3]})`;
@@ -1379,7 +1426,8 @@ function drawBlock(
       lL.stroke();
 
       // little arrow
-      let arrowXOffset = 0, arrowYOffset = 0;
+      let arrowXOffset = 0,
+        arrowYOffset = 0;
       if (data[1] > 0) arrowXOffset = 3 * (blockSize / 25);
       else if (data[1] < 0) arrowXOffset = -3 * (blockSize / 25);
       if (data[2] > 0) arrowYOffset = 3 * (blockSize / 25);
@@ -1572,31 +1620,33 @@ function drawBlock(
       break;
     case 52:
       if (!sOn[data[4]] !== !data[3]) {
-        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[2],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          2
-        );
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault, 1);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[2],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            2
+          );
       } else {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[1],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          1
-        );
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault, 2);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[1],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            1
+          );
       }
 
       lL.fillStyle = "#00880044";
@@ -1623,31 +1673,33 @@ function drawBlock(
       break;
     case 53:
       if (tOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[2],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          2
-        );
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault, 1);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[2],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            2
+          );
       } else {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[1],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          1
-        );
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault, 2);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[1],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            1
+          );
       }
 
       lL.fillStyle = "#88888844";
@@ -1678,31 +1730,33 @@ function drawBlock(
       break;
     case 54:
       if (jOn !== data[3]) {
-        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault,1);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[2],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          2
-        );
+        drawBlock(canvas, x, y, data[1], xOffset, yOffset, size, useDefault, 1);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[2],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            2
+          );
       } else {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[1],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          1
-        );
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault, 2);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[1],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            1
+          );
       }
 
       lL.fillStyle = "#88440044";
@@ -2319,7 +2373,10 @@ function drawBlock(
       lL.strokeStyle = `rgb(${
         (1 - Math.min(data[2] / data[1], 1)) * 128 + 127
       },127,127)`;
-      if (data[2] === 0) lL.strokeStyle = `rgba(${(Math.min(data[4] / data[3], 1)) * 127},0,0,0.5)`;
+      if (data[2] === 0)
+        lL.strokeStyle = `rgba(${
+          Math.min(data[4] / data[3], 1) * 127
+        },0,0,0.5)`;
       lL.fillStyle = lL.strokeStyle;
       lL.beginPath();
       lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
@@ -2543,31 +2600,33 @@ function drawBlock(
       break;
     case 82:
       if (!(player.coins >= data[1]) !== !data[4]) {
-        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault,2);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[3],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          3
-        );
+        drawBlock(canvas, x, y, data[2], xOffset, yOffset, size, useDefault, 2);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[3],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            3
+          );
       } else {
-        drawBlock(canvas, x, y, data[3], xOffset, yOffset, size, useDefault,3);
-        if (player.showSubblock) drawBlock(
-          canvas,
-          x,
-          y,
-          data[2],
-          xOffset + size / 2,
-          yOffset + size / 2,
-          size / 2,
-          useDefault,
-          2
-        );
+        drawBlock(canvas, x, y, data[3], xOffset, yOffset, size, useDefault, 3);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[2],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            2
+          );
       }
 
       lL.fillStyle = "#88880044";
@@ -2594,20 +2653,20 @@ function drawBlock(
       break;
     case 83:
       lL.fillStyle = "#00000088";
-      lL.fillRect(xb,yb,blockSize,blockSize);
+      lL.fillRect(xb, yb, blockSize, blockSize);
       break;
     case 84:
       drawBlock(
-  canvas,
-  x,
-  y,
-  data[1],
-  xOffset,
-  yOffset,
-  size,
-  useDefault,
-  subBlock
-      )
+        canvas,
+        x,
+        y,
+        data[player.falseTexture?1:2],
+        xOffset,
+        yOffset,
+        size,
+        useDefault,
+        subBlock
+      );
       break;
     default:
   }

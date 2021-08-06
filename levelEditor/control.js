@@ -460,6 +460,11 @@ document.addEventListener("keydown", function (input) {
         } else if (id("luaConsoleParent").style.display !== "block")
           id("luaConsoleParent").style.display = "block";
         break;
+      case "Digit0":
+        player.falseTexture = !player.falseTexture;
+        id("falseTexture").innerHTML = player.falseTexture ? "ON" : "OFF";
+        drawLevel(true);
+        break;
       case "KeyF":
         if (input.shiftKey) {
           save();

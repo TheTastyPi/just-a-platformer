@@ -34,6 +34,7 @@ const player = {
   coins: 0,
   showTooltips: true,
   showSubblock: true,
+  falseTexture: true,
   timer: 0,
   // [0-255, 0-255, 0-255]
   customColor: false,
