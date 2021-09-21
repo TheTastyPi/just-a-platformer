@@ -1715,8 +1715,8 @@ function respawn(start = false) {
   player.y = spawny;
 
   timerList = [];
-  for (let x = 0; x <= level.length - 1; x += 0.5) {
-    for (let y = 0; y <= level[0].length - 1; y += 0.5) {
+  for (let x = 0; x < level.length; x += 0.5) {
+    for (let y = 0; y < level[0].length; y += 0.5) {
       let block = getBlock(x, y);
       if (blockIncludes(block, 31)) {
         if (start) {

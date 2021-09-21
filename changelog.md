@@ -905,3 +905,9 @@ Editor
 Editor
 
 - Added the ability to toggle false textures using \[0]
+
+#### 21 Sep. 2021
+
+Editor
+
+- Fixed a bug where mini coins on the right or bottom edge won't be reset on start
