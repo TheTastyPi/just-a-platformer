@@ -911,3 +911,9 @@ Editor
 Editor
 
 - Fixed a bug where mini coins on the right or bottom edge won't be reset on start
+
+#### 24 Sep. 2021
+
+Editor
+
+- Fixed a bug where collected and saved mini coins on the right or bottom edge resets on death
