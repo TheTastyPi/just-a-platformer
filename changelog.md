@@ -923,4 +923,4 @@ Editor
 Editor
 
 - Fixed a bug where undo history is preserved between level loads
-- "pointer-event" is now "none" for tooltips
+- "pointer-events" is now "none" for tooltips
