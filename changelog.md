@@ -917,3 +917,10 @@ Editor
 Editor
 
 - Fixed a bug where collected and saved mini coins on the right or bottom edge resets on death
+
+#### 28 Sep. 2021
+
+Editor
+
+- Fixed a bug where undo history is perserved between level loads
+- "pointer-event" is now "none" for tooltips

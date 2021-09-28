@@ -1872,6 +1872,7 @@ function load(name) {
   player.spawnPoint = deepCopy(player.startPoint);
   player.customColor = false;
   player.currentSave = name;
+  prevVersions = [deepCopy(level)];
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
   id("levelLayer").width = Math.min(
