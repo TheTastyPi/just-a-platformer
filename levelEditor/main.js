@@ -277,7 +277,7 @@ const blockProperty = {
   33: ["ID"],
   34: ["ID"],
   35: ["ID"],
-  41: ["TP Offset X", "TP Offset Y"],
+  41: ["X", "Y", "Absolute"],
   46: ["Text"],
   47: ["Power"],
   48: ["Gravity", "Horizontal"],
@@ -317,7 +317,7 @@ const defaultProperty = {
   33: [0],
   34: [0],
   35: [0],
-  41: [0, 0],
+  41: [0, 0, false],
   46: ["Text"],
   47: [275],
   48: [325, false],
@@ -375,7 +375,7 @@ const propertyType = {
   33: ["integer"],
   34: ["integer"],
   35: ["integer"],
-  41: ["number", "number"],
+  41: ["number", "number", "boolean"],
   46: ["any"],
   47: ["number"],
   48: ["number", "boolean"],
@@ -433,7 +433,7 @@ const propertyLimit = {
   33: [[0, 99]],
   34: [[0, 99]],
   35: [[0, 99]],
-  41: ["none", "none"],
+  41: ["none", "none", "none"],
   46: ["none"],
   47: [[0, 1000]],
   48: [[-2000, 2000], "none"],
@@ -1382,7 +1382,14 @@ function nextFrame(timeStamp) {
                     break;
                   // portal
                   case 41:
-                    if (getBlockType(x, y, false) === 73) {
+                    if (props[3]){
+                      player.x =
+                        props[1] * blockSize +
+                        (blockSize - player.size) / 2;
+                      player.y =
+                        props[2] * blockSize +
+                        (blockSize - player.size) / 2;
+                    } else if (getBlockType(x, y, false) === 73) {
                       player.x =
                         (x + props[1]) * blockSize +
                         (blockSize / 2 - player.size) / 2;

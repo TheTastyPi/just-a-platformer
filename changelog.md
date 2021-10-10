@@ -924,3 +924,9 @@ Editor
 
 - Fixed a bug where undo history is preserved between level loads
 - "pointer-events" is now "none" for tooltips
+
+### 10 Oct. 2021
+
+Editor
+
+- Added "Absolute" property to portals, which switches the x and y inputs from relative to absolute coordinates
