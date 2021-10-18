@@ -24,6 +24,8 @@ html {
   transition: 1s;
   font-family: monospace;
   font-size: 30px;
+  opacity: 0;
+  overflow-y: scroll;
 }
 
 #mainInfo > div {

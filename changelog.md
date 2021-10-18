@@ -930,3 +930,15 @@ Editor
 Editor
 
 - Added "Absolute" property to portals, which switches the x and y inputs from relative to absolute coordinates
+
+## 18 Oct. 2021
+
+Main Game
+
+- Added HARD mode
+  - Only pre-hub, gravity, and a portion of wall-jump is finished
+
+Both
+
+- Made the credit's opacity 0 when not opened.
+  - Also added a scroll bar for the credit.

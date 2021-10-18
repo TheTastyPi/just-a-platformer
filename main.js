@@ -911,7 +911,11 @@ function nextFrame(timeStamp) {
 function openInfo() {
   if (id("mainInfo").style.bottom == "0%") {
     id("mainInfo").style.bottom = "100%";
-  } else id("mainInfo").style.bottom = "0%";
+    id("mainInfo").style.opacity = 0;
+  } else {
+    id("mainInfo").style.bottom = "0%";
+    id("mainInfo").style.opacity = 1;
+  }
 }
 function newSave() {
   return [
@@ -936,16 +940,11 @@ function newSave() {
 function save() {
   let saveData = deepCopy(player.spawnPoint);
   if (saveData[5] == Infinity) saveData[5] = "Infinity";
-  localStorage.setItem(
-    isEasy ? "just-a-save-EZ" : "just-a-save",
-    JSON.stringify(saveData)
-  );
+  localStorage.setItem("just-a-save" + diff, JSON.stringify(saveData));
 }
 function load() {
-  if (localStorage.getItem(isEasy ? "just-a-save-EZ" : "just-a-save")) {
-    let saveData = JSON.parse(
-      localStorage.getItem(isEasy ? "just-a-save-EZ" : "just-a-save")
-    );
+  if (localStorage.getItem("just-a-save" + diff)) {
+    let saveData = JSON.parse(localStorage.getItem("just-a-save" + diff));
     if (saveData[5] == "Infinity") saveData[5] = Infinity;
     if (saveData[8] == undefined) {
       saveData[8] = newSave()[8];
@@ -1134,6 +1133,11 @@ function pluralCheck(n) {
 var id = (x) => document.getElementById(x);
 
 load();
+for (let i = -2; i > -5; i--) {
+  let index = player.spawnPoint[7].indexOf(i);
+  if (index > -1) player.spawnPoint[7].splice(index, 1);
+}
+save();
 respawn(false);
 adjustScreen(true);
 window.requestAnimationFrame(nextFrame);

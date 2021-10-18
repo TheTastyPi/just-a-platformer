@@ -1,4 +1,4 @@
-const isEasy = false;
+const diff = "";
 const worldMap = [
   [45, 34, 33, 23, 22, 21, 18, 17, 0, 80],
   [44, 35, 32, 24, 25, 20, 19, 16, 1, 81],

@@ -2599,7 +2599,11 @@ function blockIncludes(block, type) {
 function openInfo() {
   if (id("mainInfo").style.bottom == "0%") {
     id("mainInfo").style.bottom = "100%";
-  } else id("mainInfo").style.bottom = "0%";
+    id("mainInfo").style.opacity = 0;
+  } else {
+    id("mainInfo").style.bottom = "0%";
+    id("mainInfo").style.opacity = 1;
+  }
 }
 function changeLevelSize(dir, num) {
   switch (dir) {

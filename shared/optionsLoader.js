@@ -8,9 +8,22 @@ const options =
   JSON.parse(localStorage.getItem("just-some-options")) ?? defaultOptions;
 if (options.timer) document.getElementById("timer").style.display = "block";
 if (options.darkMode) {
+  let bg;
+  switch (diff) {
+    case "":
+      bg = 333336;
+      break;
+    case "-EZ":
+      bg = 334433;
+      break;
+    case "-HARD":
+      bg = 443333;
+      break;
+    default:
+  }
   let darkCSS = `
     body, #background {
-      background-color: #${isEasy ? 334433 : 333336} !important;
+      background-color: #${bg} !important;
     }
   
     * {
