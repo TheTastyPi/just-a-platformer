@@ -89,7 +89,8 @@ document.addEventListener("keydown", function (input) {
           }
         } else alert("You have not reached the hub yet.");
       } else {
-        respawn();
+        player.isDead = true;
+        player.spawnTimer = 0;
       }
       break;
     case "KeyC":
@@ -1133,11 +1134,6 @@ function pluralCheck(n) {
 var id = (x) => document.getElementById(x);
 
 load();
-for (let i = -2; i > -5; i--) {
-  let index = player.spawnPoint[7].indexOf(i);
-  if (index > -1) player.spawnPoint[7].splice(index, 1);
-}
-save();
 respawn(false);
 adjustScreen(true);
 window.requestAnimationFrame(nextFrame);

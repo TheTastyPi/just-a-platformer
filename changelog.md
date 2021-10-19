@@ -942,3 +942,10 @@ Both
 
 - Made the credit's opacity 0 when not opened.
   - Also added a scroll bar for the credit.
+
+## ?? Oct. 2021
+
+Main Game
+
+- Made EZ mode easier
+- Fixed a bug where manually respawning does not update toggleable block display
