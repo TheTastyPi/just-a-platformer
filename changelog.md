@@ -943,7 +943,7 @@ Both
 - Made the credit's opacity 0 when not opened.
   - Also added a scroll bar for the credit.
 
-## ?? Oct. 2021
+## 20 Oct. 2021
 
 Main Game
 
