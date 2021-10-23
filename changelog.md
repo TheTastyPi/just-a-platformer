@@ -949,3 +949,10 @@ Main Game
 
 - Made EZ mode easier
 - Fixed a bug where manually respawning does not update toggleable block display
+
+## 23 Oct. 2021
+
+Main Game
+
+- Added EZR mode, which is eaiser than EZ
+- Made dark mode background slightly darker

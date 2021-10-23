@@ -13,11 +13,14 @@ if (options.darkMode) {
     case "":
       bg = 333336;
       break;
+    case "-EZR":
+      bg = 223333;
+      break;
     case "-EZ":
-      bg = 334433;
+      bg = 223322;
       break;
     case "-HARD":
-      bg = 443333;
+      bg = 332222;
       break;
     default:
   }

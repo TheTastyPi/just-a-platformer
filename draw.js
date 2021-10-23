@@ -10,7 +10,10 @@ function drawPlayer() {
   if (player.maxJumps === Infinity) ratio = 1;
   if (player.maxJumps === 0) ratio = 0;
   pL.fillStyle = `rgb(${255 - ratio * 255},0,${ratio * 255})`;
-  if (options.darkMode) pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255*0.25},${ratio * 255 * 0.75 + 255*0.25})`;
+  if (options.darkMode)
+    pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255 * 0.25},${
+      ratio * 255 * 0.75 + 255 * 0.25
+    })`;
   if (player.isDead) pL.fillStyle += "88";
   pL.fillRect(
     Math.floor(player.x),
@@ -21,11 +24,29 @@ function drawPlayer() {
   adjustScreen();
 }
 
-const transparentBlocks = [-5, -4, -3, 3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 21, 22, 23]
+const transparentBlocks = [
+  -5,
+  -4,
+  -3,
+  3,
+  6,
+  7,
+  8,
+  9,
+  10,
+  12,
+  13,
+  14,
+  15,
+  16,
+  21,
+  22,
+  23
+];
 function drawLevel() {
   let canvas = id("levelLayer");
   let lL = canvas.getContext("2d");
-  let bcanv = id("bgLayer")
+  let bcanv = id("bgLayer");
   let bL = id("bgLayer").getContext("2d");
   canvas.width = levels[player.currentLevel].length * blockSize;
   canvas.height = levels[player.currentLevel][0].length * blockSize;
@@ -119,7 +140,8 @@ function drawLevel() {
           lL.fillStyle = "#00000000";
       }
       lL.fillRect(xb, yb, blockSize, blockSize);
-      if (transparentBlocks.includes(type)) bL.fillRect(xb, yb, blockSize, blockSize)    
+      if (transparentBlocks.includes(type))
+        bL.fillRect(xb, yb, blockSize, blockSize);
       switch (type) {
         case -5:
           if (isSpawn(x, y)) {
