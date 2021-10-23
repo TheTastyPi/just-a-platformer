@@ -954,5 +954,5 @@ Main Game
 
 Main Game
 
-- Added EZR mode, which is eaiser than EZ
+- Added EZR mode, which is easier than EZ
 - Made dark mode background slightly darker
