@@ -956,3 +956,10 @@ Main Game
 
 - Added EZR mode, which is easier than EZ
 - Made dark mode background slightly darker
+
+
+## 31 Oct. 2021
+
+Main Game
+
+- You can no longer go back up to the pre-hub area from the gravity branch switch room
