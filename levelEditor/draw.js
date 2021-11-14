@@ -1,4 +1,4 @@
-const isEasy = false;
+const diff = "";
 var baseBlockSize = 50;
 var lvlxOffset = 0;
 var lvlyOffset = 0;
@@ -448,7 +448,7 @@ function drawBlock(
       lL.fillStyle = "#222288";
       break;
     case 76:
-      lL.fillStyle = `hsla(240,50%,50%,${data[4] * 0.5 + 0.5})`;
+      lL.fillStyle = `hsla(240,50%,50%,${(data[4] ^ data[6]) * 0.5 + 0.5})`;
       break;
     case 78:
       if (!(player.coins >= data[1])) {
@@ -469,6 +469,9 @@ function drawBlock(
       if (player.coins >= data[1]) {
         lL.fillStyle = "#00000000";
       } else lL.fillStyle = "#888800";
+      break;
+    case 85:
+      lL.fillStyle = `hsla(240,50%,50%,${(data[4] ^ data[6]) * 0.5 + 0.5})`;
       break;
     default:
       clear = true;
@@ -1428,10 +1431,10 @@ function drawBlock(
       // little arrow
       let arrowXOffset = 0,
         arrowYOffset = 0;
-      if (data[1] - x*data[3] > 0) arrowXOffset = 3 * (blockSize / 25);
-      else if (data[1] - x*data[3] < 0) arrowXOffset = -3 * (blockSize / 25);
-      if (data[2] - y*data[3] > 0) arrowYOffset = 3 * (blockSize / 25);
-      else if (data[2] - y*data[3] < 0) arrowYOffset = -3 * (blockSize / 25);
+      if (data[1] - x * data[3] > 0) arrowXOffset = 3 * (blockSize / 25);
+      else if (data[1] - x * data[3] < 0) arrowXOffset = -3 * (blockSize / 25);
+      if (data[2] - y * data[3] > 0) arrowYOffset = 3 * (blockSize / 25);
+      else if (data[2] - y * data[3] < 0) arrowYOffset = -3 * (blockSize / 25);
       lL.beginPath();
       lL.arc(
         xb + blockSize / 2 + arrowXOffset,
@@ -2418,7 +2421,7 @@ function drawBlock(
       break;
     case 76:
       lL.strokeStyle = `hsla(240,50%,${(80 * data[5]) / data[3]}%,${
-        data[4] * 0.75 + 0.25
+        (data[4] ^ data[6]) * 0.75 + 0.25
       })`;
       lL.beginPath();
       lL.moveTo(xb + blockSize / 2, yb + (blockSize / 25) * 3);
@@ -2437,9 +2440,11 @@ function drawBlock(
       break;
     case 77: {
       let collected = data[2] !== "uncollected";
+      let a = data[3] ? "55" : "CC";
+      let b = data[3] ? "CC" : "55";
       if (data[1] < 0) {
-        lL.fillStyle = `#CC5555`;
-      } else lL.fillStyle = `#CCCC55`;
+        lL.fillStyle = `#${a}55${b}`;
+      } else lL.fillStyle = `#${a}CC${b}`;
       if (collected) lL.fillStyle += "88";
       lL.fillRect(
         xb + blockSize / 4,
@@ -2448,9 +2453,11 @@ function drawBlock(
         blockSize / 2
       );
 
+      a = data[3] ? "66" : "FF";
+      b = data[3] ? "FF" : "66";
       if (data[1] < 0) {
-        lL.fillStyle = `#FF6666`;
-      } else lL.fillStyle = `#FFFF66`;
+        lL.fillStyle = `#${a}66${b}`;
+      } else lL.fillStyle = `#${a}FF${b}`;
       if (collected) lL.fillStyle += "88";
       lL.fillRect(
         xb + (3 * blockSize) / 8,
@@ -2654,13 +2661,79 @@ function drawBlock(
         canvas,
         x,
         y,
-        data[player.falseTexture?1:2],
+        data[player.falseTexture ? 1 : 2],
         xOffset,
         yOffset,
         size,
         useDefault,
         subBlock
       );
+      break;
+    case 85:
+      lL.strokeStyle = `hsla(240,50%,${(80 * data[5]) / data[3]}%,${
+        (data[4] ^ data[6]) * 0.75 + 0.25
+      })`;
+      lL.beginPath();
+      lL.moveTo(xb + (blockSize / 25) * 3, yb + (blockSize / 25) * 3);
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+
+      lL.moveTo(
+        xb + (blockSize / 25) * 3,
+        yb + blockSize - (blockSize / 25) * 3
+      );
+      lL.lineTo(
+        xb + blockSize - (blockSize / 25) * 3,
+        yb + (blockSize / 25) * 3
+      );
+      lL.stroke();
+      break;
+    case 86:
+      if (data[4] ^ data[6]) {
+        drawBlock(canvas, x, y, data[7], xOffset, yOffset, size, useDefault, 1);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[8],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            2
+          );
+      } else {
+        drawBlock(canvas, x, y, data[8], xOffset, yOffset, size, useDefault, 2);
+        if (player.showSubblock)
+          drawBlock(
+            canvas,
+            x,
+            y,
+            data[7],
+            xOffset + size / 2,
+            yOffset + size / 2,
+            size / 2,
+            useDefault,
+            1
+          );
+      }
+
+      lL.fillStyle = `hsla(240,50%,50%,0.25)`;
+      lL.fillRect(xb, yb, blockSize, blockSize);
+
+      lL.lineWidth = blockSize / 25;
+      lL.strokeStyle = `hsl(240,50%,${(80 * data[5]) / data[3]}%)`;
+      lL.setLineDash([blockSize / 10]);
+      lL.strokeRect(
+        xb + blockSize / 25,
+        yb + blockSize / 25,
+        blockSize - (blockSize / 25) * 2,
+        blockSize - (blockSize / 25) * 2
+      );
+      lL.setLineDash([]);
       break;
     default:
   }

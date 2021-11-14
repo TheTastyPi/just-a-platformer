@@ -37,7 +37,7 @@ const player = {
   falseTexture: true,
   timer: 0,
   // [0-255, 0-255, 0-255]
-  customColor: false,
+  customColor: false
 };
 const control = {
   lmb: false,
@@ -146,7 +146,9 @@ const blockName = [
   "Coin Death Block B",
   "Custom Coin Block", // coin (77,78,79,80,81,82)
   "Vacuum", // air friction (83)
-  "False Block"
+  "False Block", // hot garbage (84)
+  "Chain Death Block",
+  "Custom Chain Block" // more chain (85,86)
 ];
 const blockSelect = [
   "Special",
@@ -237,6 +239,8 @@ const blockSelect = [
   "Chain",
   75,
   76,
+  85,
+  86,
   "Coin",
   77,
   78,
@@ -294,14 +298,39 @@ const blockProperty = {
   73: ["!Q1", "!Q2", "!Q3", "!Q4"],
   74: ["ColorR", "ColorG", "ColorB"],
   75: ["Next X Offset", "Next Y Offset", "Interval", "!Timer"],
-  76: ["Next X Offset", "Next Y Offset", "Active Duration", "!State", "!Timer"],
-  77: ["Coin Value", "!Status"],
+  76: [
+    "Next X Offset",
+    "Next Y Offset",
+    "Active Duration",
+    "!State",
+    "!Timer",
+    "Invert"
+  ],
+  77: ["Coin Value", "!Status", "Set Value"],
   78: ["Required Value"],
   79: ["Required Value"],
   80: ["Required Value"],
   81: ["Required Value"],
   82: ["Required Value", "BlockA", "BlockB", "Invert"],
-  84: ["Texture", "Effect"]
+  84: ["Texture", "Effect"],
+  85: [
+    "Next X Offset",
+    "Next Y Offset",
+    "Active Duration",
+    "!State",
+    "!Timer",
+    "Invert"
+  ],
+  86: [
+    "Next X Offset",
+    "Next Y Offset",
+    "Active Duration",
+    "!State",
+    "!Timer",
+    "Invert",
+    "BlockA",
+    "BlockB"
+  ]
 };
 const defaultProperty = {
   get 17() {
@@ -334,14 +363,16 @@ const defaultProperty = {
   73: [0, 0, 0, 0],
   74: [255, 127, 127],
   75: [1, 0, 1000, 1000],
-  76: [1, 0, 500, false, 500],
-  77: [1, "uncollected"],
+  76: [1, 0, 500, false, 500, false],
+  77: [1, "uncollected", false],
   78: [1],
   79: [1],
   80: [1],
   81: [1],
   82: [1, 0, 1, false],
-  84: [1, 0]
+  84: [1, 0],
+  85: [1, 0, 500, false, 500, false],
+  86: [1, 0, 500, false, 500, false, 1, 0]
 };
 const propertyType = {
   17: [
@@ -392,14 +423,25 @@ const propertyType = {
   73: ["block", "block", "block", "block"],
   74: ["number", "number", "number"],
   75: ["number", "number", "number", "number"],
-  76: ["number", "number", "number", "boolean", "number"],
-  77: ["integer", "any"],
+  76: ["number", "number", "number", "boolean", "number", "boolean"],
+  77: ["integer", "any", "boolean"],
   78: ["integer"],
   79: ["integer"],
   80: ["integer"],
   81: ["integer"],
   82: ["integer", "block", "block", "boolean"],
-  84: ["block", "block"]
+  84: ["block", "block"],
+  85: ["number", "number", "number", "boolean", "number", "boolean"],
+  86: [
+    "number",
+    "number",
+    "number",
+    "boolean",
+    "number",
+    "boolean",
+    "block",
+    "block"
+  ]
 };
 const propertyLimit = {
   17: [
@@ -458,14 +500,25 @@ const propertyLimit = {
     [0, 255]
   ],
   75: ["none", "none", [0, 1000 * 60 * 60], "none"],
-  76: ["none", "none", [0, 1000 * 60 * 60], "none", "none"],
-  77: [[-100, 100], "none"],
+  76: ["none", "none", [0, 1000 * 60 * 60], "none", "none", "none"],
+  77: [[-100, 100], "none", "none"],
   78: [[-999, 999]],
   79: [[-999, 999]],
   80: [[-999, 999]],
   81: [[-999, 999]],
   82: [[-999, 999], "none", "none", "none"],
-  84: ["none", "none"]
+  84: ["none", "none"],
+  85: ["none", "none", [0, 1000 * 60 * 60], "none", "none", "none"],
+  86: [
+    "none",
+    "none",
+    [0, 1000 * 60 * 60],
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+  ]
 };
 var prevVersions = [
   [
@@ -518,7 +571,7 @@ function nextFrame(timeStamp) {
         pressedKeys: keys,
         isDead: player.isDead,
         justDied,
-        hasJSPerms,
+        hasJSPerms
       });
       isFirstRun = false;
       justDied = false;
@@ -1382,13 +1435,11 @@ function nextFrame(timeStamp) {
                     break;
                   // portal
                   case 41:
-                    if (props[3]){
+                    if (props[3]) {
                       player.x =
-                        props[1] * blockSize +
-                        (blockSize - player.size) / 2;
+                        props[1] * blockSize + (blockSize - player.size) / 2;
                       player.y =
-                        props[2] * blockSize +
-                        (blockSize - player.size) / 2;
+                        props[2] * blockSize + (blockSize - player.size) / 2;
                     } else if (getBlockType(x, y, false) === 73) {
                       player.x =
                         (x + props[1]) * blockSize +
@@ -1420,7 +1471,9 @@ function nextFrame(timeStamp) {
                       )
                         break;
                       editProp(x, y, 77, 2, false, "collected/unsaved");
-                      player.coins += props[1];
+                      if (props[3]) {
+                        player.coins = props[1];
+                      } else player.coins += props[1];
                       id("coins").textContent = player.coins;
                       shouldDrawLevel = true;
                     }
@@ -1473,17 +1526,16 @@ function nextFrame(timeStamp) {
           continue;
         }
         block[index] -= dt;
-        if (
-          type === 76 &&
-          block[5] / block[3] < 0.5 &&
-          getBlock(x + block[1], y + block[2], true, true)[0] === 76 &&
-          !getBlock(x + block[1], y + block[2], true, true)[4]
-        ) {
+        if ([76, 85, 86].includes(type) && block[5] / block[3] < 0.5) {
           let xx = x + block[1];
           let yy = y + block[2];
-          editProp(xx, yy, 76, 4, false, true);
-          editProp(xx, yy, 76, 5, false, getBlock(xx, yy, true, true)[3]);
-          addTimer(xx, yy, 5, 76, getSubBlockPos(xx, yy));
+          let nextBlock = getBlock(xx, yy, true, true);
+          if (getBlock(xx, yy, true)[0] === 86) nextBlock = getBlock(xx, yy, true);
+          if ([76, 85, 86].includes(nextBlock[0]) && !nextBlock[4]) {
+            editProp(xx, yy, nextBlock[0], 4, false, true);
+            editProp(xx, yy, nextBlock[0], 5, false, nextBlock[3]);
+            addTimer(xx, yy, 5, nextBlock[0], nextBlock[0] === 86 ? undefined : getSubBlockPos(xx, yy));
+          }
         }
         if (block[index] <= 0) {
           block[index] = 0;
@@ -1506,22 +1558,27 @@ function nextFrame(timeStamp) {
               break;
             case 75:
               block[4] = block[3];
-              if (getBlock(x + block[1], y + block[2], true, true)[0] === 76) {
-                let xx = x + block[1];
-                let yy = y + block[2];
-                editProp(x, y, 75, 4, false, block[3]);
-                addTimer(x, y, 4, 75, subBlock);
-                if (
-                  getBlock(xx, yy)[5] < getBlock(xx, yy, true, true)[3] ||
-                  getSubBlockPos(x, y) !== subBlock
-                )
-                  break;
-                editProp(xx, yy, 76, 4, false, true);
-                editProp(xx, yy, 76, 5, false, getBlock(xx, yy)[3]);
-                addTimer(xx, yy, 5, 76, getSubBlockPos(xx, yy));
+              editProp(x, y, 75, 4, false, block[3]);
+              addTimer(x, y, 4, 75, subBlock);
+              let xx = x + block[1];
+              let yy = y + block[2];
+              let nextBlock = getBlock(xx, yy, true, true);
+              if (getBlock(xx, yy, true)[0] === 86) nextBlock = getBlock(xx, yy, true);
+              if ([76, 85, 86].includes(nextBlock[0]) && !nextBlock[4]) {
+                editProp(xx, yy, nextBlock[0], 4, false, true);
+                editProp(xx, yy, nextBlock[0], 5, false, nextBlock[3]);
+                addTimer(xx, yy, 5, nextBlock[0], nextBlock[0] === 86 ? undefined : getSubBlockPos(xx, yy));
               }
               break;
             case 76:
+              block[5] = block[3];
+              block[4] = false;
+              break;
+            case 85:
+              block[5] = block[3];
+              block[4] = false;
+              break;
+            case 86:
               block[5] = block[3];
               block[4] = false;
               break;
@@ -1751,6 +1808,16 @@ function respawn(start = false) {
         editProp(x, y, 76, 4, false, false, true);
         shouldDraw = true;
       }
+      if (blockIncludes(block, 85)) {
+        editProp(x, y, 85, 5, false, false, true, 3);
+        editProp(x, y, 85, 4, false, false, true);
+        shouldDraw = true;
+      }
+      if (blockIncludes(block, 86)) {
+        editProp(x, y, 86, 5, false, false, true, 3);
+        editProp(x, y, 86, 4, false, false, true);
+        shouldDraw = true;
+      }
     }
   }
 
@@ -1830,7 +1897,12 @@ function save(auto = false) {
     const startPoint = deinfinify(player.startPoint);
     startPoint[13] = 0;
     startPoint[14] = [];
-    saves[player.currentSave] = [level, startPoint, player.currentSave, LZString.compressToEncodedURIComponent(code)];
+    saves[player.currentSave] = [
+      level,
+      startPoint,
+      player.currentSave,
+      LZString.compressToEncodedURIComponent(code)
+    ];
     localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
     if (!auto) alert("Saved.");
   } else if (!auto) alert("No save is currently selected.");
@@ -1903,7 +1975,11 @@ function load(name) {
   drawLevel(true);
   drawGrid();
   updateSaveMenu();
-  id("editor").editor.setValue(saves[name][3] ? LZString.decompressFromEncodedURIComponent(saves[name][3]) : "");
+  id("editor").editor.setValue(
+    saves[name][3]
+      ? LZString.decompressFromEncodedURIComponent(saves[name][3])
+      : ""
+  );
   updateCode();
 }
 function exportSave(name) {
@@ -2467,7 +2543,7 @@ function getBlockType(x, y, subtype = true, block) {
           } else type = 1;
           break;
         case 76:
-          if (block[4]) {
+          if (block[4] ^ block[6]) {
             type = 1;
           } else type = 0;
           break;
@@ -2490,6 +2566,11 @@ function getBlockType(x, y, subtype = true, block) {
           if (player.coins >= block[1]) {
             type = 0;
           } else type = 2;
+          break;
+        case 85:
+          if (block[4] ^ block[6]) {
+            type = 2;
+          } else type = 0;
           break;
         default:
           break;
@@ -2528,7 +2609,12 @@ function getSubBlockPos(x, y, type) {
     } else return 3;
   }
   if (type === 84) {
-    return 2
+    return 2;
+  }
+  if (type === 86) {
+    if (block[4] ^ block[6]) {
+      return 1;
+    } else return 2;
   }
 }
 function editBlock(x, y, block, miniBlock = true) {
@@ -2768,7 +2854,7 @@ function sanitize(text) {
     .replace(/</gimu, "&lt;")
     .replace(/>/gimu, "&gt;")
     .replace(/"/gimu, "&quot;")
-    .replace(/'/gimu, "&#039;")
+    .replace(/'/gimu, "&#039;");
 }
 function init() {
   id("levelLayer").height = level[0].length * baseBlockSize;

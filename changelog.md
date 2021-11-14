@@ -963,3 +963,11 @@ Main Game
 Main Game
 
 - You can no longer go back up to the pre-hub area from the gravity branch switch room
+
+## 14 Nov. 2021
+
+Editor
+
+- Added Chain Death Block and Custom Chain Block
+- Added "Invert" property to Chain Block
+- Added "Set Value" property to Coin
