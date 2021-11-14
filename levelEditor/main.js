@@ -2613,8 +2613,8 @@ function getSubBlockPos(x, y, type) {
   }
   if (type === 86) {
     if (block[4] ^ block[6]) {
-      return 1;
-    } else return 2;
+      return 7;
+    } else return 8;
   }
 }
 function editBlock(x, y, block, miniBlock = true) {
