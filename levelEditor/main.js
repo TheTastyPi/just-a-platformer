@@ -336,7 +336,7 @@ const defaultProperty = {
   get 17() {
     return player.startPoint.slice(2);
   },
-  18: [false, 325, false, 1, 600, 4000, 20, 1],
+  18: [false, 325, 1, 600, false, 4000, 20, 1],
   27: [100],
   28: [100],
   29: [100],
@@ -390,9 +390,9 @@ const propertyType = {
   18: [
     "boolean",
     "number",
+    "number",
+    "number",
     "boolean",
-    "number",
-    "number",
     "number",
     "number",
     "number"
@@ -459,9 +459,9 @@ const propertyLimit = {
   18: [
     "none",
     [-2000, 2000],
-    "none",
     [0, Infinity],
     [0, 2000],
+    "none",
     [500, 60 * 60 * 1000],
     [1, 500],
     [0, 5]
