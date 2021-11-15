@@ -77,7 +77,7 @@ The console resides on the top-left of the screen, right below the info section.
   	a = true
   }
   ```
-  pretty much every key is supported. If you want to find out what a key would be listed as, press a key then check the `e.key` value at [jskeycode.info](http://jskeycode.info/).
+  pretty much every key is supported. If you want to find out what a key would be listed as, press a key then check the `e.key` value at [keycode.info](http://keycode.info/).
 
 - `isDead`: If the player is currently in the animation of dying.
 
@@ -296,6 +296,8 @@ blockName.map((n, i) => `${i}. ${n}`).join("\n")
 82. Custom Coin Block
 83. Vacuum
 84. False Block
+85. Chain Death Block
+86. Custom Chain Block
 
 # Appendix C: Player Properties
 
