@@ -971,3 +971,9 @@ Editor
 - Added Chain Death Block and Custom Chain Block
 - Added "Invert" property to Chain Block
 - Added "Set Value" property to Coin
+
+### 21 Nov. 2021
+
+Main Game
+
+- Finished japHARD Wall-Jump branch!
