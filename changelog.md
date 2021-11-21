@@ -957,8 +957,7 @@ Main Game
 - Added EZR mode, which is easier than EZ
 - Made dark mode background slightly darker
 
-
-## 31 Oct. 2021
+#### 31 Oct. 2021
 
 Main Game
 
