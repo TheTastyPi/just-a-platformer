@@ -123,7 +123,9 @@ Main Game
   - Might consider nerfing
 - Made which block the switches affect more apparent
 - Added hotkey \[R] to restart from checkpoint (didn't know why I hadn't added this sooner)
-  Editor
+
+Editor
+
 - Changed the color of player when in god mode
 - oh i also added some cool tab icons. one for main game & one for the level editor
 
