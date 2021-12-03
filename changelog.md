@@ -427,7 +427,9 @@ Both
 - Completely refactored the collision system
 - Changed how wall-jumps controls
 - You now just die if you're fully inside a block
-  Main Game
+
+Main Game
+
 - Made adjustments to the wall-jump branch to prevent accidentally touching previous checkpoints
 - Made adjustments to the entire game for balancing
 - Fixed a bug where switch blocks wouldn't display properly on game load
