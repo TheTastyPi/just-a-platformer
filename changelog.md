@@ -466,7 +466,7 @@ Editor
 
 Editor
 
-- Fixed a bug related to replacing a unstable block while it's break/reforming
+- Fixed a bug related to replacing a unstable block while it's breaking/reforming
 - Increased the lower bound of all properties of unstable block to 1
 
 #### 18 Mar. 2021
