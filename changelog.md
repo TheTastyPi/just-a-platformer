@@ -980,3 +980,9 @@ Editor
 Main Game
 
 - Finished japHARD Wall-Jump branch!
+
+### 17 Jan. 2021
+
+Main Game
+
+- Fixed the last room of japHARD WJ branch
