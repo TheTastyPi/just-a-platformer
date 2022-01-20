@@ -771,7 +771,11 @@ function nextFrame(timeStamp) {
       } else levels[43][5][9] = -4;
       if (player.triggers.includes(20)) {
         levels[43][7][10] = 0;
-      } else levels[43][7][10] = -4;
+        if (diff === "-HARD") levels[43][6][9] = -4;
+      } else {
+        levels[43][7][10] = -4;
+        if (diff === "-HARD") levels[43][6][9] = 0;
+      }
       if (player.triggers.includes(21)) {
         levels[43][6][12] = 0;
       } else levels[43][6][12] = -4;

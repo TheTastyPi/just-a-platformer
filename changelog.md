@@ -986,3 +986,9 @@ Main Game
 Main Game
 
 - Fixed the last room of japHARD WJ branch
+
+### 20 Jan. 2022
+
+Main Game
+
+- Finished japHARD Multi-Jump branch!
