@@ -992,3 +992,9 @@ Main Game
 Main Game
 
 - Finished japHARD Multi-Jump branch!
+
+### 26 Jan. 2022
+
+Main Game
+
+- Finished japHARD Speed branch!
