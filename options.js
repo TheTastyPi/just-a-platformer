@@ -2,7 +2,8 @@ const defaultOptions = {
   darkMode: false,
   spawnDelay: 10,
   timer: false,
-  wipeConfirm: true
+  wipeConfirm: true,
+  volume: 0.5
 };
 
 let options = {
@@ -64,4 +65,10 @@ document.getElementById("spawnDelay").value = options.spawnDelay;
 
 document.getElementById("spawnDelay").addEventListener("input", function () {
   updateOption("spawnDelay", this.value);
+});
+
+document.getElementById("volume").value = options.volume;
+
+document.getElementById("volume").addEventListener("input", function () {
+  updateOption("volume", parseFloat(this.value));
 });

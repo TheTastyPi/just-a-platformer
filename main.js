@@ -37,8 +37,65 @@ const control = {
   space: false
 };
 const hasHitbox = [1, 5, 11, 40];
-
+const music = {
+  hub: initAudio("/audio/jap_hub.wav"),
+  grav: initAudio("/audio/jap_grav.wav"),
+  speed: initAudio("/audio/jap_speed.wav"),
+  final: initAudio("/audio/jap_final.wav"),
+  end: initAudio("/audio/jap_end.wav")
+};
+var currentlyPlaying = null;
+function initAudio(url) {
+  let a = new Audio(url);
+  a.loop = true;
+  a.volume = 0;
+  return a;
+}
+var fadein = null;
+var fadeout = null;
+function playAudio(target) {
+  if (currentlyPlaying === target) return;
+  if (currentlyPlaying) {
+    fadeout = currentlyPlaying;
+  }
+  setTimeout(function () {
+    target.play();
+    fadein = target;
+    currentlyPlaying = target;
+  }, 2500);
+}
+function updateAudio() {
+  switch (true) {
+    case player.currentLevel === 8 || player.currentLevel === 9:
+      playAudio(music.hub);
+      break;
+    case player.currentLevel >= 10 && player.currentLevel <= 27:
+      playAudio(music.grav);
+      break;
+    case player.currentLevel >= 28 && player.currentLevel <= 45:
+      //playAudio(music.mj);
+      break;
+    case player.currentLevel >= 46 && player.currentLevel <= 64:
+      //playAudio(music.wj);
+      break;
+    case player.currentLevel >= 65 && player.currentLevel <= 76:
+      playAudio(music.speed);
+      break;
+    case player.currentLevel >= 77 && player.currentLevel <= 87:
+      playAudio(music.final);
+      break;
+    case player.currentLevel === 88:
+      playAudio(music.end);
+      break;
+    default:
+  }
+}
+var audioInitDone = false;
 document.addEventListener("keydown", function (input) {
+  if (!audioInitDone) {
+    updateAudio();
+    audioInitDone = true;
+  }
   let key = input.code;
   switch (key) {
     case "ArrowUp":
@@ -153,6 +210,21 @@ function nextFrame(timeStamp) {
   if (sinceLastSave >= 5000) {
     save();
     sinceLastSave -= 5000;
+  }
+  if (fadein) {
+    fadein.volume = Math.min(
+      fadein.volume + (dt / 5000) * options.volume,
+      options.volume
+    );
+    if (fadein.volume === options.volume) fadein = null;
+  }
+  if (fadeout) {
+    fadeout.volume = Math.max(fadeout.volume - (dt / 5000) * options.volume, 0);
+    if (fadeout.volume === 0) {
+      fadeout.pause();
+      fadeout.currentTime = 0;
+      fadeout = null;
+    }
   }
   dt *= gameSpeed;
   lastFrame = timeStamp;
@@ -506,9 +578,11 @@ function nextFrame(timeStamp) {
                     if (id("mainInfo").style.bottom != "0%") openInfo();
                   }
                 case 3:
-                  if (player.currentLevel === 8) branchInProgress = false;
                   if (!isSpawn(x, y)) {
-                    if (player.currentLevel === 8) player.reachedHub = true;
+                    if (player.currentLevel === 8) {
+                      branchInProgress = false;
+                      player.reachedHub = true;
+                    }
                     player.spawnPoint = [
                       x,
                       y,
@@ -617,6 +691,7 @@ function nextFrame(timeStamp) {
                         ) +
                       ((player.x + blockSize) % blockSize);
                   }
+                  updateAudio();
                   break;
                 default:
                   break;
@@ -1020,6 +1095,7 @@ function respawn(death = true) {
   player.y = spawny;
   drawLevel();
   drawPlayer();
+  if (audioInitDone) updateAudio();
 }
 function getBlockType(x, y) {
   let level = levels[player.currentLevel];
