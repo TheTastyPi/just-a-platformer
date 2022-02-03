@@ -40,6 +40,8 @@ const hasHitbox = [1, 5, 11, 40];
 const music = {
   hub: initAudio("/audio/jap_hub.wav"),
   grav: initAudio("/audio/jap_grav.wav"),
+  mj: initAudio("/audio/jap_mj.wav"),
+  wj: initAudio("/audio/jap_wj.wav"),
   speed: initAudio("/audio/jap_speed.wav"),
   final: initAudio("/audio/jap_final.wav"),
   end: initAudio("/audio/jap_end.wav")
@@ -73,10 +75,10 @@ function updateAudio() {
       playAudio(music.grav);
       break;
     case player.currentLevel >= 28 && player.currentLevel <= 45:
-      //playAudio(music.mj);
+      playAudio(music.mj);
       break;
     case player.currentLevel >= 46 && player.currentLevel <= 64:
-      //playAudio(music.wj);
+      playAudio(music.wj);
       break;
     case player.currentLevel >= 65 && player.currentLevel <= 76:
       playAudio(music.speed);
