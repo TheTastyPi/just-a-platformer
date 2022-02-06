@@ -37,8 +37,48 @@ const control = {
   space: false
 };
 const hasHitbox = [1, 5, 11, 40];
-
+const music = {
+  hub: initAudio("audio/jap_hub.wav"),
+  grav: initAudio("audio/jap_grav.wav")
+};
+var currentlyPlaying = null;
+function initAudio(url) {
+  let a = new Audio(url);
+  a.loop = true;
+  a.volume = 0;
+  return a;
+}
+var fadein = null;
+var fadeout = null;
+function playAudio(target) {
+  if (currentlyPlaying === target) return;
+  if (currentlyPlaying) {
+    fadeout = currentlyPlaying;
+  }
+  setTimeout(function () {
+    target.play();
+    fadein = target;
+    currentlyPlaying = target;
+  }, 2500);
+}
+function updateAudio() {
+  switch (player.currentLevel) {
+    case 8:
+    case 9:
+      playAudio(music.hub);
+      break;
+    case 10:
+      playAudio(music.grav);
+      break;
+    default:
+  }
+}
+var audioInitDone = false;
 document.addEventListener("keydown", function (input) {
+  if (!audioInitDone) {
+    updateAudio();
+    audioInitDone = true;
+  }
   let key = input.code;
   switch (key) {
     case "ArrowUp":
@@ -153,6 +193,18 @@ function nextFrame(timeStamp) {
   if (sinceLastSave >= 5000) {
     save();
     sinceLastSave -= 5000;
+  }
+  if (fadein) {
+    fadein.volume = Math.min(fadein.volume + dt / 5000, 1);
+    if (fadein.volume === 1) fadein = null;
+  }
+  if (fadeout) {
+    fadeout.volume = Math.max(fadeout.volume - dt / 5000, 0);
+    if (fadeout.volume === 0) {
+      fadeout.pause();
+      fadeout.currentTime = 0;
+      fadeout = null;
+    }
   }
   dt *= gameSpeed;
   lastFrame = timeStamp;
@@ -506,9 +558,11 @@ function nextFrame(timeStamp) {
                     if (id("mainInfo").style.bottom != "0%") openInfo();
                   }
                 case 3:
-                  if (player.currentLevel === 8) branchInProgress = false;
                   if (!isSpawn(x, y)) {
-                    if (player.currentLevel === 8) player.reachedHub = true;
+                    if (player.currentLevel === 8) {
+                      branchInProgress = false;
+                      player.reachedHub = true;
+                    }
                     player.spawnPoint = [
                       x,
                       y,
@@ -617,6 +671,7 @@ function nextFrame(timeStamp) {
                         ) +
                       ((player.x + blockSize) % blockSize);
                   }
+                  updateAudio();
                   break;
                 default:
                   break;
