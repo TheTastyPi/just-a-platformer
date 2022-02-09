@@ -998,3 +998,9 @@ Main Game
 Main Game
 
 - Finished japHARD Speed branch!
+
+#### 9 Feb. 2022
+
+Main Game
+
+- Fixed japHARD MJ branch final room
