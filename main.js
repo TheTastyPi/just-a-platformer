@@ -37,7 +37,7 @@ const control = {
   space: false
 };
 const hasHitbox = [1, 5, 11, 40];
-const prefix = diff === "normal" ? "" : "../";
+const prefix = diff === "" ? "" : "../";
 const music = {
   hub: initAudio(prefix+"audio/jap_hub.wav"),
   grav: initAudio(prefix+"audio/jap_grav.wav"),
