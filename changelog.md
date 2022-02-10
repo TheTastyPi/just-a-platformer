@@ -1004,3 +1004,17 @@ Main Game
 Main Game
 
 - Fixed japHARD MJ branch final room
+
+## 10 Feb. 2022
+
+Main Game
+
+- Added music: 7 tracks
+  - "/" by TheTastyPi
+  - "v" by TheTastyPi
+  - "+" by yhvr
+  - "z" by yhvr
+  - ">" by TheTastyPi
+  - "Σ" by TheTastyPi
+  - "." by TheTastyPi
+- Added volume option

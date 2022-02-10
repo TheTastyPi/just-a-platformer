@@ -2,10 +2,13 @@ const defaultOptions = {
   darkMode: false,
   spawnDelay: 10,
   timer: false,
-  wipeConfirm: true
+  wipeConfirm: true,
+  volume: 0.5
 };
-const options =
-  JSON.parse(localStorage.getItem("just-some-options")) ?? defaultOptions;
+const options = {
+  ...defaultOptions,
+  ...JSON.parse(localStorage.getItem("just-some-options") ?? "{}")
+};
 if (options.timer) document.getElementById("timer").style.display = "block";
 if (options.darkMode) {
   let bg;

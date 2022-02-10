@@ -38,8 +38,13 @@ const control = {
 };
 const hasHitbox = [1, 5, 11, 40];
 const music = {
-  hub: initAudio("audio/jap_hub.wav"),
-  grav: initAudio("audio/jap_grav.wav")
+  hub: initAudio("/audio/jap_hub.wav"),
+  grav: initAudio("/audio/jap_grav.wav"),
+  mj: initAudio("/audio/jap_mj.wav"),
+  wj: initAudio("/audio/jap_wj.wav"),
+  speed: initAudio("/audio/jap_speed.wav"),
+  final: initAudio("/audio/jap_final.wav"),
+  end: initAudio("/audio/jap_end.wav")
 };
 var currentlyPlaying = null;
 function initAudio(url) {
@@ -62,13 +67,27 @@ function playAudio(target) {
   }, 2500);
 }
 function updateAudio() {
-  switch (player.currentLevel) {
-    case 8:
-    case 9:
+  switch (true) {
+    case player.currentLevel === 8 || player.currentLevel === 9:
       playAudio(music.hub);
       break;
-    case 10:
+    case player.currentLevel >= 10 && player.currentLevel <= 27:
       playAudio(music.grav);
+      break;
+    case player.currentLevel >= 28 && player.currentLevel <= 45:
+      playAudio(music.mj);
+      break;
+    case player.currentLevel >= 46 && player.currentLevel <= 64:
+      playAudio(music.wj);
+      break;
+    case player.currentLevel >= 65 && player.currentLevel <= 76:
+      playAudio(music.speed);
+      break;
+    case player.currentLevel >= 77 && player.currentLevel <= 87:
+      playAudio(music.final);
+      break;
+    case player.currentLevel === 88:
+      playAudio(music.end);
       break;
     default:
   }
@@ -195,11 +214,14 @@ function nextFrame(timeStamp) {
     sinceLastSave -= 5000;
   }
   if (fadein) {
-    fadein.volume = Math.min(fadein.volume + dt / 5000, 1);
-    if (fadein.volume === 1) fadein = null;
+    fadein.volume = Math.min(
+      fadein.volume + (dt / 5000) * options.volume,
+      options.volume
+    );
+    if (fadein.volume === options.volume) fadein = null;
   }
   if (fadeout) {
-    fadeout.volume = Math.max(fadeout.volume - dt / 5000, 0);
+    fadeout.volume = Math.max(fadeout.volume - (dt / 5000) * options.volume, 0);
     if (fadeout.volume === 0) {
       fadeout.pause();
       fadeout.currentTime = 0;
@@ -1075,6 +1097,7 @@ function respawn(death = true) {
   player.y = spawny;
   drawLevel();
   drawPlayer();
+  if (audioInitDone) updateAudio();
 }
 function getBlockType(x, y) {
   let level = levels[player.currentLevel];
