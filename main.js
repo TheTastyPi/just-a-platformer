@@ -37,14 +37,15 @@ const control = {
   space: false
 };
 const hasHitbox = [1, 5, 11, 40];
+const prefix = diff === "normal" ? "" : "../";
 const music = {
-  hub: initAudio("/audio/jap_hub.wav"),
-  grav: initAudio("/audio/jap_grav.wav"),
-  mj: initAudio("/audio/jap_mj.wav"),
-  wj: initAudio("/audio/jap_wj.wav"),
-  speed: initAudio("/audio/jap_speed.wav"),
-  final: initAudio("/audio/jap_final.wav"),
-  end: initAudio("/audio/jap_end.wav")
+  hub: initAudio(prefix+"audio/jap_hub.wav"),
+  grav: initAudio(prefix+"audio/jap_grav.wav"),
+  mj: initAudio(prefix+"audio/jap_mj.wav"),
+  wj: initAudio(prefix+"audio/jap_wj.wav"),
+  speed: initAudio(prefix+"audio/jap_speed.wav"),
+  final: initAudio(prefix+"audio/jap_final.wav"),
+  end: initAudio(prefix+"audio/jap_end.wav")
 };
 var currentlyPlaying = null;
 function initAudio(url) {
