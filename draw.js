@@ -749,4 +749,3 @@ function adjustScreen(instant = false) {
   id("playerLayer").style.top = camy + "px";
   id("levelLayer").style.top = camy + "px";
 }
-// eh
