@@ -56,15 +56,24 @@ function initAudio(url) {
 }
 var fadein = null;
 var fadeout = null;
+var toFadein = null;
 function playAudio(target) {
   if (currentlyPlaying === target) return;
   if (currentlyPlaying) {
+    if (fadeout) {
+      fadeout.volume = 0;
+      fadeout.pause();
+      fadeout.currentTime = 0;
+      fadeout = null;
+    }
     fadeout = currentlyPlaying;
   }
-  setTimeout(function () {
+  if (toFadein) clearTimeout(toFadein)
+  toFadein = setTimeout(function () {
     target.play();
     fadein = target;
     currentlyPlaying = target;
+    toFadein = null;
   }, 2500);
 }
 function updateAudio() {
