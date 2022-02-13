@@ -69,12 +69,14 @@ function playAudio(target) {
     fadeout = currentlyPlaying;
   }
   if (toFadein) clearTimeout(toFadein)
-  toFadein = setTimeout(function () {
-    target.play();
-    fadein = target;
-    currentlyPlaying = target;
-    toFadein = null;
-  }, 2500);
+  if (target) {
+    toFadein = setTimeout(function () {
+      target.play();
+      fadein = target;
+      currentlyPlaying = target;
+      toFadein = null;
+    }, 2500);
+  } else toFadein = null;
 }
 function updateAudio() {
   switch (true) {
@@ -100,6 +102,7 @@ function updateAudio() {
       playAudio(music.end);
       break;
     default:
+      playAudio(null);
   }
 }
 var audioInitDone = false;
