@@ -1221,3 +1221,6 @@ respawn(false);
 adjustScreen(true);
 window.requestAnimationFrame(nextFrame);
 setTimeout(drawLevel, 100);
+function bruh() {
+  console.log("bruh");
+}
