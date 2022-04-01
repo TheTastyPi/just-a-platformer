@@ -26,7 +26,8 @@ const mobileConfig = {
     ["Toggle Grid", "4", "Digit4"],
     ["Toggle Custom Sublock Display", "7", "Digit7"],
     // ["Toggle Code Menu", "8", "Digit8"],
-    ["Toggle Lua Console", "9", "Digit9"],
+    // ["Toggle Lua Console", "9", "Digit9"],
+    ["Toggle False Block Texture", "0", "Digit0"],
     ["Toggle Save Menu", "Ctrl + f", "KeyF", false, true],
     ["Save Current Level", "⇧ + f", "KeyF", true],
     ["Credits", "c", "KeyC"]
