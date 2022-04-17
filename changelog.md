@@ -1018,3 +1018,9 @@ Main Game
   - "Σ" by TheTastyPi
   - "." by TheTastyPi
 - Added volume option
+
+#### 17 Apr. 2022
+
+Editor
+
+- Fixed a bug where sometimes the game crashes on level load

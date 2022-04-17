@@ -2663,8 +2663,8 @@ function blockIncludes(block, type) {
       for (let i in block) {
         if (i == 0) continue;
         if (
-          getBlockType(0, 0, false, block[i]) === type[j] &&
-          propertyType[block[0]][parseInt(i) - 1] === "block"
+          propertyType[block[0]][parseInt(i) - 1] === "block" &&
+          getBlockType(0, 0, false, block[i]) === type[j]
         )
           return true;
       }
@@ -2674,8 +2674,8 @@ function blockIncludes(block, type) {
     for (let i in block) {
       if (i == 0) continue;
       if (
-        getBlockType(0, 0, false, block[i]) === type &&
-        propertyType[block[0]][parseInt(i) - 1] === "block"
+        propertyType[block[0]][parseInt(i) - 1] === "block" &&
+        getBlockType(0, 0, false, block[i]) === type
       )
         return true;
     }
