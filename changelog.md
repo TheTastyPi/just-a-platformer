@@ -1024,3 +1024,15 @@ Main Game
 Editor
 
 - Fixed a bug where sometimes the game crashes on level load
+
+### 9 Sep. 2022
+
+Main Game
+
+- Added the 4th room to japHARD final branch
+- Buffed the 3rd room in japHARD final branch
+- Nerfed the 2nd and 3rd room in japHARD speed branch
+
+Editor
+
+- Fixed a bug where sometimes the game can crash in FireFox

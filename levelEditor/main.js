@@ -558,6 +558,10 @@ function nextFrame(timeStamp) {
 
   // setup stuff
   let dt = timeStamp - lastFrame;
+  if (dt === 0) {
+    window.requestAnimationFrame(nextFrame);
+    return;
+  }
   dt *= player.gameSpeed;
   lastFrame = timeStamp;
   sinceLastSave += dt;
