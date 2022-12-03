@@ -333,9 +333,7 @@ const blockProperty = {
   ]
 };
 const defaultProperty = {
-  get 17() {
-    return player.startPoint.slice(2);
-  },
+  17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
   18: [false, 325, 1, 600, false, 4000, 20, 1],
   27: [100],
   28: [100],
@@ -1309,7 +1307,7 @@ function nextFrame(timeStamp) {
                   case 3:
                   case 17:
                     if (!isSpawn(x, y) && canSetSpawn) {
-                      setSpawn(x, y);
+                      setSpawn(x, y, true);
                       shouldDrawLevel = true;
                     }
                     canSetSpawn = false;
@@ -1534,11 +1532,18 @@ function nextFrame(timeStamp) {
           let xx = x + block[1];
           let yy = y + block[2];
           let nextBlock = getBlock(xx, yy, true, true);
-          if (getBlock(xx, yy, true)[0] === 86) nextBlock = getBlock(xx, yy, true);
+          if (getBlock(xx, yy, true)[0] === 86)
+            nextBlock = getBlock(xx, yy, true);
           if ([76, 85, 86].includes(nextBlock[0]) && !nextBlock[4]) {
             editProp(xx, yy, nextBlock[0], 4, false, true);
             editProp(xx, yy, nextBlock[0], 5, false, nextBlock[3]);
-            addTimer(xx, yy, 5, nextBlock[0], nextBlock[0] === 86 ? undefined : getSubBlockPos(xx, yy));
+            addTimer(
+              xx,
+              yy,
+              5,
+              nextBlock[0],
+              nextBlock[0] === 86 ? undefined : getSubBlockPos(xx, yy)
+            );
           }
         }
         if (block[index] <= 0) {
@@ -1567,11 +1572,18 @@ function nextFrame(timeStamp) {
               let xx = x + block[1];
               let yy = y + block[2];
               let nextBlock = getBlock(xx, yy, true, true);
-              if (getBlock(xx, yy, true)[0] === 86) nextBlock = getBlock(xx, yy, true);
+              if (getBlock(xx, yy, true)[0] === 86)
+                nextBlock = getBlock(xx, yy, true);
               if ([76, 85, 86].includes(nextBlock[0]) && !nextBlock[4]) {
                 editProp(xx, yy, nextBlock[0], 4, false, true);
                 editProp(xx, yy, nextBlock[0], 5, false, nextBlock[3]);
-                addTimer(xx, yy, 5, nextBlock[0], nextBlock[0] === 86 ? undefined : getSubBlockPos(xx, yy));
+                addTimer(
+                  xx,
+                  yy,
+                  5,
+                  nextBlock[0],
+                  nextBlock[0] === 86 ? undefined : getSubBlockPos(xx, yy)
+                );
               }
               break;
             case 76:
@@ -1715,23 +1727,7 @@ function addVersion() {
   }
 }
 function getDefaultSpawn() {
-  return [
-    4,
-    5,
-    325,
-    1,
-    600,
-    [],
-    false,
-    false,
-    false,
-    4000,
-    20,
-    1,
-    false,
-    0,
-    []
-  ];
+  return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1, false, 0];
 }
 function respawn(start = false) {
   if (start) player.spawnPoint = deepCopy(player.startPoint);
@@ -1763,9 +1759,7 @@ function respawn(start = false) {
   if (start) {
     player.coins = 0;
     player.spawnPoint[13] = 0;
-    player.spawnPoint[14] = [];
     player.startPoint[13] = 0;
-    player.startPoint[14] = [];
   }
   let blockSize = baseBlockSize;
   if (player.spawnPoint[12]) blockSize /= 2;
@@ -1857,7 +1851,6 @@ function setSpawn(x, y, start = false) {
   ];
   if (start) {
     player.spawnPoint[13] = 0;
-    player.spawnPoint[14] = [];
     player.startPoint = deepCopy(player.spawnPoint);
   }
   for (let x = 0; x < level.length; x += 0.5) {
@@ -1900,7 +1893,6 @@ function save(auto = false) {
     let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
     const startPoint = deinfinify(player.startPoint);
     startPoint[13] = 0;
-    startPoint[14] = [];
     saves[player.currentSave] = [
       level,
       startPoint,
@@ -1920,9 +1912,13 @@ function load(name) {
       let block = deepCopy(level[x][y]);
       if (hasProperty(getBlockType(x, y, false))) {
         if (typeof block !== "object") block = [block];
-        if (block.length - 1 !== defaultProperty[block[0]].length) {
+        if (block.length - 1 < defaultProperty[block[0]].length) {
           block = block.concat(
             defaultProperty[block[0]].slice(block.length - 1)
+          );
+        } else if (block.length - 1 > defaultProperty[block[0]].length) {
+          block = block.slice(0,
+            defaultProperty[block[0]].length+1
           );
         }
         if (propertyType[block[0]].includes("block")) {
@@ -1947,7 +1943,7 @@ function load(name) {
   }
   let start = infinify(saves[name][1]);
   player.startPoint = getDefaultSpawn();
-  for (let i in start) {
+  for (let i in player.startPoint) {
     if (start[i] !== undefined) player.startPoint[i] = start[i];
   }
   if (typeof player.startPoint[5] !== "object")
@@ -2370,14 +2366,8 @@ function openPropertyMenu(
           if (newVal == parseFloat(newVal)) newVal = parseFloat(newVal);
           if (newVal == "Infinity") newVal = Infinity;
           if (propertyType[type][i] == "block") newVal = JSON.parse(newVal);
-          if (propertyType[type][i] == "block" && newVal[0] == 17) {
-            player.spawnPoint = [x, y].concat(newVal.slice(1));
-            player.startPoint = deepCopy(player.spawnPoint);
-            player.spawnPoint[13] = 0;
-            player.spawnPoint[14] = [];
-            player.startPoint[13] = 0;
-            player.startPoint[14] = [];
-          }
+          if (propertyType[type][i] == "block" && newVal[0] == 17)
+            setSpawn(x, y, true);
           if (type === 17) {
             player.spawnPoint[parseInt(i) + 2] = newVal;
           }
@@ -2391,13 +2381,7 @@ function openPropertyMenu(
             editProp(x, y, false, parseInt(i) + 1, false, newVal);
           }
         }
-        if (type === 17) {
-          player.startPoint = deepCopy(player.spawnPoint);
-          player.spawnPoint[13] = 0;
-          player.spawnPoint[14] = [];
-          player.startPoint[13] = 0;
-          player.startPoint[14] = [];
-        }
+        if (type === 17) setSpawn(x, y, true);
         drawLevel();
         menu.style.display = "none";
         if (!editDefault) {

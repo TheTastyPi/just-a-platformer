@@ -1036,3 +1036,14 @@ Main Game
 Editor
 
 - Fixed a bug where sometimes the game can crash in FireFox
+
+### ?? ???. 2022
+
+Main Game
+
+- Added a still not fully playtested 5th room to japHARD final branch
+  - This update was for the bugfixes okay?
+
+Editor
+
+- Fixed a few bugs related to Start Points
