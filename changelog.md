@@ -1037,7 +1037,7 @@ Editor
 
 - Fixed a bug where sometimes the game can crash in FireFox
 
-### ?? ???. 2022
+### 3 Dec. 2022
 
 Main Game
 
