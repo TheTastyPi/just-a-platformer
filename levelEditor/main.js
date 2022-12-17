@@ -1307,7 +1307,7 @@ function nextFrame(timeStamp) {
                   case 3:
                   case 17:
                     if (!isSpawn(x, y) && canSetSpawn) {
-                      setSpawn(x, y, true);
+                      setSpawn(x, y, type === 17);
                       shouldDrawLevel = true;
                     }
                     canSetSpawn = false;
