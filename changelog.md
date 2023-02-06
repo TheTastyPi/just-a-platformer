@@ -1047,3 +1047,9 @@ Main Game
 Editor
 
 - Fixed a few bugs related to Start Points
+
+#### 6 Feb. 2023
+
+Both
+
+- Added a 50% opacity white background to the in-game timer
