@@ -1053,3 +1053,9 @@ Editor
 Both
 
 - Added a 50% opacity white background to the in-game timer
+
+### 26 Feb. 2023
+
+Main Game
+
+- Added the ability to export and import save data

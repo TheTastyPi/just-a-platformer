@@ -168,6 +168,11 @@ document.addEventListener("keydown", function (input) {
     case "KeyC":
       openInfo();
       break;
+    case "Backslash":
+      if (input.shiftKey) {
+        importSave();
+      } else exportSave();
+      break;
     default:
       break;
   }
@@ -1076,6 +1081,28 @@ function wipeSave() {
     load();
     respawn(false);
     branchInProgress = true;
+    drawLevel();
+    drawPlayer();
+    adjustScreen(true);
+  }
+}
+function exportSave() {
+  let saveData = btoa(localStorage.getItem("just-a-save" + diff));
+  id("exportArea").value = saveData;
+  id("exportArea").style.display = "inline";
+  id("exportArea").focus();
+  id("exportArea").select();
+  document.execCommand("copy");
+  id("exportArea").style.display = "none";
+  alert("Save data copied to clipboard!");
+}
+function importSave() {
+  let saveData = prompt("Please input save data");
+  if (saveData) {
+    saveData = atob(saveData);
+    localStorage.setItem("just-a-save" + diff, saveData);
+    load();
+    respawn(false);
     drawLevel();
     drawPlayer();
     adjustScreen(true);
