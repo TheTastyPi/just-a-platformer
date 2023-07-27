@@ -1059,3 +1059,9 @@ Both
 Main Game
 
 - Added the ability to export and import save data
+
+#### 27 Jul. 2023
+
+Main Game
+
+- The in-game timer now only runs after the player's first movement

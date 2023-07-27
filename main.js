@@ -34,7 +34,8 @@ const control = {
   right: false,
   up: false,
   down: false,
-  space: false
+  space: false,
+  madeFirstInput: false
 };
 const hasHitbox = [1, 5, 11, 40];
 const prefix = diff === "" ? "" : "../";
@@ -116,21 +117,26 @@ document.addEventListener("keydown", function (input) {
     case "ArrowUp":
     case "KeyW":
       control.up = true;
+      control.madeFirstInput = true;
       break;
     case "ArrowDown":
     case "KeyS":
       control.down = true;
+      control.madeFirstInput = true;
       break;
     case "ArrowLeft":
     case "KeyA":
       control.left = true;
+      control.madeFirstInput = true;
       break;
     case "ArrowRight":
     case "KeyD":
       control.right = true;
+      control.madeFirstInput = true;
       break;
     case "Space":
       control.space = true;
+      control.madeFirstInput = true;
       break;
     case "Delete":
       wipeSave();
@@ -220,8 +226,10 @@ function nextFrame(timeStamp) {
     window.requestAnimationFrame(nextFrame);
     return;
   }
-  player.timePlayed += dt;
-  if (branchInProgress) player.branchTime += dt;
+  if (control.madeFirstInput) {
+    player.timePlayed += dt;
+    if (branchInProgress) player.branchTime += dt;
+  }
   player.spawnPoint[10] = player.timePlayed;
   player.spawnPoint[15] = player.branchTime;
   id("timePlayed").innerHTML = formatTime(player.timePlayed);
@@ -1084,6 +1092,7 @@ function wipeSave() {
     drawLevel();
     drawPlayer();
     adjustScreen(true);
+    control.madeFirstInput = false;
   }
 }
 function exportSave() {
