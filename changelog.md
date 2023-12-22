@@ -1065,3 +1065,9 @@ Main Game
 Main Game
 
 - The in-game timer now only runs after the player's first movement
+
+#### 22 Dec. 2023
+
+Editor
+
+- Fixed a bug where non-custom gravity strength fields (G-Low, G-Medium, G-High) does not work if the player has 0 gravity.
