@@ -1266,13 +1266,19 @@ function nextFrame(timeStamp) {
                     break;
                   // grav magnitude
                   case 8:
-                    player.g = Math.sign(player.g) * 170;
+                    if (player.g === 0) {
+                      player.g = 170
+                    } else player.g = Math.sign(player.g) * 170;
                     break;
                   case 9:
-                    player.g = Math.sign(player.g) * 325;
+                    if (player.g === 0) {
+                      player.g = 325
+                    } else player.g = Math.sign(player.g) * 325;
                     break;
                   case 10:
-                    player.g = Math.sign(player.g) * 650;
+                    if (player.g === 0) {
+                      player.g = 650
+                    } else player.g = Math.sign(player.g) * 650;
                     break;
                   case 48:
                     player.g = props[1];
