@@ -1885,6 +1885,7 @@ function addSave() {
       name = prompt(
         `There's already a save named '${name}'. Please enter a different name.`
       );
+      if (name === null) return;
     }
     saves[name] = [deepCopy(level), deinfinify(player.startPoint), name];
     saveList.push(name);
@@ -2009,13 +2010,13 @@ function importSave() {
       name = prompt(
         "The imported level does not have a name. Please enter a name."
       );
-    while (!name || saveList.includes(name)) {
-      let temp = name;
+    while (saveList.includes(name)) {
       name = prompt(
         `There's already a save named '${name}'. Please enter a different name.`
       );
-      if (!name) name = temp;
+      if (name === null) return;
     }
+    if (name === null) return;
     saves[name] = data;
     saveList.push(name);
     localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
@@ -2063,9 +2064,11 @@ function renameSave(name) {
     newName = prompt(
       `There's already a save named '${newName}'. Please enter a different name.`
     );
+    if (newName === null) return;
   }
-  if (!newName) return;
+  if (newName === null) return;
   saves[newName] = deepCopy(saves[name]);
+  saves[newName][2] = newName;
   delete saves[name];
   saveList[index] = newName;
   localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
@@ -2081,8 +2084,9 @@ function copySave(name) {
     newName = prompt(
       `There's already a save named '${newName}'. Please enter a different name.`
     );
+    if (newName === null) return;
   }
-  if (!newName) return;
+  if (newName === null) return;
   saves[newName] = deepCopy(saves[name]);
   saveList.splice(index + 1, 0, newName);
   localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
