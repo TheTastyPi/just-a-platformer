@@ -1071,3 +1071,9 @@ Main Game
 Editor
 
 - Fixed a bug where non-custom gravity strength fields (G-Low, G-Medium, G-High) does not work if the player has 0 gravity.
+
+#### 5 Jan. 2023
+
+Editor
+
+- Fixed a bug where canceling a save copy results in a copy named "null"

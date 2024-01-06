@@ -2082,6 +2082,7 @@ function copySave(name) {
       `There's already a save named '${newName}'. Please enter a different name.`
     );
   }
+  if (!newName) return;
   saves[newName] = deepCopy(saves[name]);
   saveList.splice(index + 1, 0, newName);
   localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
