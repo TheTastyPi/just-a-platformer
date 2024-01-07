@@ -1991,13 +1991,11 @@ function load(name) {
 }
 function exportSave(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
-  id("exportArea").value = JSON.stringify(saves[name]);
-  id("exportArea").style.display = "inline";
-  id("exportArea").focus();
-  id("exportArea").select();
-  document.execCommand("copy");
-  id("exportArea").style.display = "none";
-  alert("Level data copied to clipboard!");
+  let text = JSON.stringify(saves[name]);
+  navigator.clipboard.writeText(text).then(
+    ()=>{alert("Level data copied to clipboard!")},
+    ()=>{alert("Export failed. Please try again.")}
+  );
 }
 function importSave() {
   let data = prompt("Please enter level data.");

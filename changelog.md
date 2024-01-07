@@ -1085,3 +1085,4 @@ Editor
 - Fixed a bug where canceling a 'This name already exists" prompt doesn't work
 - Fixed a bug where immporting a level named "" doesn't work, even when adding a level name "" works
 - Fixed a bug where renaming a level did not immediately change its name in the level code
+- Fixed a strange visual bug when exporting a very tall level
