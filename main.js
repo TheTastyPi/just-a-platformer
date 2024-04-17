@@ -724,6 +724,11 @@ function nextFrame(timeStamp) {
                       ((player.x + blockSize) % blockSize);
                   }
                   updateAudio();
+                  if (player.currentLevel === 46) {
+                    id("wjTip").style.bottom = `calc(100% - ${id("wjTip").clientHeight}px)`;
+                  } else {
+                    id("wjTip").style.bottom = "100%";
+                  }
                   break;
                 default:
                   break;
@@ -1151,6 +1156,11 @@ function respawn(death = true) {
   drawLevel();
   drawPlayer();
   if (audioInitDone) updateAudio();
+  if (player.currentLevel === 46) {
+    id("wjTip").style.bottom = `calc(100% - ${id("wjTip").clientHeight}px)`;
+  } else {
+    id("wjTip").style.bottom = "100%";
+  }
 }
 function getBlockType(x, y) {
   let level = levels[player.currentLevel];
