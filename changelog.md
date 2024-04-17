@@ -1086,3 +1086,9 @@ Editor
 - Fixed a bug where immporting a level named "" doesn't work, even when adding a level name "" works
 - Fixed a bug where renaming a level did not immediately change its name in the level code
 - Fixed a strange visual bug when exporting a very tall level
+
+### 16 Apr. 2024
+
+Main Game
+
+- Added a tip that tells you how to walljump upon entering the walljump branch
