@@ -1092,3 +1092,9 @@ Editor
 Main Game
 
 - Added a tip that tells you how to walljump upon entering the walljump branch
+
+### 20 Apr. 2024
+
+Main Game
+
+- Fixed a softlock in EZR difficulty final branch
