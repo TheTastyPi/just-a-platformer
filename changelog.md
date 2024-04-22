@@ -1098,3 +1098,9 @@ Main Game
 Main Game
 
 - Fixed a softlock in EZR difficulty final branch
+
+### 22 Apr. 2024
+
+Main Game
+
+- Fixed another softlock in EZR difficulty final branch
