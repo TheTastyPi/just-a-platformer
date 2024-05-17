@@ -1110,3 +1110,9 @@ Main Game
 Main Game
 
 - Fixed a (difficult to reach accidentally) softlock in both EZ and EZR difficulty final branch final room
+
+#### 17 May 2023
+
+Main Game
+
+- Fixed a softlock in EZ difficulty final branch 2nd room
