@@ -1116,3 +1116,10 @@ Main Game
 Main Game
 
 - Fixed a softlock in EZ difficulty final branch 2nd room
+
+### 19 May 2023
+
+Main Game
+
+- All switches now reset when you enter the hub in any way
+  - No clue why I didn't do this sooner, but better late than never!

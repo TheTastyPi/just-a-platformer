@@ -724,6 +724,9 @@ function nextFrame(timeStamp) {
                       ((player.x + blockSize) % blockSize);
                   }
                   updateAudio();
+                  if (player.currentLevel === 8) {
+                    player.triggers = [];
+                  }
                   if (player.currentLevel === 46) {
                     id("wjTip").style.bottom = `calc(100% - ${id("wjTip").clientHeight}px)`;
                   } else {
@@ -1156,6 +1159,9 @@ function respawn(death = true) {
   drawLevel();
   drawPlayer();
   if (audioInitDone) updateAudio();
+  if (player.currentLevel === 8) {
+    player.triggers = [];
+  }
   if (player.currentLevel === 46) {
     id("wjTip").style.bottom = `calc(100% - ${id("wjTip").clientHeight}px)`;
   } else {
