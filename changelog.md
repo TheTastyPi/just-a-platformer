@@ -1128,4 +1128,4 @@ Main Game
 
 Editor
 
-- Fixed a bug related where editing the property of Start blocks doesn't actually change the starting player state
+- Fixed a bug where editing the property of Start blocks doesn't actually change the starting player state
