@@ -1123,3 +1123,9 @@ Main Game
 
 - All switches now reset when you enter the hub in any way
   - No clue why I didn't do this sooner, but better late than never!
+
+### 28 May 2023
+
+Editor
+
+- Fixed a bug related where editing the property of Start blocks doesn't actually change the starting player state

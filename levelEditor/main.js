@@ -1829,7 +1829,7 @@ function respawn(start = false) {
   if (shouldDraw) drawLevel();
   adjustScreen();
 }
-function setSpawn(x, y, start = false) {
+function setSpawn(x, y, start = false, startBlock) {
   let mini = true;
   let bx = Math.floor(x);
   let by = Math.floor(y);
@@ -1839,23 +1839,45 @@ function setSpawn(x, y, start = false) {
     x = bx;
     y = by;
   }
-  player.spawnPoint = [
-    x,
-    y,
-    player.g,
-    player.maxJumps,
-    player.moveSpeed,
-    [...player.switchsOn],
-    player.jumpOn,
-    player.timerOn,
-    player.xg,
-    player.timerInterval,
-    player.targetSize,
-    player.gameSpeed,
-    mini,
-    player.coins
-  ];
+  if (startBlock) {
+    player.spawnPoint = [
+      x,
+      y,
+      startBlock[1],
+      startBlock[2],
+      startBlock[3],
+      startBlock[4],
+      startBlock[5],
+      startBlock[6],
+      startBlock[7],
+      startBlock[8],
+      startBlock[9],
+      startBlock[10],
+      mini,
+      player.coins
+    ];
+  } else {
+    player.spawnPoint = [
+      x,
+      y,
+      player.g,
+      player.maxJumps,
+      player.moveSpeed,
+      [...player.switchsOn],
+      player.jumpOn,
+      player.timerOn,
+      player.xg,
+      player.timerInterval,
+      player.targetSize,
+      player.gameSpeed,
+      mini,
+      player.coins
+    ];
+  }
   if (start) {
+    player.spawnPoint[5] = [];
+    player.spawnPoint[6] = false;
+    player.spawnPoint[7] = false;
     player.spawnPoint[13] = 0;
     player.startPoint = deepCopy(player.spawnPoint);
   }
@@ -2376,10 +2398,7 @@ function openPropertyMenu(
           if (newVal == "Infinity") newVal = Infinity;
           if (propertyType[type][i] == "block") newVal = JSON.parse(newVal);
           if (propertyType[type][i] == "block" && newVal[0] == 17)
-            setSpawn(x, y, true);
-          if (type === 17) {
-            player.spawnPoint[parseInt(i) + 2] = newVal;
-          }
+            setSpawn(x, y, true, newVal);
           if (editDefault) {
             defaultProperty[type][i] = newVal;
           } else if (subProp) {
@@ -2390,7 +2409,7 @@ function openPropertyMenu(
             editProp(x, y, false, parseInt(i) + 1, false, newVal);
           }
         }
-        if (type === 17) setSpawn(x, y, true);
+        if (type === 17) setSpawn(x, y, true, block);
         drawLevel();
         menu.style.display = "none";
         if (!editDefault) {
