@@ -2207,10 +2207,8 @@ function updateSaveMenu() {
 function toggleControl() {
   if (id("control").style.display !== "none") {
     id("control").style.display = "none";
-    editDisabled = false;
   } else if (id("control").style.display !== "inline") {
     id("control").style.display = "inline";
-    editDisabled = true;
   }
   if (id("controlNotice").style.display === "") {
     id("control").style.display = "inline";

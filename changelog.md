@@ -1111,21 +1111,28 @@ Main Game
 
 - Fixed a (difficult to reach accidentally) softlock in both EZ and EZR difficulty final branch final room
 
-#### 17 May 2023
+#### 17 May 2024
 
 Main Game
 
 - Fixed a softlock in EZ difficulty final branch 2nd room
 
-### 19 May 2023
+### 19 May 2024
 
 Main Game
 
 - All switches now reset when you enter the hub in any way
   - No clue why I didn't do this sooner, but better late than never!
 
-### 28 May 2023
+### 28 May 2024
 
 Editor
 
 - Fixed a bug where editing the property of Start blocks doesn't actually change the starting player state
+
+#### 1 Jun. 2024
+
+Editor
+
+- Fixed a bug where the controls menu cannot be closed using \[2]
+  - Previously, this also caused another bug where you cannot type in any textboxes due to a bad pull request :P

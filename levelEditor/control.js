@@ -298,11 +298,11 @@ document.addEventListener("contextmenu", function (input) {
 });
 
 document.addEventListener("keydown", function (input) {
-  let key = input.code;
+  if (!editDisabled) {
+    let key = input.code;
     if (!(key === "F12" || (key === "KeyC" && input.altKey && input.metaKey))) {
       input.preventDefault();
     }
-  if (!editDisabled) {
     switch (key) {
       case "ArrowUp":
         if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
@@ -415,6 +415,9 @@ document.addEventListener("keydown", function (input) {
           id("info").style.display = "none";
         } else if (id("info").style.display !== "inline")
           id("info").style.display = "inline";
+        break;
+      case "Digit2":
+        toggleControl();
         break;
       case "Digit3":
         if (id("blockSelect").style.display !== "none") {
@@ -557,10 +560,6 @@ document.addEventListener("keydown", function (input) {
         break;
       default:
     }
-  }
-  
-  if (key === "Digit2") {
-    toggleControl();
   }
 });
 document.addEventListener("keyup", function (input) {
