@@ -123,11 +123,11 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
 
 - `getProp(prop):propVal`: Get a player property. See Appendix C for all possible properties.
 
-- `setProp(prop, value):void`: Set a property. See Appendix C for all possible properties, and what you should set them to.
+- `setProp(prop, value):void`: Set a player property. See Appendix C for all possible properties, and what you should set them to.
 
 - `getSwitchState(id):boolean`: Get the switch state of an ID. `true` is on. `false` is off.
 
-- `setSwitchState(id, value):void`: Set the switch state. `value` is boolean.
+- `setSwitchState(id, value):void`: Set the switch state of an ID. `value` is boolean.
 
 - `getWidth():number`: Get the width of the level.
 
