@@ -1136,3 +1136,9 @@ Editor
 
 - Fixed a bug where the controls menu cannot be closed using \[2]
   - Previously, this also caused another bug where you cannot type in any textboxes due to a bad pull request :P
+
+### 2 Jun. 2024
+
+Editor
+
+- Added getSwitchState() and setSwitchState() to the Lua API

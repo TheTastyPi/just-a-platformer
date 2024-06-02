@@ -77,6 +77,15 @@ const APIGlobals = {
 		if (prop === "x" || prop === "y") drawPlayer();
 	},
 
+	getSwitchState(id) {
+		if (Number.isInteger(id) && id >= 0) return !!player.switchsOn[id];
+		this.error(`Trying to get state of invalid switch ID ${id}`);
+	},
+	setSwitchState(id, value) {
+		if (Number.isInteger(id) && id >= 0) player.switchsOn[id] = value;
+		else this.error(`Trying to set state of invalid switch ID ${id} to ${value}`);
+	},
+
 	getWidth() {
 		return level.length;
 	},
