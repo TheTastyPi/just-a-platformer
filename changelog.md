@@ -1142,3 +1142,10 @@ Editor
 Editor
 
 - Added getSwitchState() and setSwitchState() to the Lua API
+
+### 14 Aug. 2024
+
+Editor
+
+- Changed lua function setBlock()'s effects to be temporary. Changes made via setBlock() now resets upon death or load.
+  - This also applies to fill().

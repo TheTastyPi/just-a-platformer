@@ -26,12 +26,13 @@ const changeableStyles = "top left bottom right width height color backgroundCol
 
 const APIGlobals = {
 	setBlock(x, y, val) {
-		// TODO this is probably really unsafe?? idk
-		level[x][y] = val;
+		luaLevel[x][y] = val;
 		drawBlock(id("levelLayer"), x, y)
 	},
 	getBlock(x, y) {
-		return level[x][y];
+		let block = level[x][y];
+		if (luaLevel[x][y]) block = luaLevel[x][y];
+		return block;
 	},
 	// 0 -> 255
 	// set r to `false` to revert to default
@@ -121,14 +122,13 @@ const APIGlobals = {
 		locks.noclip = noclip ?? false;
 	},
 	fill(x, y, w, h, bid) {
-		if (x + w > level.length || y + h > level[1].length) this.error("Filling beyond level boundaries!");
+		if (x + w > level.length || y + h > level[0].length) this.error("Filling beyond level boundaries!");
 		else if (w < 1 || h < 1) this.error("Negative width or height.");
 		else if (x < 0 || y < 0) this.error("Negative x or y.");
 		else {
 			for (let i = x; i < x + w; i++) {
 				for (let j = y; j < y + h; j++) {
-					level[i][j] = bid;
-					drawBlock(id("levelLayer"), i, j);
+					this.setBlock(i,j,bid);
 				}
 			}
 		}

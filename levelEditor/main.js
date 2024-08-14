@@ -60,6 +60,7 @@ var level = [
   [1, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
+var luaLevel = Array.from(level, (x) => new Array(9));
 const hasHitbox = [1, 5, 11, 24, 25, 26, 40, 47, 51, 61, 62, 75];
 const blockName = [
   "Empty Space",
@@ -1783,6 +1784,14 @@ function respawn(start = false) {
   player.y = spawny;
 
   timerList = [];
+  
+  luaLevel.forEach((col,x)=>{col.forEach((block,y)=>{
+    if (block !== undefined) {
+      col[y] = undefined;
+      drawBlock(id("levelLayer"),x,y);
+    }
+  })});
+
   for (let x = 0; x < level.length; x += 0.5) {
     for (let y = 0; y < level[0].length; y += 0.5) {
       let block = getBlock(x, y);
@@ -1833,7 +1842,7 @@ function setSpawn(x, y, start = false, startBlock) {
   let mini = true;
   let bx = Math.floor(x);
   let by = Math.floor(y);
-  let block = level[bx][by];
+  let block = getBlock(x,y,false,false);
   if (block[0] !== 73) {
     mini = false;
     x = bx;
@@ -2474,6 +2483,7 @@ function getBlock(x, y, miniBlock = true, subBlock = false) {
   let bx = Math.floor(x);
   let by = Math.floor(y);
   let block = level[bx][by];
+  if (luaLevel[bx][by]) block = luaLevel[bx][by];
   if (block[0] === 73 && miniBlock)
     block = block[1 + 2 * (bx !== x) + (by !== y)];
   if (subBlock && getSubBlockPos(x, y)) block = block[getSubBlockPos(x, y)];
@@ -2713,11 +2723,16 @@ function changeLevelSize(dir, num) {
           level.unshift([]);
           level[0].length = level[1].length;
           level[0].fill(0);
+          luaLevel.unshift([]);
+          luaLevel[0].length = level[0].length;
         }
       }
       if (num < 0) {
         for (let j = 0; j > num; j--) {
-          if (level.length > 1) level.shift();
+          if (level.length > 1) {
+            level.shift();
+            luaLevel.shift();
+          }
         }
       }
       player.spawnPoint[0] += num;
@@ -2734,20 +2749,33 @@ function changeLevelSize(dir, num) {
           level.push([]);
           level[level.length - 1].length = level[0].length;
           level[level.length - 1].fill(0);
+          luaLevel.push([]);
+          luaLevel[level.length - 1].length = level[0].length;
         }
       }
       if (num < 0) {
         for (let j = 0; j > num; j--) {
-          if (level.length > 1) level.pop();
+          if (level.length > 1) {
+            level.pop();
+            luaLevel.pop();
+          }
         }
       }
       break;
     case "up":
       for (let i in level) {
-        if (num > 0) for (let j = 0; j < num; j++) level[i].unshift(0);
+        if (num > 0) {
+          for (let j = 0; j < num; j++) {
+            level[i].unshift(0);
+            luaLevel[i].unshift(undefined);
+          }
+        }
         if (num < 0) {
           for (let j = 0; j > num; j--) {
-            if (level[0].length > 1) level[i].shift();
+            if (level[0].length > 1) {
+              level[i].shift();
+              luaLevel[i].shift();
+            }
           }
         }
       }
@@ -2761,10 +2789,18 @@ function changeLevelSize(dir, num) {
       break;
     case "down":
       for (let i in level) {
-        if (num > 0) for (let j = 0; j < num; j++) level[i].push(0);
+        if (num > 0) {
+          for (let j = 0; j < num; j++) {
+            level[i].push(0);
+            luaLevel[i].push(undefined);
+          }
+        }
         if (num < 0) {
           for (let j = 0; j > num; j--) {
-            if (level[0].length > 1) level[i].pop();
+            if (level[0].length > 1) {
+              level[i].pop();
+              luaLevel[i].pop();
+            }
           }
         }
       }
