@@ -1100,7 +1100,9 @@ function wipeSave() {
     drawLevel();
     drawPlayer();
     adjustScreen(true);
-    control.madeFirstInput = false;
+    if (!control.left && !control.right && !control.up && !control.down && !control.space) {
+      control.madeFirstInput = false;
+    }
   }
 }
 function exportSave() {
