@@ -1945,6 +1945,7 @@ function save(auto = false) {
 function load(name) {
   let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
   level = saves[name][0];
+  luaLevel = Array.from(level, (x) => new Array(level[0].length));
   for (let x in level) {
     for (let y in level[x]) {
       let block = deepCopy(level[x][y]);
