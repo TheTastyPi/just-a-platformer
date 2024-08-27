@@ -1155,3 +1155,11 @@ Editor
 Main Game
 
 - Fixed a bug where the timer does not start after wiping save while pressing a control key
+
+### 27 Aug. 2024
+
+Main Game
+
+- Revised the 5th room of the final branch in HARD difficulty.
+  - The change to the position of the 2nd Checkpoint in this room will cause players who've reached there to get stuck after this update. Feel free to use god mode to get yourselves out.
+- Slightly nerfed a jump in the 2nd to last room of speed branch in HARD difficulty.
