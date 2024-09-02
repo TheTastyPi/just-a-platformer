@@ -1163,3 +1163,9 @@ Main Game
 - Revised the 5th room of the final branch in HARD difficulty.
   - The change to the position of the 2nd Checkpoint in this room will cause players who've reached there to get stuck after this update. Feel free to use god mode to get yourselves out.
 - Slightly nerfed a jump in the 2nd to last room of speed branch in HARD difficulty.
+
+### 1 Sep. 2024
+
+Main Game
+
+- Added two new (untested) rooms to the final branch of HARD difficulty.
