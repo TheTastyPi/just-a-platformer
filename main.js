@@ -1107,13 +1107,10 @@ function wipeSave() {
 }
 function exportSave() {
   let saveData = btoa(localStorage.getItem("just-a-save" + diff));
-  id("exportArea").value = saveData;
-  id("exportArea").style.display = "inline";
-  id("exportArea").focus();
-  id("exportArea").select();
-  document.execCommand("copy");
-  id("exportArea").style.display = "none";
-  alert("Save data copied to clipboard!");
+  navigator.clipboard.writeText(saveData).then(
+    ()=>{alert("Save data copied to clipboard!")},
+    ()=>{alert("Export failed. Please try again.")}
+  );
 }
 function importSave() {
   let saveData = prompt("Please input save data");

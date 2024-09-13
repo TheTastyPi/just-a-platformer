@@ -1169,3 +1169,9 @@ Main Game
 Main Game
 
 - Added two new (untested) rooms to the final branch of HARD difficulty.
+
+#### 13 Sep. 2024
+
+Main Game
+
+- Added controls for save export/import in the credit of non-normal difficulties.
