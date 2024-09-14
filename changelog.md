@@ -1186,4 +1186,4 @@ All
 Editor
 
 - You now move 4x faster while in noclip mode.
-- While in god mode, you player now becomes green when they should've died.
+- While in god mode, the player now becomes green when they should've died.
