@@ -4,6 +4,7 @@ var lvlxOffset = 0;
 var lvlyOffset = 0;
 var prevPlayerx = 0;
 var prevPlayery = 0;
+var godModeDeathIndicator = false;
 function drawPlayer() {
   let canvas = id("playerLayer");
   let pL = canvas.getContext("2d");
@@ -18,7 +19,13 @@ function drawPlayer() {
     pL.fillStyle = `rgb(${255 - ratio * 255 * 0.75},${255 * 0.25},${
       ratio * 255 * 0.75 + 255 * 0.25
     })`;
-  if (player.godMode) pL.fillStyle = "#FF00FF";
+  if (player.godMode) {
+    if (godModeDeathIndicator) {
+      pL.fillStyle = "#00FF00";
+    } else {
+      pL.fillStyle = "#FF00FF";
+    }
+  }
   if (player.noclip || player.isDead) pL.fillStyle += "88";
 
   if (player.customColor)

@@ -1622,6 +1622,7 @@ function nextFrame(timeStamp) {
         player.spawnTimer -= dt / player.gameSpeed;
         if (player.spawnTimer <= 0) respawn();
       }
+      if (player.godMode) godModeDeathIndicator = shouldDie;
       // OoB check
       if (player.x < 0) player.x = 0;
       if (player.x > level.length * baseBlockSize - player.size)
