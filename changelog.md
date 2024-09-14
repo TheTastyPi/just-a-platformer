@@ -1175,3 +1175,4 @@ Main Game
 Main Game
 
 - Added controls for save export/import in the credit of non-normal difficulties.
+- Added mobile controls for save export/import.

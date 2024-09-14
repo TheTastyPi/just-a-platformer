@@ -10,6 +10,8 @@ const mobileConfig = {
     ["Reset Position", "r", "KeyR", false],
     ["Return to Hub", "Shift + r", "KeyR", true],
     ["Wipe Save", "Delete", "Delete", false],
-    ["Credits", "c", "KeyC", false]
+    ["Credits", "c", "KeyC", false],
+    ["Export Save", "\\", "Backslash", false],
+    ["Import Save", "Shift + \\", "Backslash", true]
   ]
 };
