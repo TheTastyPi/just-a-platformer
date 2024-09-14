@@ -1176,3 +1176,9 @@ Main Game
 
 - Added controls for save export/import in the credit of non-normal difficulties.
 - Added mobile controls for save export/import.
+
+### 14 Sep. 2024
+
+All
+
+- Touchscreen controls now show for all primarily touchscreen devices, and not just mobile phones.

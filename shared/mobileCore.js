@@ -2,19 +2,11 @@ const mobileDiv = id("mobileControls");
 const leftDiv = id("mobileControlsLeft");
 const topDiv = id("mobileControlsTop");
 
-// stolen from https://stackoverflow.com/a/11381730
+// stolen from https://stackoverflow.com/a/52855084
+// detects all touchscreen devices, including tablets
+// does not work for IE, but like, who cares
 function detectMobile() {
-	const toMatch = [
-		/Android/i,
-		/webOS/i,
-		/iPhone/i,
-		/iPad/i,
-		/iPod/i,
-		/BlackBerry/i,
-		/Windows Phone/i,
-	];
-
-	return toMatch.some(toMatchItem => navigator.userAgent.match(toMatchItem));
+	return window.matchMedia("(pointer: coarse)").matches;
 }
 
 function simulateKeypress(code, type, shiftKey = false, ctrlKey = false) {
