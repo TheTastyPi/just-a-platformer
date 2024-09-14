@@ -1633,10 +1633,10 @@ function nextFrame(timeStamp) {
     dt *= simReruns;
     // key input
     if (player.noclip) {
-      if (control.left) player.x -= dt / 4;
-      if (control.right) player.x += dt / 4;
-      if (control.up) player.y -= dt / 4;
-      if (control.down) player.y += dt / 4;
+      if (control.left) player.x -= dt;
+      if (control.right) player.x += dt;
+      if (control.up) player.y -= dt;
+      if (control.down) player.y += dt;
     } else if (player.xg) {
       if (control.up && player.yv > -player.moveSpeed) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);

@@ -1182,3 +1182,7 @@ Main Game
 All
 
 - Touchscreen controls now show for all primarily touchscreen devices, and not just mobile phones.
+
+Editor
+
+- You now move 4x faster while in noclip mode.
