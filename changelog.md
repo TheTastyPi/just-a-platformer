@@ -1187,3 +1187,9 @@ Editor
 
 - You now move 4x faster while in noclip mode.
 - While in god mode, the player now becomes green when they should've died.
+
+### 25 Sep. 2024
+
+Editor
+
+- Fixed a bug where Start Points did not save switch states for non-start spawn points, among other things.

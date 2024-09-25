@@ -1885,11 +1885,11 @@ function setSpawn(x, y, start = false, startBlock) {
     ];
   }
   if (start) {
-    player.spawnPoint[5] = [];
-    player.spawnPoint[6] = false;
-    player.spawnPoint[7] = false;
-    player.spawnPoint[13] = 0;
     player.startPoint = deepCopy(player.spawnPoint);
+    player.startPoint[5] = [];
+    player.startPoint[6] = false;
+    player.startPoint[7] = false;
+    player.startPoint[13] = 0;
   }
   for (let x = 0; x < level.length; x += 0.5) {
     for (let y = 0; y < level[0].length; y += 0.5) {
