@@ -1193,3 +1193,9 @@ Editor
 Editor
 
 - Fixed a bug where Start Points did not save switch states for non-start spawn points, among other things.
+
+### 26 Sep. 2024
+
+Editor
+
+- You can now press \[Shift] + \[N] to switch noclip speed.

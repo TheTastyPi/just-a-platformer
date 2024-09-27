@@ -25,6 +25,7 @@ const player = {
   jumpOn: false,
   godMode: false,
   noclip: false,
+  noclipFast: true,
   selectedBlock: [1, 0],
   playerFocus: true,
   size: 20,
@@ -1634,10 +1635,12 @@ function nextFrame(timeStamp) {
     dt *= simReruns;
     // key input
     if (player.noclip) {
-      if (control.left) player.x -= dt;
-      if (control.right) player.x += dt;
-      if (control.up) player.y -= dt;
-      if (control.down) player.y += dt;
+      let noclipSpeed = dt / 4;
+      if (player.noclipFast) noclipSpeed *= 4
+      if (control.left) player.x -= noclipSpeed;
+      if (control.right) player.x += noclipSpeed;
+      if (control.up) player.y -= noclipSpeed;
+      if (control.down) player.y += noclipSpeed;
     } else if (player.xg) {
       if (control.up && player.yv > -player.moveSpeed) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);

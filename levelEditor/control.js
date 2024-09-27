@@ -183,7 +183,7 @@ id("levelLayer").addEventListener("mousemove", function (input) {
     let trueBlock = getBlock(x, y, false);
     let block = getBlock(x, y);
     let trueType = getBlockType(x, y, false);
-    if (input.ctrlKey) {
+    if (input.ctrlKey || input.metaKey) {
       if (control.lmb && !locks.panning) {
         player.playerFocus = false;
         lvlxOffset += input.movementX;
@@ -403,8 +403,12 @@ document.addEventListener("keydown", function (input) {
         drawPlayer();
         break;
       case "KeyN":
-       if (!locks.noclip) player.noclip = !player.noclip;
-        drawPlayer();
+        if (input.shiftKey) {
+          if (player.noclip) player.noclipFast = !player.noclipFast;
+        } else {
+          if (!locks.noclip) player.noclip = !player.noclip;
+          drawPlayer();
+        }
         break;
       case "KeyM":
         player.miniBlock = !player.miniBlock;
