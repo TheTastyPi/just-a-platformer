@@ -48,7 +48,8 @@ const control = {
   up: false,
   down: false,
   e: false,
-  space: false
+  space: false,
+  latestDir: 0,
 };
 var level = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -1642,12 +1643,21 @@ function nextFrame(timeStamp) {
       if (control.up) player.y -= noclipSpeed;
       if (control.down) player.y += noclipSpeed;
     } else if (player.xg) {
-      if (control.up && player.yv > -player.moveSpeed) {
+      let moveUp = control.up;
+      let moveDown = control.down;
+      if (moveUp && moveDown) {
+        if (control.latestDir == -1) {
+          moveDown = false;
+        } else if (control.latestDir == 1) {
+          moveUp = false;
+        }
+      }
+      if (moveUp && player.yv > -player.moveSpeed) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.yv < -player.moveSpeed / (noFriction ? 6 : 1))
           player.yv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
-      if (control.down && player.yv < player.moveSpeed) {
+      if (moveDown && player.yv < player.moveSpeed) {
         player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.yv > player.moveSpeed / (noFriction ? 6 : 1))
           player.yv = player.moveSpeed / (noFriction ? 6 : 1);
@@ -1665,12 +1675,21 @@ function nextFrame(timeStamp) {
         player.currentJumps--;
       }
     } else {
-      if (control.left && player.xv > -player.moveSpeed) {
+      let moveLeft = control.left;
+      let moveRight = control.right;
+      if (moveLeft && moveRight) {
+        if (control.latestDir == -1) {
+          moveRight = false;
+        } else if (control.latestDir == 1) {
+          moveLeft = false;
+        }
+      }
+      if (moveLeft && player.xv > -player.moveSpeed) {
         player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.xv < -player.moveSpeed / (noFriction ? 6 : 1))
           player.xv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
-      if (control.right && player.xv < player.moveSpeed) {
+      if (moveRight && player.xv < player.moveSpeed) {
         player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
           player.xv = player.moveSpeed / (noFriction ? 6 : 1);

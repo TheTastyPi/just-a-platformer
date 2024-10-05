@@ -35,7 +35,8 @@ const control = {
   up: false,
   down: false,
   space: false,
-  madeFirstInput: false
+  madeFirstInput: false,
+  latestDir: ""
 };
 const hasHitbox = [1, 5, 11, 40];
 const prefix = diff === "" ? "" : "../";
@@ -127,11 +128,13 @@ document.addEventListener("keydown", function (input) {
     case "ArrowLeft":
     case "KeyA":
       control.left = true;
+      control.latestDir = "left";
       control.madeFirstInput = true;
       break;
     case "ArrowRight":
     case "KeyD":
       control.right = true;
+      control.latestDir = "right";
       control.madeFirstInput = true;
       break;
     case "Space":
@@ -980,12 +983,21 @@ function nextFrame(timeStamp) {
     }
     dt = dt * simReruns;
     // key input
-    if (control.left && player.xv > -player.moveSpeed) {
+    let moveLeft = control.left;
+    let moveRight = control.right;
+    if (moveLeft && moveRight) {
+      if (control.latestDir == "left") {
+        moveRight = false;
+      } else {
+        moveLeft = false;
+      }
+    }
+    if (moveLeft && player.xv > -player.moveSpeed) {
       player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
       if (player.xv < -player.moveSpeed / (noFriction ? 6 : 1))
         player.xv = -player.moveSpeed / (noFriction ? 6 : 1);
     }
-    if (control.right && player.xv < player.moveSpeed) {
+    if (moveRight && player.xv < player.moveSpeed) {
       player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
       if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
         player.xv = player.moveSpeed / (noFriction ? 6 : 1);
