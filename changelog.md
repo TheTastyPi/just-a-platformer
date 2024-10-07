@@ -1199,9 +1199,3 @@ Editor
 Editor
 
 - You can now press \[Shift] + \[N] to switch noclip speed.
-
-### 5 Oct. 2024
-
-Both
-
-- Moving both left and right (or up and down in horizontal gravity) no longer stops the player. Instead, in that situation, the player now moves in the most recently pressed direction.

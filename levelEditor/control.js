@@ -324,7 +324,6 @@ document.addEventListener("keydown", function (input) {
       case "KeyW":
         if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
           control.up = true;
-          if (player.xg) control.latestDir = -1;
         }
         break;
       case "ArrowDown":
@@ -345,10 +344,8 @@ document.addEventListener("keydown", function (input) {
           changeLevelSize("down", 1);
         }
       case "KeyS":
-        if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
           control.down = true;
-          if (player.xg) control.latestDir = 1;
-        }
         break;
       case "ArrowLeft":
         if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
@@ -368,10 +365,8 @@ document.addEventListener("keydown", function (input) {
           changeLevelSize("left", 1);
         }
       case "KeyA":
-        if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
           control.left = true;
-          if (!player.xg) control.latestDir = -1;
-        }
         break;
       case "ArrowRight":
         if ((input.ctrlKey || input.metaKey) && input.shiftKey) {
@@ -391,10 +386,8 @@ document.addEventListener("keydown", function (input) {
           changeLevelSize("right", 1);
         }
       case "KeyD":
-        if (!input.shiftKey && !(input.ctrlKey || input.metaKey)) {
+        if (!input.shiftKey && !(input.ctrlKey || input.metaKey))
           control.right = true;
-          if (!player.xg) control.latestDir = 1;
-        }
         break;
       case "KeyE":
         if (isMobile) control.e = !control.e;
