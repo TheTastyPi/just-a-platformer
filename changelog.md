@@ -1199,3 +1199,9 @@ Editor
 Editor
 
 - You can now press \[Shift] + \[N] to switch noclip speed.
+
+### 11 Oct. 2024
+
+Main Game
+
+- Slightly changed the 2nd to last room of speed branch in HARD difficulty, again.
