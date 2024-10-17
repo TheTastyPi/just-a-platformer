@@ -550,6 +550,7 @@ var prevTextCoord;
 var xprev;
 var yprev;
 var justDied = false;
+var UIScale = 1;
 function nextFrame(timeStamp) {
   // lua lock checks
   if (locks.panning) player.playerFocus = true;
@@ -2835,6 +2836,12 @@ function changeLevelSize(dir, num) {
   drawGrid();
   adjustScreen();
   addVersion();
+}
+function updateUIScale() {
+  let transformText = `scale(${UIScale.toFixed(1)}) `;
+  let widthText = `${(100/UIScale).toFixed(1)}%`
+  id("blockSelect").style.transform = transformText;
+  id("blockSelect").style.width = widthText;
 }
 function deepCopy(inObject) {
   //definitely not copied from somewhere else

@@ -562,6 +562,18 @@ document.addEventListener("keydown", function (input) {
       case "KeyT":
         player.timer = 0;
         break;
+      case "Equal":
+        if (input.ctrlKey || input.metaKey) {
+          UIScale += 0.1;
+          updateUIScale()
+        }
+        break;
+      case "Minus":
+        if (input.ctrlKey || input.metaKey) {
+          UIScale -= 0.1;
+          updateUIScale()
+        }
+        break;
       default:
     }
   }

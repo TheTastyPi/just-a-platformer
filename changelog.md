@@ -1205,3 +1205,9 @@ Editor
 Main Game
 
 - Slightly changed the 2nd to last room of speed branch in HARD difficulty, again.
+
+### 16 Oct. 2024
+
+Editor
+
+- Added the ability to change the block selector UI size by pressing \[Ctrl] + \[+] or \[-].
