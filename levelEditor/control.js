@@ -561,6 +561,8 @@ document.addEventListener("keydown", function (input) {
         break;
       case "KeyT":
         player.timer = 0;
+        player.timeSinceDeath = 0;
+        player.finishTime = undefined;
         break;
       case "Equal":
         if (input.ctrlKey || input.metaKey) {

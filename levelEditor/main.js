@@ -37,6 +37,8 @@ const player = {
   showSubblock: true,
   falseTexture: true,
   timer: 0,
+  timeSinceDeath: 0,
+  finishTime: undefined,
   // [0-255, 0-255, 0-255]
   customColor: false
 };
@@ -567,6 +569,7 @@ function nextFrame(timeStamp) {
   lastFrame = timeStamp;
   sinceLastSave += dt;
   player.timer += dt;
+  player.timeSinceDeath += dt;
 
   try {
     if (!errored) {
@@ -587,7 +590,9 @@ function nextFrame(timeStamp) {
     errored = true;
   }
 
-  id("timer").innerHTML = formatTime(player.timer);
+  id("timer").innerHTML =
+  "Session time: " + formatTime(player.timer) + "<br>Time since last respawn: " + formatTime(player.timeSinceDeath);
+  if (player.finishTime) id("timer").innerHTML += "<br>Finish time: " + formatTime(player.finishTime);
   if (player.autoSave && sinceLastSave > 5000) {
     save(true);
     sinceLastSave = 0;
@@ -1337,6 +1342,7 @@ function nextFrame(timeStamp) {
                       if (!isSpawn(x, y)) {
                         setSpawn(x, y);
                         shouldDrawLevel = true;
+                        player.finishTime = player.timer;
                       }
                     }
                     break;
@@ -1839,6 +1845,7 @@ function respawn(start = false) {
     }
   }
 
+  player.timeSinceDeath = 0;
   id("coins").textContent = player.coins;
   if (shouldDraw) drawLevel();
   adjustScreen();

@@ -1211,3 +1211,11 @@ Main Game
 Editor
 
 - Added the ability to change the block selector UI size by pressing \[Ctrl] + \[+] or \[-].
+
+### 2 Nov. 2024
+
+Editor
+
+- Added two new timers that appears if timers are turned on:
+  - Time since last respawn
+  - Finish time (session time when the player touches a Goal block)
