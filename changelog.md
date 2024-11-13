@@ -1224,4 +1224,4 @@ Editor
 
 Main Game
 
-- Importing invalid save data now denys it instead of permanently ruining the save.
+- Importing invalid save data now rejects it instead of permanently ruining the save.
