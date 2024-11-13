@@ -1219,3 +1219,9 @@ Editor
 - Added two new timers that appears if timers are turned on:
   - Time since last respawn
   - Finish time (session time when the player touches a Goal block)
+
+### 13 Nov. 2024
+
+Main Game
+
+- Importing invalid save data now denys it instead of permanently ruining the save.

@@ -1116,12 +1116,23 @@ function importSave() {
   let saveData = prompt("Please input save data");
   if (saveData) {
     saveData = atob(saveData);
-    localStorage.setItem("just-a-save" + diff, saveData);
-    load();
-    respawn(false);
-    drawLevel();
-    drawPlayer();
-    adjustScreen(true);
+    let backup = localStorage.getItem("just-a-save" + diff);
+    try {
+      localStorage.setItem("just-a-save" + diff, saveData);
+      load();
+      respawn(false);
+      drawLevel();
+      drawPlayer();
+      adjustScreen(true);
+    } catch (e) {
+      localStorage.setItem("just-a-save" + diff, backup);
+      load();
+      respawn(false);
+      drawLevel();
+      drawPlayer();
+      adjustScreen(true);
+      alert("Invalid save code entered!");
+    }
   }
 }
 function isSpawn(x, y) {
