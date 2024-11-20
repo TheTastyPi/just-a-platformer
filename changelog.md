@@ -1225,3 +1225,9 @@ Editor
 Main Game
 
 - Importing invalid save data now rejects it instead of permanently ruining the save.
+
+#### 19 Nov. 2024
+
+Editor
+
+- Fixed a bug where blocks with properties set via lua doesn't get drawn properly.

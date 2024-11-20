@@ -195,7 +195,7 @@ function drawBlock(
       data = defaultProperty[type].slice();
       data.unshift(type);
     } else {
-      data = level[x][y];
+      data = getBlock(x, y, false);
     }
   }
   let sOn = player.switchsOn;
