@@ -1231,3 +1231,9 @@ Main Game
 Editor
 
 - Fixed a bug where blocks with properties set via lua doesn't get drawn properly.
+
+### 4 Jan. 2025
+
+Main Game
+
+- Changed a single jump in japHARD gravity branch.
