@@ -1672,12 +1672,12 @@ function nextFrame(timeStamp) {
         player.currentJumps--;
       }
     } else {
-      if (control.left && player.xv > -player.moveSpeed) {
+      if (control.left && player.xv > -player.moveSpeed / (noFriction ? 6 : 1)) {
         player.xv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.xv < -player.moveSpeed / (noFriction ? 6 : 1))
           player.xv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
-      if (control.right && player.xv < player.moveSpeed) {
+      if (control.right && player.xv < player.moveSpeed / (noFriction ? 6 : 1)) {
         player.xv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.xv > player.moveSpeed / (noFriction ? 6 : 1))
           player.xv = player.moveSpeed / (noFriction ? 6 : 1);

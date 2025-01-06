@@ -1237,3 +1237,9 @@ Editor
 Main Game
 
 - Changed a single jump in japHARD gravity branch.
+
+### 5 Jan. 2025
+
+Editor
+
+- Fixed a bug where if you try to move when you're faster than your move speed, your speed gets set to your move speed.
