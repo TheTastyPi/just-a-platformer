@@ -564,6 +564,9 @@ document.addEventListener("keydown", function (input) {
         player.timeSinceDeath = 0;
         player.finishTime = undefined;
         break;
+      case "KeyP":
+        player.timerPaused = !player.timerPaused;
+        break;
       case "Equal":
         if (input.ctrlKey || input.metaKey) {
           UIScale += 0.1;

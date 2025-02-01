@@ -1243,3 +1243,9 @@ Main Game
 Editor
 
 - Fixed a bug where if you try to move when you're faster than your move speed, your speed gets set to your move speed.
+
+### 1 Feb. 2025
+
+Editor
+
+- Added the ability to press \[P] to pause the in-game timer.

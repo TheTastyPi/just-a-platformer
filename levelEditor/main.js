@@ -39,6 +39,7 @@ const player = {
   timer: 0,
   timeSinceDeath: 0,
   finishTime: undefined,
+  timerPaused: false,
   // [0-255, 0-255, 0-255]
   customColor: false
 };
@@ -568,8 +569,10 @@ function nextFrame(timeStamp) {
   dt *= player.gameSpeed;
   lastFrame = timeStamp;
   sinceLastSave += dt;
-  player.timer += dt;
-  player.timeSinceDeath += dt;
+  if (!player.timerPaused) {
+    player.timer += dt;
+    player.timeSinceDeath += dt;
+    }
 
   try {
     if (!errored) {
