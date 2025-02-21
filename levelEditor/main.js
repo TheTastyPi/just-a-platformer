@@ -40,6 +40,7 @@ const player = {
   timeSinceDeath: 0,
   finishTime: undefined,
   timerPaused: false,
+  deathCount: 0,
   // [0-255, 0-255, 0-255]
   customColor: false
 };
@@ -1750,7 +1751,7 @@ function addVersion() {
 function getDefaultSpawn() {
   return [4, 5, 325, 1, 600, [], false, false, false, 4000, 20, 1, false, 0];
 }
-function respawn(start = false) {
+function respawn(start = false, death = true) {
   if (start) player.spawnPoint = deepCopy(player.startPoint);
   player.spawnTimer = player.spawnDelay;
   player.isDead = false;
@@ -1849,6 +1850,10 @@ function respawn(start = false) {
   }
 
   player.timeSinceDeath = 0;
+  if (death) {
+    player.deathCount++;
+    id("deathCount").textContent = player.deathCount;
+  }
   id("coins").textContent = player.coins;
   if (shouldDraw) drawLevel();
   adjustScreen();
@@ -2005,6 +2010,8 @@ function load(name) {
   player.spawnPoint = deepCopy(player.startPoint);
   player.customColor = false;
   player.currentSave = name;
+  player.deathCount = 0;
+  id("deathCount").textContent = player.deathCount;
   prevVersions = [deepCopy(level)];
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
@@ -2933,7 +2940,7 @@ function init() {
   id("levelLayer").width = level.length * baseBlockSize;
   id("bgLayer").height = level[0].length * baseBlockSize;
   id("bgLayer").width = level.length * baseBlockSize;
-  respawn();
+  respawn(false, false);
   drawLevel();
   drawGrid();
   let blockAmt = 0;

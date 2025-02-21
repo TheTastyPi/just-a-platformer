@@ -1249,3 +1249,9 @@ Editor
 Editor
 
 - Added the ability to press \[P] to pause the in-game timer.
+
+### 21 Feb. 2025
+
+Editor
+
+- Added a death counter that resets on level load
