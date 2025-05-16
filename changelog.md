@@ -1256,7 +1256,7 @@ Editor
 
 - Added a death counter that resets on level load
 
-### 16 May. 2025
+### 16 May 2025
 
 Editor
 
