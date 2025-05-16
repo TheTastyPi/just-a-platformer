@@ -1653,12 +1653,12 @@ function nextFrame(timeStamp) {
       if (control.up) player.y -= noclipSpeed;
       if (control.down) player.y += noclipSpeed;
     } else if (player.xg) {
-      if (control.up && player.yv > -player.moveSpeed) {
+      if (control.up && player.yv > -player.moveSpeed / (noFriction ? 6 : 1)) {
         player.yv -= (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.yv < -player.moveSpeed / (noFriction ? 6 : 1))
           player.yv = -player.moveSpeed / (noFriction ? 6 : 1);
       }
-      if (control.down && player.yv < player.moveSpeed) {
+      if (control.down && player.yv < player.moveSpeed / (noFriction ? 6 : 1)) {
         player.yv += (player.moveSpeed * dt) / 50 / (noFriction ? 6 : 1);
         if (player.yv > player.moveSpeed / (noFriction ? 6 : 1))
           player.yv = player.moveSpeed / (noFriction ? 6 : 1);

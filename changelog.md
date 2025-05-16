@@ -1255,3 +1255,9 @@ Editor
 Editor
 
 - Added a death counter that resets on level load
+
+### 16 May. 2025
+
+Editor
+
+- Fixed a bug where if you try to move when you're faster than your move speed, your speed gets set to your move speed, but only for horizontal gravity.
