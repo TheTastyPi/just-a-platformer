@@ -1,6 +1,5 @@
 document.addEventListener("mousedown", function (input) {
-  if (input.ctrlKey) {
-    if (input.button === 0) control.lmb = true;
+  if (input.ctrlKey || input.metaKey) {
     if (input.button === 2) {
       player.playerFocus = true;
       adjustScreen();
@@ -24,7 +23,7 @@ id("levelLayer").addEventListener("mousedown", function (input) {
       if (input.button === 0) {
         openPropertyMenu(x, y);
       }
-    } else if (input.ctrlKey) {
+    } else if (input.ctrlKey || input.metaKey) {
       if (input.button === 0) control.lmb = true;
       if (input.button === 2 && !locks.panning) {
         player.playerFocus = true;

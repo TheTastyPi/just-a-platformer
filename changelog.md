@@ -1261,3 +1261,10 @@ Editor
 Editor
 
 - Fixed a bug where if you try to move when you're faster than your move speed, your speed gets set to your move speed, but only for horizontal gravity.
+
+### 10 Jun. 2025
+
+Editor
+
+- Fixed level panning not working on Mac with \[Cmd]
+- Fixed LMB being recognized as 'held down' if you \[Ctrl] + LMB outside of the level boundary
