@@ -1268,3 +1268,9 @@ Editor
 
 - Fixed level panning not working on Mac with \[Cmd]
 - Fixed LMB being recognized as 'held down' if you \[Ctrl] + LMB outside of the level boundary
+
+#### 11 Jun. 2025
+
+Editor
+
+- The camera no longer pans to the player when loading a level, and instead instantly focuses on the player

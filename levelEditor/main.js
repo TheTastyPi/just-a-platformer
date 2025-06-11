@@ -2036,6 +2036,7 @@ function load(name) {
   drawLevel(true);
   drawGrid();
   updateSaveMenu();
+  adjustScreen(true);
   id("editor").editor.setValue(
     saves[name][3]
       ? LZString.decompressFromEncodedURIComponent(saves[name][3])
