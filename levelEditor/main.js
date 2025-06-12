@@ -2015,9 +2015,8 @@ function load(name) {
   prevVersions = [deepCopy(level)];
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
-  adjustLevelSize(true);
   respawn(true);
-  drawGrid();
+  adjustLevelSize(true);
   updateSaveMenu();
   id("editor").editor.setValue(
     saves[name][3]

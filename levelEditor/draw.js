@@ -2804,7 +2804,7 @@ function adjustScreen(instant = false) {
     camCenterx = -(lvlx - id("levelLayer").width);
   camOffsetx = camX - camCenterx;
   if (camOffsety > 0 || camOffsety < -(canvasHeight - window.innerHeight))
-    camCentery = camY + window.innerWidth;
+    camCentery = camY + window.innerHeight;
   if (camCentery > 0) camCentery = 0;
   if (camCentery < -(lvly - id("levelLayer").height))
     camCentery = -(lvly - id("levelLayer").height);
