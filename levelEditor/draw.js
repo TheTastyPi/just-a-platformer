@@ -1,7 +1,5 @@
 const diff = "";
 var baseBlockSize = 50;
-var lvlxOffset = 0;
-var lvlyOffset = 0;
 var prevPlayerx = 0;
 var prevPlayery = 0;
 var godModeDeathIndicator = false;
@@ -31,8 +29,8 @@ function drawPlayer() {
   if (player.customColor)
     pL.fillStyle = `rgb(${player.customColor.join(", ")})`;
   pL.fillRect(
-    Math.floor(player.x) + Math.floor(camx),
-    Math.floor(player.y) + Math.floor(camy),
+    Math.floor(player.x) + Math.floor(camX),
+    Math.floor(player.y) + Math.floor(camY),
     player.size,
     player.size
   );
@@ -2745,18 +2743,110 @@ function drawBlock(
     default:
   }
 }
+var targetCamX = 0;
+var targetCamY = 0;
+var camX = 0;
+var camY = 0;
+var camDelay = 10;
+var camCenterx = 0;
+var camCentery = 0;
+var prevCenterx = 0;
+var prevCentery = 0;
+function adjustScreen(instant = false) {
+  let lvlx = level.length * baseBlockSize;
+  let lvly = level[0].length * baseBlockSize;
+  // smooth panning
+  if (player.playerFocus) {
+    targetCamX = Math.floor((window.innerWidth - lvlx) / 2);
+    if (targetCamX < 0) {
+      targetCamX =
+        Math.floor(window.innerWidth / 2) -
+        Math.floor(player.x + player.size / 2);
+      if (targetCamX > 0) targetCamX = 0;
+      if (targetCamX < window.innerWidth - lvlx)
+        targetCamX = Math.floor(window.innerWidth - lvlx);
+    }
+    targetCamY = Math.floor((window.innerHeight - lvly) / 2);
+    if (targetCamY < 0) {
+      targetCamY =
+        Math.floor(window.innerHeight / 2) -
+        Math.floor(player.y + player.size / 2);
+      if (targetCamY > 0) targetCamY = 0;
+      if (targetCamY < window.innerHeight - lvly)
+        targetCamY = Math.floor(window.innerHeight - lvly);
+    }
+  }
+  camX = (camX * (camDelay - 1) + targetCamX) / camDelay;
+  camY = (camY * (camDelay - 1) + targetCamY) / camDelay;
+  if (camX > targetCamX) {
+    camX = Math.floor(camX);
+  } else camX = Math.ceil(camX);
+  if (camY > targetCamY) {
+    camY = Math.floor(camY);
+  } else camY = Math.ceil(camY);
+  if (Math.abs(camX - targetCamX) < 1 || instant) camX = targetCamX;
+  if (Math.abs(camY - targetCamY) < 1 || instant) camY = targetCamY;
+  // moving camera
+  let canvasWidth = Math.min(
+    level.length * baseBlockSize,
+    Math.floor((window.innerWidth * 3) / baseBlockSize) * baseBlockSize
+  );
+  let canvasHeight = Math.min(
+    level[0].length * baseBlockSize,
+    Math.floor((window.innerHeight * 3) / baseBlockSize) * baseBlockSize
+  );
+  let camOffsetx = camX - camCenterx;
+  let camOffsety = camY - camCentery;
+  if (camOffsetx > 0 || camOffsetx < -(canvasWidth - window.innerWidth))
+    camCenterx = camX + window.innerWidth;
+  if (camCenterx > 0) camCenterx = 0;
+  if (camCenterx < -(lvlx - id("levelLayer").width))
+    camCenterx = -(lvlx - id("levelLayer").width);
+  camOffsetx = camX - camCenterx;
+  if (camOffsety > 0 || camOffsety < -(canvasHeight - window.innerHeight))
+    camCentery = camY + window.innerWidth;
+  if (camCentery > 0) camCentery = 0;
+  if (camCentery < -(lvly - id("levelLayer").height))
+    camCentery = -(lvly - id("levelLayer").height);
+  camOffsety = camY - camCentery;
+  if (prevCenterx !== camCenterx || prevCentery !== camCentery) {
+    drawLevel(true);
+    prevCenterx = camCenterx;
+    prevCentery = camCentery;
+  }
+  id("bgLayer").style.left = camOffsetx + "px";
+  id("bgLayer").style.top = camOffsety + "px";
+  id("levelLayer").style.left = camOffsetx + "px";
+  id("levelLayer").style.top = camOffsety + "px";
+  id("background").style.left = camOffsetx + "px";
+  id("background").style.top = camOffsety + "px";
+  id("grid").style.left = camOffsetx + "px";
+  id("grid").style.top = camOffsety + "px";
+  drawPlayer();
+}
+function adjustLevelSize() {
+  let canvasWidth = Math.min(
+    level.length * baseBlockSize,
+    Math.floor((window.innerWidth * 3) / baseBlockSize) * baseBlockSize
+  );
+  let canvasHeight = Math.min(
+    level[0].length * baseBlockSize,
+    Math.floor((window.innerHeight * 3) / baseBlockSize) * baseBlockSize
+  );
+  id("levelLayer").width = canvasWidth;
+  id("levelLayer").height = canvasHeight
+  id("bgLayer").width = canvasWidth;
+  id("bgLayer").height = canvasHeight;
+  id("grid").width = canvasWidth;
+  id("grid").height = canvasHeight;
+  drawGrid();
+  drawLevel(true);
+  adjustScreen(true);
+}
 function drawGrid() {
   let canvas = id("grid");
   let g = canvas.getContext("2d");
   g.lineWidth = baseBlockSize / 25;
-  canvas.width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
-  canvas.height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
   for (let x = 0.5; x < canvas.width / baseBlockSize + 0.5; x += 0.5) {
     if (x % 1 === 0.5) {
       g.strokeStyle = options.darkMode ? "#666666" : "#BBBBBB";
@@ -2775,102 +2865,4 @@ function drawGrid() {
     g.lineTo(canvas.width, baseBlockSize * y + (camCentery % baseBlockSize));
     g.stroke();
   }
-}
-var camx = 0;
-var camy = 0;
-var camDelay = 10;
-var camCenterx = 0;
-var camCentery = 0;
-var prevCenterx = 0;
-var prevCentery = 0;
-var camOffsetLimit = baseBlockSize * 10;
-function adjustScreen(instant = false) {
-  let lvlx = level.length * baseBlockSize;
-  let lvly = level[0].length * baseBlockSize;
-  if (player.playerFocus) {
-    lvlxOffset = Math.floor((window.innerWidth - lvlx) / 2);
-    if (lvlxOffset < 0) {
-      lvlxOffset =
-        Math.floor(window.innerWidth / 2) -
-        Math.floor(player.x + player.size / 2);
-      if (lvlxOffset > 0) lvlxOffset = 0;
-      if (lvlxOffset < window.innerWidth - lvlx)
-        lvlxOffset = Math.floor(window.innerWidth - lvlx);
-    }
-    lvlyOffset = Math.floor((window.innerHeight - lvly) / 2);
-    if (lvlyOffset < 0) {
-      lvlyOffset =
-        Math.floor(window.innerHeight / 2) -
-        Math.floor(player.y + player.size / 2);
-      if (lvlyOffset > 0) lvlyOffset = 0;
-      if (lvlyOffset < window.innerHeight - lvly)
-        lvlyOffset = Math.floor(window.innerHeight - lvly);
-    }
-  }
-  camx = (camx * (camDelay - 1) + lvlxOffset) / camDelay;
-  camy = (camy * (camDelay - 1) + lvlyOffset) / camDelay;
-  if (camx > lvlxOffset) {
-    camx = Math.floor(camx);
-  } else camx = Math.ceil(camx);
-  if (camy > lvlyOffset) {
-    camy = Math.floor(camy);
-  } else camy = Math.ceil(camy);
-  if (Math.abs(camx - lvlxOffset) < 1 || instant) camx = lvlxOffset;
-  if (Math.abs(camy - lvlyOffset) < 1 || instant) camy = lvlyOffset;
-
-  let camOffsetx = camx - camCenterx;
-  let camOffsety = camy - camCentery;
-  if (camOffsetx > 0 || camOffsetx < -2 * camOffsetLimit) {
-    camCenterx = camx + camOffsetLimit;
-    if (camCenterx > 0) camCenterx = 0;
-    if (camCenterx < id("levelLayer").width - lvlx)
-      camCenterx = id("levelLayer").width - lvlx;
-    camOffsetx = camx - camCenterx;
-    if (prevCenterx !== camCenterx) {
-      drawLevel(true);
-      drawGrid();
-    }
-    prevCenterx = camCenterx;
-  }
-  if (camOffsety > 0 || camOffsety < -2 * camOffsetLimit) {
-    camCentery = camy + camOffsetLimit;
-    if (camCentery > 0) camCentery = 0;
-    if (camCentery < id("levelLayer").height - lvly)
-      camCentery = id("levelLayer").height - lvly;
-    camOffsety = camy - camCentery;
-    if (prevCentery !== camCentery) {
-      drawLevel(true);
-      drawGrid();
-    }
-    prevCentery = camCentery;
-  }
-  id("bgLayer").style.left = camOffsetx + "px";
-  id("bgLayer").style.top = camOffsety + "px";
-  id("levelLayer").style.left = camOffsetx + "px";
-  id("levelLayer").style.top = camOffsety + "px";
-  id("background").style.left = camOffsetx + "px";
-  id("background").style.top = camOffsety + "px";
-  id("grid").style.left = camOffsetx + "px";
-  id("grid").style.top = camOffsety + "px";
-  drawPlayer();
-}
-function adjustLevelSize() {
-  id("levelLayer").width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
-  id("levelLayer").height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
-  id("bgLayer").width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
-  id("bgLayer").height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
-  drawLevel(true);
-  adjustScreen(true);
 }

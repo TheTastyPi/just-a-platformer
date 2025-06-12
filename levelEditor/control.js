@@ -185,10 +185,10 @@ id("levelLayer").addEventListener("mousemove", function (input) {
     if (input.ctrlKey || input.metaKey) {
       if (control.lmb && !locks.panning) {
         player.playerFocus = false;
-        lvlxOffset += input.movementX;
-        lvlyOffset += input.movementY;
-        camx = lvlxOffset;
-        camy = lvlyOffset;
+        targetCamX += input.movementX;
+        targetCamY += input.movementY;
+        camX = targetCamX;
+        camY = targetCamY;
         adjustScreen();
       }
     } else if (!input.shiftKey) {
@@ -310,6 +310,8 @@ document.addEventListener("keydown", function (input) {
           );
           if (dw == parseInt(dw)) {
             dw = parseInt(dw);
+          } else if (dw == null) {
+            break;
           } else {
             alert("Invalid input!");
             break;
@@ -332,6 +334,8 @@ document.addEventListener("keydown", function (input) {
           );
           if (dw == parseInt(dw)) {
             dw = parseInt(dw);
+          } else if (dw == null) {
+            break;
           } else {
             alert("Invalid input!");
             break;
@@ -353,6 +357,8 @@ document.addEventListener("keydown", function (input) {
           );
           if (dw == parseInt(dw)) {
             dw = parseInt(dw);
+          } else if (dw == null) {
+            break;
           } else {
             alert("Invalid input!");
             break;
@@ -374,6 +380,8 @@ document.addEventListener("keydown", function (input) {
           );
           if (dw == parseInt(dw)) {
             dw = parseInt(dw);
+          } else if (dw == null) {
+            break;
           } else {
             alert("Invalid input!");
             break;

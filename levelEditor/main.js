@@ -1423,7 +1423,7 @@ function nextFrame(timeStamp) {
                       let text = props[1];
                       id("textBlockText").textContent = text;
                       id("textBlockText").style.display = "block";
-                      let tx = blockSize * (x + sizeMult / 2) + lvlxOffset;
+                      let tx = blockSize * (x + sizeMult / 2) + targetCamX;
                       if (tx < id("textBlockText").clientWidth / 2)
                         tx = id("textBlockText").clientWidth / 2;
                       if (
@@ -1433,7 +1433,7 @@ function nextFrame(timeStamp) {
                         tx =
                           window.innerWidth -
                           id("textBlockText").clientWidth / 2;
-                      let ty = blockSize * (y + sizeMult / 2) + lvlyOffset;
+                      let ty = blockSize * (y + sizeMult / 2) + targetCamY;
                       if (ty < id("textBlockText").clientHeight / 2)
                         ty = id("textBlockText").clientHeight / 2;
                       if (
@@ -1734,7 +1734,7 @@ function nextFrame(timeStamp) {
     // draw checks
     if (shouldDrawLevel) drawLevel();
     if (player.x !== xprev || player.y !== yprev) adjustScreen();
-    if (camx !== lvlxOffset || camy !== lvlyOffset) adjustScreen();
+    if (camX !== targetCamX || camY !== targetCamY) adjustScreen();
   }
   window.requestAnimationFrame(nextFrame);
 }
@@ -2015,28 +2015,10 @@ function load(name) {
   prevVersions = [deepCopy(level)];
   id("lvlWidth").innerHTML = level.length;
   id("lvlHeight").innerHTML = level[0].length;
-  id("levelLayer").width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
-  id("levelLayer").height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
-  id("bgLayer").width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
-  id("bgLayer").height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
   adjustLevelSize(true);
   respawn(true);
-  drawLevel(true);
   drawGrid();
   updateSaveMenu();
-  adjustScreen(true);
   id("editor").editor.setValue(
     saves[name][3]
       ? LZString.decompressFromEncodedURIComponent(saves[name][3])
@@ -2832,27 +2814,9 @@ function changeLevelSize(dir, num) {
     default:
   }
   id("lvlWidth").innerHTML = level.length;
-  id("levelLayer").width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
-  id("bgLayer").width = Math.min(
-    level.length * baseBlockSize,
-    window.innerWidth + 2 * camOffsetLimit
-  );
   id("lvlHeight").innerHTML = level[0].length;
-  id("levelLayer").height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
-  id("bgLayer").height = Math.min(
-    level[0].length * baseBlockSize,
-    window.innerHeight + 2 * camOffsetLimit
-  );
   prevLevel = [];
-  drawLevel();
-  drawGrid();
-  adjustScreen();
+  adjustLevelSize();
   addVersion();
 }
 function updateUIScale() {
@@ -2937,13 +2901,8 @@ function sanitize(text) {
     .replace(/'/gimu, "&#039;");
 }
 function init() {
-  id("levelLayer").height = level[0].length * baseBlockSize;
-  id("levelLayer").width = level.length * baseBlockSize;
-  id("bgLayer").height = level[0].length * baseBlockSize;
-  id("bgLayer").width = level.length * baseBlockSize;
+  adjustLevelSize();
   respawn(false, false);
-  drawLevel();
-  drawGrid();
   let blockAmt = 0;
   let currentSect;
   for (let i in blockSelect) {
@@ -3021,7 +2980,6 @@ function init() {
     localStorage.setItem("just-a-save-list", "[]");
   }
   addTooltip(id("autoSaveButton"), "Saves once every 5 seconds");
-  adjustScreen(true);
 
   if (isMobile) {
     id("posText").textContent = "Last Finger";
