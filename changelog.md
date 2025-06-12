@@ -1276,3 +1276,4 @@ Editor
 - The camera no longer pans to the player when loading a level, and instead instantly focuses on the player
 - Refactored and optimized code for camera movement and grid display
   - This might've also fixed some visual glitches with grid display when changing browser zoom
+- Fixed a bug where cancelling an "increase level size by specified amount" prompt caused it to display "Invalid input!"
