@@ -52,22 +52,18 @@ function drawLevel(clear = false) {
   }
   for (
     let x = Math.max(Math.floor(-camCenterx / baseBlockSize), 0);
-    x <=
-    Math.min(
+    x <= Math.min(
       Math.floor((canvas.width - camCenterx) / baseBlockSize),
       level.length
-    ) -
-      1;
+    ) - 1;
     x++
   ) {
     for (
       let y = Math.max(Math.floor(-camCentery / baseBlockSize), 0);
-      y <=
-      Math.min(
+      y <= Math.min(
         Math.floor((canvas.height - camCentery) / baseBlockSize),
         level[0].length
-      ) -
-        1;
+      ) - 1;
       y++
     ) {
       if (prevLevel[x] == undefined) {
