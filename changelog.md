@@ -1284,3 +1284,8 @@ Editor
 
 - Added the 'No Camera Easing' property to Portals, which, if true, prevents the camera from easing when you teleport using a Portal.
 - Added moveCamera() and refocusCamera() to the Lua API. See the documentation for more information.
+
+### 7 Nov. 2025
+
+Main Game
+- Added a new room to japHARD.
