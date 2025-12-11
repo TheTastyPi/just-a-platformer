@@ -670,10 +670,10 @@ function nextFrame(timeStamp) {
       if (i === 0) {
         player.canWalljump = false;
       }
-      let x1 = (player.x - 0.01) / baseBlockSize;
+      let x1 = player.x / baseBlockSize;
       let x2 = (player.x + player.size) / baseBlockSize;
-      let y1 = (player.y - 0.01) / baseBlockSize;
-      let y2 = (player.y + player.size + 0.01) / baseBlockSize;
+      let y1 = player.y / baseBlockSize;
+      let y2 = (player.y + player.size) / baseBlockSize;
       let bx1 = Math.floor(x1 * 2);
       let bx2 = Math.floor(x2 * 2);
       let by1 = Math.floor(y1 * 2);
@@ -1253,10 +1253,10 @@ function nextFrame(timeStamp) {
                 sizeMult = 1;
               }
               if (
-                player.x < (x + sizeMult) * blockSize - 0.1 &&
-                player.x + player.size > x * blockSize + 0.1 &&
-                player.y < (y + sizeMult) * blockSize - 0.1 &&
-                player.y + player.size > y * blockSize + 0.1
+                player.x < (x + sizeMult) * blockSize - 0.01 &&
+                player.x + player.size > x * blockSize + 0.01 &&
+                player.y < (y + sizeMult) * blockSize - 0.01 &&
+                player.y + player.size > y * blockSize + 0.01
               ) {
                 switch (type) {
                   // grav-dir

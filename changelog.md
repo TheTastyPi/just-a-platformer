@@ -1289,3 +1289,12 @@ Editor
 
 Main Game
 - Added a new room to japHARD.
+
+#### 10 Dec. 2025
+
+Main Game
+- The player is no longer 0.001 units smaller on the top and left side specifically.
+
+Editor
+- The player is no longer 0.01 units smaller on the top, left, and bottom side specifically.
+- Made non-solid blocks only 0.01 units smaller on each side compared to solid blocks, matching the main game.
