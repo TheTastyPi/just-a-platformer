@@ -1302,4 +1302,4 @@ Editor
 #### 17 Dec. 2025
 
 Both
-- Reverted the player size change from last update because for some reason it was essential for wall-jumping to function properly. The player is now exactly 0.001 units smaller on all sides for both Main Game and Editor.
+- Reverted the player size change from last update because for some reason it was essential for wall-jumping to function properly. The player hitbox is now exactly 0.001 units larger on all sides for both Main Game and Editor.
