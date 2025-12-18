@@ -296,10 +296,10 @@ function nextFrame(timeStamp) {
       let level = levels[player.currentLevel];
       let onIce = false;
       let shouldDie = false;
-      let bx1 = Math.floor(player.x / blockSize);
-      let bx2 = Math.floor((player.x + playerSize) / blockSize);
-      let by1 = Math.floor(player.y / blockSize);
-      let by2 = Math.floor((player.y + playerSize) / blockSize);
+      let bx1 = Math.floor((player.x - 0.001) / blockSize);
+      let bx2 = Math.floor((player.x + playerSize + 0.001) / blockSize);
+      let by1 = Math.floor((player.y - 0.001) / blockSize);
+      let by2 = Math.floor((player.y + playerSize + 0.001) / blockSize);
       let wallLeft = false;
       let wallRight = false;
       let wallTop = false;

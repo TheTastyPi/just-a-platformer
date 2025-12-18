@@ -1293,8 +1293,13 @@ Main Game
 #### 10 Dec. 2025
 
 Main Game
-- The player is no longer 0.001 units smaller on the top and left side specifically.
+- The player is no longer 0.001 units larger on the top and left side specifically.
 
 Editor
-- The player is no longer 0.01 units smaller on the top, left, and bottom side specifically.
+- The player is no longer 0.01 units larger on the top, left, and bottom side specifically.
 - Made non-solid blocks only 0.01 units smaller on each side compared to solid blocks, matching the main game.
+
+#### 17 Dec. 2025
+
+Both
+- Reverted the player size change from last update because for some reason it was essential for wall-jumping to function properly. The player is now exactly 0.001 units smaller on all sides for both Main Game and Editor.

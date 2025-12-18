@@ -670,10 +670,10 @@ function nextFrame(timeStamp) {
       if (i === 0) {
         player.canWalljump = false;
       }
-      let x1 = player.x / baseBlockSize;
-      let x2 = (player.x + player.size) / baseBlockSize;
-      let y1 = player.y / baseBlockSize;
-      let y2 = (player.y + player.size) / baseBlockSize;
+      let x1 = (player.x - 0.001) / baseBlockSize;
+      let x2 = (player.x + player.size + 0.001) / baseBlockSize;
+      let y1 = (player.y - 0.001) / baseBlockSize;
+      let y2 = (player.y + player.size + 0.001) / baseBlockSize;
       let bx1 = Math.floor(x1 * 2);
       let bx2 = Math.floor(x2 * 2);
       let by1 = Math.floor(y1 * 2);
