@@ -2658,11 +2658,7 @@ function editBlock(x, y, block, miniBlock = true) {
 }
 function editProp(x, y, type, index, from, to, all = false, toIndex = false) {
   to = deepCopy(to);
-  let bx = Math.floor(x);
-  let by = Math.floor(y);
-  let miniBlockPos = 1 + 2 * (bx !== x) + (by !== y);
-  let block = level[bx][by];
-  if (block[0] === 73) block = block[miniBlockPos];
+  let block = getBlock(x, y, true, false);
   if (block[0] !== type && type !== false) {
     if (all) {
       for (let i in block) {

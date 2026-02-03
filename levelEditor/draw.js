@@ -72,7 +72,7 @@ function drawLevel(clear = false) {
         let prevBlock = prevLevel[x][y];
         if (prevBlock == undefined) prevBlock = 0;
         if (
-          !arraysEqual(level[x][y], prevBlock) ||
+          !arraysEqual(getBlock(x,y,false), prevBlock) ||
           (!arraysEqual(player.switchsOn, prevSwitch) &&
             ([31, 32, 33, 34, 35, 52].includes(getBlockType(x, y, false)) ||
               blockIncludes(level[x][y], [31, 32, 33, 34, 35, 52]))) ||
