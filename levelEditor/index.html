@@ -151,6 +151,9 @@
         <button id="importSaveButton" onclick="importSave()">
           Import Save
         </button>
+        <button id="importSaveFileButton" onclick="importSaveAsFile()">
+          Import File
+        </button>
         <button id="autoSaveButton" onclick="toggleAutoSave()">
           Auto Save: On
         </button>
@@ -360,6 +363,7 @@
         pointer-events: none;
       "
     ></div>
+    <input type="file" id="fileExport" accept=".txt" multiple style="display: none;" />
   </body>
   <script src="draw.js"></script>
   <script src="../shared/optionsLoader.js"></script>

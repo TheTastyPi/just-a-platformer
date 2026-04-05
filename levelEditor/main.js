@@ -2034,8 +2034,7 @@ function exportSave(name) {
     ()=>{alert("Export failed. Please try again.")}
   );
 }
-function importSave() {
-  let data = prompt("Please enter level data.");
+function importSave(data = prompt("Please enter level data.")) {
   if (data) {
     data = JSON.parse(data);
     let name = data[2];
@@ -2058,6 +2057,20 @@ function importSave() {
     localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
     updateSaveMenu();
   }
+}
+function exportSaveAsFile(name) {
+  let saves = JSON.parse(localStorage.getItem("just-an-editor-save"));
+  let text = JSON.stringify(saves[name]);
+  let blob = new Blob([text], {type: "text/plain"});
+  let link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${name}.txt`;
+  link.click();
+  link.remove();
+}
+function importSaveAsFile() {
+  let input = id("fileExport");
+  input.click();
 }
 function deleteSave(name) {
   if (confirm("Are you sure you want to delete this save?")) {
@@ -2176,6 +2189,13 @@ function updateSaveMenu() {
       exportSave(name);
     });
     saveSect.appendChild(exportButton);
+
+    let exportFileButton = document.createElement("button");
+    exportFileButton.innerHTML = "Export File";
+    exportFileButton.addEventListener("mousedown", function () {
+      exportSaveAsFile(name);
+    });
+    saveSect.appendChild(exportFileButton);
 
     saveSect.appendChild(document.createElement("br"));
 
@@ -2969,6 +2989,17 @@ function init() {
       currentSect.style.minWidth = (baseBlockSize + 5) * blockAmt + "px";
     }
   }
+  id("fileExport").addEventListener("change", function (e) {
+    let files = e.target.files
+    for (let i = 0; i < files.length; i++) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        importSave(reader.result);
+      };
+      reader.readAsText(files[i]);
+    }
+  });
+
   if (!isMobile) id("blockSelect0").style.boxShadow = "0 0 0 5px #0000FF";
   id("blockSelect1").style.boxShadow = "0 0 0 5px #FF0000";
   if (!localStorage.getItem("just-an-editor-save")) {
