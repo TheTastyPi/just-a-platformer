@@ -1313,3 +1313,8 @@ Editor
 
 Editor
 - Added the ability to export/import levels as text files.
+
+#### 8 Apr. 2026
+
+Editor
+- Added an error message for when a save action exceeds the brower storage quota.

@@ -1941,8 +1941,12 @@ function addSave() {
     }
     saves[name] = [deepCopy(level), deinfinify(player.startPoint), name];
     saveList.push(name);
-    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
-    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    try {
+      localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+      localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    } catch {
+      alert("Error: Storage quota exceeded! Either delete some levels, or increase your browser's storage quota.")
+    }
     player.currentSave = name;
     updateSaveMenu();
   }
@@ -1958,7 +1962,11 @@ function save(auto = false) {
       player.currentSave,
       LZString.compressToEncodedURIComponent(code)
     ];
-    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    try {
+      localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    } catch {
+      alert("Error: Storage quota exceeded! Either delete some levels, or increase your browser's storage quota.")
+    }
     if (!auto) alert("Saved.");
   } else if (!auto) alert("No save is currently selected.");
 }
@@ -2053,8 +2061,12 @@ function importSave(data = prompt("Please enter level data.")) {
     if (name === null) return;
     saves[name] = data;
     saveList.push(name);
-    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
-    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    try {
+      localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+      localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    } catch {
+      alert("Error: Storage quota exceeded! Either delete some levels, or increase your browser's storage quota.")
+    }
     updateSaveMenu();
   }
 }
@@ -2081,8 +2093,12 @@ function deleteSave(name) {
       saveList.findIndex((x) => x === name),
       1
     );
-    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
-    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    try {
+      localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+      localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+    } catch {
+      alert("Error: Storage quota exceeded! Try to increase your browser's storage quota.")
+    }
     if (player.currentSave === name) player.currentSave = undefined;
     updateSaveMenu();
   }
@@ -2100,7 +2116,11 @@ function moveSave(name, dir) {
     saveList[index] = saveList[index + 1];
     saveList[index + 1] = temp;
   }
-  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  try {
+    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  } catch {
+    alert("Error: Storage quota exceeded! Either delete some levels, or increase your browser's storage quota.")
+  }
   updateSaveMenu();
 }
 function renameSave(name) {
@@ -2119,8 +2139,12 @@ function renameSave(name) {
   saves[newName][2] = newName;
   delete saves[name];
   saveList[index] = newName;
-  localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
-  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  try {
+    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  } catch {
+    alert("Error: Storage quota exceeded! Either delete some levels, or increase your browser's storage quota.")
+  }
   updateSaveMenu();
 }
 function copySave(name) {
@@ -2137,8 +2161,12 @@ function copySave(name) {
   if (newName === null) return;
   saves[newName] = deepCopy(saves[name]);
   saveList.splice(index + 1, 0, newName);
-  localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
-  localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  try {
+    localStorage.setItem("just-an-editor-save", JSON.stringify(saves));
+    localStorage.setItem("just-a-save-list", JSON.stringify(saveList));
+  } catch {
+    alert("Error: Storage quota exceeded! Either delete some levels, or increase your browser's storage quota.")
+  }
   updateSaveMenu();
 }
 function toggleAutoSave() {
