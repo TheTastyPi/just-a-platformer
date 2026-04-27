@@ -1318,3 +1318,8 @@ Editor
 
 Editor
 - Added an error message for when a save action exceeds the brower storage quota.
+
+#### 27 Apr. 2026
+
+Main Game
+- For parity with the level editor, made it so that your x velocity is set to 0 under 1 unit instead of 5.

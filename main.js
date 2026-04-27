@@ -277,7 +277,7 @@ function nextFrame(timeStamp) {
         // velocity change
         if (!noFriction) {
           player.xv *= Math.pow(0.5, dt / 6);
-          if (Math.abs(player.xv) < 5) player.xv = 0;
+          if (Math.abs(player.xv) < 1) player.xv = 0;
         }
         if (
           (player.yv > player.g && player.g > 0) ||
