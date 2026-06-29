@@ -749,6 +749,7 @@ function nextFrame(timeStamp) {
         player.spawnTimer -= dt;
         if (player.spawnTimer <= 0) respawn();
       }
+      if (player.godMode) godModeDeathIndicator = shouldDie;
       // triggers
       if (!player.triggers.includes(-1)) {
         levels[9][5][5] = 0;

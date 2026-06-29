@@ -1323,3 +1323,10 @@ Editor
 
 Main Game
 - For parity with the level editor, made it so that your x velocity is set to 0 under 1 unit instead of 5.
+
+### 29 Jun. 2026
+
+Main Game
+- Added a checkpoint to the 6th room in japHARD final branch.
+- Made god mode pink (still only accessible though manual modification of game variables)
+- Made the player turn green if they die in god mode.

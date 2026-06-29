@@ -1,5 +1,6 @@
 var playerSize = 20;
 var blockSize = 50;
+var godModeDeathIndicator = false;
 function drawPlayer() {
   let canvas = id("playerLayer");
   let pL = canvas.getContext("2d");
@@ -15,6 +16,13 @@ function drawPlayer() {
       ratio * 255 * 0.75 + 255 * 0.25
     })`;
   if (player.isDead) pL.fillStyle += "88";
+  if (player.godMode) {
+    if (godModeDeathIndicator) {
+      pL.fillStyle = "#00FF00";
+    } else {
+      pL.fillStyle = "#FF00FF";
+    }
+  }
   pL.fillRect(
     Math.floor(player.x),
     Math.floor(player.y),
