@@ -222,9 +222,15 @@ function drawBlock(
       lL.fillStyle = "#FF0000";
       break;
     case 3:
-      if (isSpawn(x + xOffset, y + yOffset)) {
-        lL.fillStyle = "#00FFFF88";
-      } else lL.fillStyle = "#00888888";
+      if (data[1]) {
+        if (isSpawn(x + xOffset, y + yOffset)) {
+          lL.fillStyle = "#00FF0088";
+        } else lL.fillStyle = "#00880088";
+      } else {
+        if (isSpawn(x + xOffset, y + yOffset)) {
+          lL.fillStyle = "#00FFFF88";
+        } else lL.fillStyle = "#00888888";
+      }
       break;
     case 5:
       lL.fillStyle = "#FFFF00";
@@ -505,9 +511,15 @@ function drawBlock(
       lL.stroke();
       break;
     case 3:
-      if (isSpawn(x + xOffset, y + yOffset)) {
-        lL.strokeStyle = "#00888888";
-      } else lL.strokeStyle = "#00444488";
+      if (data[1]) {
+        if (isSpawn(x + xOffset, y + yOffset)) {
+          lL.strokeStyle = "#00880088";
+        } else lL.strokeStyle = "#00440088";
+      } else {
+        if (isSpawn(x + xOffset, y + yOffset)) {
+          lL.strokeStyle = "#00888888";
+        } else lL.strokeStyle = "#00444488";
+      }
       lL.beginPath();
       lL.moveTo(xb + (blockSize / 25) * 3, yb + blockSize / 2);
       lL.lineTo(xb + blockSize / 2, yb + blockSize - (blockSize / 25) * 3);

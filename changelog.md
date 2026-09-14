@@ -1330,3 +1330,9 @@ Main Game
 - Added a checkpoint to the 6th room in japHARD final branch.
 - Made god mode pink (still only accessible though manual modification of game variables)
 - Made the player turn green if they would've died in god mode.
+
+### 13 Sep. 2026
+
+Editor
+- Added new property 'Multi-Use' to Checkpoints, which allows you to press \[Shift] to use a checkpoint on demand, even when it's already active, instead of it automatically triggering once on touch.
+  - Note that, unlike in jap2, you will still spawn in the center bottom of the block (with respect to gravity) regardless of the position you saved in.

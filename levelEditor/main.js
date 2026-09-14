@@ -52,7 +52,8 @@ const control = {
   up: false,
   down: false,
   e: false,
-  space: false
+  space: false,
+  interact: false
 };
 var level = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -256,6 +257,7 @@ const blockSelect = [
   82
 ];
 const blockProperty = {
+  3: ["Multi-Use"],
   17: [
     "Start Grav",
     "Start Jump Amt",
@@ -339,6 +341,7 @@ const blockProperty = {
   ]
 };
 const defaultProperty = {
+  3: [false],
   17: [325, 1, 600, [], false, false, false, 4000, 20, 1],
   18: [false, 325, 1, 600, false, 4000, 20, 1],
   27: [100],
@@ -379,6 +382,7 @@ const defaultProperty = {
   86: [1, 0, 500, false, 500, false, 1, 0]
 };
 const propertyType = {
+  3: ["boolean"],
   17: [
     "number",
     "number",
@@ -448,6 +452,7 @@ const propertyType = {
   ]
 };
 const propertyLimit = {
+  3: ["none"],
   17: [
     [-2000, 2000],
     [0, Infinity],
@@ -1323,6 +1328,16 @@ function nextFrame(timeStamp) {
                     break;
                   // checkpoint
                   case 3:
+                    if (props[1]) {
+                      showText(x, y, blockSize, sizeMult, "Press [Shift] to use")
+                      hasTexted = true;
+                      if (control.interact) {
+                        setSpawn(x, y, false);
+                        control.interact = false;
+                        shouldDrawLevel = true;
+                      }
+                      break;
+                    }
                   case 17:
                     if (!isSpawn(x, y) && canSetSpawn) {
                       setSpawn(x, y, type === 17);
@@ -1419,35 +1434,7 @@ function nextFrame(timeStamp) {
                     break;
                   // text block
                   case 46:
-                    if (!arraysEqual(prevTextCoord, [x, y])) {
-                      let text = props[1];
-                      id("textBlockText").textContent = text;
-                      id("textBlockText").style.display = "block";
-                      let tx = blockSize * (x + sizeMult / 2) + targetCamX;
-                      if (tx < id("textBlockText").clientWidth / 2)
-                        tx = id("textBlockText").clientWidth / 2;
-                      if (
-                        tx >
-                        window.innerWidth - id("textBlockText").clientWidth / 2
-                      )
-                        tx =
-                          window.innerWidth -
-                          id("textBlockText").clientWidth / 2;
-                      let ty = blockSize * (y + sizeMult / 2) + targetCamY;
-                      if (ty < id("textBlockText").clientHeight / 2)
-                        ty = id("textBlockText").clientHeight / 2;
-                      if (
-                        ty >
-                        window.innerHeight -
-                          id("textBlockText").clientHeight / 2
-                      )
-                        ty =
-                          window.innerHeight -
-                          id("textBlockText").clientHeight / 2;
-                      id("textBlockText").style.left = tx + "px";
-                      id("textBlockText").style.top = ty + "px";
-                      prevTextCoord = [x, y];
-                    }
+                    showText(x, y, blockSize, sizeMult, props[1])
                     hasTexted = true;
                     break;
                   // death block
@@ -2868,6 +2855,36 @@ function updateUIScale() {
   let widthText = `${(100/UIScale).toFixed(1)}%`
   id("blockSelect").style.transform = transformText;
   id("blockSelect").style.width = widthText;
+}
+function showText(x, y, blockSize, sizeMult, text) {
+  if (!arraysEqual(prevTextCoord, [x, y])) {
+    id("textBlockText").textContent = text;
+    id("textBlockText").style.display = "block";
+    let tx = blockSize * (x + sizeMult / 2) + targetCamX;
+    if (tx < id("textBlockText").clientWidth / 2)
+      tx = id("textBlockText").clientWidth / 2;
+    if (
+      tx >
+      window.innerWidth - id("textBlockText").clientWidth / 2
+    )
+      tx =
+        window.innerWidth -
+        id("textBlockText").clientWidth / 2;
+    let ty = blockSize * (y + sizeMult / 2) + targetCamY;
+    if (ty < id("textBlockText").clientHeight / 2)
+      ty = id("textBlockText").clientHeight / 2;
+    if (
+      ty >
+      window.innerHeight -
+        id("textBlockText").clientHeight / 2
+    )
+      ty =
+        window.innerHeight -
+        id("textBlockText").clientHeight / 2;
+    id("textBlockText").style.left = tx + "px";
+    id("textBlockText").style.top = ty + "px";
+    prevTextCoord = [x, y];
+  }
 }
 function deepCopy(inObject) {
   //definitely not copied from somewhere else

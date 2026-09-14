@@ -586,6 +586,10 @@ document.addEventListener("keydown", function (input) {
           updateUIScale()
         }
         break;
+      case "ShiftLeft":
+      case "ShiftRight":
+        control.interact = true;
+        break;
       default:
     }
   }
@@ -625,6 +629,10 @@ document.addEventListener("keyup", function (input) {
           (!control.left && !control.right && player.xg)
         )
           player.canJump = true;
+        break;
+      case "ShiftLeft":
+      case "ShiftRight":
+        control.interact = false;
         break;
       default:
     }
