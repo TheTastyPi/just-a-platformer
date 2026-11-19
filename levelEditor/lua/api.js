@@ -87,6 +87,14 @@ const APIGlobals = {
 		else this.error(`Trying to set state of invalid switch ID ${id} to ${value}`);
 	},
 
+	getCameraX() {
+		return Math.floor(window.innerWidth / 2 - targetCamX);
+	},
+
+	getCameraY() {
+		return Math.floor(window.innerWidth / 2 - targetCamY);
+	},
+
 	moveCamera(x, y, ease) {
 		player.playerFocus = false;
 		targetCamX = Math.floor(window.innerWidth / 2 - x);

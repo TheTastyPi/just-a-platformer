@@ -130,6 +130,10 @@ Functions will be shown as such: `functionName(properties):returnType`. If `retu
 
 - `setSwitchState(id, value):void`: Set the switch state of an ID. `value` is boolean.
 
+- `getCameraX():number`: Get the x position of the camera center. 1 in-game block translates to 50 units, similar to `setCoord`.
+
+- `getCameraY():number`: Get the y position of the camera center. 1 in-game block translates to 50 units, similar to `setCoord`.
+
 - `moveCamera(x, y, ease):void`: Move the camera to be centered at the coordinate (x,y). 1 in-game block translates to 50 x or y, similar to `setCoord`. If ease is true, the camera will ease to the target.
 
 - `refocusCamera(ease):void`: Refocuses the camera on the player after using `moveCamera`. If the camera is already focused on the player, nothing happens. If ease is true, the camera will ease to the player.
