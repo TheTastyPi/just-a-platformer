@@ -1336,3 +1336,8 @@ Main Game
 Editor
 - Added new property 'Multi-Use' to Checkpoints, which allows you to press \[Shift] to use a checkpoint on demand, even when it's already active, instead of it automatically triggering once on touch.
   - Note that, unlike in jap2, you will still spawn in the center bottom of the block (with respect to gravity) regardless of the position you saved in.
+
+### 19 Nov. 2026
+
+Editor
+- Added getCameraX() and getCameraY() to the Lua API. See the documentation for more information.
