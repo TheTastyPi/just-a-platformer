@@ -501,24 +501,8 @@ document.addEventListener("keydown", function (input) {
                 prevVersions[currentVersion - 1].length !== level.length ||
                 prevVersions[currentVersion - 1][0].length !== level[0].length
               ) {
-                id("lvlWidth").innerHTML = level.length;
-                id("levelLayer").width = Math.min(
-                  level.length * baseBlockSize,
-                  window.innerWidth + 2 * camOffsetLimit
-                );
-                id("bgLayer").width = Math.min(
-                  level.length * baseBlockSize,
-                  window.innerWidth + 2 * camOffsetLimit
-                );
-                id("lvlHeight").innerHTML = level[0].length;
-                id("levelLayer").height = Math.min(
-                  level[0].length * baseBlockSize,
-                  window.innerHeight + 2 * camOffsetLimit
-                );
-                id("bgLayer").height = Math.min(
-                  level[0].length * baseBlockSize,
-                  window.innerHeight + 2 * camOffsetLimit
-                );
+                luaLevel = Array.from(level, (x) => new Array(x.length));
+                adjustLevelSize();
                 prevLevel = [];
               }
               drawLevel();
@@ -530,24 +514,8 @@ document.addEventListener("keydown", function (input) {
               prevVersions[currentVersion + 1].length !== level.length ||
               prevVersions[currentVersion + 1][0].length !== level[0].length
             ) {
-              id("lvlWidth").innerHTML = level.length;
-              id("levelLayer").width = Math.min(
-                level.length * baseBlockSize,
-                window.innerWidth + 2 * camOffsetLimit
-              );
-              id("bgLayer").width = Math.min(
-                level.length * baseBlockSize,
-                window.innerWidth + 2 * camOffsetLimit
-              );
-              id("lvlHeight").innerHTML = level[0].length;
-              id("levelLayer").height = Math.min(
-                level[0].length * baseBlockSize,
-                window.innerHeight + 2 * camOffsetLimit
-              );
-              id("bgLayer").height = Math.min(
-                level[0].length * baseBlockSize,
-                window.innerHeight + 2 * camOffsetLimit
-              );
+              luaLevel = Array.from(level, (x) => new Array(x.length));
+              adjustLevelSize();
               prevLevel = [];
             }
             drawLevel();

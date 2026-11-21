@@ -1341,3 +1341,8 @@ Editor
 
 Editor
 - Added getCameraX() and getCameraY() to the Lua API. See the documentation for more information.
+
+### 20 Nov. 2026
+
+Editor
+- Fixed strange behavior when undo/redo-ing level size changes.
